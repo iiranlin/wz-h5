@@ -67,6 +67,12 @@ export const routes = [
 				meta: {title: '选择审批人'},
 				component: () => import('@/view/MyToDo/MyToDoManager/MyToDoExamineChoice.vue')
 			},
+			{
+				path: 'MyToDoSearch',
+                name: 'MyToDoSearch',
+				meta: {title: '搜索'},
+				component: () => import('@/view/MyToDo/MyToDoManager/MyToDoSearch.vue')
+			},
 		]
 	},
 	{
