@@ -5,7 +5,7 @@
         class="switch-tab"
         v-model="menuActiveIndex"
         color="#0571ff"
-        background="#8ebdec"
+        background="#eef6ff"
         title-active-color="#0571ff"
         title-inactive-color="#2e2e2e">
         <van-tab title="收货管理">

@@ -5,7 +5,7 @@
         v-model="formData.keywords"
         placeholder="输入关键字搜索"
         shape="round"
-        background="#8ebdec"
+        background="#eef6ff"
         readonly
         @click="handeSearchClick()">
       </van-search>
@@ -14,7 +14,7 @@
       <van-tabs
         v-model="menuActiveIndex"
         color="#0571ff"
-        background="#8ebdec"
+        background="#eef6ff"
         title-active-color="#0571ff"
         title-inactive-color="#2e2e2e">
         <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
@@ -306,5 +306,17 @@ export default {
 ::v-deep .van-tabs__content {
   height: calc(100vh - 167px);
   overflow-y: scroll;
+}
+
+.van-search {
+  .van-search__content {
+    border-radius: 50px;
+    background: #fff;
+  }
+
+  .van-cell {
+    border-radius: 50px;
+    background: #fff;
+  }
 }
 </style>
