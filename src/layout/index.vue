@@ -1,0 +1,109 @@
+<template>
+	<div class="app-wrapper">
+		<div class="app-container">
+			<transition name="fade-transform" mode="out-in">
+				<router-view :key="key" />
+			</transition>
+		</div>
+		<div class="nav-container">
+			<navbar :navMenu="checkNavMenu()"/>
+		</div>
+	</div>
+</template>
+<script>
+import {Navbar} from './components'
+
+export default {
+	name: 'Layout',
+	components: {
+		Navbar
+	},
+	computed: {
+		key() {
+			return this.$route.path
+		},
+	},
+	data() {
+		return {
+			//施工单位导航菜单
+			constructionUnit:[
+				{
+					title: '我的待办',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/MyToDoList'
+				},
+				{
+					title: '计划管理',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/PlannedManagementList'
+				},
+				{
+					title: '验收管理',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/MyManager'
+				},
+				{
+					title: '出入库管理',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/MyManager'
+				},
+			],
+			//监理单位导航菜单
+			supervisionUnit:[
+				{
+					title: '待审核',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/WaitExamineList'
+				},
+				{
+					title: '待处理',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/WaitHandleList'
+				},
+				{
+					title: '已审核',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/OverExamineList'
+				},
+			],
+			//供应商导航菜单
+			supplier:[
+				{
+					title: '需求管理',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/dashboard'
+				},
+				{
+					title: '发货管理',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/Information'
+				},
+				{
+					title: '退货管理',
+					activeIcon: '/static/icon_home_current.png',
+					normalIcon: '/static/icon_home.png',
+					link: '/MyManager'
+				},
+			]
+		}
+	},
+	created() {
+		
+	},
+	methods: {
+		//判断角色菜单
+		checkNavMenu(){
+			return this.constructionUnit;
+		},
+	},
+}
+</script>

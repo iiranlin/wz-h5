@@ -1,0 +1,271 @@
+@import "./vantcss.less";
+@import "./iconfont/iconfont.css";
+html,body, #app {
+    width: 100%;
+    height: 100%;
+    color: #272b31;
+}
+h1, h2, h3, h4, h5, h6, p, div, ul, dl, dd, dt {
+  margin: 0;
+  padding: 0;
+}
+
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition: all .5s;
+}
+
+.fade-transform-enter {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+#app {
+    font-size: 16px;
+}
+.app-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+}
+.app-container {
+    width: 100%;
+    height: calc(100% - 52px);
+    box-sizing: border-box;
+    background: #f2f4f8;
+}
+//底部导航容器
+.nav-container {
+    width: 100%;
+    height: 52px;
+    box-sizing: border-box;
+}
+//通用外层容器
+.default-container {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background: #f2f4f8;
+    overflow-y: auto;
+}
+//顶部tab切换控件样式
+.van-tabs__wrap {
+    height: 36px;
+    background:#f2f4f8;
+    padding: 0px;
+    margin-bottom: 10px;
+}
+//通用白底圆角带阴影盒子
+.box-container {
+    box-sizing: border-box;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-bottom: 10px;
+    background: #ffffff;
+    border-radius: 7px;
+    box-shadow:0px 2px 5px rgba(32, 30, 74, 0.1);
+    position: relative;
+    padding: 10px;
+}
+//高亮显示
+.font-weight {
+    font-weight: 700;
+}
+//列表ul
+.list-ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    li {
+        color: #2e2e2e;
+        font-size: 14px;
+        display: flex;
+        line-height: 28px;
+
+        & :nth-child(1){
+            min-width: 70px
+        }
+        & :nth-child(2){
+            width: calc(100% - 70px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+    .li-status {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+
+        & :nth-child(1){
+            min-width: initial;
+        }
+        & :nth-child(2){
+            width: initial;
+        }
+    }
+    .li-item-both {
+        display: flex;
+        position: relative;
+
+        .li-item-left {
+            display: flex;
+            flex: 1;
+        }
+        .li-item-right {
+            display: flex;
+            flex: 1;
+        }
+    }
+}
+//列表ul条目底部按钮
+.list-ul-button {
+    width: 100%;
+    height: 38px;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 5px;
+
+    .button-info {
+        width: 96px;
+        height: 28px;
+        font-size: 14px;
+        line-height: 30px;
+        float: right;
+        margin-left: 5px;
+        margin-top: 10px;
+    }
+}
+//详情ul
+.detail-ul {
+
+    li {
+        display: flex;
+        position: relative;
+        
+        span {
+            color: #272b31;
+            font-size: 14px;
+            line-height: 26px;
+        }
+        & :nth-child(1){
+            width: 75px;
+            white-space: nowrap;
+        }
+        & :nth-child(2){
+            width: calc(100% - 75px);
+        }
+    }
+    //一行两列
+    .li-item-both {
+        display: flex;
+        position: relative;
+
+        .li-item-left {
+            display: flex;
+            flex: 1;
+        }
+        .li-item-right {
+            display: flex;
+            flex: 1;
+        }
+    }
+    //字段名超长
+    .li-item-overlength {
+        & :nth-child(1){
+            width: initial;
+            white-space: nowrap;
+        }
+    }
+}
+//底部有操作按钮详情容器
+.detail-button-container {
+    width: 100%;
+    height: calc(100% - 54px);
+    background: #f2f4f8;
+    box-sizing: border-box;
+    position: relative;
+    overflow-y: auto;
+    padding-top: 10px;
+}
+//详情楼层标题
+.detail-title-info {
+    display: flex;
+    align-items: center;
+
+    span {
+        font-size: 16px;
+        color: #131a29;
+        font-weight: 600;
+    }
+}
+//默认按钮容器
+.default-button-container {
+    width: 100%;
+    height: 54px;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    .button-info {
+        width: 106px;
+        height: 35px;
+        font-size: 14px;
+    }
+}
+//选择下一级审核人弹框样式
+.assignee-popup {
+    width: 300px;
+    height: 150px;
+    box-sizing: border-box;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-bottom: 10px;
+    background: #ffffff;
+    border-radius: 7px;
+    position: relative;
+    padding: 10px;
+    text-align: center;
+    
+    .van-cell{
+        text-align: left;
+        border: 1px solid #f3f5f7;
+        border-radius: 5px;
+        padding-left: 20px;
+        padding-right: 10px;
+        margin-top: 15px;
+    }
+}
+//文本编辑页面容器
+.edit-container {
+    width: 100%;
+    height: calc(100% - 54px);
+    padding: 10px;
+    background: #ffffff;
+    box-sizing: border-box;
+    position: relative;
+    overflow-y: auto;
+    
+    .title {
+        font-size: 14px;
+        color: #1c1c1c;
+    }
+    .van-cell {
+        margin-top: 10px;
+        border: 1px solid #158aff;
+        border-radius: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}

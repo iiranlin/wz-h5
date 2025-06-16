@@ -1,0 +1,68 @@
+{
+	"name": "wz_app",
+	"version": "1.0.0",
+	"description": "wz_app",
+	"license": "MIT",
+	"scripts": {
+		"dev": "vue-cli-service serve ",
+		"zjs": "vue-cli-service serve --open --mode zjs.local",
+		"build:xiandev": "vue-cli-service build --mode xiandev",
+		"build:beiJingDev": "vue-cli-service build --mode beiJingDev",
+		"build": "vue-cli-service build",
+		"lint": "vue-cli-service lint"
+	},
+	"dependencies": {
+		"@vue-office/excel": "^1.7.8",
+		"amfe-flexible": "^2.2.1",
+		"axios": "^0.21.1",
+		"core-js": "^3.4.3",
+		"dayjs": "^1.11.3",
+		"docx-preview": "^0.1.18",
+		"echarts": "^5.3.2",
+		"jquery": "^3.6.0",
+		"lottie-web": "^5.7.6",
+		"normalize.css": "^8.0.1",
+		"vant": "^2.2.0",
+		"vue": "^2.6.10",
+		"vue-demi": "0.14.10",
+		"vue-pdf": "4.3.0",
+		"vue-router": "^3.0.6",
+		"vuex": "^3.6.2"
+	},
+	"devDependencies": {
+		"@vue/cli-plugin-babel": "^4.1.1",
+		"@vue/cli-plugin-eslint": "^4.1.1",
+		"@vue/cli-service": "^4.1.1",
+		"babel-eslint": "^10.0.3",
+		"babel-plugin-import": "^1.12.0",
+		"eslint": "7.15.0",
+		"eslint-plugin-vue": "7.2.0",
+		"less": "^3.8.1",
+		"less-loader": "^5.0.0",
+		"postcss-pxtorem": "^4.0.1",
+		"vue-template-compiler": "^2.6.10"
+	},
+	"eslintConfig": {
+		"root": true,
+		"env": {
+			"node": true
+		},
+		"extends": [
+			"plugin:vue/essential",
+			"eslint:recommended"
+		],
+		"rules": {},
+		"parserOptions": {
+			"parser": "babel-eslint"
+		}
+	},
+	"postcss": {
+		"plugins": {
+			"autoprefixer": {}
+		}
+	},
+	"browserslist": [
+		"Android >= 4.0",
+		"iOS >= 7"
+	]
+}
