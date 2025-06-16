@@ -65,7 +65,9 @@
         <van-field v-model="formData.password" label="备注" placeholder="请输入备注" :label-width="240" input-align="right" />
       </van-cell-group>
     </div>
-    <van-button class="button-info" round type="info" @click="addClick">保存</van-button>
+    <div class="default-button-container">
+      <van-button class="button-info" round type="info" @click="addClick">保存</van-button>
+    </div>
   </div>
 </template>
 <script>
@@ -108,7 +110,7 @@ export default {
 .save-materials {
   display: flex;
   flex-direction: column;
-  padding-bottom: 40px;
+  padding-bottom: 50px;
 
   .save-materials-contract {
     margin-top: 10px;
@@ -135,12 +137,7 @@ export default {
   }
 
   .button-info {
-    position: fixed;
-    bottom: 10px;
-    min-width: 200px;
-    height: 30px;
-    left: 50%;
-    transform: translateX(-50%);
+    min-width: 150px;
   }
 
   .van-cell {

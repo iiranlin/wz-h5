@@ -6,7 +6,7 @@
                     v-model="formData.keywords" 
                     placeholder="输入关键字搜索" 
                     shape="round" 
-                    background="#8ebdec"
+                    background="#eef6ff"
                     @search="handeSearch()">
                 </van-search>
                 <van-button class="cancel-button" size="small" round type="default" @click="handleCancelClick()">取消</van-button>
@@ -168,7 +168,7 @@ export default {
 <style lang="less" scoped>
 .list-search-container {
     margin-bottom: 10px;
-    background: #8ebdec;
+    background: #eef6ff;
     display: flex;
     align-items: center;
 
@@ -180,5 +180,15 @@ export default {
 }
 ::v-deep .van-search {
     width: 80%;
+    
+  .van-search__content {
+    border-radius: 50px;
+    background: #fff;
+  }
+
+  .van-cell {
+    border-radius: 50px;
+    background: #fff;
+  }
 }
 </style>

@@ -48,7 +48,9 @@
         </van-checkbox>
       </van-checkbox-group>
     </van-list>
-    <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
+    <div class="default-button-container">
+      <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
+    </div>
     <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
@@ -200,12 +202,7 @@ export default {
   }
 
   .button-info{
-    position: fixed;
-    bottom: 10px;
-    min-width: 200px;
-    height: 30px;
-    left: 50%;
-    transform: translateX(-50%);
+    min-width: 150px;
   }
 }
 

@@ -41,6 +41,12 @@ export const routes = [
 				meta: {title: '计划管理'},
 				component: () => import('@/view/PlannedManagement/PlannedManagementList.vue')
 			},
+			{
+				path: 'InOutManagementList',
+				name: 'InOutManagementList',
+				meta: {title: '出入库管理'},
+				component: () => import('@/view/InOutManagement/InOutManagementList.vue')
+			},
 		]
 	},
 	{
@@ -171,6 +177,19 @@ export const routes = [
       },
 		]
 	},
+   {
+		path: '/InOutManagementChild',
+    component: () => import('@/view/InOutManagement/InOutManagementChild/index.vue'),
+		hidden: true,
+		children: [
+      {
+        path: 'SubmitStore',
+        name: 'SubmitStore',
+        meta: {title: '提交入库'},
+        component: () => import('@/view/InOutManagement/InOutManagementChild/SubmitStore.vue')
+      },
+    ]
+  }
 ];
 
 // add route path

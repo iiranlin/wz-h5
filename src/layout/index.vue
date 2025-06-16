@@ -29,8 +29,8 @@ export default {
 			constructionUnit:[
 				{
 					title: '我的待办',
-					activeIcon: '/static/icon_home_current.png',
-					normalIcon: '/static/icon_home.png',
+					activeIcon: '/static/icon_mine_current.png',
+					normalIcon: '/static/icon_mine.png',
 					link: '/MyToDoList'
 				},
 				{
@@ -47,9 +47,9 @@ export default {
 				},
 				{
 					title: '出入库管理',
-					activeIcon: '/static/icon_home_current.png',
-					normalIcon: '/static/icon_home.png',
-					link: '/MyManager'
+					activeIcon: '/static/icon_message_current.png',
+					normalIcon: '/static/icon_message.png',
+					link: '/InOutManagementList'
 				},
 			],
 			//监理单位导航菜单
