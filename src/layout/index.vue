@@ -43,7 +43,7 @@ export default {
 					title: '验收管理',
 					activeIcon: '/static/icon_home_current.png',
 					normalIcon: '/static/icon_home.png',
-					link: '/MyManager'
+					link: '/AcceptanceReturn'
 				},
 				{
 					title: '出入库管理',
@@ -97,7 +97,7 @@ export default {
 		}
 	},
 	created() {
-		
+
 	},
 	methods: {
 		//判断角色菜单
