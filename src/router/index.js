@@ -41,6 +41,12 @@ export const routes = [
 				meta: {title: '计划管理'},
 				component: () => import('@/view/PlannedManagement/PlannedManagementList.vue')
 			},
+			{
+				path: 'AcceptanceReturn',
+				name: 'AcceptanceReturn',
+				meta: {title: '验收管理'},
+				component: () => import('@/view/AcceptanceReturn/AcceptanceReturn.vue')
+			},
 		]
 	},
 	{
@@ -171,6 +177,19 @@ export const routes = [
       },
 		]
 	},
+	{
+		path: '/AcceptanceReturnChild',
+		component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/index.vue'),
+		hidden: true,
+		children: [
+			{
+				path: 'DoAccept',
+				name: 'DoAccept',
+				meta: {title: '初验收货'},
+				component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/DoAccept.vue')
+			},
+		]
+	}
 ];
 
 // add route path
@@ -178,7 +197,7 @@ routes.forEach(route => {
 	route.path = route.path || '/' + (route.title || '');
 });
 
-const router = new Router({ 
+const router = new Router({
 	mode: 'history',
 	routes,
 	// fallback: true,
