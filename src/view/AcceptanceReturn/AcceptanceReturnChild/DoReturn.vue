@@ -14,15 +14,13 @@
           <span>需求组织：</span>
           <span>需求组织名称</span>
         </li>
-        <li class="li-item-both">
-          <div class="li-item-left">
-            <span>退货环节：</span>
-            <span>收货不通过</span>
-          </div>
-          <div class="li-item-right">
-            <span>退货时间：</span>
-            <span>2025-04-20 15:35</span>
-          </div>
+        <li>
+          <span>退货环节：</span>
+          <span>收货不通过</span>
+        </li>
+        <li>
+          <span>退货时间：</span>
+          <span>2025-04-20 15:35</span>
         </li>
         <li>
           <span>操作人：</span>
@@ -47,7 +45,7 @@
             <span>计量单位：</span>
             <span>套</span>
           </div>
-          <div class="li-item-right">
+          <div class="li-item-right li-item-overlength">
             <span>包装形式：</span>
             <span>捆包</span>
           </div>
@@ -57,20 +55,18 @@
             <span>需求数量：</span>
             <span>10</span>
           </div>
-          <div class="li-item-right">
+          <div class="li-item-right li-item-overlength">
             <span>本次发货数量：</span>
             <span>6</span>
           </div>
         </li>
-        <li class="li-item-both">
-          <div class="li-item-left">
-            <span>生产日期：</span>
-            <span>2025-07-15</span>
-          </div>
-          <div class="li-item-right">
-            <span>有效期截止日期：</span>
-            <span>2030-07-15</span>
-          </div>
+        <li>
+          <span>生产日期：</span>
+          <span>2025-07-15</span>
+        </li>
+        <li class="li-item-overlength">
+          <span>有效期截止日期：</span>
+          <span>2030-07-15</span>
         </li>
         <li>
           <span>收货地址：</span>
@@ -80,7 +76,7 @@
           <span>供应时间：</span>
           <span>2025-6-12</span>
         </li>
-        <li>
+        <li class="li-item-overlength">
           <span>收货时间及联系方式：</span>
           <span>张晓明 17688928166</span>
         </li>
@@ -94,26 +90,24 @@
             <span>投资比例：</span>
             <span>40%; 60%</span>
           </div>
-          <div class="li-item-right">
+          <div class="li-item-right li-item-overlength">
             <span>退货数量：</span>
             <span>2</span>
           </div>
         </li>
 
-        <li class="li-item-both">
-          <div class="li-item-left">
-            <span>合格证附件：</span>
-            <span>合格证附件/检测合格.pdf</span>
-          </div>
-          <div class="li-item-right">
-            <span>厂检报告附件：</span>
-            <span>合格证附件/厂检合格.pdf</span>
-          </div>
+        <li class="li-item-overlength">
+          <span>合格证附件：</span>
+          <span style="color: #4F8EFF">合格证附件/检测合格.pdf</span>
+        </li>
+        <li class="li-item-overlength">
+          <span>厂检报告附件：</span>
+          <span style="color: #4F8EFF">合格证附件/厂检合格.pdf</span>
         </li>
 
         <li>
           <span>退货附件：</span>
-          <span>不合格批次.pdf</span>
+          <span style="color: #4F8EFF">不合格批次.pdf</span>
         </li>
 
         <li>
@@ -128,12 +122,12 @@
       <ul class="detail-ul">
         <li>
           <span>自检单：</span>
-          <span>自检单附件.pdf</span>
+          <span style="color: #4F8EFF">自检单附件.pdf</span>
         </li>
 
         <li>
           <span>其他资料：</span>
-          <span>其他资料附件.pdf</span>
+          <span style="color: #4F8EFF">其他资料附件.pdf</span>
         </li>
       </ul>
     </div>
