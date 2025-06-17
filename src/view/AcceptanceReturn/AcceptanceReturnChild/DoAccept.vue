@@ -48,7 +48,7 @@
             <span>计量单位：</span>
             <span>套</span>
           </div>
-          <div class="li-item-right">
+          <div class="li-item-right li-item-overlength">
             <span>包装形式：</span>
             <span>捆包</span>
           </div>
@@ -58,20 +58,18 @@
             <span>需求数量：</span>
             <span>10</span>
           </div>
-          <div class="li-item-right">
+          <div class="li-item-right li-item-overlength">
             <span>本次发货数量：</span>
             <span>6</span>
           </div>
         </li>
-        <li class="li-item-both">
-          <div class="li-item-left">
-            <span>生产日期：</span>
-            <span>2025-07-15</span>
-          </div>
-          <div class="li-item-right">
-            <span>有效期截止日期：</span>
-            <span>2030-07-15</span>
-          </div>
+        <li>
+          <span>生产日期：</span>
+          <span>2025-07-15</span>
+        </li>
+        <li class="li-item-overlength">
+          <span>有效期截止日期：</span>
+          <span>2030-07-15</span>
         </li>
         <li>
           <span>收货地址：</span>
@@ -81,7 +79,7 @@
           <span>供应时间：</span>
           <span>2025-6-12</span>
         </li>
-        <li>
+        <li class="li-item-overlength">
           <span>收货时间及联系方式：</span>
           <span>张晓明 17688928166</span>
         </li>
@@ -93,34 +91,56 @@
           <span>投资比例：</span>
           <span>40%; 60%</span>
         </li>
-
-        <van-cell-group>
-          <van-field v-model="formData.num1" label="收货数量" placeholder="请输入数量" required clearable :label-width="240"
-                     input-align="right"/>
-          <van-field v-model="formData.num2" label="退货数量" placeholder="请输入数量" required clearable :label-width="240"
-                     input-align="right"/>
-        </van-cell-group>
-
-        <li class="li-item-both">
-          <div class="li-item-left">
-            <span>合格证附件：</span>
-            <span>合格证附件/检测合格.pdf</span>
-          </div>
-          <div class="li-item-right">
-            <span>厂检报告附件：</span>
-            <span>合格证附件/厂检合格.pdf</span>
-          </div>
+        <template v-if="!isView">
+          <van-cell-group>
+            <van-field v-model="formData.num1" label="收货数量" placeholder="请输入数量" required clearable :label-width="240"
+                       input-align="right"/>
+            <van-field v-model="formData.num2" label="退货数量" placeholder="请输入数量" required clearable :label-width="240"
+                       input-align="right"/>
+          </van-cell-group>
+        </template>
+        <template v-else>
+          <li>
+            <span>收货数量：</span>
+            <span>2</span>
+          </li>
+          <li>
+            <span>退货数量：</span>
+            <span>4</span>
+          </li>
+        </template>
+        <li class="li-item-overlength">
+          <span>合格证附件：</span>
+          <span style="color: #4F8EFF">合格证附件/检测合格.pdf</span>
         </li>
-
-        <li>
-          <span>退货附件：</span>
-          <van-button class="upload-btn" type="info" round>请上传</van-button>
+        <li class="li-item-overlength">
+          <span>厂检报告附件：</span>
+          <span style="color: #4F8EFF">合格证附件/厂检合格.pdf</span>
         </li>
+        <template v-if="!isView">
+          <van-cell-group>
+            <van-field required name="uploader" label="退货附件：">
+              <template #input>
+                <van-button class="upload-btn" type="info" round size="mini">请上传</van-button>
+                <van-uploader :show-upload="false"/>
+              </template>
+            </van-field>
 
-        <van-cell-group>
-          <van-field v-model="formData.remark" label="备注" placeholder="请输入备注" required clearable :label-width="240"
-                     input-align="right"/>
-        </van-cell-group>
+            <van-field v-model="formData.remark" label="备注" placeholder="请输入备注" required clearable :label-width="240"
+                       input-align="right"/>
+          </van-cell-group>
+        </template>
+        <template v-else>
+          <li>
+            <span>退货附件：</span>
+            <span>不合格情况说明.pdf</span>
+          </li>
+          <li>
+            <span>备注：</span>
+            <span>本次到货6,其中2个合格,4个不合格进行退货</span>
+          </li>
+        </template>
+
       </ul>
 
 
@@ -129,14 +149,45 @@
     <div class="detail-title">初验信息</div>
     <div class="box-container">
       <ul class="detail-ul">
-        <van-cell-group>
-          <van-field v-model="formData.num1" label="收货时间" placeholder="请输入数量" required clearable :label-width="240"
-                     input-align="right"/>
-          <van-field v-model="formData.num2" label="自检单" placeholder="请输入数量" required clearable :label-width="240"
-                     input-align="right"/>
-          <van-field v-model="formData.num2" label="其他资料" placeholder="请输入数量" required clearable :label-width="240"
-                     input-align="right"/>
-        </van-cell-group>
+        <template v-if="!isView">
+          <van-cell-group>
+            <van-field
+              readonly
+              clickable
+              required
+              name="calendar"
+              :value="formData.num1"
+              label="收货时间："
+              placeholder="点击选择日期"
+              @click="showDatePicker = true"
+            />
+            <van-calendar v-model="showDatePicker" @confirm="onDateConfirm"/>
+
+            <van-field required name="uploader" label="自检单：">
+              <template #input>
+                <van-button class="upload-btn" type="info" round size="mini">请上传</van-button>
+                <van-uploader :show-upload="false"/>
+              </template>
+            </van-field>
+
+            <van-field name="uploader" label="其他资料：">
+              <template #input>
+                <van-button class="upload-btn" type="info" round size="mini">请上传</van-button>
+                <van-uploader :show-upload="false"/>
+              </template>
+            </van-field>
+          </van-cell-group>
+        </template>
+        <template v-else>
+          <li>
+            <span>自检单：</span>
+            <span>自检单附件.pdf</span>
+          </li>
+          <li>
+            <span>其他资料：</span>
+            <span>其他资料附件.pdf</span>
+          </li>
+        </template>
       </ul>
     </div>
 
@@ -172,14 +223,8 @@ export default {
   mounted() {
   },
   methods: {
-    dateClick() {
-      this.showDatePicker = true
-    },
     onDateConfirm() {
       this.formData.currentDate = parseTime(this.minDate, '{y}-{m}-{d}')
-      this.showDatePicker = false
-    },
-    hideDatePicker() {
       this.showDatePicker = false
     },
     addClick() {

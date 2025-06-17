@@ -11,54 +11,47 @@
       </van-search>
     </div>
     <div class="tabs">
-      <van-tabs
-        v-model="menuActiveIndex"
-        color="#0571ff"
-        background="#eef6ff"
-        title-active-color="#0571ff"
-        title-inactive-color="#2e2e2e">
-        <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-          <van-list
-            v-model="allLoading"
-            :finished="allFinished"
-            finished-text="没有更多了..."
-            @load="getAllList">
+      <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
+        <van-list
+          v-model="allLoading"
+          :finished="allFinished"
+          finished-text="没有更多了..."
+          @load="getAllList">
 
-            <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleAllItemClick(item)">
-              <ul class="list-ul">
-                <li>
-                  <span class="font-weight">退货单号：</span>
-                  <span class="font-weight">XQ2025050007</span>
-                </li>
-                <li>
-                  <span>发货单号：</span>
-                  <span>分部用料需求</span>
-                </li>
-                <li>
-                  <span>供应需求：</span>
-                  <span>工程部</span>
-                </li>
-                <li>
-                  <span>需求组织：</span>
-                  <span>需求计划名称</span>
-                </li>
-                <li>
-                  <span>供应商：</span>
-                  <span>需求计划名称</span>
-                </li>
-                <li>
-                  <span>发货时间：</span>
-                  <span>需求计划名称</span>
-                </li>
-                <li>
-                  <span>操作人：</span>
-                  <span>张晓明</span>
-                </li>
-              </ul>
-            </div>
-          </van-list>
-        </van-pull-refresh>
-      </van-tabs>
+          <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleAllItemClick(item)">
+            <ul class="list-ul">
+              <li>
+                <span class="font-weight">退货单号：</span>
+                <span class="font-weight">XQ2025050007</span>
+              </li>
+              <li>
+                <span>发货单号：</span>
+                <span>分部用料需求</span>
+              </li>
+              <li>
+                <span>供应需求：</span>
+                <span>工程部</span>
+              </li>
+              <li>
+                <span>需求组织：</span>
+                <span>需求计划名称</span>
+              </li>
+              <li>
+                <span>供应商：</span>
+                <span>需求计划名称</span>
+              </li>
+              <li>
+                <span>发货时间：</span>
+                <span>需求计划名称</span>
+              </li>
+              <li>
+                <span>操作人：</span>
+                <span>张晓明</span>
+              </li>
+            </ul>
+          </div>
+        </van-list>
+      </van-pull-refresh>
     </div>
   </div>
 </template>

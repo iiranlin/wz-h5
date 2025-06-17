@@ -17,7 +17,7 @@
         background="#eef6ff"
         title-active-color="#0571ff"
         title-inactive-color="#2e2e2e">
-        <van-tab title="全部">
+        <van-tab v-for="(item,index) in tabList" :key="index" :title="item.title">
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list
               v-model="allLoading"
@@ -25,212 +25,42 @@
               finished-text="没有更多了..."
               @load="getAllList">
 
-              <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleAllItemClick(item)">
-                <ul class="list-ul">
+              <div v-for="(item,index) in dataList" :key="index" class="box-container">
+                <ul class="list-ul" @click="handleAllItemClick(item)">
                   <li>
                     <span class="font-weight">收货单号：</span>
-                    <span class="font-weight">XQ2025050007</span>
+                    <span class="font-weight">{{ item.receiptNumber }}</span>
                   </li>
                   <li>
                     <span>发货单号：</span>
-                    <span>分部用料需求</span>
+                    <span>{{ item.deliveryNumber }}</span>
                   </li>
                   <li>
                     <span>供应需求：</span>
-                    <span>工程部</span>
+                    <span>{{ item.supplyDemand }}</span>
                   </li>
                   <li>
                     <span>物流单号：</span>
-                    <span>物流单号名称</span>
+                    <span>{{ item.logisticsNumber }}</span>
                   </li>
                   <li>
                     <span>需求组织：</span>
-                    <span>需求计划名称</span>
+                    <span>{{ item.requiredOrganization }}</span>
                   </li>
                   <li>
                     <span>供应商：</span>
-                    <span>需求计划名称</span>
+                    <span>{{ item.supplier }}</span>
                   </li>
                   <li>
                     <span>发货时间：</span>
-                    <span>需求计划名称</span>
+                    <span>{{ item.shippingTime }}</span>
                   </li>
                   <li class="li-status">
-                    <van-tag type="primary" round size="medium">未收货</van-tag>
+                    <van-tag :type="item.status | statusStyleFilter" round size="medium">{{ item.status | statusFilter(tabList) }}</van-tag>
                   </li>
                 </ul>
-                <div class="list-ul-button">
-                  <van-button class="button-info" round type="info" @click="handleExamineClick()">初验收货</van-button>
-                </div>
-              </div>
-            </van-list>
-          </van-pull-refresh>
-        </van-tab>
-        <van-tab title="未收货">
-          <van-pull-refresh v-model="waitRefreshLoading" @refresh="waitRefresh" success-text="刷新成功">
-            <van-list
-              v-model="waitLoading"
-              :finished="waitFinished"
-              finished-text="没有更多了..."
-              @load="getWaitList">
-
-              <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleWaitItemClick(item)">
-                <ul class="list-ul">
-                  <li>
-                    <span class="font-weight">收货单号：</span>
-                    <span class="font-weight">XQ2025050007</span>
-                  </li>
-                  <li>
-                    <span>发货单号：</span>
-                    <span>分部用料需求</span>
-                  </li>
-                  <li>
-                    <span>供应需求：</span>
-                    <span>工程部</span>
-                  </li>
-                  <li>
-                    <span>需求项目：</span>
-                    <span>物流单号名称</span>
-                  </li>
-                  <li>
-                    <span>需求名称：</span>
-                    <span>需求计划名称</span>
-                  </li>
-                </ul>
-                <div class="list-ul-button">
-                  <van-button class="button-info" round type="info" @click="handleExamineClick()">初验收货</van-button>
-                </div>
-              </div>
-            </van-list>
-          </van-pull-refresh>
-        </van-tab>
-        <van-tab title="已收货">
-          <van-pull-refresh v-model="waitHandleRefreshLoading" @refresh="waitHandleRefresh" success-text="刷新成功">
-            <van-list
-              v-model="waitHandleLoading"
-              :finished="waitHandleFinished"
-              finished-text="没有更多了..."
-              @load="getWaitHandleList">
-
-              <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleWaitHandleItemClick(item)">
-                <ul class="list-ul">
-                  <li>
-                    <span class="font-weight">收货单号：</span>
-                    <span class="font-weight">XQ2025050007</span>
-                  </li>
-                  <li>
-                    <span>发货单号：</span>
-                    <span>分部用料需求</span>
-                  </li>
-                  <li>
-                    <span>需求项目：</span>
-                    <span>物流单号名称</span>
-                  </li>
-                  <li>
-                    <span>需求名称：</span>
-                    <span>需求计划名称</span>
-                  </li>
-                  <li>
-                    <span>审核时间：</span>
-                    <span>2025-03-20 15:35</span>
-                  </li>
-                  <li>
-                    <span>审核意见：</span>
-                    <span>审核意见审核意见审核意见</span>
-                  </li>
-                </ul>
-                <div class="list-ul-button">
-                  <van-button class="button-info" plain round type="info" @click="handleProcessClick()">查看流程</van-button>
-                </div>
-              </div>
-            </van-list>
-          </van-pull-refresh>
-        </van-tab>
-        <van-tab title="部分退货">
-          <van-pull-refresh v-model="waitRefreshLoading" @refresh="waitRefresh" success-text="刷新成功">
-            <van-list
-              v-model="waitLoading"
-              :finished="waitFinished"
-              finished-text="没有更多了..."
-              @load="getHistoryList">
-
-              <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleHistoryItemClick(item)">
-                <ul class="list-ul">
-                  <li>
-                    <span class="font-weight">收货单号：</span>
-                    <span class="font-weight">XQ2025050007</span>
-                  </li>
-                  <li>
-                    <span>发货单号：</span>
-                    <span>分部用料需求</span>
-                  </li>
-                  <li>
-                    <span>需求项目：</span>
-                    <span>物流单号名称</span>
-                  </li>
-                  <li>
-                    <span>需求名称：</span>
-                    <span>需求计划名称</span>
-                  </li>
-                  <li>
-                    <span>审核时间：</span>
-                    <span>2025-03-20 15:35</span>
-                  </li>
-                  <li>
-                    <span>审核意见：</span>
-                    <span>审核意见审核意见审核意见</span>
-                  </li>
-                  <li class="li-status">
-                    <van-tag type="primary" round size="medium">同意</van-tag>
-                  </li>
-                </ul>
-                <div class="list-ul-button">
-                  <van-button class="button-info" plain round type="info" @click="handleProcessClick()">查看流程</van-button>
-                </div>
-              </div>
-            </van-list>
-          </van-pull-refresh>
-        </van-tab>
-        <van-tab title="已退货">
-          <van-pull-refresh v-model="waitRefreshLoading" @refresh="waitRefresh" success-text="刷新成功">
-            <van-list
-              v-model="waitLoading"
-              :finished="waitFinished"
-              finished-text="没有更多了..."
-              @load="getHistoryList">
-
-              <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleHistoryItemClick(item)">
-                <ul class="list-ul">
-                  <li>
-                    <span class="font-weight">收货单号：</span>
-                    <span class="font-weight">XQ2025050007</span>
-                  </li>
-                  <li>
-                    <span>发货单号：</span>
-                    <span>分部用料需求</span>
-                  </li>
-                  <li>
-                    <span>需求项目：</span>
-                    <span>物流单号名称</span>
-                  </li>
-                  <li>
-                    <span>需求名称：</span>
-                    <span>需求计划名称</span>
-                  </li>
-                  <li>
-                    <span>审核时间：</span>
-                    <span>2025-03-20 15:35</span>
-                  </li>
-                  <li>
-                    <span>审核意见：</span>
-                    <span>审核意见审核意见审核意见</span>
-                  </li>
-                  <li class="li-status">
-                    <van-tag type="primary" round size="medium">同意</van-tag>
-                  </li>
-                </ul>
-                <div class="list-ul-button">
-                  <van-button class="button-info" plain round type="info" @click="handleProcessClick()">查看流程</van-button>
+                <div class="list-ul-button" v-if="item.status === '1'">
+                  <van-button class="button-info" round type="info" @click="handleDoAccept()">初验收货</van-button>
                 </div>
               </div>
             </van-list>
@@ -254,8 +84,217 @@ export default {
       formData: {
         keywords: ''
       },
-      //全部
-      allOrderList: [],
+      tabList: [
+        {title: '全部', status: '0'},
+        {title: '未收货', status: '1'},
+        {title: '已收货', status: '2'},
+        {title: '部分退货', status: '3'},
+        {title: '已退货', status: '4'}
+      ],
+      dataList: [
+        {
+          receiptNumber: 'XQ2025050007',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称1',
+          requiredOrganization: '需求计划名称1',
+          supplier: '供应商1',
+          shippingTime: '2025-03-10 15:35',
+          status: '1'
+        },
+        {
+          receiptNumber: 'XQ2025050008',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称2',
+          requiredOrganization: '需求计划名称2',
+          supplier: '供应商2',
+          shippingTime: '2025-03-11 15:35',
+          status: '2'
+        },
+        {
+          receiptNumber: 'XQ2025050009',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称3',
+          requiredOrganization: '需求计划名称3',
+          supplier: '供应商3',
+          shippingTime: '2025-03-12 15:35',
+          status: '3'
+        },
+        {
+          receiptNumber: 'XQ2025050010',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称4',
+          requiredOrganization: '需求计划名称4',
+          supplier: '供应商4',
+          shippingTime: '2025-03-13 15:35',
+          status: '4'
+        },
+        {
+          receiptNumber: 'XQ2025050011',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称5',
+          requiredOrganization: '需求计划名称5',
+          supplier: '供应商5',
+          shippingTime: '2025-03-14 15:35',
+          status: '1'
+        },
+        {
+          receiptNumber: 'XQ2025050012',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称6',
+          requiredOrganization: '需求计划名称6',
+          supplier: '供应商6',
+          shippingTime: '2025-03-15 15:35',
+          status: '2'
+        },
+        {
+          receiptNumber: 'XQ2025050013',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称7',
+          requiredOrganization: '需求计划名称7',
+          supplier: '供应商7',
+          shippingTime: '2025-03-16 15:35',
+          status: '3'
+        },
+        {
+          receiptNumber: 'XQ2025050014',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称8',
+          requiredOrganization: '需求计划名称8',
+          supplier: '供应商8',
+          shippingTime: '2025-03-17 15:35',
+          status: '4'
+        },
+        {
+          receiptNumber: 'XQ2025050015',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称9',
+          requiredOrganization: '需求计划名称9',
+          supplier: '供应商9',
+          shippingTime: '2025-03-18 15:35',
+          status: '1'
+        },
+        {
+          receiptNumber: 'XQ2025050016',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称10',
+          requiredOrganization: '需求计划名称10',
+          supplier: '供应商10',
+          shippingTime: '2025-03-19 15:35',
+          status: '2'
+        }
+      ],
+      allList: [
+        {
+          receiptNumber: 'XQ2025050007',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称1',
+          requiredOrganization: '需求计划名称1',
+          supplier: '供应商1',
+          shippingTime: '2025-03-10 15:35',
+          status: '1'
+        },
+        {
+          receiptNumber: 'XQ2025050008',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称2',
+          requiredOrganization: '需求计划名称2',
+          supplier: '供应商2',
+          shippingTime: '2025-03-11 15:35',
+          status: '2'
+        },
+        {
+          receiptNumber: 'XQ2025050009',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称3',
+          requiredOrganization: '需求计划名称3',
+          supplier: '供应商3',
+          shippingTime: '2025-03-12 15:35',
+          status: '3'
+        },
+        {
+          receiptNumber: 'XQ2025050010',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称4',
+          requiredOrganization: '需求计划名称4',
+          supplier: '供应商4',
+          shippingTime: '2025-03-13 15:35',
+          status: '4'
+        },
+        {
+          receiptNumber: 'XQ2025050011',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称5',
+          requiredOrganization: '需求计划名称5',
+          supplier: '供应商5',
+          shippingTime: '2025-03-14 15:35',
+          status: '1'
+        },
+        {
+          receiptNumber: 'XQ2025050012',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称6',
+          requiredOrganization: '需求计划名称6',
+          supplier: '供应商6',
+          shippingTime: '2025-03-15 15:35',
+          status: '2'
+        },
+        {
+          receiptNumber: 'XQ2025050013',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称7',
+          requiredOrganization: '需求计划名称7',
+          supplier: '供应商7',
+          shippingTime: '2025-03-16 15:35',
+          status: '3'
+        },
+        {
+          receiptNumber: 'XQ2025050014',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称8',
+          requiredOrganization: '需求计划名称8',
+          supplier: '供应商8',
+          shippingTime: '2025-03-17 15:35',
+          status: '4'
+        },
+        {
+          receiptNumber: 'XQ2025050015',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称9',
+          requiredOrganization: '需求计划名称9',
+          supplier: '供应商9',
+          shippingTime: '2025-03-18 15:35',
+          status: '1'
+        },
+        {
+          receiptNumber: 'XQ2025050016',
+          deliveryNumber: '分部用料需求',
+          supplyDemand: '工程部',
+          logisticsNumber: '物流单号名称10',
+          requiredOrganization: '需求计划名称10',
+          supplier: '供应商10',
+          shippingTime: '2025-03-19 15:35',
+          status: '2'
+        }
+      ],
 
       allRefreshLoading: false,
       allLoading: false,
@@ -264,45 +303,30 @@ export default {
       allListQuery: {
         pageNum: 1,
         pageSize: 10
-      },
-      //待审批
-      waitOrderList: [],
-
-      waitRefreshLoading: false,
-      waitLoading: false,
-      waitFinished: false,
-
-      waitListQuery: {
-        pageNum: 1,
-        pageSize: 10
-      },
-      //待处理
-      waitHandleList: [],
-
-      waitHandleRefreshLoading: false,
-      waitHandleLoading: false,
-      waitHandleFinished: false,
-
-      waitHandleListQuery: {
-        pageNum: 1,
-        pageSize: 10
-      },
-      //已审批
-      historyOrderList: [],
-
-      historyRefreshLoading: false,
-      historyLoading: false,
-      historyFinished: false,
-
-      historyListQuery: {
-        pageNum: 1,
-        pageSize: 10
-      },
-
-      //订单状态字典
-      orderStatusOptions: [],
-      //优先保障字典
-      guaranteeOptions: []
+      }
+    }
+  },
+  filters: {
+    statusFilter(status, tabList) {
+      return tabList.find(item => item.status === status).title
+    },
+    statusStyleFilter(status) {
+      const statusMap = [
+        {status: '1', type: 'primary'},
+        {status: '2', type: 'success'},
+        {status: '3', type: 'danger'},
+        {status: '4', type: 'default'}
+      ]
+      return statusMap.find(item => item.status === status).type
+    }
+  },
+  watch: {
+    menuActiveIndex(val) {
+      if (val != '0') {
+        this.dataList = this.allList.filter(item => item.status == val)
+      } else {
+        this.dataList = this.allList
+      }
     }
   },
   created() {
@@ -316,134 +340,22 @@ export default {
     this.$store.commit('removeThisPage', 'MyToDoDetail')
   },
   methods: {
-    //获取订单状态字典
-    getOrderStatusOptions() {
-
-    },
     //获取全部订单
     getAllList() {
       this.allRefreshLoading = false
       this.allFinished = true
     },
-    //获取待审批的订单
-    getWaitList() {
-      // let toast = this.$toast.loading({
-      //     duration: 0,
-      //     message: "正在加载...",
-      //     forbidClick: true
-      // });
-      // let  params = {
-      //     reviewCompleted: '0',
-      // }
-      // gcywVehicleRequestListPageForH5(Object.assign({}, params,this.waitListQuery)).then(({ data }) => {
-      //     if(this.waitRefreshLoading){
-      //         this.waitOrderList = [];
-      this.waitRefreshLoading = false
-      //     }
-      //     this.waitLoading = false;
-      //     this.waitOrderList = [...this.waitOrderList, ...data.list];
-
-      //     if (!data.hasNextPage) {
-      this.waitFinished = true
-      //         return;
-      //     }
-      //     this.waitListQuery.pageNum = this.waitListQuery.pageNum + 1;
-      // }).catch((error) => {
-      //     this.waitLoading = false;
-      //     this.waitFinished = true;
-      // }).finally(() => {
-      //     toast.clear();
-      // });
-    },
-    //获取待处理数据
-    getWaitHandleList() {
-
-    },
-    //获取已审批订单
-    getHistoryList() {
-      // let toast = this.$toast.loading({
-      //     duration: 0,
-      //     message: "正在加载...",
-      //     forbidClick: true
-      // });
-      // let  params = {
-      //     reviewCompleted: '1',
-      // }
-      // gcywVehicleRequestListPageForH5(Object.assign({}, params,this.historyListQuery)).then(({ data }) => {
-      //     if(this.historyRefreshLoading){
-      //         this.historyOrderList = [];
-      this.historyRefreshLoading = false
-      //     }
-      //     this.historyLoading = false;
-      //     this.historyOrderList = [...this.historyOrderList, ...data.list];
-
-      //     if (!data.hasNextPage) {
-      this.historyFinished = true
-      //         return;
-      //     }
-      //     this.historyListQuery.pageNum = this.historyListQuery.pageNum + 1;
-      // }).catch((error) => {
-      //     this.historyLoading = false;
-      //     this.historyFinished = true;
-      // }).finally(() => {
-      //     toast.clear();
-      // });
-    },
     //全部列表条目点击
     handleAllItemClick(item) {
-      this.$router.push({name: 'DoAccept'})
-    },
-    //待审核列表条目点击
-    handleWaitItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: {
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //待处理列表条目点击
-    handleWaitHandleItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: {
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //已审核列表条目点击
-    handleHistoryItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: {
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //查看流程点击
-    handleProcessClick() {
-      this.$router.push({
-        name: 'MyProcess',
-        params: {}
-      })
+      this.$router.push({name: 'DoAcceptDetail'})
     },
     //去审核点击
-    handleExamineClick() {
-      this.$router.push({
-        name: 'MyToDoDetail',
-        params: {
-          type: '0'
-        }
-      })
+    handleDoAccept() {
+      this.$router.push({name: 'DoAccept'})
     },
     //搜索点击
     handeSearchClick() {
-      this.$router.push({
-        name: 'MyToDoSearch',
-        params: {
-          type: '0'
-        }
-      })
+
     },
     //全部列表刷新
     allRefresh() {
@@ -452,30 +364,6 @@ export default {
       this.allFinished = false
       this.allListQuery.pageNum = 1
       this.getAllList()
-    },
-    //待审核列表刷新
-    waitRefresh() {
-      this.waitRefreshLoading = true
-      this.waitLoading = true
-      this.waitFinished = false
-      this.waitListQuery.pageNum = 1
-      this.getWaitList()
-    },
-    //待处理列表刷新
-    waitHandleRefresh() {
-      this.waitHandleRefreshLoading = true
-      this.waitHandleLoading = true
-      this.waitHandleFinished = false
-      this.waitHandleListQuery.pageNum = 1
-      this.getWaitHandleList()
-    },
-    //已审核列表刷新
-    historyRefresh() {
-      this.historyRefreshLoading = true
-      this.historyLoading = true
-      this.historyFinished = false
-      this.historyListQuery.pageNum = 1
-      this.getHistoryList()
     }
   }
 }
@@ -485,6 +373,7 @@ export default {
   height: calc(100vh - 167px);
   overflow-y: scroll;
 }
+
 .van-search {
   .van-search__content {
     border-radius: 50px;

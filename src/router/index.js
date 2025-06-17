@@ -207,6 +207,12 @@ export const routes = [
 				meta: {title: '初验收货'},
 				component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/DoAccept.vue')
 			},
+			{
+				path: 'DoAcceptDetail',
+				name: 'DoAcceptDetail',
+				meta: {title: '收货详情'},
+				component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/DoAcceptDetail.vue')
+			},
 		]
 	}
 ];
