@@ -121,8 +121,9 @@
           <van-cell-group>
             <van-field required name="uploader" label="退货附件：">
               <template #input>
-                <van-button class="upload-btn" type="info" round size="mini">请上传</van-button>
-                <van-uploader :show-upload="false"/>
+                <van-uploader>
+                  <van-button round type="info" class="outbound-uploader">上传</van-button>
+                </van-uploader>
               </template>
             </van-field>
 
@@ -165,15 +166,17 @@
 
             <van-field required name="uploader" label="自检单：">
               <template #input>
-                <van-button class="upload-btn" type="info" round size="mini">请上传</van-button>
-                <van-uploader :show-upload="false"/>
+                <van-uploader>
+                  <van-button round type="info" class="outbound-uploader">上传</van-button>
+                </van-uploader>
               </template>
             </van-field>
 
             <van-field name="uploader" label="其他资料：">
               <template #input>
-                <van-button class="upload-btn" type="info" round size="mini">请上传</van-button>
-                <van-uploader :show-upload="false"/>
+                <van-uploader>
+                  <van-button round type="info" class="outbound-uploader">上传</van-button>
+                </van-uploader>
               </template>
             </van-field>
           </van-cell-group>
@@ -190,8 +193,9 @@
         </template>
       </ul>
     </div>
-
-    <van-button class="button-info" round type="info" @click="addClick">确定收货</van-button>
+    <div class="default-button-container" v-if="!isView">
+      <van-button class="button-info" round type="info" @click="addClick">确定收货</van-button>
+    </div>
   </div>
 </template>
 <script>
@@ -220,8 +224,6 @@ export default {
 
     }
   },
-  mounted() {
-  },
   methods: {
     onDateConfirm() {
       this.formData.currentDate = parseTime(this.minDate, '{y}-{m}-{d}')
@@ -229,8 +231,14 @@ export default {
     },
     addClick() {
       this.$toast('保存成功')
-      this.$router.push({path: '/PlannedManagementList'})
+      this.$router.push({path: '/AcceptanceReturn'})
+    },
+    onClickBack() {
+      this.$router.push({path: '/AcceptanceReturn'})
     }
+  },
+  mounted() {
+    this.from = this.$route.query.from
   }
 }
 </script>
@@ -301,4 +309,19 @@ export default {
   width: 100px;
   height: 30px;
 }
+
+.flex-box {
+  position: relative;
+
+  .save-materials {
+    position: absolute;
+    top: 1.5rem;
+  }
+}
+
+.outbound-uploader {
+  min-width: 80px;
+  height: 25px;
+}
+
 </style>

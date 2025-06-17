@@ -296,7 +296,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-::v-deep .van-tabs__content {
+.tabs {
   height: calc(100vh - 167px);
   overflow-y: scroll;
 }

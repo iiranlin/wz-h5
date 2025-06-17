@@ -347,7 +347,7 @@ export default {
     },
     //全部列表条目点击
     handleAllItemClick(item) {
-      this.$router.push({name: 'DoAcceptDetail'})
+      this.$router.push({name: 'DoAcceptDetail', query: {from: 'AcceptanceReturn'}})
     },
     //去审核点击
     handleDoAccept() {
@@ -370,7 +370,7 @@ export default {
 </script>
 <style lang="less" scoped>
 ::v-deep .van-tabs__content {
-  height: calc(100vh - 167px);
+  height: calc(100vh - 205px);
   overflow-y: scroll;
 }
 

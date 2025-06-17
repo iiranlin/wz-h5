@@ -24,7 +24,7 @@ import Acceptance from '@/view/AcceptanceReturn/Acceptance.vue'
 import Return from '@/view/AcceptanceReturn/Return.vue'
 
 export default {
-  name: 'MyToDoList',
+  name: 'AcceptanceReturn',
   components: {Return, Acceptance},
   mixins: [keepPages],
 

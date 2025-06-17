@@ -131,7 +131,6 @@
         </li>
       </ul>
     </div>
-
   </div>
 </template>
 <script>
@@ -157,6 +156,9 @@ export default {
   mounted() {
   },
   methods: {
+    onClickBack() {
+      this.$router.go(-1)
+    },
     dateClick() {
       this.showDatePicker = true
     },
@@ -241,4 +243,5 @@ export default {
   width: 100px;
   height: 30px;
 }
+
 </style>
