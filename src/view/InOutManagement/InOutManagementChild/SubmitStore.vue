@@ -16,6 +16,16 @@
               <span>需求组织：</span>
               <span>施工单位名称</span>
             </li>
+            <li class="li-item-both" v-if="queryType === 'view'">
+              <div class="li-item-left">
+                <span>入库时间：</span>
+                <span>2025-06-03</span>
+              </div>
+              <div class="li-item-right">
+                <span>操作人：</span>
+                <span>name</span>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -54,7 +64,7 @@
               </div>
               <div class="li-item">
                 <span>有效截止日期：</span>
-                <span>2026-6-1</span>
+                <span class="li-span-red">2026-6-1</span>
               </div>
             </li>
             <li>
@@ -81,21 +91,33 @@
               <span>投资比例：</span>
               <span>投资比例</span>
             </li>
-            <li>
+            <li class="li-item-overlength">
               <span>合格证附件：</span>
-              <span>XXXXX.pdf</span>
+              <span @click="imgClick" class="li-span-click">XXXXX.pdf</span>
             </li>
             <li>
               <span>厂检附件：</span>
-              <span>XXXXX.pdf</span>
+              <span @click="imgClick" class="li-span-click">XXXXX.pdf</span>
             </li>
-            <van-form @submit="onSubmit" label-align="right" label-width="145px">
+            <van-form @submit="onSubmit" label-align="right" label-width="145px" v-if="queryType === 'submit'">
               <van-field v-model="formData.num" name="入库数量" label="入库数量" placeholder="请输入入库数量" input-align="right" />
               <van-field v-model="formData.name" name="退货数量" label="退货数量" placeholder="请输入退货数量" input-align="right" />
             </van-form>
+            <template v-else>
+              <li class="li-item-both">
+                <div class="li-item-left">
+                  <span>入库数量：</span>
+                  <span>10</span>
+                </div>
+                <div class="li-item-right">
+                  <span>退货数量：</span>
+                  <span>10</span>
+                </div>
+              </li>
+            </template>
             <li>
               <span>退货附件：</span>
-              <span>XXXXX.pdf</span>
+              <span @click="imgClick" class="li-span-click">XXXXX.pdf</span>
             </li>
             <li class="li-item-overlength">
               <span>备注：</span>
@@ -112,40 +134,51 @@
           <ul class="detail-ul">
             <li>
               <span>检测报告：</span>
-              <span>XXXXX.pdf</span>
+              <span @click="imgClick" class="li-span-click">XXXXX.pdf</span>
             </li>
             <li class="li-item-overlength">
               <span>质量证明文件：</span>
-              <span>XXXXX.pdf</span>
+              <span @click="imgClick" class="li-span-click">XXXXX.pdf</span>
             </li>
             <li>
               <span>报验结果：</span>
-              <span>XXXXX.pdf</span>
+              <span @click="imgClick" class="li-span-click">XXXXX.pdf</span>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="default-button-container">
+    <div class="default-button-container" v-if="queryType === 'submit'">
       <van-button class="button-info" round type="info" @click="onSubmit">提交入库审核</van-button>
     </div>
+    <van-popup v-model="showPopup" position="bottom">
+      <van-image-preview v-model="showImg" :images="images" :startPosition="startPosition" :loop="false" @close="showPopup = false"/>
+    </van-popup>
   </div>
 </template>
 <script>
+import dt from '@/assets/img/dt.png';
 export default {
   name: 'SubmitStore',
   components: {},
   data() {
     return {
+      queryType: '',
       activeKey: 0,
       menuActiveIndex: '',
       formData: {
         num: '',
         name: ''
-      }
+      },
+      
+      showPopup: false,
+      startPosition: 0,
+      showImg: false,
+      images: [dt]
     }
   },
   created() {
+    this.queryType = this.$route.query.type
   },
   activated() {
   },
@@ -156,6 +189,10 @@ export default {
     onSubmit () {
       this.$toast('提交入库审核成功');
       this.$router.push({ path: '/InOutManagementList' })
+    },
+    imgClick() {
+      this.showImg = true
+      this.showPopup = true
     }
   }
 }

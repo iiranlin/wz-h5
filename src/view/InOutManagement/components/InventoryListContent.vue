@@ -11,8 +11,7 @@
     </div>
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
-
-        <div v-for="(item, index) in 10" :key="index" class="box-container" @click="handleAllItemClick(item)">
+        <div v-for="(item, index) in 10" :key="index" class="box-container">
           <ul class="list-ul">
             <li>
               <span>当前库存：</span>
@@ -20,7 +19,7 @@
             </li>
             <li>
               <span>需求ID：</span>
-              <span style="color: #1989fa;">XQ20250500001</span>
+              <span class="li-span-click">XQ20250500001</span>
             </li>
             <li>
               <span>需求名称：</span>
@@ -55,8 +54,8 @@
             </li>
           </ul>
           <div class="list-ul-button">
-            <van-button class="button-info" round type="info">库存详情</van-button>
-            <van-button class="button-info" round type="info">出库</van-button>
+            <van-button class="button-info" plain round type="info" @click="detailsClick">库存详情</van-button>
+            <van-button class="button-info" round type="info" @click="outboundClick">出库</van-button>
           </div>
         </div>
       </van-list>
@@ -98,6 +97,12 @@ export default {
     getAllList() {
       this.allRefreshLoading = false
       this.allFinished = true
+    },
+    outboundClick () {
+      this.$router.push({ name: 'Outbound', query: {type: 'submit'} })
+    },
+    detailsClick () {
+      this.$router.push({ name: 'InventoryDetails' })
     }
   },
 };

@@ -8,7 +8,7 @@
     </div>
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
-        <div v-for="(item, index) in 10" :key="index" class="box-container">
+        <div v-for="(item, index) in 10" :key="index" class="box-container" @click="handleWaitItemClick(item)">
           <ul class="list-ul">
             <li class="li-item-both">
               <div class="li-item-left">
@@ -78,6 +78,9 @@ export default {
     getAllList() {
       this.allRefreshLoading = false
       this.allFinished = true
+    },
+    handleWaitItemClick (item) {
+      // this.$router.push({ name: 'SubmitStore', query: {type: 'view'} })
     }
   },
 };

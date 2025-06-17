@@ -4,6 +4,12 @@ import Router from 'vue-router';
 Vue.use(Router);
 import Layout from '@/layout'
 
+const typeName = {
+  submit: '提交',
+  update: '修改',
+  view: '详情'
+}
+
 export const routes = [
 	{
 		path: '/',
@@ -192,8 +198,34 @@ export const routes = [
         path: 'SubmitStore',
         name: 'SubmitStore',
         meta: {title: '提交入库'},
-        component: () => import('@/view/InOutManagement/InOutManagementChild/SubmitStore.vue')
+        component: () => import('@/view/InOutManagement/InOutManagementChild/SubmitStore.vue'),
+        beforeEnter(to, from, next) {
+            to.meta.title = to.query.type == 'view' ? `入库${typeName[to.query.type]}` : `${typeName[to.query.type]}入库`
+            next()
+        }
       },
+      {
+        path: 'Outbound',
+        name: 'Outbound',
+        meta: {title: '物资出库'},
+        component: () => import('@/view/InOutManagement/InOutManagementChild/Outbound.vue'),
+        beforeEnter(to, from, next) {
+            to.meta.title = to.query.type == 'view' ? `出库${typeName[to.query.type]}` : `物资出库`
+            next()
+        }
+      },
+      {
+        path: 'OutboundDetails',
+        name: 'OutboundDetails',
+        meta: {title: '出库详情'},
+        component: () => import('@/view/InOutManagement/InOutManagementChild/OutboundDetails.vue'),
+      },
+      {
+        path: 'InventoryDetails',
+        name: 'InventoryDetails',
+        meta: {title: '库存详情'},
+        component: () => import('@/view/InOutManagement/InOutManagementChild/InventoryDetails.vue'),
+      }
     ]
   },
 	{

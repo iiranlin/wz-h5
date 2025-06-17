@@ -13,14 +13,14 @@
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
 
         <div v-for="(item, index) in 10" :key="index" class="box-container">
-          <ul class="list-ul" @click="handleAllItemClick(item)">
+          <ul class="list-ul">
             <li v-if="[0, 3, 4, 5].includes(value1)">
               <span>入库单号：</span>
-              <span>RK2025050001</span>
+              <span @click="detailsClick('1')" class="li-span-click">RK2025050001</span>
             </li>
             <li>
               <span>收货单号：</span>
-              <span>SH2025050001</span>
+              <span @click="detailsClick('2')" class="li-span-click">SH2025050001</span>
             </li>
             <li>
               <span>需求名称：</span>
@@ -53,8 +53,8 @@
             </li>
           </ul>
           <div class="list-ul-button">
-            <van-button class="button-info" round type="info">查看流程</van-button>
-            <van-button class="button-info" round type="info">撤回</van-button>
+            <van-button class="button-info" plain round type="info" @click="handleProcessClick">查看流程</van-button>
+            <van-button class="button-info" plain round type="info" @click="withdrawClick">撤回</van-button>
             <van-button class="button-info" round type="info" @click="submitStore">入库</van-button>
           </div>
         </div>
@@ -102,11 +102,38 @@ export default {
       this.allRefreshLoading = false
       this.allFinished = true
     },
-    handleAllItemClick () {
-
-    },
     submitStore () {
-      this.$router.push({ name: 'SubmitStore' })
+      this.$router.push({ name: 'SubmitStore', query: {type: 'submit'} })
+    },
+    withdrawClick () {
+      this.$dialog.confirm({
+        title: '标题',
+        message: '确认要撤回吗？',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.$toast('撤回成功');
+      }).catch(() => {
+      });
+    },
+    //查看流程点击
+    handleProcessClick() {
+      this.$router.push({
+        name: "MyProcess",
+        params: {
+        },
+      });
+    },
+    detailsClick (key) {
+      const objKey = {
+        '1': () => {
+          this.$router.push({ name: 'SubmitStore', query: {type: 'view'} })
+        },
+        '2': () => {
+          // this.$router.push({ name: 'SubmitStore' })
+        }
+      }
+      objKey && objKey[key]()
     }
   },
 };
