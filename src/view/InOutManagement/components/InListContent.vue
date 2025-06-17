@@ -171,7 +171,7 @@ export default {
 
 
   ::v-deep .van-pull-refresh {
-    height: calc(100vh - 162px);
+    height: calc(100vh - 150px);
     overflow-y: scroll;
   }
 
