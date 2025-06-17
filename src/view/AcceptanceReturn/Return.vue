@@ -206,7 +206,7 @@ export default {
     },
     //全部列表条目点击
     handleAllItemClick(item) {
-
+      this.$router.push({name: 'DoReturn'})
     },
     //待审核列表条目点击
     handleWaitItemClick(item) {
