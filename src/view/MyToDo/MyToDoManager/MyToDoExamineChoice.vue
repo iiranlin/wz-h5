@@ -76,6 +76,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.detail-container {
+    padding-top: 10px;
+}
 .item-container {
     width: 100%;
     height: 58px;
