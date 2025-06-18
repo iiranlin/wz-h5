@@ -8,7 +8,7 @@
                 title-active-color="#0571ff"
                 @change="tabsChange"
                 title-inactive-color="#2e2e2e">
-                <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.title">
+                <van-tab  title="需求信息" name="需求信息">
                     <div class="tabs"></div>
                     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
                         <van-list 
@@ -34,6 +34,10 @@
                                     <li>
                                         <span style="width: 230px;">物流单号:</span>
                                         <span>其他</span>
+                                    </li>
+                                    <li>
+                                        <span style="width: 230px;">发货地址:</span>
+                                        <span>Xxxxxx</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">发货单附件:</span>
@@ -64,7 +68,98 @@
                         </van-list>
                     </van-pull-refresh>
                 </van-tab>
-         
+                 <van-tab  title="发货物明细" name="发货物明细">
+                    <div class="tabs"></div>
+                    <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
+                        <van-list 
+                            v-model="allLoading" 
+                            :finished="allFinished" 
+                            finished-text="没有更多了..." 
+                            @load="getAllList">
+
+                            <div class="box-container" v-for="(item,index) in 10" :key="index">
+                                <ul class="list-ul" >
+                                    <li>
+                                        <span class="font-weight" style="width: 300px;">需求组织名称:</span>
+                                        <span class="font-weight">施工单位名称</span>
+                                    </li>
+                                    <li>
+                                        <span style="width: 230px;">物资名称:</span>
+                                        <span class="text">计算机联锁设备</span>
+                                    </li>
+                                    <li>
+                                        <span style="width: 230px;">规格型号:</span>
+                                        <span>2x2取2s10组道岔</span>
+                                    </li>
+                                    <li class="li-item-both">
+                                        <div class="li-item-left">
+                                            <span style="width: 230px;">计量单位:</span>
+                                            <span>套</span>
+                                        </div>
+                                        <div class="li-item-right">
+                                            <span style="width: 230px;">发货数量:</span>
+                                            <span>5</span>
+                                        </div>
+                                        </li>
+                                     <li class="li-item-both">
+                                        <div class="li-item-left">
+                                            <span style="width: 300px;">本次计划数量:</span>
+                                            <span>5</span>
+                                        </div>
+                                        <div class="li-item-right">
+                                            <span style="width: 230px;">包装形式:</span>
+                                            <span>固装</span>
+                                        </div>
+                                        </li>
+                                     <li class="li-item-both">
+                                        <div class="li-item-left">
+                                            <span>生产日期:</span>
+                                            <span>2025/06/01</span>
+                                        </div>
+                                        <div class="li-item-right">
+                                            <span>截止日期:</span>
+                                            <span>2025/05/03</span>
+                                        </div>
+                                        </li>
+                                    <li>
+                                        <span style="width: 230px;">收货地址:</span>
+                                        <span>收货地址收货地址收货地址收货地址</span>
+                                    </li>
+                                    <li>
+                                        <span style="width: 230px;">供应时间:</span>
+                                        <span>2025年06月01日</span>
+                                    </li>
+                                     <li>
+                                        <span style="width: 400px;">收货人及联系方式:</span>
+                                        <span>张晓明 13865444566</span>
+                                    </li>
+                                     <li>
+                                        <span style="min-width: 230px;">投资方:</span>
+                                        <span>投资方名称投资方名称投资方名称投资方名称投资方名称投资方名称</span>
+                                    </li>
+                                    <li>
+                                        <span style="min-width: 230px;">投资比例:</span>
+                                        <span>40%;60%</span>
+                                    </li>
+                                    <li>
+                                        <span style="min-width: 230px;">备注:</span>
+                                        <span>备注内容备注内容备注内容备注内容备注内容</span>
+                                    </li>
+                                     <li class="li-item-both">
+                                        <div class="li-item-left">
+                                            <span style="min-width: 210px;"> 合格证附件:</span>
+                                            <span style="color:#1989fa;">合格证附件.pdf</span>
+                                        </div>
+                                        <div class="li-item-right">
+                                            <span>报告附件:</span>
+                                            <span style="color:#1989fa;">厂检报告.pdf</span>
+                                        </div>
+                                        </li>
+                                </ul>
+                            </div>
+                        </van-list>
+                    </van-pull-refresh>
+                </van-tab>
             </van-tabs>
         </div>
     </div>  

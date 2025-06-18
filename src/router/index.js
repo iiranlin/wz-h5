@@ -270,7 +270,7 @@ export const routes = [
 		path: '/sendGoods',
 		component: () => import('@/view/Demand/SendGoods/index.vue'),
 		hidden: true,
-		name: 'sendGoods',
+		name: 'SendGoods',
 		meta: {title: '发货'},
 	},
 	{

@@ -55,24 +55,41 @@
                                 <span>17703155555</span>
                             </li>
                         </ul>
-                        <van-steps direction="vertical" :active="0">
-                            <van-step>
-                                <h3>派送中</h3>
-                                <p>2016-07-12 12:40</p>
-                            </van-step>
-                            <van-step>
-                                <h3>运输中</h3>
-                                <p>2016-07-11 10:00</p>
-                            </van-step>
-                            <van-step>
-                                <h3>发货中</h3>
-                                <p>2016-07-10 09:30</p>
-                            </van-step>
-                             <van-step>
-                                <h3>确认下单</h3>
-                                <p>2016-07-10 09:30</p>
-                            </van-step>
-                        </van-steps>
+                         <div class="Logistics-Information-dt">
+        <img :src="dt" />
+      </div>
+                       <van-steps direction="vertical" active-color="#0086ff" :active="0">
+                        <van-step>
+                        <div>
+                            <p>派送中</p>
+                            <p class="Logistics-Information-text">货物派送中</p>
+                        </div>
+                        <div class="Logistics-Information-text">2016-07-12 12:40</div>
+                        </van-step>
+                        <van-step>
+                        <div>
+                            <p>运输中</p>
+                            <p class="Logistics-Information-text">货物运输中</p>
+                        </div>
+                        <div class="Logistics-Information-text">2016-07-12 12:40</div>
+                        <div></div>
+                        </van-step>
+                        <van-step>
+                        <div>
+                            <p>发货中</p>
+                            <p class="Logistics-Information-text">货物正在发货</p>
+                        </div>
+                        <div class="Logistics-Information-text">2016-07-12 12:40</div>
+                        <div></div>
+                        </van-step>
+                        <van-step>
+                        <div>
+                            <p>确认下单</p>
+                            <p class="Logistics-Information-text">订单确认中</p>
+                        </div>
+                        <div class="Logistics-Information-text">2016-07-12 12:40</div>
+                        </van-step>
+                    </van-steps>
                  
 
             </div>
@@ -85,7 +102,7 @@ import Vue from 'vue';
 import { Sidebar, SidebarItem } from 'vant';
 import { Tab, Tabs } from 'vant';
 import { Step, Steps } from 'vant';
-
+import dt from '@/assets/img/dt.png';
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Tab);
@@ -97,6 +114,7 @@ export default {
 
     data() {
         return {
+            dt,
             active: 2,
             activeKey: 0,
             username: '',
@@ -146,6 +164,13 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+ .Logistics-Information-dt {
+    width: 100%;
+
+    img {
+      width: 100%;
+    }
+  }
 .default-container {
     padding-top: 10px;
 }

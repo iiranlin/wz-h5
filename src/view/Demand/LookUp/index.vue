@@ -65,6 +65,7 @@
                                 <span>17703155555</span>
                             </li>
                         </ul>
+                        
                         <van-steps direction="vertical" :active="0">
                             <van-step>
                                 <h3>派送中</h3>
@@ -251,6 +252,19 @@ li :nth-child(2) {
 /deep/.van-sidebar-item--select::before{
     background-color: blue;
 }
+  ::v-deep .van-step__title {
+    color: #272b31 !important;
+    display: flex;
+    justify-content: space-between;
+
+    div:nth-child(1) {
+      flex: 1;
+    }
+
+    .Logistics-Information-text {
+      color: #999999 !important;
+    }
+  }
 .li-item-both {
     .li-item-right {
         flex: initial;

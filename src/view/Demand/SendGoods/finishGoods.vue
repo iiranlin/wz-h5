@@ -118,7 +118,12 @@ export default {
         },
         save(){
           Toast.success('保存成功');
-          this.$router.push({path:'/sendGoods'})
+          this.$router.push({
+            name:'SendGoods',
+            params: { 
+                type: '1',
+            }
+          })
         }
     },
 };

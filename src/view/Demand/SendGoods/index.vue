@@ -46,6 +46,9 @@
                 </van-field>
             </van-form>
         </div>
+        <div class="default-button-container" v-if="paramsType == '1'">
+          <van-button class="button-info" round type="info" @click="saveClick">确认</van-button>
+        </div>
     </div>
 </template>
 <script>
@@ -56,8 +59,7 @@ import { Field } from 'vant';
 Vue.use(Form);
 Vue.use(Field);
 export default {
-    name: 'MyProcess',
-
+    name: 'SendGoods',
     data() {
         return {
             formKey:"",
@@ -65,10 +67,12 @@ export default {
             password: '',
             value: '',
             showCalendar: false,
+            paramsType: ''
         };
     },
     created() {
         // this.getOrderStatusOptions();
+        this.paramsType = this.$route.params.type
     },
     methods: {
         onSubmit(values) {
@@ -89,6 +93,9 @@ export default {
         uploadGoosSend(){
             this.formKey++
             alert('11')
+        },
+        saveClick () {
+          this.$router.push({ path: '/dashboard' })
         }
     },
 };
