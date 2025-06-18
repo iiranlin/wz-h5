@@ -24,24 +24,6 @@ export const routes = [
 				component: () => import('@/view/MyToDo/MyToDoList.vue')
 			},
 			{
-				path: '/WaitExamineList',
-				name: 'WaitExamineList',
-				meta: {title: '待审核'},
-				component: () => import('@/view/SupervisionUnit/WaitExamineList.vue')
-			},
-			{
-				path: '/WaitHandleList',
-				name: 'WaitHandleList',
-				meta: {title: '待处理'},
-				component: () => import('@/view/SupervisionUnit/WaitHandleList.vue')
-			},
-			{
-				path: '/OverExamineList',
-				name: 'OverExamineList',
-				meta: {title: '已审核'},
-				component: () => import('@/view/SupervisionUnit/OverExamineList.vue')
-			},
-			{
 				path: '/PlannedManagementList',
 				name: 'PlannedManagementList',
 				meta: {title: '计划管理'},
@@ -58,6 +40,24 @@ export const routes = [
 				name: 'InOutManagementList',
 				meta: {title: '出入库管理'},
 				component: () => import('@/view/InOutManagement/InOutManagementList.vue')
+			},
+			{
+				path: '/WaitExamineList',
+				name: 'WaitExamineList',
+				meta: {title: '待审核'},
+				component: () => import('@/view/SupervisionUnit/WaitExamineList.vue')
+			},
+			{
+				path: '/WaitHandleList',
+				name: 'WaitHandleList',
+				meta: {title: '待处理'},
+				component: () => import('@/view/SupervisionUnit/WaitHandleList.vue')
+			},
+			{
+				path: '/OverExamineList',
+				name: 'OverExamineList',
+				meta: {title: '已审核'},
+				component: () => import('@/view/SupervisionUnit/OverExamineList.vue')
 			},
 			{
 				path: '/dashboard',
@@ -143,21 +143,6 @@ export const routes = [
 		meta: {title: '查看流程'},
 		component: () => import('@/view/MyProcess/index.vue')
 	},
-  // {
-	// 	path: '/PlannedManagement',
-	// 	component: Layout,
-	// 	redirect: '/PlannedManagement/PlannedManagementList',
-	// 	meta: {title: '计划管理'},
-	// 	hidden: true,
-	// 	children: [
-	// 		{
-	// 			path: 'PlannedManagementList',
-	// 			name: 'PlannedManagementList',
-	// 			meta: {title: '计划管理'},
-	// 			component: () => import('@/view/PlannedManagement/PlannedManagementList.vue')
-	// 		},
-	// 	]
-	// },
   {
 		path: '/PlannedManagementChild',
     component: () => import('@/view/PlannedManagement/PlannedManagementChild/index.vue'),

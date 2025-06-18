@@ -102,6 +102,22 @@ export default {
 	methods: {
 		//判断角色菜单
 		checkNavMenu(){
+      const username = this.$route.query.username || window.sessionStorage.getItem("username")
+      if(username){
+        window.sessionStorage.setItem("username", username)
+        const obj = {
+          '001': () => {
+            return this.constructionUnit
+          },
+          '002': () => {
+            return this.supervisionUnit
+          },
+          '003': () => {
+            return this.supplier
+          }
+        }
+        return (obj[username] && obj[username]()) || this.constructionUnit
+      }
 			return this.constructionUnit;
 		},
 	},
