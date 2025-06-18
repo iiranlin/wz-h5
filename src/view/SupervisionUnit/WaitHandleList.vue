@@ -19,7 +19,7 @@
                     finished-text="没有更多了..." 
                     @load="geList">
 
-                    <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleAllItemClick(item)">
+                    <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleItemClick(item)">
                         <ul class="list-ul">
                             <li>
                                 <span class="font-weight">业务编号：</span>
@@ -135,8 +135,13 @@ export default {
             // });
         },
         //列表条目点击
-        handleAllItemClick(item){
-
+        handleItemClick(item){
+            this.$router.push({
+                name: "SupervisionUnitDetail",
+                params: { 
+                    type: '1',
+                },
+            });
         },
         //查看流程点击
         handleProcessClick(){
