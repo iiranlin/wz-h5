@@ -8,56 +8,60 @@
       </van-dropdown-menu>
       <van-button round @click="resetClick">重置</van-button>
     </van-sticky>
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <div v-for="(item, index) in list" :key="index" class="box-container">
-        <ul class="list-ul" @click="handleWaitItemClick(item)">
-          <li>
-            <span class="font-weight">需求编号：</span>
-            <span class="font-weight">XQ2025050007</span>
-          </li>
-          <li>
-            <span>需求名称：</span>
-            <span>南京枢纽（江北地区）和南通地区工程2025年5月甲供物资需求计划表-04</span>
-          </li>
-          <li>
-            <span>供应商：</span>
-            <span>供应商名称供应商名称供应商名称供应商名称供应商名称供应商名称供应商名称</span>
-          </li>
-          <li>
-            <span>物资名称：</span>
-            <span>物资名称物资名称物资名称</span>
-          </li>
-          <li class="li-status">
-            <van-tag type="primary" round size="medium" v-if="item == 1">未提交</van-tag>
-            <van-tag type="primary" round size="medium" v-if="item == 2">已提交</van-tag>
-            <van-tag type="primary" round size="medium" v-if="item == 3">已生效</van-tag>
-            <van-tag type="primary" round size="medium" v-if="item == 4">修改后生效</van-tag>
-            <van-tag type="danger" round size="medium" v-if="item == 5">已驳回</van-tag>
-            <van-tag type="danger" round size="medium" v-if="item == 6">已撤回</van-tag>
-            <van-tag type="primary" round size="medium" v-if="item == 7">供应中</van-tag>
-            <van-tag type="primary" round size="medium" v-if="item == 8">收货完成</van-tag>
-            <van-tag type="primary" round size="medium" v-if="item == 9">已入库</van-tag>
-            <van-tag type="primary" round size="medium" v-if="item == 10" class="li-status-completed">已完成</van-tag>
-          </li>
-        </ul>
-        <div class="list-ul-button">
-          <van-button class="button-info" plain round type="info" v-if="[7, 8, 9, 10].includes(item)"
-            @click="supplyOverviewClick">供应概览</van-button>
-          <van-button class="button-info" plain round type="info" v-if="[7, 8, 9, 10].includes(item)"
-            @click="logisticsViewClick">物流查看</van-button>
-          <van-button class="button-info" plain round type="info" v-if="[2].includes(item)"
-            @click="withdrawClick">撤回</van-button>
-          <van-button class="button-info" plain round type="danger" v-if="[1, 5, 6].includes(item)"
-            @click="deleteClick">删除</van-button>
-          <van-button class="button-info" plain round type="info" v-if="[2, 3, 4, 5].includes(item)"
-            @click="handleProcessClick">查看流程</van-button>
-          <van-button class="button-info" plain round type="info" v-if="[1, 4, 5, 6].includes(item)"
-            @click="addClick">编辑</van-button>
-          <van-button class="button-info" round type="info" v-if="[1, 4, 5, 6].includes(item)"
-            @click="handleExamineClick">提交审核</van-button>
-        </div>
-      </div>
-    </van-list>
+    <div class="planned-management-list">
+      <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+          <div v-for="(item, index) in list" :key="index" class="box-container">
+            <ul class="list-ul" @click="handleWaitItemClick(item)">
+              <li>
+                <span class="font-weight">需求编号：</span>
+                <span class="font-weight">XQ2025050007</span>
+              </li>
+              <li>
+                <span>需求名称：</span>
+                <span>2025年5月甲供物资计划申请表-04</span>
+              </li>
+              <li>
+                <span>供应商：</span>
+                <span>供应商名称供应商名称供应商名称供应商名称供应商名称供应商名称供应商名称</span>
+              </li>
+              <li>
+                <span>物资名称：</span>
+                <span>特殊桥梁支座</span>
+              </li>
+              <li class="li-status">
+                <van-tag type="primary" round size="medium" v-if="item == 1">未提交</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item == 2">已提交</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item == 3">已生效</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item == 4">修改后生效</van-tag>
+                <van-tag type="danger" round size="medium" v-if="item == 5">已驳回</van-tag>
+                <van-tag type="danger" round size="medium" v-if="item == 6">已撤回</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item == 7">供应中</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item == 8">收货完成</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item == 9">已入库</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item == 10" class="li-status-completed">已完成</van-tag>
+              </li>
+            </ul>
+            <div class="list-ul-button">
+              <van-button class="button-info" plain round type="info" v-if="[7, 8, 9, 10].includes(item)"
+                @click="supplyOverviewClick">供应概览</van-button>
+              <van-button class="button-info" plain round type="info" v-if="[7, 8, 9, 10].includes(item)"
+                @click="logisticsViewClick">物流查看</van-button>
+              <van-button class="button-info" plain round type="info" v-if="[2].includes(item)"
+                @click="withdrawClick">撤回</van-button>
+              <van-button class="button-info" plain round type="danger" v-if="[1, 5, 6].includes(item)"
+                @click="deleteClick">删除</van-button>
+              <van-button class="button-info" plain round type="info" v-if="[2, 3, 4, 5].includes(item)"
+                @click="handleProcessClick">查看流程</van-button>
+              <van-button class="button-info" plain round type="info" v-if="[1, 4, 5, 6].includes(item)"
+                @click="addClick">编辑</van-button>
+              <van-button class="button-info" round type="info" v-if="[1, 4, 5, 6].includes(item)"
+                @click="handleExamineClick">提交审核</van-button>
+            </div>
+          </div>
+        </van-list>
+      </van-pull-refresh>
+    </div>
     <van-icon name="plus" @click="addClick" />
     <back-to-top className=".planned-management"></back-to-top>
   </div>
@@ -72,6 +76,7 @@ export default {
       value: '',
       showAction: false,
       list: [],
+      refreshLoading:false,
       loading: false,
       finished: false,
       value1: 0,
@@ -96,17 +101,30 @@ export default {
     onLoad() {
       // 异步更新数据
       setTimeout(() => {
+        if (this.refreshLoading) {
+          this.list = [];
+          this.refreshLoading = false;
+        }
+
         for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
+          this.list.push(this.list.length + 1)
         }
         // 加载状态结束
-        this.loading = false;
+        this.loading = false
 
         // 数据全部加载完成
         if (this.list.length >= 40) {
-          this.finished = true;
+          this.finished = true
         }
-      }, 500);
+      }, 500)
+    },
+    //列表刷新
+    onRefresh(){
+      this.refreshLoading = true
+      this.loading = true
+      this.finished = false
+      // this.listQuery.pageNum = 1
+      this.onLoad();
     },
     handleWaitItemClick() {
       this.$router.push({ name: 'RequirementDetails' })
@@ -173,7 +191,7 @@ export default {
   overflow-y: auto;
 
   .planned-management-search {
-    ::v-deep .van-sticky{
+    ::v-deep .van-sticky {
       width: 100%;
       top: 0;
       left: 0;
@@ -208,6 +226,9 @@ export default {
       border-radius: 50px;
       background: #fff;
     }
+  }
+  .planned-management-list{
+    height: 100%;
   }
 
   ::v-deep .van-dropdown-menu__bar {

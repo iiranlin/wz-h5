@@ -8,11 +8,11 @@
         </li>
         <li>
           <span>需求项目：</span>
-          <span>需求项目名称</span>
+          <span>中铁电气化局集团有限公司沪渝蓉高铁南京</span>
         </li>
         <li>
           <span>需求组织：</span>
-          <span>需求组织名称</span>
+          <span>施工单位名称（含分部）</span>
         </li>
       </ul>
     </div>

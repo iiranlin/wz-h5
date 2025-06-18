@@ -81,6 +81,7 @@ export default {
     },
     handleWaitItemClick (item) {
       // this.$router.push({ name: 'SubmitStore', query: {type: 'view'} })
+      this.$router.push({name: 'DoReturn'})
     }
   },
 };
