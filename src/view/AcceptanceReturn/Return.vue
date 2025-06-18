@@ -297,7 +297,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .tabs {
-  height: calc(100vh - 167px);
+  height: calc(100vh - 247px);
   overflow-y: scroll;
 }
 
