@@ -98,16 +98,16 @@
 
         <li class="li-item-overlength">
           <span>合格证附件：</span>
-          <span style="color: #4F8EFF">合格证附件/检测合格.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">合格证附件/检测合格.pdf</span>
         </li>
         <li class="li-item-overlength">
           <span>厂检报告附件：</span>
-          <span style="color: #4F8EFF">合格证附件/厂检合格.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">合格证附件/厂检合格.pdf</span>
         </li>
 
         <li>
           <span>退货附件：</span>
-          <span style="color: #4F8EFF">不合格批次.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">不合格批次.pdf</span>
         </li>
 
         <li>
@@ -122,22 +122,28 @@
       <ul class="detail-ul">
         <li>
           <span>自检单：</span>
-          <span style="color: #4F8EFF">自检单附件.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">自检单附件.pdf</span>
         </li>
 
         <li>
           <span>其他资料：</span>
-          <span style="color: #4F8EFF">其他资料附件.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">其他资料附件.pdf</span>
         </li>
       </ul>
     </div>
+
+    <van-popup v-model="showPopup" position="bottom">
+      <van-image-preview v-model="showImg" :images="images" :startPosition="startPosition" :loop="false" @close="showPopup = false"/>
+    </van-popup>
   </div>
 </template>
 <script>
-import {parseTime} from '@/utils/index'
+import {parseTime} from '@/utils'
+import imgMixin from '@/view/mixins/imgMixin'
 
 export default {
   name: 'DoReturn',
+  mixins: [imgMixin],
   data() {
     return {
       minDate: new Date(),
@@ -150,7 +156,6 @@ export default {
         remark: ''
       },
       showDatePicker: false // 控制日期选择器显示
-
     }
   },
   mounted() {

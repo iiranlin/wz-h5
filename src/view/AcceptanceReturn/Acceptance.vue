@@ -91,208 +91,67 @@ export default {
         {title: '部分退货', status: '3'},
         {title: '已退货', status: '4'}
       ],
-      dataList: [
-        {
-          receiptNumber: 'XQ2025050007',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称1',
-          requiredOrganization: '需求计划名称1',
-          supplier: '供应商1',
-          shippingTime: '2025-03-10 15:35',
-          status: '1'
-        },
-        {
-          receiptNumber: 'XQ2025050008',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称2',
-          requiredOrganization: '需求计划名称2',
-          supplier: '供应商2',
-          shippingTime: '2025-03-11 15:35',
-          status: '2'
-        },
-        {
-          receiptNumber: 'XQ2025050009',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称3',
-          requiredOrganization: '需求计划名称3',
-          supplier: '供应商3',
-          shippingTime: '2025-03-12 15:35',
-          status: '3'
-        },
-        {
-          receiptNumber: 'XQ2025050010',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称4',
-          requiredOrganization: '需求计划名称4',
-          supplier: '供应商4',
-          shippingTime: '2025-03-13 15:35',
-          status: '4'
-        },
-        {
-          receiptNumber: 'XQ2025050011',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称5',
-          requiredOrganization: '需求计划名称5',
-          supplier: '供应商5',
-          shippingTime: '2025-03-14 15:35',
-          status: '1'
-        },
-        {
-          receiptNumber: 'XQ2025050012',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称6',
-          requiredOrganization: '需求计划名称6',
-          supplier: '供应商6',
-          shippingTime: '2025-03-15 15:35',
-          status: '2'
-        },
-        {
-          receiptNumber: 'XQ2025050013',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称7',
-          requiredOrganization: '需求计划名称7',
-          supplier: '供应商7',
-          shippingTime: '2025-03-16 15:35',
-          status: '3'
-        },
-        {
-          receiptNumber: 'XQ2025050014',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称8',
-          requiredOrganization: '需求计划名称8',
-          supplier: '供应商8',
-          shippingTime: '2025-03-17 15:35',
-          status: '4'
-        },
-        {
-          receiptNumber: 'XQ2025050015',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称9',
-          requiredOrganization: '需求计划名称9',
-          supplier: '供应商9',
-          shippingTime: '2025-03-18 15:35',
-          status: '1'
-        },
-        {
-          receiptNumber: 'XQ2025050016',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称10',
-          requiredOrganization: '需求计划名称10',
-          supplier: '供应商10',
-          shippingTime: '2025-03-19 15:35',
-          status: '2'
-        }
-      ],
+      dataList: [],
       allList: [
         {
-          receiptNumber: 'XQ2025050007',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称1',
-          requiredOrganization: '需求计划名称1',
-          supplier: '供应商1',
-          shippingTime: '2025-03-10 15:35',
+          receiptNumber: '',
+          deliveryNumber: 'FH202505310006',
+          supplyDemand: '2025年5月甲供物资计划申请表-04',
+          logisticsNumber: 'Es130343925KR',
+          requiredOrganization: '施工单位名称（分部）',
+          supplier: '五道口有限责任公司',
+          shippingTime: '2025-04-20',
           status: '1'
         },
         {
-          receiptNumber: 'XQ2025050008',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称2',
-          requiredOrganization: '需求计划名称2',
-          supplier: '供应商2',
-          shippingTime: '2025-03-11 15:35',
+          receiptNumber: '',
+          deliveryNumber: 'FH202505310005',
+          supplyDemand: '2025年5月甲供物资计划申请表-03',
+          logisticsNumber: 'Es130343925KR',
+          requiredOrganization: '施工单位名称（分部）',
+          supplier: '五道口有限责任公司',
+          shippingTime: '2025-04-20',
+          status: '1'
+        },
+        {
+          receiptNumber: 'SH202506010004',
+          deliveryNumber: 'FH202505310004',
+          supplyDemand: '2025年5月甲供物资计划申请表-02',
+          logisticsNumber: 'Es130343925KR',
+          requiredOrganization: '施工单位名称（分部）',
+          supplier: '五道口有限责任公司',
+          shippingTime: '2025-04-20',
           status: '2'
         },
         {
-          receiptNumber: 'XQ2025050009',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称3',
-          requiredOrganization: '需求计划名称3',
-          supplier: '供应商3',
-          shippingTime: '2025-03-12 15:35',
+          receiptNumber: 'SH202506010003',
+          deliveryNumber: 'FH202505310003',
+          supplyDemand: '2025年5月甲供物资计划申请表-04',
+          logisticsNumber: '其它',
+          requiredOrganization: '施工单位名称（分部）',
+          supplier: '五道口有限责任公司',
+          shippingTime: '2025-04-20',
+          status: '2'
+        },
+        {
+          receiptNumber: 'SH202506010002',
+          deliveryNumber: 'FH202505310002',
+          supplyDemand: '2025年5月甲供物资计划申请表-03',
+          logisticsNumber: '其它',
+          requiredOrganization: '施工单位名称（分部）',
+          supplier: '五道口有限责任公司',
+          shippingTime: '2025-04-20',
           status: '3'
         },
         {
-          receiptNumber: 'XQ2025050010',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称4',
-          requiredOrganization: '需求计划名称4',
-          supplier: '供应商4',
-          shippingTime: '2025-03-13 15:35',
+          receiptNumber: 'SH202506010001',
+          deliveryNumber: 'FH202505310001',
+          supplyDemand: '2025年5月甲供物资计划申请表-02',
+          logisticsNumber: 'Es130343925KR',
+          requiredOrganization: '施工单位名称（分部）',
+          supplier: '五道口有限责任公司',
+          shippingTime: '2025-04-20',
           status: '4'
-        },
-        {
-          receiptNumber: 'XQ2025050011',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称5',
-          requiredOrganization: '需求计划名称5',
-          supplier: '供应商5',
-          shippingTime: '2025-03-14 15:35',
-          status: '1'
-        },
-        {
-          receiptNumber: 'XQ2025050012',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称6',
-          requiredOrganization: '需求计划名称6',
-          supplier: '供应商6',
-          shippingTime: '2025-03-15 15:35',
-          status: '2'
-        },
-        {
-          receiptNumber: 'XQ2025050013',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称7',
-          requiredOrganization: '需求计划名称7',
-          supplier: '供应商7',
-          shippingTime: '2025-03-16 15:35',
-          status: '3'
-        },
-        {
-          receiptNumber: 'XQ2025050014',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称8',
-          requiredOrganization: '需求计划名称8',
-          supplier: '供应商8',
-          shippingTime: '2025-03-17 15:35',
-          status: '4'
-        },
-        {
-          receiptNumber: 'XQ2025050015',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称9',
-          requiredOrganization: '需求计划名称9',
-          supplier: '供应商9',
-          shippingTime: '2025-03-18 15:35',
-          status: '1'
-        },
-        {
-          receiptNumber: 'XQ2025050016',
-          deliveryNumber: '分部用料需求',
-          supplyDemand: '工程部',
-          logisticsNumber: '物流单号名称10',
-          requiredOrganization: '需求计划名称10',
-          supplier: '供应商10',
-          shippingTime: '2025-03-19 15:35',
-          status: '2'
         }
       ],
 
@@ -330,7 +189,7 @@ export default {
     }
   },
   created() {
-    // this.getOrderStatusOptions();
+    this.dataList = this.allList
   },
   activated() {
     if (this.$route.params.refresh) {
