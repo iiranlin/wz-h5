@@ -34,7 +34,7 @@
                                         <span class="font-weight">FH20250531004</span>
                                     </li>
                                     <li>
-                                        <span>需求ID:</span>
+                                        <span>需求编号:</span>
                                         <span>XQ2025050007</span>
                                     </li>
                                     <li>

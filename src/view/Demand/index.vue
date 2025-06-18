@@ -30,7 +30,7 @@
                             <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleAllItemClick(item)">
                                 <ul class="list-ul">
                                     <li>
-                                        <span class="font-weight">需求ID:</span>
+                                        <span class="font-weight">需求编号:</span>
                                         <span class="font-weight">XQ2025050007</span>
                                     </li>
                                     <li>

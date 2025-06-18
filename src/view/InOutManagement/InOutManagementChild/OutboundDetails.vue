@@ -9,7 +9,7 @@
               <span>CK2025050007</span>
             </li>
             <li class="li-item-overlength">
-              <span>需求ID：</span>
+              <span>需求编号：</span>
               <span>XQ2025050007</span>
             </li>
             <li>

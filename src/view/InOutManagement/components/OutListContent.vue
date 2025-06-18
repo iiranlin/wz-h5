@@ -15,7 +15,7 @@
               <span>CK20250531004</span>
             </li>
             <li>
-              <span>需求ID：</span>
+              <span>需求编号：</span>
               <span>XQ20250531004</span>
             </li>
             <li>

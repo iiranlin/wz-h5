@@ -27,7 +27,7 @@
                                         <span class="font-weight" style="color:#1989fa;">FH20250531004</span>
                                     </li>
                                     <li>
-                                        <span style="width: 230px;">需求ID：</span>
+                                        <span style="width: 230px;">需求编号：</span>
                                         <span class="text" style="color:#1989fa;">GYXQ25050007</span>
                                     </li>
                                      <li>

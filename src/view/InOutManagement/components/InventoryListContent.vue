@@ -18,7 +18,7 @@
               <span>{{ [0, 1].includes(value1)?'有':'无' }}</span>
             </li>
             <li>
-              <span>需求ID：</span>
+              <span>需求编号：</span>
               <span class="li-span-click">XQ20250500001</span>
             </li>
             <li>
