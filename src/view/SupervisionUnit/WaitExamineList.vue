@@ -6,7 +6,7 @@
                     v-model="formData.keywords" 
                     placeholder="输入关键字搜索" 
                     shape="round" 
-                    background="#8ebdec"
+                    background="#eef6ff"
                     @search="handeSearch()">
                 </van-search>
             </div>
@@ -165,5 +165,18 @@ export default {
 <style lang="less" scoped>
 .list-search-container {
     margin-bottom: 10px;
+}
+
+.van-search {
+
+  .van-search__content {
+    border-radius: 50px;
+    background: #fff;
+  }
+
+  .van-cell {
+    border-radius: 50px;
+    background: #fff;
+  }
 }
 </style>

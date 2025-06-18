@@ -102,7 +102,7 @@ export default {
 	methods: {
 		//判断角色菜单
 		checkNavMenu(){
-			return this.constructionUnit;
+			return this.supervisionUnit;
 		},
 	},
 }

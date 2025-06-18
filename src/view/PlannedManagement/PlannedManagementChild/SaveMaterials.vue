@@ -30,7 +30,7 @@
           <span>规格型号：</span>
           <span>特殊桥梁支庄</span>
         </li>
-        <li class="li-item-both">
+        <li class="li-item-both li-item-overlength">
             <div class="li-item-left">
                 <span>计量单位：</span>
                 <span>套</span>
@@ -56,7 +56,7 @@
         </van-popup>
         <van-field required v-model="formData.password" label="收货人" placeholder="请输入收货人" :label-width="240"
           input-align="right" />
-        <van-field required v-model="formData.password" label="收货人联系方式" placeholder="请输入收货人联系方式" :label-width="240"
+        <van-field required v-model="formData.password" label="收货人联系方式" placeholder="请输入收货人联系方式" :label-width="260"
           input-align="right" />
         <van-field required v-model="formData.password" label="投资方" placeholder="请输入投资方" :label-width="240"
           input-align="right" />

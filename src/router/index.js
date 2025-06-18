@@ -42,22 +42,40 @@ export const routes = [
 				component: () => import('@/view/SupervisionUnit/OverExamineList.vue')
 			},
 			{
-				path: 'PlannedManagementList',
+				path: '/PlannedManagementList',
 				name: 'PlannedManagementList',
 				meta: {title: '计划管理'},
 				component: () => import('@/view/PlannedManagement/PlannedManagementList.vue')
 			},
 			{
-				path: 'AcceptanceReturn',
+				path: '/AcceptanceReturn',
 				name: 'AcceptanceReturn',
 				meta: {title: '验收管理'},
 				component: () => import('@/view/AcceptanceReturn/AcceptanceReturn.vue')
 			},
 			{
-				path: 'InOutManagementList',
+				path: '/InOutManagementList',
 				name: 'InOutManagementList',
 				meta: {title: '出入库管理'},
 				component: () => import('@/view/InOutManagement/InOutManagementList.vue')
+			},
+			{
+				path: '/dashboard',
+				name: 'dashboard',
+				meta: {title: '需求管理'},
+				component: () => import('@/view/Demand/index.vue')
+			},
+			{
+				path: '/Information',
+				name: 'Information',
+				meta: {title: '发货管理'},
+				component: () => import('@/view/Demand/Delivery.vue')
+			},
+			{
+				path: '/MyManager',
+				name: 'MyManager',
+				meta: {title: '退货管理'},
+				component: () => import('@/view/Demand/Return.vue')
 			},
 		]
 	},
@@ -252,7 +270,80 @@ export const routes = [
 				component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/DoReturn.vue')
 			},
 		]
-	}
+	},
+	// 确认需求
+	{
+		
+		path: '/confirm',
+		component: () => import('@/view/Demand/Confirm/index.vue'),
+		hidden: true,
+		name: 'confirm',
+		meta: {title: '确认需求'},
+	},
+	{
+		
+		path: '/sendGoods',
+		component: () => import('@/view/Demand/SendGoods/index.vue'),
+		hidden: true,
+		name: 'sendGoods',
+		meta: {title: '发货'},
+	},
+	{
+		
+		path: '/selectGoods',
+		component: () => import('@/view/Demand/SendGoods/selectGoods.vue'),
+		hidden: true,
+		name: 'selectGoods',
+		meta: {title: '选择物资'},
+	},
+	{
+		
+		path: '/finishGoods',
+		component: () => import('@/view/Demand/SendGoods/finishGoods.vue'),
+		hidden: true,
+		name: 'finishGoods',
+		meta: {title: '选择完物资'},
+	},
+	{
+		
+		path: '/supplyMsg',
+		component: () => import('@/view/Demand/Supply/index.vue'),
+		hidden: true,
+		name: 'supplyMsg',
+		meta: {title: '供应信息'},
+	},
+	{
+		
+		path: '/lookUp',
+		component: () => import('@/view/Demand/LookUp/index.vue'),
+		hidden: true,
+		name: 'lookUp',
+		meta: {title: '查看物流'},
+	},
+	{
+		
+		path: '/lookCargo',
+		component: () => import('@/view/Demand/Cargo/index.vue'),
+		hidden: true,
+		name: 'lookCargo',
+		meta: {title: '货运详情'},
+	},
+	{
+		
+		path: '/cargoDetails',
+		component: () => import('@/view/Demand/Cargo/cargoDetails.vue'),
+		hidden: true,
+		name: 'cargoDetails',
+		meta: {title: '货运详情'},
+	},
+	{
+		
+		path: '/returnDetails',
+		component: () => import('@/view/Demand/ReturnGoods/index.vue'),
+		hidden: true,
+		name: 'returnDetails',
+		meta: {title: '退货详情'},
+	},
 ];
 
 // add route path
