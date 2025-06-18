@@ -80,7 +80,88 @@
                             </van-step>
                         </van-steps>
                     </van-tab>
-                    <van-tab title="发货物资明细">内容 2</van-tab>
+                    <van-tab title="发货物资明细">
+                        <ul class="list-ul">
+                            <li>
+                                <span style="width: 230px;">需求组织名称:</span>
+                                <span>施工单位名称</span>
+                            </li>
+                            <li>
+                                <span style="width: 210px;">物资名称:</span>
+                                <span class="text">计算机联锁设备</span>
+                            </li>
+                            <li>
+                                <span style="width: 210px;">规格型号:</span>
+                                <span>2x2取2s10组道岔</span>
+                            </li>
+                            <li class="li-item-both">
+                                <div class="li-item-left">
+                                    <span>计量单位:</span>
+                                    <span>套</span>
+                                </div>
+                                <div class="li-item-right">
+                                    <span>发货数量:</span>
+                                    <span>5</span>
+                                </div>
+                            </li>
+                            <li class="li-item-both">
+                                <div class="li-item-left">
+                                    <span>本次计划数量:</span>
+                                    <span>5</span>
+                                </div>
+                                <div class="li-item-right">
+                                    <span>包装形式:</span>
+                                    <span>固装</span>
+                                </div>
+                            </li>
+                            <li class="li-item-both">
+                                <div class="li-item-left">
+                                    <span>生产日期:</span>
+                                    <span>2025年06月01日</span>
+                                </div>
+                            </li>
+                            <li class="li-item-both">
+                                <div class="li-item-left">
+                                    <span>有效期截止日期:</span>
+                                    <span>2025年05月03日</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span style="width: 210px;">收货地址:</span>
+                                <span class="text">收货地址收货地址收货地址收货地址</span>
+                            </li>
+                            <li>
+                                <span style="width: 210px;">供应时间:</span>
+                                <span>2025年06月01日</span>
+                            </li>
+                            <li>
+                                <span style="width: 300px;">收货人及联系方式:</span>
+                                <span>张晓明 13865444566</span>
+                            </li>
+                            <li>
+                                <span style="width: 210px;">投资方:</span>
+                                <span class="text">投资方名称投资方名称投资方名称投资方名称投资方名称投资方名称</span>
+                            </li>
+                            <li>
+                                <span style="width: 210px;">投资比例:</span>
+                                <span>40%;60%</span>
+                            </li>
+                           
+                            <li>
+                                <span>合格证附件:</span>
+                                    <span style="color:#1989fa;">合格证附件.pdf</span>
+                               
+                            </li>
+                            <li>
+                                  <span>厂检报告附件:</span>
+                                    <span style="color:#1989fa;">厂检报告.pdf</span>
+                            </li>
+                             <li>
+                                <span style="width: 210px;">备注:</span>
+                                <span class="text">备注内容备注内容备注内容备注内容备注内容</span>
+                            </li>
+                        </ul>
+                    </van-tab>
                 </van-tabs>
 
             </div>
@@ -159,16 +240,23 @@ export default {
 }
 
 li :nth-child(1) {
+
     min-width: 60px
 }
 
 li :nth-child(2) {
+
     width: initial;
 }
-
+/deep/.van-sidebar-item--select::before{
+    background-color: blue;
+}
 .li-item-both {
     .li-item-right {
         flex: initial;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -182,6 +270,12 @@ li :nth-child(2) {
 .title {
     margin: 10px;
     font-size: 14px;
+}
+
+.text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .sidebar {
@@ -203,7 +297,8 @@ li :nth-child(2) {
         margin-left: 10px;
     }
 }
-/deep/.van-sidebar-item__text{
-width: 200px !important;
+
+/deep/.van-sidebar-item__text {
+    width: 200px !important;
 }
 </style>

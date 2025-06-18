@@ -16,34 +16,34 @@
             </li>
         </ul>
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
-            <van-form>
-                <van-field v-model="username" name="物流单号" label="物流单号" placeholder="物流单号"
+            <van-form :key="formKey">
+                <van-field v-model="username" name="物流单号" label="物流单号" placeholder="物流单号" input-align="right"
                     :rules="[{ required: true, message: '请填写物流单号' }]" />
-                <van-field v-model="username" name="发货地址" label="发货地址" placeholder="发货地址"
+                <van-field v-model="username" name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
                     :rules="[{ required: true, message: '请填写发货地址' }]" />
-                <van-field readonly clickable name="calendar" :value="value" label="预计发货时间" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" :value="value" label="预计发货时间" input-align="right" placeholder="点击选择日期"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" />
                 <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-                <van-field readonly clickable name="calendar" :value="value" label="预计送达时间" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" :value="value" label="预计送达时间" input-align="right" placeholder="点击选择日期"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
-                <van-field v-model="username" name="车牌号" label="车牌号" placeholder="车牌号" />
-                <van-field v-model="username" name="联系人" label="联系人" placeholder="联系人"
+                <van-field v-model="username" name="车牌号" label="车牌号" placeholder="车牌号" input-align="right"/>
+                <van-field v-model="username" name="联系人" label="联系人" placeholder="联系人" input-align="right"
                     :rules="[{ required: true, message: '请填写联系人' }]" />
-                <van-field v-model="sms" center clearable label="发货单附件" placeholder="发货单附件"
+                <van-field v-model="sms" center clearable label="发货单附件" placeholder="发货单附件" input-align="right"
                     :rules="[{ required: true, message: '请填写发货单附件' }]">
                     <template #button>
-                        <van-button size="mini" type="primary">请上传发货单</van-button>
+                        <van-uploader v-model="fileList" :before-read="beforeRead">
+                            <van-button size="mini" class="button-info" type="primary">请上传发货单</van-button>
+                        </van-uploader>
+                        
                     </template>
                 </van-field>
-                <van-field v-model="sms" center clearable label="已选物资" placeholder="发货单附件">
+                <van-field v-model="sms" center clearable label="已选物资" placeholder="发货单附件" input-align="right">
                     <template #button>
-                        <van-button size="mini" type="primary" @click="chooseGoods">选择发货物资</van-button>
-                        <van-button size="mini" type="primary" @click="lookGoods">查看发货物资</van-button> <!--保存完回显-->
+                        <van-button size="mini" type="primary" class="button-info" @click="chooseGoods" >选择发货物资</van-button>
+                        <van-button size="mini" type="primary" class="button-info" @click="lookGoods">查看发货物资</van-button> <!--保存完回显-->
                     </template>
                 </van-field>
-                <!-- <div style="margin: 16px;">
-                    <van-button round block type="info" native-type="submit">提交</van-button>
-                </div> -->
             </van-form>
         </div>
     </div>
@@ -60,6 +60,7 @@ export default {
 
     data() {
         return {
+            formKey:"",
             username: '',
             password: '',
             value: '',
@@ -78,10 +79,16 @@ export default {
             this.showCalendar = false;
         },
         chooseGoods() {
+            this.formKey++
             this.$router.push({ path: '/selectGoods' })
         },
         lookGoods(){
-            
+            this.formKey++
+            this.$router.push({ path: '/finishGoods' })
+        },
+        uploadGoosSend(){
+            this.formKey++
+            alert('11')
         }
     },
 };
@@ -110,5 +117,9 @@ li :nth-child(2) {
     margin: 0 10px;
     border-radius: 15px;
     padding: 10px;
+}
+/deep/.van-button--primary{
+    background-color: #1989fa;
+    border:1px solid #1989fa;
 }
 </style>

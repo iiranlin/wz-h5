@@ -56,7 +56,7 @@
                     <span>{{ item.shippingTime }}</span>
                   </li>
                   <li class="li-status">
-                    <van-tag :type="item.status | statusStyleFilter" round size="medium">{{ item.status | statusFilter(tabList) }}</van-tag>
+                    <van-tag :type="item.status | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.status == 4}">{{ item.status | statusFilter(tabList) }}</van-tag>
                   </li>
                 </ul>
                 <div class="list-ul-button" v-if="item.status === '1'">

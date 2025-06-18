@@ -9,7 +9,7 @@
                 @change="tabsChange"
                 title-inactive-color="#2e2e2e">
                 <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.title">
-                    
+                    <div class="tabs"></div>
                     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
                         <van-list 
                             v-model="allLoading" 
@@ -17,10 +17,10 @@
                             finished-text="没有更多了..." 
                             @load="getAllList">
 
-                            <div class="box-container">
-                                <ul class="list-ul">
+                            <div class="box-container" v-for="(item,index) in 10" :key="index">
+                                <ul class="list-ul" >
                                     <li>
-                                        <span class="font-weight">供应商需求名称:</span>
+                                        <span class="font-weight" style="width: 300px;">供应商需求名称:</span>
                                         <span class="font-weight">北京全路通信信号研究设计院集团有限公司</span>
                                     </li>
                                     <li>
@@ -44,7 +44,7 @@
                                         <span>2025年06月01日</span>
                                     </li>
                                      <li>
-                                        <span style="min-width: 230px;">预计到达时间为:</span>
+                                        <span style="min-width: 280px;">预计到达时间为:</span>
                                         <span>2025年05月03日</span>
                                     </li>
                                     <li>
@@ -338,10 +338,15 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-::v-deep .van-tabs__content {
-    height: calc(100vh - 162px);
-    overflow-y: scroll;
-}
+// .box-container{
+//     width: 100%;
+//     height: calc(100vh - 60px);
+//     overflow: scroll;
+// }
+// ::v-deep .van-tabs__content {
+//     height: calc(100vh - 162px);
+//     overflow-y: scroll;
+// }
 
 .van-search {
 

@@ -106,7 +106,7 @@
   </div>
 </template>
 <script>
-import dt from '@/assets/img/dt.png';
+import dt from '@/assets/img/img.png';
 export default {
   name: 'OutboundDetails',
   components: {},

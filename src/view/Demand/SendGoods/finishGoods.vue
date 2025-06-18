@@ -33,39 +33,44 @@
       <van-divider />
       <div class="list-ul" style="margin-top: 26px;padding: 10px;">
             <van-form>
-                <van-field v-model="username" name="发货数量" label="发货数量" placeholder="发货数量"
+                <van-field v-model="username" name="发货数量" label="发货数量" placeholder="发货数量" input-align="right"
                     :rules="[{ required: true, message: '请填写发货数量' }]" />
-                <van-field v-model="username" name="包装形式" label="包装形式" placeholder="包装形式"
+                <van-field v-model="username" name="包装形式" label="包装形式" placeholder="包装形式" input-align="right"
                     :rules="[{ required: true, message: '请填写包装形式' }]" />
-                <van-field readonly clickable name="calendar" :value="value" label="生产日期" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" :value="value" label="生产日期" placeholder="点击选择日期" input-align="right"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写生产日期' }]" />
                 <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-                <van-field readonly clickable name="calendar" :value="value" label="有效期截止日期" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" :value="value" label="有效期截止日期" placeholder="点击选择日期" input-align="right"
                     @click="showCalendar = true" />
-                <van-field v-model="username" name="收货地址" label="收货地址" placeholder="收货地址" />
-                <van-field readonly clickable name="calendar" :value="value" label="供应时间" placeholder="点击选择日期"
+                <van-field v-model="username" name="收货地址" label="收货地址" placeholder="收货地址" input-align="right"/>
+                <van-field readonly clickable name="calendar" :value="value" label="供应时间" placeholder="点击选择日期" input-align="right"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写供应时间' }]" />
-                <van-field v-model="username" name="收货人" label="收货人" placeholder="收货人"
+                <van-field v-model="username" name="收货人" label="收货人" placeholder="收货人" input-align="right"
                     :rules="[{ required: true, message: '请填写收货人' }]" />
-                <van-field v-model="sms" center clearable label="联系方式" placeholder="联系方式"
+                <van-field v-model="sms" center clearable label="联系方式" placeholder="联系方式" input-align="right"
                     :rules="[{ required: true, message: '请填写联系方式' }]">
                     
                 </van-field>
-                    <van-field v-model="username" name="投资方" label="投资方" placeholder="投资方"
+                    <van-field v-model="username" name="投资方" label="投资方" placeholder="投资方" input-align="right"
                     :rules="[{ required: true, message: '请填写投资方' }]" />
-                    <van-field v-model="username" name="投资比例" label="投资比例" placeholder="投资比例"
+                    <van-field v-model="username" name="投资比例" label="投资比例" placeholder="投资比例" input-align="right"
                     :rules="[{ required: true, message: '请填写投资比例' }]" />
-                   <van-field v-model="sms" center clearable label="合格证附件" placeholder="合格证附件">
+                   <van-field v-model="sms" center clearable label="合格证附件" placeholder="合格证附件" input-align="right">
                     <template #button>
-                        <van-button size="mini" type="primary" @click="chooseGoods">请上传合格证</van-button>
+                      <van-uploader v-model="fileList" :before-read="beforeRead">
+                         <van-button size="mini" type="primary">请上传合格证</van-button>
+                      </van-uploader>
                     </template>
                 </van-field>
 
 
               
-                <van-field v-model="sms" center clearable label="厂检报告附件" placeholder="厂检报告附件">
+                <van-field v-model="sms" center clearable label="厂检报告附件" placeholder="厂检报告附件" input-align="right">
                     <template #button>
-                        <van-button size="mini" type="primary" @click="chooseGoods">请上传发货单</van-button>
+                      <van-uploader v-model="fileList" :before-read="beforeRead">
+                         <van-button size="mini" type="primary">请上传发货单</van-button>
+                      </van-uploader>
+                       
                     </template>
                 </van-field>
                 <!-- <div style="margin: 16px;">
@@ -83,7 +88,9 @@
 <script>
 import Vue from 'vue';
 import { Divider } from 'vant';
+import { Toast } from 'vant';
 
+Vue.use(Toast);
 Vue.use(Divider);
 export default {
 
@@ -110,7 +117,8 @@ export default {
             this.$router.push({path:'/selectGoods'})
         },
         save(){
-
+          Toast.success('保存成功');
+          this.$router.push({path:'/sendGoods'})
         }
     },
 };
@@ -146,8 +154,13 @@ export default {
   height: 6px;
   background: blue;
 }
+
 /deep/.van-cell{
 padding-left: 0;
+}
+/deep/.van-button--primary{
+    background-color: #1989fa;
+    border:1px solid #1989fa;
 }
 // .dian{
 //   background-color: blue;
