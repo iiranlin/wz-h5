@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'detail-button-container':type == '0'}">
+    <div :class="['default-container',type == '0'?'detail-button-container':'']">
         <div class="box-container">
             <div>
                 <ul class="detail-ul">
@@ -28,7 +28,7 @@
                 </ul>
             </div>
         </div>
-        <div class="box-container detail-title-info">
+        <div class="detail-title-info" style="margin-left:10px;margin-bottom:10px;">
             <span class="info-title">物资明细</span>
         </div>
          <div class="box-container" v-for="(item,index) in 5" :key="index">
@@ -139,7 +139,6 @@ export default {
         }
     },
     created() {
-        console.log('created')
         this.type = this.$route.params.type;
         // this.getActivitiList();
         
@@ -156,7 +155,7 @@ export default {
         }.bind(this));
     },
     activated() {
-        console.log('activated')
+        
     },
     methods: {
         //获取审批日志
@@ -207,11 +206,7 @@ export default {
         //审核意见回调
         examineEditCallBack(opinion,type){
             if(type == 'reject'){
-                this.$notify({
-                    type: 'success',
-                    message: "提交成功"
-                });
-                this.$router.back();
+                this.handleAssigneeSubmit();
             }else if(type == 'editAdopt'){
                 this.assigneePopupShow = true;
             }else if(type == 'adopt'){
@@ -248,5 +243,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
+.default-container {
+    padding-top: 10px;
+}
 </style>

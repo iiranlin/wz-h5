@@ -340,34 +340,39 @@ export default {
         },
         //全部列表条目点击
         handleAllItemClick(item){
-
+            this.$router.push({
+                name: "MyToDoDetail",
+                params: { 
+                    type: '0',
+                },
+            });
         },
         //待审核列表条目点击
         handleWaitItemClick(item){
-            // this.$router.push({
-            //     name: "ApprovalDetail",
-            //     params: { 
-            //         id:item.id,
-            //     },
-            // });
+            this.$router.push({
+                name: "MyToDoDetail",
+                params: { 
+                    type: '0',
+                },
+            });
         },
         //待处理列表条目点击
         handleWaitHandleItemClick(item){
-            // this.$router.push({
-            //     name: "ApprovalDetail",
-            //     params: { 
-            //         id:item.id,
-            //     },
-            // });
+            this.$router.push({
+                name: "MyToDoDetail",
+                params: { 
+                    type: '1',
+                },
+            });
         },
         //已审核列表条目点击
         handleHistoryItemClick(item){
-            // this.$router.push({
-            //     name: "ApprovalDetail",
-            //     params: { 
-            //         id:item.id,
-            //     },
-            // });
+            this.$router.push({
+                name: "MyToDoDetail",
+                params: { 
+                    type: '1',
+                },
+            })
         },
         //查看流程点击
         handleProcessClick(){
