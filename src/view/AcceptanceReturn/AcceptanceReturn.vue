@@ -1,6 +1,14 @@
 <template>
   <div ref="container">
     <div class="tabs">
+      <div class="tab-img">
+        <div>
+          <img src="@/assets/img/acceptImg.png" alt="">
+        </div>
+        <div>
+          <img src="@/assets/img/returnImg.png" alt="">
+        </div>
+      </div>
       <van-tabs
         class="switch-tab"
         v-model="menuActiveIndex"
@@ -265,6 +273,20 @@ export default {
 .switch-tab {
   ::v-deep & > .van-tabs__wrap {
     margin-bottom: 0;
+  }
+}
+
+.tab-img {
+  background-color: #eef6ff;
+  display: flex;
+  position: relative;
+
+  & > div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
   }
 }
 </style>
