@@ -1,11 +1,12 @@
 <template>
-
   <div class="in-out-management-list">
-    <div class="list-search-container">
-      <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff" readonly
-        @click="handeSearchClick()">
-      </van-search>
-    </div>
+    <van-sticky :offset-top="112">
+      <div class="list-search-container">
+        <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff" readonly
+          @click="handeSearchClick()">
+        </van-search>
+      </div>
+    </van-sticky>
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
         <div v-for="(item, index) in 10" :key="index" class="box-container" @click="handleWaitItemClick(item)">
@@ -115,12 +116,6 @@ export default {
       }
 
     }
-  }
-
-
-  ::v-deep .van-pull-refresh {
-    height: calc(100vh - 150px);
-    overflow-y: scroll;
   }
 
   .van-search {

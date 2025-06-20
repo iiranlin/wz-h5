@@ -1,6 +1,6 @@
 <template>
-    <div ref="container">
-        <div class="list-search-container">
+    <div class="my-to-do-list">
+        <van-sticky class="list-search-container">
             <van-search 
                 v-model="formData.keywords" 
                 placeholder="输入关键字搜索" 
@@ -9,9 +9,10 @@
                 readonly
                 @click="handeSearchClick()">
             </van-search>
-        </div>
+        </van-sticky>
         <div class="tabs">
             <van-tabs 
+                sticky :offset-top="138"
                 v-model="menuActiveIndex" 
                 color="#0571ff"
                 background="#eef6ff"
@@ -437,9 +438,11 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-::v-deep .van-tabs__content {
-    height: calc(100vh - 162px);
-    overflow-y: scroll;
+.my-to-do-list{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .van-search {

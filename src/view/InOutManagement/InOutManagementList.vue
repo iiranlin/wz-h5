@@ -1,7 +1,7 @@
 <template>
-  <div ref="container" class="in-out-management">
+  <div class="in-out-management">
     <div class="tabs">
-      <van-tabs v-model="activeIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
+      <van-tabs sticky v-model="activeIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e">
         <van-tab title="入库列表">
           <in-list-content></in-list-content>
@@ -43,6 +43,7 @@ export default {
 <style lang="less" scoped>
 .in-out-management {
   height: 100%;
+  overflow-y: auto;
 
   ::v-deep .van-tabs__wrap {
     margin-bottom: 0;

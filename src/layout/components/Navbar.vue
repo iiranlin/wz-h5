@@ -1,5 +1,5 @@
 <template>
-    <van-tabbar v-model="active" :fixed="false">
+    <van-tabbar v-model="active">
         <van-tabbar-item v-for="(item,index) in navMenu" :key="index" :name="item.link" :to="item.link">
             {{item.title}}
             <template #icon="props">
