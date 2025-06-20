@@ -23,7 +23,7 @@ export default {
     handleResize() {
       if (window.innerWidth > window.innerHeight) {
         this.screenOrientation = 'landscape'; // 横屏
-        document.documentElement.style.fontSize = 64 + 'px'
+        document.documentElement.style.fontSize = 50 + 'px'
       }
     }
   }
