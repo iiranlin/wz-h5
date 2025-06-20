@@ -7,7 +7,26 @@
 </template>
 <script>
 export default {
-	
+  data() {
+    return {
+      screenOrientation: 'portrait' // 默认竖屏
+    };
+  },
+  mounted() {
+    this.handleResize()
+    window.addEventListener('resize', this.handleResize);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+  },
+  methods: {
+    handleResize() {
+      if (window.innerWidth > window.innerHeight) {
+        this.screenOrientation = 'landscape'; // 横屏
+        document.documentElement.style.fontSize = 64 + 'px'
+      }
+    }
+  }
 }
 </script>
 <style>
