@@ -1,12 +1,11 @@
 <template>
-  <div ref="container">
+  <div class="tab-list">
     <div class="list-search-container">
       <van-search
         v-model="formData.keywords"
         placeholder="输入关键字搜索"
         shape="round"
         background="#eef6ff"
-        readonly
         @click="handeSearchClick()">
       </van-search>
     </div>
@@ -20,13 +19,13 @@
         <van-tab v-for="(item,index) in tabList" :key="index" :title="item.title">
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list
-              v-model="allLoading"
+              v-model="listLoading"
               :finished="allFinished"
               finished-text="没有更多了..."
-              @load="getAllList">
+              @load="loadList">
 
               <div v-for="(item,index) in dataList" :key="index" class="box-container">
-                <ul class="list-ul" @click="handleAllItemClick(item)">
+                <ul class="list-ul" @click="viewAcceptDetail(item)">
                   <li>
                     <span class="font-weight">收货单号：</span>
                     <span class="font-weight">{{ item.receiptNumber }}</span>
@@ -45,6 +44,7 @@
                   </li>
                   <li>
                     <span>需求组织：</span>
+                    `
                     <span>{{ item.requiredOrganization }}</span>
                   </li>
                   <li>
@@ -56,7 +56,10 @@
                     <span>{{ item.shippingTime }}</span>
                   </li>
                   <li class="li-status">
-                    <van-tag :type="item.status | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.status == 4}">{{ item.status | statusFilter(tabList) }}</van-tag>
+                    <van-tag :type="item.status | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.status == 4}">{{
+                        item.status | statusFilter(tabList)
+                      }}
+                    </van-tag>
                   </li>
                 </ul>
                 <div class="list-ul-button" v-if="item.status === '1'">
@@ -156,7 +159,7 @@ export default {
       ],
 
       allRefreshLoading: false,
-      allLoading: false,
+      listLoading: false,
       allFinished: false,
 
       allListQuery: {
@@ -200,12 +203,12 @@ export default {
   },
   methods: {
     //获取全部订单
-    getAllList() {
+    loadList() {
       this.allRefreshLoading = false
       this.allFinished = true
     },
     //全部列表条目点击
-    handleAllItemClick(item) {
+    viewAcceptDetail(item) {
       this.$router.push({name: 'DoAcceptDetail', query: {from: 'AcceptanceReturn'}})
     },
     //去审核点击
@@ -219,17 +222,17 @@ export default {
     //全部列表刷新
     allRefresh() {
       this.allRefreshLoading = true
-      this.allLoading = true
+      this.listLoading = true
       this.allFinished = false
       this.allListQuery.pageNum = 1
-      this.getAllList()
+      this.loadList()
     }
   }
 }
 </script>
 <style lang="less" scoped>
 ::v-deep .van-tabs__content {
-  height: calc(100vh - 240px);
+  height: calc(100vh - 6rem);
   overflow-y: scroll;
 }
 

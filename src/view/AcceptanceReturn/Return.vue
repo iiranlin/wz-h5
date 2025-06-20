@@ -6,7 +6,6 @@
         placeholder="输入关键字搜索"
         shape="round"
         background="#eef6ff"
-        readonly
         @click="handeSearchClick()">
       </van-search>
     </div>
@@ -170,10 +169,6 @@ export default {
       //     toast.clear();
       // });
     },
-    //获取待处理数据
-    getWaitHandleList() {
-
-    },
     //获取已审批订单
     getHistoryList() {
       // let toast = this.$toast.loading({
@@ -217,24 +212,6 @@ export default {
       //     },
       // });
     },
-    //待处理列表条目点击
-    handleWaitHandleItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: {
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //已审核列表条目点击
-    handleHistoryItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: {
-      //         id:item.id,
-      //     },
-      // });
-    },
     //查看流程点击
     handleProcessClick() {
       this.$router.push({
@@ -242,23 +219,8 @@ export default {
         params: {}
       })
     },
-    //去审核点击
-    handleExamineClick() {
-      this.$router.push({
-        name: 'MyToDoDetail',
-        params: {
-          type: '0'
-        }
-      })
-    },
     //搜索点击
     handeSearchClick() {
-      this.$router.push({
-        name: 'MyToDoSearch',
-        params: {
-          type: '0'
-        }
-      })
     },
     //全部列表刷新
     allRefresh() {
@@ -276,14 +238,6 @@ export default {
       this.waitListQuery.pageNum = 1
       this.getWaitList()
     },
-    //待处理列表刷新
-    waitHandleRefresh() {
-      this.waitHandleRefreshLoading = true
-      this.waitHandleLoading = true
-      this.waitHandleFinished = false
-      this.waitHandleListQuery.pageNum = 1
-      this.getWaitHandleList()
-    },
     //已审核列表刷新
     historyRefresh() {
       this.historyRefreshLoading = true
@@ -297,7 +251,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .tabs {
-  height: calc(100vh - 188px);
+  height: calc(100vh - 4.7rem);
   overflow-y: scroll;
 }
 
