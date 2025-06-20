@@ -1,6 +1,6 @@
 <template>
   <div class="in-out-management-list">
-    <van-sticky :offset-top="112">
+    <van-sticky>
       <div class="list-search-container">
         <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff" readonly
           @click="handeSearchClick()">
@@ -141,7 +141,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .in-out-management-list {
-
+  ::v-deep .van-sticky--fixed{
+    top: 44px !important;
+  }
   .list-search-container {
     width: 100%;
     top: 0;

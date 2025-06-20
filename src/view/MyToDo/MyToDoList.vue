@@ -1,7 +1,7 @@
 <template>
     <div class="my-to-do-list">
         <van-sticky class="list-search-container">
-            <van-search 
+            <van-search ref="getheight"
                 v-model="formData.keywords" 
                 placeholder="输入关键字搜索" 
                 shape="round" 
@@ -12,7 +12,7 @@
         </van-sticky>
         <div class="tabs">
             <van-tabs 
-                sticky :offset-top="138"
+                sticky
                 v-model="menuActiveIndex" 
                 color="#0571ff"
                 background="#eef6ff"
@@ -200,6 +200,7 @@ export default {
     data() {
         return {
             menuActiveIndex:0,
+            offsetTop: 0,
 
             formData: {
                 keywords: '',
@@ -264,6 +265,9 @@ export default {
             this.historyRefresh();
         }
         this.$store.commit('removeThisPage', 'MyToDoDetail')
+    },
+    mounted () {
+      // this.offsetTop = this.$refs.getheight.offsetHeight
     },
     methods: {
         //获取订单状态字典
@@ -443,6 +447,11 @@ export default {
   flex-direction: column;
   height: 100%;
   overflow-y: auto;
+  .van-tabs{
+    ::v-deep .van-sticky--fixed{
+      top: 54px !important;
+    }
+  }
 }
 
 .van-search {
