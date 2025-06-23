@@ -1,5 +1,5 @@
 <template>
-    <div class="default-container" ref="container">
+    <div class="my-process" ref="container">
         <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
             <van-list 
                 v-model="loading" 
@@ -40,7 +40,7 @@
                 </div>
             </van-list>
         </van-pull-refresh>
-    </div>  
+    </div>
 </template>
 <script>
 
@@ -91,8 +91,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.default-container {
-    padding-top: 10px;
+.my-process {
+  padding-top: 10px;
 }
 li :nth-child(1){
     min-width: 60px
