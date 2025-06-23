@@ -2,10 +2,10 @@
   <div class="acceptance-return">
     <div class="tab-img">
       <div>
-        <img src="@/assets/img/acceptImg.png" alt="">
+        <img src="@/assets/img/acceptImg.png" alt="" @click="changeTab(0)">
       </div>
       <div>
-        <img src="@/assets/img/returnImg.png" alt="">
+        <img src="@/assets/img/returnImg.png" alt="" @click="changeTab(1)">
       </div>
     </div>
     <van-tabs
@@ -38,6 +38,11 @@ export default {
     return {
       menuActiveIndex: 0
     }
+  },
+  methods: {
+    changeTab(index) {
+      this.menuActiveIndex = index
+    }
   }
 }
 </script>
@@ -45,6 +50,8 @@ export default {
 .switch-tab {
   ::v-deep & > .van-tabs__wrap {
     margin-bottom: 0;
+    height: 0.8rem;
+
   }
 }
 
