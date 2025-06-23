@@ -5,21 +5,25 @@
     <van-field
       readonly
       clickable
+      required
       name="calendar"
       :value="value"
       label="预计发货时间"
-      placeholder="点击选择日期"
+      placeholder="请选择日期"
       @click="showCalendar = true"
       :rules="[{ required: true, message: '请填写发货日期' }]"
+      input-align="right"
     />
     <van-calendar v-model="showCalendar" @confirm="onConfirm" />
       <van-field
         v-model="password"
+        required
         type="text"
-        name="确认说明"
+        name="确认情况"
         label="确认说明"
-        placeholder="确认说明"
-        :rules="[{ required: true, message: '请填写说明' }]"
+        placeholder="请输入确认情况"
+        :rules="[{ required: true, message: '请输入确认情况' }]"
+        input-align="right"
       />
       <div style="margin: 16px;">
         <van-button round block type="info" native-type="submit">确认需求</van-button>

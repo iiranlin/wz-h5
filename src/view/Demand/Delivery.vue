@@ -67,11 +67,12 @@
       </van-tabs>
     </div>
     <!-- 增加货运位置 弹出框 -->
-    <van-dialog v-model="freightLocationDiaLog" title="请填写货运当前位置" :show-cancel-button="false"
-      :showConfirmButton="false">
-      <van-form @submit="onSubmit" ref="form" :key="formKey">
-        <van-field v-model="username" name="username" label="当前位置" placeholder="请输入货运当前位置" input-align="right"
-          :rules="[{ required: true, message: '请填写当前位置' }]" />
+    <van-dialog v-model="freightLocationDiaLog" title="请填写货运当前位置" :show-cancel-button="false" 
+      :showConfirmButton="false" >
+      <div style="padding:10px;">
+         <van-form @submit="onSubmit" ref="form" :key="formKey">
+        <van-field v-model="username" name="username" label="当前位置" style="padding:13px 40px;" class="custom-border" placeholder="请输入货运当前位置" input-align="right"
+          :rules="[{ required: true, message: '请填写当前位置' }]" required />
         <div class="locationsteps">
           <van-steps direction="vertical" :active="0">
             <van-step>
@@ -95,6 +96,7 @@
           </div>
         </div>
       </van-form>
+      </div>
     </van-dialog>
   </div>
 </template>
@@ -215,7 +217,8 @@ export default {
     handleSendGoodsClick() {
       Dialog.confirm({
         title: '',
-        message: '确定已发货',
+        message: '确定已经发货！',
+        confirmButtonColor:'#1989fa'
       })
         .then(() => {
           // on confirm
@@ -451,7 +454,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
+.custom-border {
+  border: 1px solid rgb(208,208,208);
+  border-radius: 4px;
+  margin-bottom: 10px;
+ 
+}
 .li-status {
   .van-tag--primary {
     color: #028bff;

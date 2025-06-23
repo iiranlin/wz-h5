@@ -1,9 +1,20 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-      <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff" readonly
-        @click="handeSearchClick()">
-      </van-search>
+     <van-search v-model="formData.keywords" show-action shape="round" background="#eef6ff"
+                placeholder="请输入搜索关键词">
+                <template #action>
+                    <div>搜索</div>
+                </template>
+            </van-search>
+            <!-- <van-search 
+                v-model="formData.keywords" 
+                placeholder="输入关键字搜索" 
+                shape="round" 
+                background="#eef6ff"
+                readonly
+                @click="handeSearchClick()">
+            </van-search> -->
     </div>
     <div class="tabs">
       <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
