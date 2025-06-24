@@ -26,7 +26,6 @@ router.beforeEach(async (to, from, next) => {
         next();
       } else {
         try {
-          console.log(store)
           await store.dispatch("GetInfo")
           next({ ...to, replace: true })
         } catch (error) {

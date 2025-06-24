@@ -26,7 +26,6 @@ const user = {
         authInfo().then(res => {
           if (res.success) {
             const user = res.data;
-            console.log(1)
             commit('SET_ROLES', true)
             commit('SET_USER_INFO', user)
             sessionStorage.setItem("rank", user.rank);

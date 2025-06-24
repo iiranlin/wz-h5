@@ -1,10 +1,10 @@
 <template>
   <div class="planned-management">
     <van-sticky class="planned-management-search">
-      <van-search v-model="value" placeholder="请输入搜索关键词" background="#eef6ff" :show-action="showAction"
+      <van-search v-model="searchValue" placeholder="请输入搜索关键词" background="#eef6ff" :show-action="showAction"
         @search="onSearch" @cancel="onCancel" @focus="onFocus" />
       <van-dropdown-menu active-color="#028bff">
-        <van-dropdown-item v-model="value1" :options="option1" />
+        <van-dropdown-item v-model="statusValue" :options="statusArr" @change="statusChange" />
       </van-dropdown-menu>
       <van-button round @click="resetClick">重置</van-button>
     </van-sticky>
@@ -30,16 +30,16 @@
                 <span>{{ item.materialName }}</span>
               </li>
               <li class="li-status">
-                <van-tag type="primary" round size="medium" v-if="item == 1">未提交</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item == 2">已提交</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item == 3">已生效</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item == 4">修改后生效</van-tag>
-                <van-tag type="danger" round size="medium" v-if="item == 5">已驳回</van-tag>
-                <van-tag type="danger" round size="medium" v-if="item == 6">已撤回</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item == 7">供应中</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item == 8">收货完成</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item == 9">已入库</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item == 10" class="li-status-completed">已完成</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item.status == '0'">未提交</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item.status == 2">已提交</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item.status == 3">已生效</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item.status == 4">修改后生效</van-tag>
+                <van-tag type="danger" round size="medium" v-if="item.status == 5">已驳回</van-tag>
+                <van-tag type="danger" round size="medium" v-if="item.status == 6">已撤回</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item.status == 7">供应中</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item.status == 8">收货完成</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item.status == 9">已入库</van-tag>
+                <van-tag type="primary" round size="medium" v-if="item.status == 10" class="li-status-completed">已完成</van-tag>
               </li>
             </ul>
             <div class="list-ul-button">
@@ -71,29 +71,40 @@ import BackToTop from '@/components/BackToTop'
 import { materialDemandPlanRestList } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'PlannedManagement',
-  dicts: ['cs'],
+  // dicts: ['JLDW'],
   components: { BackToTop },
   data() {
     return {
-      value: '',
+      searchValue: '',
       showAction: false,
       list: [],
       refreshLoading:false,
       loading: false,
       finished: false,
       error: false,
-      value1: 0,
-      option1: [
-        { text: '需求状态', value: 0 },
+      statusValue: '',
+      statusArr: [
+        { text: '全部', value: '' },
+        { text: '未提交', value: '0' },
+        { text: '未确认', value: '2' },
+        { text: '已确认', value: '3' },
+        { text: '供货中', value: '4' },
       ],
       scrollTop1: 0,
+      listQuery: {
+        pageNum: 1,
+        pageSize: 10
+      }
     }
   },
   mounted() {
   },
   methods: {
     onSearch() {
-      this.$toast(this.value);
+      // this.$toast(this.searchValue);
+      this.refreshLoading = true
+      this.listQuery.pageNum = 1
+      this.materialDemandPlanRestList()
     },
     onFocus() {
       // this.showAction = true;
@@ -101,34 +112,32 @@ export default {
     onCancel() {
       // this.showAction = false;
     },
-    onLoad() {
-      // 异步更新数据
+    statusChange () {
+      this.refreshLoading = true
+      this.listQuery.pageNum = 1
       this.materialDemandPlanRestList()
-      // this.loading = false
-      // setTimeout(() => {
-      //   if (this.refreshLoading) {
-      //     this.list = [];
-      //     this.refreshLoading = false;
-      //   }
-
-      //   for (let i = 0; i < 10; i++) {
-      //     this.list.push(this.list.length + 1)
-      //   }
-      //   // 加载状态结束
-      //   this.loading = false
-
-      //   // 数据全部加载完成
-      //   if (this.list.length >= 40) {
-      //     this.finished = true
-      //   }
-      // }, 500)
+    },
+    resetClick() {
+      this.refreshLoading = true
+      this.statusValue = ''
+      this.searchValue = ''
+      this.listQuery.pageNum = 1
+      this.materialDemandPlanRestList()
+    },
+    onLoad() {
+      this.materialDemandPlanRestList()
     },
     materialDemandPlanRestList () {
       if (this.refreshLoading) {
         this.list = [];
         this.refreshLoading = false;
       }
-      materialDemandPlanRestList().then( ({data}) => {
+      const params = {
+        status: this.statusValue,
+        planName: this.searchValue,
+        ...this.listQuery
+      }
+      materialDemandPlanRestList(params).then( ({data}) => {
         this.list.push(...(data.list || []))
         // 数据全部加载完成
         if (this.list.length >= data.total) {
@@ -137,7 +146,6 @@ export default {
       }).catch(() => {
         this.error = true
       }).finally( (err) => {
-        console.log(err)
         this.loading = false
       })
     },
@@ -146,11 +154,11 @@ export default {
       this.refreshLoading = true
       this.loading = true
       this.finished = false
-      // this.listQuery.pageNum = 1
+      this.listQuery.pageNum = 1
       this.onLoad();
     },
-    handleWaitItemClick() {
-      this.$router.push({ name: 'RequirementDetails' })
+    handleWaitItemClick(item) {
+      this.$router.push({ name: 'RequirementDetails', query: {id: item.id} })
     },
     addClick() {
       this.$router.push({ name: 'RequirementFilling' })
@@ -177,9 +185,6 @@ export default {
         params: {
         },
       });
-    },
-    resetClick() {
-      this.value = ''
     },
     deleteClick() {
       this.$dialog.confirm({
