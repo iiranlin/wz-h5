@@ -22,31 +22,39 @@
         <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.id">
 
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-            <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
+            <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad">
 
-              <div v-for="(item, index) in 4" :key="index" class="box-container" @click="handleAllItemClick(item)">
+              <div v-for="(item, index) in listGhsData" :key="index" class="box-container" @click="handleAllItemClick(item)">
                 <ul class="list-ul">
                   <li>
                     <span class="font-weight">需求编号:</span>
-                    <span class="font-weight">XQ2025050007</span>
+                    <span class="font-weight">{{ item.planNumber }}</span>
                   </li>
                   <li>
                     <span style="width: 230px;">供应需求：</span>
-                    <span class="text">分部用料需求</span>
+                    <span class="text">{{ item.planName }}</span>
                   </li>
                   <li>
                     <span style="width: 230px;">需求项目：</span>
-                    <span>工程部</span>
+                    <span>{{ item.sectionName }}</span>
                   </li>
                   <li>
                     <span style="width: 230px;">需求计划表:</span>
-                    <span style="color:#1989fa;">查看附件</span>
+                    <span style="color:#1989fa;">
+                      <template>
+                        <div v-for="(item1,index1) in item.fileList" :key="index1">
+                          <div v-for="(item2,index2) in item1.fileList" :key="index2"> 
+                            <a href="javascript:;" @click="dialogPopup(item2.filePath)">{{ item2.fileName }}</a>
+                          </div>
+                        </div>
+                      </template>
+                    </span>
                   </li>
                   <li class="li-status">
-                    <van-tag type="primary" round size="medium" v-if="index == 0">未确认</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="index == 1">已确认</van-tag>
-                    <van-tag type="primary" round size="success" v-if="index == 2">供应中</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="index == 3" class="li-status-completed">已完成</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="item.status == 2">货运中</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="item.status == 1">未发货</van-tag>
+                    <van-tag type="primary" round size="success" v-if="item.status == 4">供应中</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="item.status == 3" class="li-status-completed">已完成</van-tag>
                   </li>
                 </ul>
                 <div class="list-ul-button">
@@ -66,11 +74,15 @@
 
       </van-tabs>
     </div>
+    <!-- 查看pdf -->
+    <van-dialog v-model="showPdf" title="查看pdf" show-cancel-button>
+      <img :src="imgPdf" />
+    </van-dialog>
   </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
-
+import {demandManagementList} from '@/api/demand/demandManagement'
 export default {
   name: 'MyToDoList',
   mixins: [keepPages],
@@ -78,7 +90,7 @@ export default {
   data() {
     return {
       menuActiveIndex: 0,
-
+      showPdf:false,
       formData: {
         keywords: '',
       },
@@ -88,49 +100,10 @@ export default {
       allRefreshLoading: false,
       allLoading: false,
       allFinished: false,
-
-      allListQuery: {
-        pageNum: 1,
-        pageSize: 10,
+      params:{
+        pageNum:1,
+        pageSize:10
       },
-      //待审批
-      waitOrderList: [],
-
-      waitRefreshLoading: false,
-      waitLoading: false,
-      waitFinished: false,
-
-      waitListQuery: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-      //待处理
-      waitHandleList: [],
-
-      waitHandleRefreshLoading: false,
-      waitHandleLoading: false,
-      waitHandleFinished: false,
-
-      waitHandleListQuery: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-      //已审批
-      historyOrderList: [],
-
-      historyRefreshLoading: false,
-      historyLoading: false,
-      historyFinished: false,
-
-      historyListQuery: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-
-      //订单状态字典
-      orderStatusOptions: [],
-      //优先保障字典
-      guaranteeOptions: [],
       tabList: [
         {
           id: 0,
@@ -152,22 +125,57 @@ export default {
           id: 4,
           title: '已完成',
         }
-      ]
+      ],
+      listGhsData:[
+       {
+         status:4,
+         planName:'2025年6甲供物资需求-08',
+         planNumber: "XQ2025060199",
+         sectionName: "沪宁合高铁站前2标",
+         fileList:[
+          {
+            fileList:[
+              {
+                fileName: "需求计划表.pdf",
+                filePath: "sa/saleOrder/202506/9c83f0c415a24228a955afd5ba17322d.pdf"
+              }
+            ]
+          }
+         ],
+         createUserName: "施工单位工程部_提报需求计划",
+         submitTime: 1750309850000
+       }
+      ],
+      imgPdf:""
     };
   },
   created() {
-    // this.getOrderStatusOptions();
-  },
-  activated() {
-    if (this.$route.params.refresh) {
-      this.waitRefresh();
-      this.historyRefresh();
-    }
-    this.$store.commit('removeThisPage', 'MyToDoDetail')
+    this.getList();
   },
   methods: {
+    //初始化请求
+    getList(){
+       this.allLoading = true;
+      demandManagementList(this.params.pageNum,this.params.pageSize).then((res) => {
+          if (res.code == 0) {
+            this.allLoading = false
+            this.params.pageNum++;
+            if(this.listGhsData.length<1){
+              this.listGhsData = res.data.list
+            }else{
+              this.listGhsData = this.listGhsData.concat(res.data.list)
+            }
+            this.pageTotal = res.data.total
+          }
+        })
+    },
     tabsChange(e) {
-      console.log(e)
+      this.params.pageNum = 1;
+      this.getList()
+    },
+    dialogPopup(path){
+      this.imgPdf = path
+      this.showPdf = true
     },
     //发货
     handleSendGoodsClick() {
@@ -190,160 +198,18 @@ export default {
       this.allRefreshLoading = false;
       this.allFinished = true;
     },
-    //获取待审批的订单
-    getWaitList() {
-      // let toast = this.$toast.loading({
-      //     duration: 0,
-      //     message: "正在加载...",
-      //     forbidClick: true
-      // });
-      // let  params = {
-      //     reviewCompleted: '0',
-      // }
-      // gcywVehicleRequestListPageForH5(Object.assign({}, params,this.waitListQuery)).then(({ data }) => {
-      //     if(this.waitRefreshLoading){
-      //         this.waitOrderList = [];
-      this.waitRefreshLoading = false;
-      //     }
-      //     this.waitLoading = false;
-      //     this.waitOrderList = [...this.waitOrderList, ...data.list];
-
-      //     if (!data.hasNextPage) {
-      this.waitFinished = true;
-      //         return;
-      //     }
-      //     this.waitListQuery.pageNum = this.waitListQuery.pageNum + 1;
-      // }).catch((error) => {
-      //     this.waitLoading = false;
-      //     this.waitFinished = true;
-      // }).finally(() => {
-      //     toast.clear();
-      // });
-    },
-    //获取待处理数据
-    getWaitHandleList() {
-
-    },
-
-    //获取已审批订单
-    getHistoryList() {
-      // let toast = this.$toast.loading({
-      //     duration: 0,
-      //     message: "正在加载...",
-      //     forbidClick: true
-      // });
-      // let  params = {
-      //     reviewCompleted: '1',
-      // }
-      // gcywVehicleRequestListPageForH5(Object.assign({}, params,this.historyListQuery)).then(({ data }) => {
-      //     if(this.historyRefreshLoading){
-      //         this.historyOrderList = [];
-      this.historyRefreshLoading = false;
-      //     }
-      //     this.historyLoading = false;
-      //     this.historyOrderList = [...this.historyOrderList, ...data.list];
-
-      //     if (!data.hasNextPage) {
-      this.historyFinished = true;
-      //         return;
-      //     }
-      //     this.historyListQuery.pageNum = this.historyListQuery.pageNum + 1;
-      // }).catch((error) => {
-      //     this.historyLoading = false;
-      //     this.historyFinished = true;
-      // }).finally(() => {
-      //     toast.clear();
-      // });
-    },
-    //全部列表条目点击
-    handleAllItemClick(item) {
-
-    },
-    //待审核列表条目点击
-    handleWaitItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: { 
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //待处理列表条目点击
-    handleWaitHandleItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: { 
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //已审核列表条目点击
-    handleHistoryItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: { 
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //查看流程点击
-    handleProcessClick() {
-      this.$router.push({
-        name: "MyProcess",
-        params: {
-
-        },
-      });
-    },
-    //去审核点击
-    handleExamineClick() {
-      this.$router.push({
-        name: "MyToDoDetail",
-        params: {
-          type: '0',
-        },
-      });
-    },
-    //搜索点击
-    handeSearchClick() {
-      this.$router.push({
-        name: "MyToDoSearch",
-        params: {
-          type: '0',
-        },
-      });
-    },
     //全部列表刷新
     allRefresh() {
-      this.allRefreshLoading = true;
-      this.allLoading = true;
+      this.params.pageNum=1
       this.allFinished = false;
-      this.allListQuery.pageNum = 1;
-      this.getAllList();
+      this.getList()
+      
     },
-    //待审核列表刷新
-    waitRefresh() {
-      this.waitRefreshLoading = true;
-      this.waitLoading = true;
-      this.waitFinished = false;
-      this.waitListQuery.pageNum = 1;
-      this.getWaitList();
-    },
-    //待处理列表刷新
-    waitHandleRefresh() {
-      this.waitHandleRefreshLoading = true;
-      this.waitHandleLoading = true;
-      this.waitHandleFinished = false;
-      this.waitHandleListQuery.pageNum = 1;
-      this.getWaitHandleList();
-    },
-    //已审核列表刷新
-    historyRefresh() {
-      this.historyRefreshLoading = true;
-      this.historyLoading = true;
-      this.historyFinished = false;
-      this.historyListQuery.pageNum = 1;
-      this.getHistoryList();
+     // 上拉加载处理函数
+    onLoad() {
+     this.params.pageNum++;
+      // this.loading = true
+      this.getList()
     },
   },
 };
