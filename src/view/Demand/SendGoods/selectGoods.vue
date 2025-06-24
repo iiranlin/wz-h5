@@ -7,8 +7,8 @@
         @search="onSearch" @cancel="onCancel" @focus="onFocus" />
     </div>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <van-checkbox-group v-model="result">
-        <van-checkbox shape="square" :name="index+''" v-for="(item, index) in list" :key="index">
+      <van-checkbox-group v-model="result" @change="selectGoods">
+        <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index">
           <ul class="list-ul">
             <li>
               <span class="font-weight">物资名称：</span>
@@ -75,7 +75,7 @@
     </van-list>
     <div class="default-button-container">
         <div>
-            已选物资<span class="number">3</span>项
+            已选物资<span class="number">{{ selectTotal }}</span>项
         </div>
       <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
     </div>
@@ -84,6 +84,7 @@
 </template>
 <script>
 import BackToTop from '@/components/BackToTop'
+import {demandChooseGoods,demandSnedGoodsUpload} from '@/api/demand/demandManagement'
 export default {
   name: 'SelectMaterials',
   components: { BackToTop },
@@ -94,12 +95,25 @@ export default {
       loading: false,
       finished: false,
       result: [],
-      list: []
+      list: [],
+      goodsId:'',
+      selectGoodsList:[],
+      selectTotal:0
     }
   },
   mounted() {
+   this.goodsId = this.$route.query.id
+
+    this.getSelectGoods()
   },
   methods: {
+    getSelectGoods(){
+      demandChooseGoods(this.goodsId).then((res)=>{
+        if(res.code==0){
+          this.selectGoodsList = res.data.details
+        }
+      })
+    },
     onSearch() {
       this.$toast(this.value);
     },
@@ -131,12 +145,12 @@ export default {
       this.$router.push({ name: 'SelectContract' })
     },
     addClick() {
-    //   if(!this.result.length){
-    //     this.$notify({ type: 'warning', message: '请选择需求物资' });
-    //     return
-    //   }
       this.$router.push({ path: 'finishGoods' })
-    }
+    },
+    selectGoods(e){
+      console.log(e.flat())
+      this.selectTotal = e.length
+    },
   }
 }
 </script>

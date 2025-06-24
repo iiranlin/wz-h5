@@ -120,7 +120,7 @@ export default {
         }
         return (obj[username] && obj[username]()) || this.constructionUnit
       }
-			return this.constructionUnit;
+			return this.supplier;
 		},
 	},
 }

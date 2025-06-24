@@ -13,19 +13,19 @@
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
 
-              <div v-for="(item, index) in 3" :key="index" class="box-container" @click="handleAllItemClick(item)">
+              <div v-for="(item, index) in listBySendData" :key="index" class="box-container" @click="handleAllItemClick(item)">
                 <ul class="list-ul">
                   <li>
                     <span class="font-weight">发货单号:</span>
-                    <span class="font-weight">FH20250531004</span>
+                    <span class="font-weight">{{ item.shipmentBatchNumber }}</span>
                   </li>
                   <li>
                     <span>需求编号:</span>
-                    <span>XQ2025050007</span>
+                    <span>{{ item.planNumber }}</span>
                   </li>
                   <li>
                     <span style="width: 230px;">供应需求：</span>
-                    <span class="text">南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
+                    <span class="text">{{ item.planName }}</span>
                   </li>
                   <li>
                     <span style="width: 230px;">物流单号：</span>
@@ -33,7 +33,7 @@
                   </li>
                   <li>
                     <span style="width: 230px;">需求项目: </span>
-                    <span>项目名称</span>
+                    <span>{{ item.sectionName }}</span>
                   </li>
                   <li>
                     <span style="width: 230px;">发货单附件:</span>
@@ -196,7 +196,29 @@ export default {
           title: '已完成',
         }
       ],
-      freightLocationDiaLog: false
+      freightLocationDiaLog: false,
+       listBySendData:[
+       {
+         status:2,
+         planName:"2025年6甲供物资需求-08",
+         shipmentBatchNumber:'FH202506190002-08',
+         planNumber: "XQ2025060199",
+         sectionName: "沪宁合高铁站前2标",
+         fileList:[
+          {
+            fileList:[
+              {
+                fileName: "需求计划表.pdf",
+                filePath: "sa/saleOrder/202506/9c83f0c415a24228a955afd5ba17322d.pdf"
+              }
+            ]
+          }
+         ],
+         createUserName: "施工单位工程部_提报需求计划",
+         submitTime: 1750309850000
+       }
+
+      ]
     };
   },
   created() {
