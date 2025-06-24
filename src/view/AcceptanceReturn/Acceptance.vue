@@ -15,54 +15,54 @@
         color="#0571ff"
         background="#eef6ff"
         title-active-color="#0571ff"
-        title-inactive-color="#2e2e2e">
+        title-inactive-color="#2e2e2e"
+        @click="handleChange">
         <van-tab v-for="(item,index) in tabList" :key="index" :title="item.title">
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list
               v-model="listLoading"
               :finished="allFinished"
               finished-text="没有更多了..."
-              @load="loadList">
+              @load="getList">
 
               <div v-for="(item,index) in dataList" :key="index" class="box-container">
                 <ul class="list-ul" @click="viewAcceptDetail(item)">
                   <li>
                     <span class="font-weight">收货单号：</span>
-                    <span class="font-weight">{{ item.receiptNumber }}</span>
+                    <span class="font-weight">{{ item.takeNumber }}</span>
                   </li>
                   <li>
                     <span>发货单号：</span>
-                    <span>{{ item.deliveryNumber }}</span>
+                    <span>{{ item.shipmentBatchNumber }}</span>
                   </li>
                   <li>
                     <span>供应需求：</span>
-                    <span>{{ item.supplyDemand }}</span>
+                    <span>{{ item.planName }}</span>
                   </li>
                   <li>
                     <span>物流单号：</span>
-                    <span>{{ item.logisticsNumber }}</span>
+                    <span>{{ item.oddNumbers?item.oddNumbers:"其他" }}</span>
                   </li>
                   <li>
                     <span>需求组织：</span>
-                    `
-                    <span>{{ item.requiredOrganization }}</span>
+                    <span>{{ item.deptName }}</span>
                   </li>
                   <li>
                     <span>供应商：</span>
-                    <span>{{ item.supplier }}</span>
+                    <span>{{ item.sellerName }}</span>
                   </li>
                   <li>
                     <span>发货时间：</span>
-                    <span>{{ item.shippingTime }}</span>
+                    <span>{{ item.shippingDate | formatDate}}</span>
                   </li>
                   <li class="li-status">
-                    <van-tag :type="item.status | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.status == 4}">{{
-                        item.status | statusFilter(tabList)
+                    <van-tag :type="item.takeStatus | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.takeStatus == 4}">{{
+                        item.takeStatus | statusFilter(tabList)
                       }}
                     </van-tag>
                   </li>
                 </ul>
-                <div class="list-ul-button" v-if="item.status === '1'">
+                <div class="list-ul-button" v-if="item.takeStatus === '1'">
                   <van-button class="button-info" round type="info" @click="handleDoAccept()">初验收货</van-button>
                 </div>
               </div>
@@ -75,6 +75,7 @@
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import {ListTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 
 export default {
   name: 'Acceptance',
@@ -95,69 +96,6 @@ export default {
         {title: '已退货', status: '4'}
       ],
       dataList: [],
-      allList: [
-        {
-          receiptNumber: '',
-          deliveryNumber: 'FH202505310006',
-          supplyDemand: '2025年5月甲供物资计划申请表-04',
-          logisticsNumber: 'Es130343925KR',
-          requiredOrganization: '施工单位名称（分部）',
-          supplier: '五道口有限责任公司',
-          shippingTime: '2025-04-20',
-          status: '1'
-        },
-        {
-          receiptNumber: '',
-          deliveryNumber: 'FH202505310005',
-          supplyDemand: '2025年5月甲供物资计划申请表-03',
-          logisticsNumber: 'Es130343925KR',
-          requiredOrganization: '施工单位名称（分部）',
-          supplier: '五道口有限责任公司',
-          shippingTime: '2025-04-20',
-          status: '1'
-        },
-        {
-          receiptNumber: 'SH202506010004',
-          deliveryNumber: 'FH202505310004',
-          supplyDemand: '2025年5月甲供物资计划申请表-02',
-          logisticsNumber: 'Es130343925KR',
-          requiredOrganization: '施工单位名称（分部）',
-          supplier: '五道口有限责任公司',
-          shippingTime: '2025-04-20',
-          status: '2'
-        },
-        {
-          receiptNumber: 'SH202506010003',
-          deliveryNumber: 'FH202505310003',
-          supplyDemand: '2025年5月甲供物资计划申请表-04',
-          logisticsNumber: '其它',
-          requiredOrganization: '施工单位名称（分部）',
-          supplier: '五道口有限责任公司',
-          shippingTime: '2025-04-20',
-          status: '2'
-        },
-        {
-          receiptNumber: 'SH202506010002',
-          deliveryNumber: 'FH202505310002',
-          supplyDemand: '2025年5月甲供物资计划申请表-03',
-          logisticsNumber: '其它',
-          requiredOrganization: '施工单位名称（分部）',
-          supplier: '五道口有限责任公司',
-          shippingTime: '2025-04-20',
-          status: '3'
-        },
-        {
-          receiptNumber: 'SH202506010001',
-          deliveryNumber: 'FH202505310001',
-          supplyDemand: '2025年5月甲供物资计划申请表-02',
-          logisticsNumber: 'Es130343925KR',
-          requiredOrganization: '施工单位名称（分部）',
-          supplier: '五道口有限责任公司',
-          shippingTime: '2025-04-20',
-          status: '4'
-        }
-      ],
-
       allRefreshLoading: false,
       listLoading: false,
       allFinished: false,
@@ -180,19 +118,22 @@ export default {
         {status: '4', type: 'default'}
       ]
       return statusMap.find(item => item.status === status).type
-    }
-  },
-  watch: {
-    menuActiveIndex(val) {
-      if (val != '0') {
-        this.dataList = this.allList.filter(item => item.status == val)
-      } else {
-        this.dataList = this.allList
+    },
+    formatDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }else{
+        return ""
       }
+        
     }
+
   },
   created() {
-    this.dataList = this.allList
   },
   activated() {
     if (this.$route.params.refresh) {
@@ -202,6 +143,21 @@ export default {
     this.$store.commit('removeThisPage', 'MyToDoDetail')
   },
   methods: {
+
+    //收获列表
+    getList(val){
+      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,takeStatus:val?val:''}
+      ListTake(params).then((res) => {
+        if(res.success){
+          this.dataList = res.data.list
+        }
+       })
+       this.allFinished=true
+    },
+    handleChange(val){
+      this.getList(val)
+
+    },
     //获取全部订单
     loadList() {
       this.allRefreshLoading = false
@@ -209,7 +165,10 @@ export default {
     },
     //全部列表条目点击
     viewAcceptDetail(item) {
-      this.$router.push({name: 'DoAcceptDetail', query: {from: 'AcceptanceReturn'}})
+      if(item.takeStatus==2){
+        this.$router.push({name: 'DoAcceptDetail', query: {from: 'AcceptanceReturn',id:item.id}})
+      }
+      
     },
     //去审核点击
     handleDoAccept() {

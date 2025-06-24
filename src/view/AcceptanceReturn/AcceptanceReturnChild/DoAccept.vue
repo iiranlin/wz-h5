@@ -4,23 +4,23 @@
       <ul class="detail-ul">
         <li>
           <span class="font-weight">供应需求：</span>
-          <span class="font-weight">2025年5月甲供物资需求计划表–04</span>
+          <span class="font-weight">{{dataList.planName}}</span>
         </li>
         <li>
           <span>需求项目：</span>
-          <span>标段项目名称</span>
-        </li>
+          <span>{{dataList.sectionName}}</span>
+        </li> 
         <li>
           <span>需求组织：</span>
-          <span>施工单位名称（分部）</span>
+          <span>{{dataList.deptName}}</span>
         </li>
         <li>
           <span>供应商：</span>
-          <span>供应商名称</span>
+          <span>{{dataList.sellerName}}</span>
         </li>
         <li>
-          <span>发货时间：</span>
-          <span>2025年6月11日</span>
+          <span>收货时间：</span>
+          <span>{{dataList.takeDate |formatDate }}</span>
         </li>
       </ul>
     </div>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="detail-title">收货明细</div>
-    <div class="box-container" v-for="(item, index) in dataList" :key="index">
+    <div class="box-container" v-for="(item, index) in dataList.materialCirculationDetailsTableDTOS" :key="index">
       <ul class="detail-ul">
         <li class="save-materials-li">
           <span class="font-weight">物资名称：</span>
@@ -202,6 +202,7 @@
 <script>
 import {parseTime} from '@/utils'
 import imgMixin from '@/view/mixins/imgMixin'
+import {defaultTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 
 export default {
   name: 'DoAccept',
@@ -224,121 +225,153 @@ export default {
         remark: ''
       },
       showDatePicker: false, // 控制日期选择器显示
-      dataList: [
-        {
-          materialName: '计算机联锁设备',
-          specificationModel: '2x2取2s10组道岔',
-          unit: '套',
-          packagingForm: '捆包',
-          demandQuantity: 5,
-          shipmentQuantity: 2,
-          productionDate: '2025年6月1日',
-          validUntil: '2026年6月1日',
-          supplyTime: '2025年6月16日',
-          usageLocation: '地点1, 地点2',
-          deliveryAddress: '领航科技大厦',
-          contactInfo: '张晓明 15888888888',
-          investor: '五道口投资公司',
-          investmentRatio: '40%; 60%',
-          receiveQuantity: null,
-          returnQuantity: null,
-          certificatePath: '道岔合格证.pdf',
-          inspectionReportPath: '道岔厂检报告.pdf',
-          returnAttachmentPath: '不合格道岔附件.pdf',
-          remark: '不合格道岔进行退货处理'
-        },
-        {
-          materialName: '计算机联锁设备',
-          specificationModel: '2x2取2s10组道岔',
-          unit: '套',
-          packagingForm: '捆包',
-          demandQuantity: 5,
-          shipmentQuantity: 3,
-          productionDate: '2025年6月1日',
-          validUntil: '2026年6月1日',
-          supplyTime: '2025年6月16日',
-          usageLocation: '地点1, 地点2',
-          deliveryAddress: '领航科技大厦',
-          contactInfo: '张晓明 15888888888',
-          investor: '五道口投资公司',
-          investmentRatio: '40%; 60%',
-          receiveQuantity: null,
-          returnQuantity: null,
-          certificatePath: '道岔合格证.pdf',
-          inspectionReportPath: '道岔厂检报告.pdf',
-          returnAttachmentPath: '不合格道岔附件.pdf',
-          remark: ''
-        },
-        {
-          materialName: '计算机联锁设备',
-          specificationModel: '2x2取2s10组道岔',
-          unit: '套',
-          packagingForm: '捆包',
-          demandQuantity: 5,
-          shipmentQuantity: 2,
-          productionDate: '2025年6月1日',
-          validUntil: '2026年6月1日',
-          supplyTime: '2025年6月16日',
-          usageLocation: '地点1, 地点2',
-          deliveryAddress: '领航科技大厦',
-          contactInfo: '张晓明 15888888888',
-          investor: '五道口投资公司',
-          investmentRatio: '40%; 60%',
-          receiveQuantity: null,
-          returnQuantity: null,
-          certificatePath: '道岔合格证.pdf',
-          inspectionReportPath: '道岔厂检报告.pdf',
-          returnAttachmentPath: '不合格道岔附件.pdf',
-          remark: ''
-        },
-        {
-          materialName: '计算机联锁设备',
-          specificationModel: '2x2取2s10组道岔',
-          unit: '套',
-          packagingForm: '捆包',
-          demandQuantity: 5,
-          shipmentQuantity: 2,
-          productionDate: '2025年6月1日',
-          validUntil: '2026年6月1日',
-          supplyTime: '2025年6月16日',
-          usageLocation: '地点1, 地点2',
-          deliveryAddress: '领航科技大厦',
-          contactInfo: '张晓明 15888888888',
-          investor: '五道口投资公司',
-          investmentRatio: '40%; 60%',
-          receiveQuantity: null,
-          returnQuantity: null,
-          certificatePath: '道岔合格证.pdf',
-          inspectionReportPath: '道岔厂检报告.pdf',
-          returnAttachmentPath: '不合格道岔附件.pdf',
-          remark: ''
-        },
-        {
-          materialName: '计算机联锁设备',
-          specificationModel: '2x2取2s10组道岔',
-          unit: '套',
-          packagingForm: '捆包',
-          demandQuantity: 5,
-          shipmentQuantity: 1,
-          productionDate: '2025年6月1日',
-          validUntil: '2026年6月1日',
-          supplyTime: '2025年6月16日',
-          usageLocation: '地点1, 地点2',
-          deliveryAddress: '领航科技大厦',
-          contactInfo: '张晓明 15888888888',
-          investor: '五道口投资公司',
-          investmentRatio: '40%; 60%',
-          receiveQuantity: null,
-          returnQuantity: null,
-          certificatePath: '道岔合格证.pdf',
-          inspectionReportPath: '道岔厂检报告.pdf',
-          returnAttachmentPath: '不合格道岔附件.pdf',
-          remark: ''
-        }
-      ]
+      // dataList: [
+      //   {
+      //     materialName: '计算机联锁设备',
+      //     specificationModel: '2x2取2s10组道岔',
+      //     unit: '套',
+      //     packagingForm: '捆包',
+      //     demandQuantity: 5,
+      //     shipmentQuantity: 2,
+      //     productionDate: '2025年6月1日',
+      //     validUntil: '2026年6月1日',
+      //     supplyTime: '2025年6月16日',
+      //     usageLocation: '地点1, 地点2',
+      //     deliveryAddress: '领航科技大厦',
+      //     contactInfo: '张晓明 15888888888',
+      //     investor: '五道口投资公司',
+      //     investmentRatio: '40%; 60%',
+      //     receiveQuantity: null,
+      //     returnQuantity: null,
+      //     certificatePath: '道岔合格证.pdf',
+      //     inspectionReportPath: '道岔厂检报告.pdf',
+      //     returnAttachmentPath: '不合格道岔附件.pdf',
+      //     remark: '不合格道岔进行退货处理'
+      //   },
+      //   {
+      //     materialName: '计算机联锁设备',
+      //     specificationModel: '2x2取2s10组道岔',
+      //     unit: '套',
+      //     packagingForm: '捆包',
+      //     demandQuantity: 5,
+      //     shipmentQuantity: 3,
+      //     productionDate: '2025年6月1日',
+      //     validUntil: '2026年6月1日',
+      //     supplyTime: '2025年6月16日',
+      //     usageLocation: '地点1, 地点2',
+      //     deliveryAddress: '领航科技大厦',
+      //     contactInfo: '张晓明 15888888888',
+      //     investor: '五道口投资公司',
+      //     investmentRatio: '40%; 60%',
+      //     receiveQuantity: null,
+      //     returnQuantity: null,
+      //     certificatePath: '道岔合格证.pdf',
+      //     inspectionReportPath: '道岔厂检报告.pdf',
+      //     returnAttachmentPath: '不合格道岔附件.pdf',
+      //     remark: ''
+      //   },
+      //   {
+      //     materialName: '计算机联锁设备',
+      //     specificationModel: '2x2取2s10组道岔',
+      //     unit: '套',
+      //     packagingForm: '捆包',
+      //     demandQuantity: 5,
+      //     shipmentQuantity: 2,
+      //     productionDate: '2025年6月1日',
+      //     validUntil: '2026年6月1日',
+      //     supplyTime: '2025年6月16日',
+      //     usageLocation: '地点1, 地点2',
+      //     deliveryAddress: '领航科技大厦',
+      //     contactInfo: '张晓明 15888888888',
+      //     investor: '五道口投资公司',
+      //     investmentRatio: '40%; 60%',
+      //     receiveQuantity: null,
+      //     returnQuantity: null,
+      //     certificatePath: '道岔合格证.pdf',
+      //     inspectionReportPath: '道岔厂检报告.pdf',
+      //     returnAttachmentPath: '不合格道岔附件.pdf',
+      //     remark: ''
+      //   },
+      //   {
+      //     materialName: '计算机联锁设备',
+      //     specificationModel: '2x2取2s10组道岔',
+      //     unit: '套',
+      //     packagingForm: '捆包',
+      //     demandQuantity: 5,
+      //     shipmentQuantity: 2,
+      //     productionDate: '2025年6月1日',
+      //     validUntil: '2026年6月1日',
+      //     supplyTime: '2025年6月16日',
+      //     usageLocation: '地点1, 地点2',
+      //     deliveryAddress: '领航科技大厦',
+      //     contactInfo: '张晓明 15888888888',
+      //     investor: '五道口投资公司',
+      //     investmentRatio: '40%; 60%',
+      //     receiveQuantity: null,
+      //     returnQuantity: null,
+      //     certificatePath: '道岔合格证.pdf',
+      //     inspectionReportPath: '道岔厂检报告.pdf',
+      //     returnAttachmentPath: '不合格道岔附件.pdf',
+      //     remark: ''
+      //   },
+      //   {
+      //     materialName: '计算机联锁设备',
+      //     specificationModel: '2x2取2s10组道岔',
+      //     unit: '套',
+      //     packagingForm: '捆包',
+      //     demandQuantity: 5,
+      //     shipmentQuantity: 1,
+      //     productionDate: '2025年6月1日',
+      //     validUntil: '2026年6月1日',
+      //     supplyTime: '2025年6月16日',
+      //     usageLocation: '地点1, 地点2',
+      //     deliveryAddress: '领航科技大厦',
+      //     contactInfo: '张晓明 15888888888',
+      //     investor: '五道口投资公司',
+      //     investmentRatio: '40%; 60%',
+      //     receiveQuantity: null,
+      //     returnQuantity: null,
+      //     certificatePath: '道岔合格证.pdf',
+      //     inspectionReportPath: '道岔厂检报告.pdf',
+      //     returnAttachmentPath: '不合格道岔附件.pdf',
+      //     remark: ''
+      //   }
+      // ],
+      id:"",
+      dataList:[]
     }
   },
+  filters: {
+    formatDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        const hh = (dt.getHours() + '').padStart(2, '0');
+        const mm = (dt.getMinutes() + '').padStart(2, '0');
+        const ss = (dt.getSeconds() + '').padStart(2, '0');
+      
+        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+
+      }else{
+        return ""
+      }
+        
+    }
+
+  },
   methods: {
+    getDetailList(){
+
+       defaultTake(this.id).then((res)=>{
+          console.log(res,"res")
+          if(res.success){
+            this.dataList = res.data
+          }
+       })
+
+    },
     onDateConfirm() {
       this.formData.currentDate = parseTime(this.minDate, '{y}-{m}-{d}')
       this.showDatePicker = false
@@ -353,6 +386,8 @@ export default {
   },
   mounted() {
     this.from = this.$route.query.from
+    this.id = this.$route.query.id
+    this.getDetailList()  
   }
 }
 </script>
