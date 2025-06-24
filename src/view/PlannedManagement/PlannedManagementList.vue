@@ -9,8 +9,8 @@
       <van-button round @click="resetClick">重置</van-button>
     </van-sticky>
     <div class="planned-management-list">
-      <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功" >
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error" error-text="请求失败，点击重新加载" @load="onLoad">
           <div v-for="(item, index) in list" :key="index" class="box-container">
             <ul class="list-ul" @click="handleWaitItemClick(item)">
               <li>
@@ -68,6 +68,7 @@
 </template>
 <script>
 import BackToTop from '@/components/BackToTop'
+import { materialDemandPlanRestList } from '@/api/prodmgr-inv/plannedManagement'
 export default {
   name: 'PlannedManagement',
   components: { BackToTop },
@@ -79,6 +80,7 @@ export default {
       refreshLoading:false,
       loading: false,
       finished: false,
+      error: false,
       value1: 0,
       option1: [
         { text: '需求状态', value: 0 },
@@ -100,6 +102,12 @@ export default {
     },
     onLoad() {
       // 异步更新数据
+      // if (this.refreshLoading) {
+      //   this.list = [];
+      //   this.refreshLoading = false;
+      // }
+      // this.materialDemandPlanRestList()
+      this.loading = false
       setTimeout(() => {
         if (this.refreshLoading) {
           this.list = [];
@@ -117,6 +125,20 @@ export default {
           this.finished = true
         }
       }, 500)
+    },
+    materialDemandPlanRestList () {
+      materialDemandPlanRestList().then( ({data}) => {
+        this.list.push(...(data.list || []))
+        // 数据全部加载完成
+        if (this.list.length >= data.total) {
+          this.finished = true
+        }
+      }).catch(() => {
+        this.error = true
+      }).finally( (err) => {
+        console.log(err)
+        this.loading = false
+      })
     },
     //列表刷新
     onRefresh(){
