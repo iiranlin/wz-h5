@@ -2,45 +2,45 @@
     <div class="default-container" ref="container">
         <ul class="list-ul">
             <li>
-                <span style="width:480px;">供应需求名称：</span>
-                <span>南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
+                <span>供应需求名称：</span>
+                <span>{{ goodsMsg.planName }}</span>
             </li>
 
             <li class="li-item-both">
-                <span style="width:220px;">需求项目：</span>
-                <span>标段项目名称</span>
+                <span>需求项目：</span>
+                <span>{{ goodsMsg.sectionName }}</span>
             </li>
             <li>
-                <span style="width: 220px;">合同名称：</span>
-                <span>合同名称</span>
+                <span>合同名称：</span>
+                <span>{{ goodsMsg.contractName }}</span>
             </li>
         </ul>
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
             <van-form :key="formKey">
-                <van-field v-model="username" name="物流单号" label="物流单号" placeholder="物流单号" input-align="right"
+                <van-field v-model="params.username" name="物流单号" label="物流单号" placeholder="物流单号" input-align="right"
                     :rules="[{ required: true, message: '请填写物流单号' }]" />
-                <van-field v-model="username" name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
+                <van-field v-model="params.username" name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
                     :rules="[{ required: true, message: '请填写发货地址' }]" />
-                <van-field readonly clickable name="calendar" :value="value" label="预计发货时间" input-align="right" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" :value="params.username" label="预计发货时间" input-align="right" placeholder="点击选择日期"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" />
                 <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-                <van-field readonly clickable name="calendar" :value="value" label="预计送达时间" input-align="right" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" :value="params.username" label="预计送达时间" input-align="right" placeholder="点击选择日期"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
-                <van-field v-model="username" name="车牌号" label="车牌号" placeholder="车牌号" input-align="right"/>
-                <van-field v-model="username" name="联系人" label="联系人" placeholder="联系人" input-align="right"
+                <van-field v-model="params.username" name="车牌号" label="车牌号" placeholder="车牌号" input-align="right"/>
+                <van-field v-model="params.username" name="联系人" label="联系人" placeholder="联系人" input-align="right"
                     :rules="[{ required: true, message: '请填写联系人' }]" />
-                <van-field v-model="sms" center clearable label="发货单附件" placeholder="发货单附件" input-align="right"
+                <van-field v-model="params.fileName" center clearable label="发货单附件" placeholder="发货单附件" input-align="right"
                     :rules="[{ required: true, message: '请填写发货单附件' }]">
                     <template #button>
-                        <van-uploader v-model="fileList" :before-read="beforeRead">
+                        <van-uploader :after-read="beforeReadUpload">
                             <van-button size="mini" class="button-info" type="primary">请上传发货单</van-button>
                         </van-uploader>
                         
                     </template>
                 </van-field>
-                <van-field v-model="sms" center clearable label="已选物资" placeholder="发货单附件" input-align="right">
+                <van-field v-model="params.username" center clearable label="已选物资" placeholder="发货单附件" input-align="right">
                     <template #button>
-                        <van-button size="mini" type="primary" class="button-info" @click="chooseGoods" >选择发货物资</van-button>
+                        <van-button size="mini" type="primary" class="button-info" @click="chooseGoods(goodsId)" >选择发货物资</van-button>
                         <van-button size="mini" type="primary" class="button-info" @click="lookGoods">查看发货物资</van-button> <!--保存完回显-->
                     </template>
                 </van-field>
@@ -55,9 +55,10 @@
 import Vue from 'vue';
 import { Form } from 'vant';
 import { Field } from 'vant';
-
+import {demandSnedGoods,demandSnedGoodsUpload} from '@/api/demand/demandManagement'
 Vue.use(Form);
 Vue.use(Field);
+
 export default {
     name: 'SendGoods',
     data() {
@@ -67,14 +68,28 @@ export default {
             password: '',
             value: '',
             showCalendar: false,
-            paramsType: ''
+            paramsType: '',
+            goodsId:'',
+            goodsMsg:{},
+            params:{
+                fileName:''
+            }
         };
     },
     created() {
-        // this.getOrderStatusOptions();
-        this.paramsType = this.$route.params.type
+        this.goodsId = this.$route.query.id
+        console.log(this.goodsId,'111')
+        this.getSendGoods();
+        // this.paramsType = this.$route.params.type
     },
     methods: {
+        getSendGoods(){
+            demandSnedGoods(this.goodsId).then((res)=>{
+                if(res.code == 0){
+                    this.goodsMsg = res.data
+                }
+            })
+        },
         onSubmit(values) {
             console.log('submit', values);
         },
@@ -82,9 +97,9 @@ export default {
             this.value = `${date.getMonth() + 1}/${date.getDate()}`;
             this.showCalendar = false;
         },
-        chooseGoods() {
+        chooseGoods(id) {
             this.formKey++
-            this.$router.push({ path: '/selectGoods' })
+            this.$router.push({ path: '/selectGoods',query:{id:id} })
         },
         lookGoods(){
             this.formKey++
@@ -96,6 +111,19 @@ export default {
         },
         saveClick () {
           this.$router.push({ path: '/dashboard' })
+        },
+        beforeReadUpload(file){
+            console.log(file)
+            let imgFile = new FormData();
+
+            imgFile.append("businessType", '01');
+            imgFile.append("key", file.file.name);
+            imgFile.append("file", file.file);
+            demandSnedGoodsUpload(imgFile).then((res)=>{
+                if(res.code == 0){
+                    this.params.fileName = res.data.fileName
+                }
+            })
         }
     },
 };
