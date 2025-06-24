@@ -1,43 +1,58 @@
 <template>
-  <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+  <!-- <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> -->
+  <div>
     <div class="box-container" v-for="(item, index) in list" :key="index">
       <div>
         <ul class="detail-ul">
           <li>
             <span class="font-weight">事件组织：</span>
-            <span class="font-weight">施工单位分部名称-物资部</span>
+            <span class="font-weight">{{ item.deptName }}</span>
           </li>
-          <li class="li-item-both">
+          <li>
+            <span>事件：</span>
+            <span>{{ item.logName }}</span>
+          </li>
+          <li>
+            <span>操作人：</span>
+            <span>{{ item.createUserName }}</span>
+          </li>
+          <li>
+            <span>操作时间：</span>
+            <span>{{ parseTime(item.createDate, '{y}-{m}-{d}') }}</span>
+          </li>
+          <!-- <li class="li-item-both">
             <div>
               <span>事件：</span>
-              <span>出库</span>
+              <span>{{ item.logName }}</span>
             </div>
             <div>
               <span>操作人：</span>
-              <span>name</span>
+              <span>{{ item.createUserName }}</span>
             </div>
             <div>
               <span>操作时间：</span>
-              <span>2025-05-30</span>
+              <span>{{ parseTime(item.createDate, '{y}-{m}-{d}') }}</span>
             </div>
-          </li>
+          </li> -->
           <li>
             <span>备注：</span>
-            <span>同意/不同/修改后同意</span>
+            <span>{{ item.amount }}</span>
           </li>
         </ul>
       </div>
     </div>
-  </van-list>
+  </div>
+  <!-- </van-list> -->
 </template>
 <script>
+import { materialOperateLogGetList } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'LogRecording',
   components: {},
   data() {
     return {
       loading: false,
-      finished: false,
+      // finished: false,
       list: []
     }
   },
@@ -45,22 +60,34 @@ export default {
   },
   activated() {
   },
+  mounted () {
+    const businessId = this.$route.query.id
+    businessId && this.materialOperateLogGetList(businessId)
+  },
   methods: {
-    onLoad() {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-        // 加载状态结束
-        this.loading = false;
+    materialOperateLogGetList (businessId) {
+      this.loading = true
+      materialOperateLogGetList({businessId}).then(({data}) => {
+        this.list = data || []
+      }).finally( (err) => {
+        this.loading = false
+      })
+    }
+    // onLoad() {
+    //   // 异步更新数据
+    //   setTimeout(() => {
+    //     for (let i = 0; i < 10; i++) {
+    //       this.list.push(this.list.length + 1);
+    //     }
+    //     // 加载状态结束
+    //     this.loading = false;
 
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 500);
-    },
+    //     // 数据全部加载完成
+    //     if (this.list.length >= 40) {
+    //       this.finished = true;
+    //     }
+    //   }, 500);
+    // },
   },
 }
 </script>

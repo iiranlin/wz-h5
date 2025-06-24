@@ -1,72 +1,75 @@
 <template>
-  <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+  <!-- <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> -->
+  <div>
     <div class="box-container" v-for="(item, index) in list" :key="index">
       <div>
         <ul class="detail-ul">
           <li>
             <span class="font-weight">供应商名称：</span>
-            <span class="font-weight">北京全路通信信号研究设计院集团</span>
+            <span class="font-weight">{{ item.sellerName }}</span>
           </li>
           <li>
             <span>物资名称：</span>
-            <span>计算机联锁设备</span>
+            <span>{{ item.materialName }}</span>
           </li>
           <li>
             <span>使用地点：</span>
-            <span>华庄/永津路/高里东/浦口北</span>
+            <span>{{ item.addr }}</span>
           </li>
           <li>
             <span>收货人：</span>
-            <span>name 15888888888</span>
+            <span>{{ item.receiver }}</span>
           </li>
           <li class="li-item-both">
             <div class="li-item-left">
               <span>规格型号：</span>
-              <span>2x2取2s10</span>
+              <span>{{ item.specModel }}</span>
             </div>
             <div class="li-item-right">
               <span>计量单位：</span>
-              <span>套</span>
+              <span>{{ item.unit }}</span>
             </div>
           </li>
           <li class="li-item-both">
             <div class="li-item-left">
               <span>合同数量：</span>
-              <span>10</span>
+              <span>{{ item.amount }}</span>
             </div>
             <div class="li-item-right">
               <span>累计计划量(含本次)：</span>
-              <span>6</span>
+              <span>{{ item.cumulativeAmount }}</span>
             </div>
           </li>
           <li class="li-item-both">
             <div class="li-item-left li-item-left-num">
               <span>本次计划数量：</span>
-              <span>3</span>
+              <span>{{ item.planAmount }}</span>
             </div>
             <div class="li-item-right">
               <span>供应时间：</span>
-              <span>2025-07-15</span>
+              <span>{{ parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
             </div>
           </li>
           <li>
             <span>投资方：</span>
-            <span>北京全路通信信号研究设计院集团有限公司</span>
+            <span>{{ item.field0 }}</span>
           </li>
           <li>
             <span>投资比例：</span>
-            <span>40%;60%</span>
+            <span>{{ item.field1 }}</span>
           </li>
           <li>
             <span>备注：</span>
-            <span>备注内容备注内容备注内容备注内容</span>
+            <span>{{ item.remark }}</span>
           </li>
         </ul>
       </div>
     </div>
-  </van-list>
+  </div>
+  <!-- </van-list> -->
 </template>
 <script>
+import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'MaterialDetails',
   components: {},
@@ -81,22 +84,34 @@ export default {
   },
   activated() {
   },
+  mounted () {
+    const id = this.$route.query.id
+    id && this.materialDemandPlanRestDetail(id)
+  },
   methods: {
-    onLoad() {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-        // 加载状态结束
-        this.loading = false;
+    // onLoad() {
+    //   // 异步更新数据
+    //   setTimeout(() => {
+    //     for (let i = 0; i < 10; i++) {
+    //       this.list.push(this.list.length + 1);
+    //     }
+    //     // 加载状态结束
+    //     this.loading = false;
 
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 500);
-    },
+    //     // 数据全部加载完成
+    //     if (this.list.length >= 40) {
+    //       this.finished = true;
+    //     }
+    //   }, 500);
+    // },
+    materialDemandPlanRestDetail (id) {
+      this.loading = true
+      materialDemandPlanRestDetail(id).then(({data}) => {
+        this.list = data.details || []
+      }).finally( (err) => {
+        this.loading = false
+      })
+    }
   },
 }
 </script>

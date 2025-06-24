@@ -11,7 +11,7 @@ service.interceptors.request.use(
   (config) => {
     const token = store.getters.userInfo?.token || getToken();
     if (token) {
-      config.headers["token"] = token;
+      // config.headers["token"] = token;
       config.headers["Authorization"] = token;
       // config.url = config.url;
     }
