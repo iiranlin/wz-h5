@@ -12,6 +12,7 @@
 </template>
 <script>
 import {Navbar} from './components'
+import { getUserInfo } from '@/utils/user-info'
 
 export default {
 	name: 'Layout',
@@ -102,6 +103,7 @@ export default {
 	methods: {
 		//判断角色菜单
 		checkNavMenu(){
+      console.log(getUserInfo())
       const username = this.$route.query.username || window.sessionStorage.getItem("username")
       if(username){
         window.sessionStorage.setItem("username", username)

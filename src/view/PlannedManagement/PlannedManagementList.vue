@@ -15,19 +15,19 @@
             <ul class="list-ul" @click="handleWaitItemClick(item)">
               <li>
                 <span class="font-weight">需求编号：</span>
-                <span class="font-weight">XQ2025050007</span>
+                <span class="font-weight">{{ item.planNumber }}</span>
               </li>
               <li>
                 <span>需求名称：</span>
-                <span>2025年5月甲供物资计划申请表-04</span>
+                <span>{{ item.planName }}</span>
               </li>
               <li>
                 <span>供应商：</span>
-                <span>供应商名称供应商名称供应商名称供应商名称供应商名称供应商名称供应商名称</span>
+                <span>{{ item.sellerName }}</span>
               </li>
               <li>
                 <span>物资名称：</span>
-                <span>特殊桥梁支座</span>
+                <span>{{ item.materialName }}</span>
               </li>
               <li class="li-status">
                 <van-tag type="primary" round size="medium" v-if="item == 1">未提交</van-tag>
@@ -68,9 +68,10 @@
 </template>
 <script>
 import BackToTop from '@/components/BackToTop'
-import { materialDemandPlanRestList } from '@/api/prodmgr-inv/plannedManagement'
+import { materialDemandPlanRestList } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'PlannedManagement',
+  dicts: ['cs'],
   components: { BackToTop },
   data() {
     return {
@@ -102,31 +103,31 @@ export default {
     },
     onLoad() {
       // 异步更新数据
-      // if (this.refreshLoading) {
-      //   this.list = [];
-      //   this.refreshLoading = false;
-      // }
-      // this.materialDemandPlanRestList()
-      this.loading = false
-      setTimeout(() => {
-        if (this.refreshLoading) {
-          this.list = [];
-          this.refreshLoading = false;
-        }
+      this.materialDemandPlanRestList()
+      // this.loading = false
+      // setTimeout(() => {
+      //   if (this.refreshLoading) {
+      //     this.list = [];
+      //     this.refreshLoading = false;
+      //   }
 
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        // 加载状态结束
-        this.loading = false
+      //   for (let i = 0; i < 10; i++) {
+      //     this.list.push(this.list.length + 1)
+      //   }
+      //   // 加载状态结束
+      //   this.loading = false
 
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 500)
+      //   // 数据全部加载完成
+      //   if (this.list.length >= 40) {
+      //     this.finished = true
+      //   }
+      // }, 500)
     },
     materialDemandPlanRestList () {
+      if (this.refreshLoading) {
+        this.list = [];
+        this.refreshLoading = false;
+      }
       materialDemandPlanRestList().then( ({data}) => {
         this.list.push(...(data.list || []))
         // 数据全部加载完成
@@ -269,7 +270,7 @@ export default {
 
 
   .van-list {
-    padding-top: 10px;
+    // padding-top: 10px;
     background: #f8f8f8;
 
     .list-ul-button {

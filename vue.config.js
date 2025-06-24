@@ -45,7 +45,7 @@ module.exports = {
       "/api": {
         // 开发
         // target: `https://car.rails.cn/gwycserver/gwyc`,
-        target: `http://192.168.61.141:8019/gwyc`,
+        target: `http://192.168.137.19:8000/`,
         // target: `http://10.59.248.230:8019/gwyc`,
         changeOrigin: true,
         pathRewrite: {
