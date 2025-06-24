@@ -10,6 +10,10 @@ import { parseTime } from "@/utils/index.js";
 // Vue.prototype.$echarts = echarts;
 import "./permission"; // permission control
 
+import dict from '@/utils/Dict'
+Vue.use(dict)
+
+
 import {
   Row,
   Col,

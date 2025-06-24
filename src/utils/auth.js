@@ -1,6 +1,6 @@
 import { param2Obj } from "./index";
 
-const TokenKey = "id_token";
+const TokenKey = "TokenKey";
 const expires = {
   expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
 };
@@ -20,11 +20,11 @@ export function getIdToken() {
   }
 }
 export function getToken() {
-  return window.sessionStorage.getItem("token");
+  return window.sessionStorage.getItem("TokenKey");
 }
 
 export function setToken(data) {
-  window.sessionStorage.setItem("token", data);
+  window.sessionStorage.setItem("TokenKey", data);
 }
 
 export function removeToken(name) {
