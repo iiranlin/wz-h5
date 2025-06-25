@@ -29,6 +29,9 @@ import keepPages from '@/view/mixins/keepPages'
 import Acceptance from '@/view/AcceptanceReturn/Acceptance.vue'
 import Return from '@/view/AcceptanceReturn/Return.vue'
 
+
+
+
 export default {
   name: 'AcceptanceReturn',
   components: {Return, Acceptance},
@@ -36,9 +39,10 @@ export default {
 
   data() {
     return {
-      menuActiveIndex: 0
+      menuActiveIndex: 0,
     }
   },
+
   methods: {
     changeTab(index) {
       this.menuActiveIndex = index

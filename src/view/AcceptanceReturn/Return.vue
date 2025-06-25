@@ -17,35 +17,35 @@
           finished-text="没有更多了..."
           @load="getAllList">
 
-          <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleAllItemClick(item)">
+          <div v-for="(item,index) in allOrderList" :key="index" class="box-container" @click="handleAllItemClick(item)">
             <ul class="list-ul">
               <li>
                 <span class="font-weight">退货单号：</span>
-                <span class="font-weight">XQ2025050007</span>
+                <span class="font-weight">{{item.backNumber}}</span>
               </li>
               <li>
                 <span>发货单号：</span>
-                <span>分部用料需求</span>
+                <span>{{item.shipmentBatchNumber}}</span>
               </li>
               <li>
-                <span>供应需求：</span>
-                <span>工程部</span>
+                <span>供应需求名称：</span>
+                <span>{{item.planName}}</span>
               </li>
               <li>
                 <span>需求组织：</span>
-                <span>需求计划名称</span>
+                <span>{{item.deptName}}</span>
               </li>
               <li>
                 <span>供应商：</span>
-                <span>需求计划名称</span>
+                <span>{{item.sellerName}}</span>
               </li>
               <li>
                 <span>发货时间：</span>
-                <span>需求计划名称</span>
+                <span>{{item.shippingDate | formatDate}}</span>
               </li>
               <li>
                 <span>操作人：</span>
-                <span>张晓明</span>
+                <span>{{item.createUserName}}</span>
               </li>
             </ul>
           </div>
@@ -56,6 +56,7 @@
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import {listCyRetreat} from '@/api/prodmgr-inv/AcceptanceReturn'
 
 export default {
   name: 'Return',
@@ -120,7 +121,7 @@ export default {
     }
   },
   created() {
-    // this.getOrderStatusOptions();
+    this.getAllList();
   },
   activated() {
     if (this.$route.params.refresh) {
@@ -129,15 +130,51 @@ export default {
     }
     this.$store.commit('removeThisPage', 'MyToDoDetail')
   },
+  filters: {
+    formatDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        const hh = (dt.getHours() + '').padStart(2, '0');
+        const mm = (dt.getMinutes() + '').padStart(2, '0');
+        const ss = (dt.getSeconds() + '').padStart(2, '0');
+        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+      }else{
+        return ""
+      }  
+    },
+    formatToDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }else{
+        return ""
+      }  
+    }
+  },
   methods: {
+      //收获列表
+    getAllList(val){
+      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,takeStatus:val?val:''}
+      listCyRetreat(params).then((res) => {
+
+
+        console.log(res,"res")
+        if(res.success){
+          this.allOrderList = res.data.list
+        }
+       })
+       this.allRefreshLoading = false
+       this.allFinished=true
+    },
     //获取订单状态字典
     getOrderStatusOptions() {
 
-    },
-    //获取全部订单
-    getAllList() {
-      this.allRefreshLoading = false
-      this.allFinished = true
     },
     //获取待审批的订单
     getWaitList() {
@@ -201,7 +238,7 @@ export default {
     },
     //全部列表条目点击
     handleAllItemClick(item) {
-      this.$router.push({name: 'DoReturn'})
+      this.$router.push({name: 'DoReturn',query:{id:item.id}})
     },
     //待审核列表条目点击
     handleWaitItemClick(item) {
@@ -265,5 +302,8 @@ export default {
     border-radius: 50px;
     background: #fff;
   }
+}
+.list-ul li :nth-child(1){
+  min-width: 2.6rem;
 }
 </style>

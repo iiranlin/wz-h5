@@ -2,117 +2,117 @@
   <div class="save-materials">
     <div class="save-materials-contract">
       <ul class="detail-ul">
-        <li>
-          <span class="font-weight">供应需求：</span>
-          <span class="font-weight">新建南京至淮安城泳铁路第二批建管甲</span>
+           <li>
+          <span class="font-weight">供应需求名称：</span>
+          <span class="font-weight">{{dataList.planName}}</span>
         </li>
         <li>
           <span>需求项目：</span>
-          <span>需求项目名称</span>
-        </li>
+          <span>{{dataList.sectionName}}</span>
+        </li> 
         <li>
           <span>需求组织：</span>
-          <span>需求组织名称</span>
+          <span>{{dataList.deptName}}</span>
         </li>
         <li>
           <span>退货环节：</span>
-          <span>收货不通过</span>
+          <span>{{dataList.backNode=='2'?"收货不通过":""}}</span>
         </li>
         <li>
           <span>退货时间：</span>
-          <span>2025-04-20 15:35</span>
+          <span>{{dataList.backDate | formatToDate}}</span>
         </li>
         <li>
           <span>操作人：</span>
-          <span>张晓明</span>
+          <span>{{dataList.createUserName}}</span>
         </li>
       </ul>
     </div>
 
     <div class="detail-title">退货明细</div>
-    <div class="box-container" v-for="item in 2" :key="item">
+    <div class="box-container" v-for="item in dataList.materialCirculationDetailsTableDTOS" :key="item">
       <ul class="detail-ul">
         <li class="save-materials-li">
           <span class="font-weight">物资名称：</span>
-          <span class="font-weight">计算机联锁设备</span>
+          <span class="font-weight">{{item.materialName}}</span>
         </li>
         <li>
           <span>规格型号：</span>
-          <span>2x2取2s10组道岔</span>
+          <span>{{item.specModel}}</span>
         </li>
         <li class="li-item-both">
           <div class="li-item-left">
             <span>计量单位：</span>
-            <span>套</span>
+            <span>{{item.unit}}</span>
           </div>
           <div class="li-item-right li-item-overlength">
             <span>包装形式：</span>
-            <span>捆包</span>
+            <span>{{item.packagingFm}}</span>
           </div>
         </li>
         <li class="li-item-both">
           <div class="li-item-left">
             <span>需求数量：</span>
-            <span>10</span>
+            <span>{{item.planAmount}}</span>
           </div>
           <div class="li-item-right li-item-overlength">
             <span>本次发货数量：</span>
-            <span>6</span>
+            <span>{{item.sendTotal}}</span>
           </div>
         </li>
         <li>
           <span>生产日期：</span>
-          <span>2025-07-15</span>
+          <span>{{item.manufactureDate |formatToDate}}</span>
         </li>
         <li class="li-item-overlength">
           <span>有效期截止日期：</span>
-          <span>2030-07-15</span>
+          <span>{{item.expirationDate |formatToDate}}</span>
         </li>
         <li>
           <span>收货地址：</span>
-          <span>华庄/永津路/高里东/浦口北</span>
+          <span>{{item.field2}}</span>
         </li>
         <li>
           <span>供应时间：</span>
-          <span>2025-6-12</span>
+          <span>{{item.supplyDate |formatToDate}}</span>
         </li>
         <li class="li-item-overlength">
-          <span>收货时间及联系方式：</span>
-          <span>张晓明 17688928166</span>
+          <span>收货人及联系方式：</span>
+          <span>{{item.receiver}}</span>
         </li>
         <li>
           <span>投资方：</span>
-          <span>北京道岔责任有限公司</span>
+          <span>{{item.field0}}</span>
         </li>
 
         <li class="li-item-both">
           <div class="li-item-left">
             <span>投资比例：</span>
-            <span>40%; 60%</span>
+            <span>{{item.field1}}</span>
           </div>
           <div class="li-item-right li-item-overlength">
             <span>退货数量：</span>
-            <span>2</span>
+            <span>{{item.refundTotal}}</span>
           </div>
         </li>
 
         <li class="li-item-overlength">
           <span>合格证附件：</span>
-          <span style="color: #0689ff" @click="imgClick">合格证附件/检测合格.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">{{ item.fileByList?(JSON.parse(item.fileByList).hgz?JSON.parse(item.fileByList).hgz[0].fileName:''):'' }}</span>
         </li>
         <li class="li-item-overlength">
           <span>厂检报告附件：</span>
-          <span style="color: #0689ff" @click="imgClick">合格证附件/厂检合格.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">{{ item.fileByList?(JSON.parse(item.fileByList).cjbg?JSON.parse(item.fileByList).cjbg[0].fileName:''):''  }}</span>
         </li>
 
         <li>
           <span>退货附件：</span>
-          <span style="color: #0689ff" @click="imgClick">不合格批次.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">{{ item.fileByList?(JSON.parse(item.fileByList).thfj_sh?JSON.parse(item.fileByList).thfj_sh[0].fileName:''):''  }}</span>
         </li>
 
         <li>
           <span>备注：</span>
-          <span>本次验收2套不合格进行退货处理</span>
+          <span>{{item.remark}}</span>
         </li>
       </ul>
     </div>
@@ -122,12 +122,12 @@
       <ul class="detail-ul">
         <li>
           <span>自检单：</span>
-          <span style="color: #0689ff" @click="imgClick">自检单附件.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">{{dataList.fileByList?(JSON.parse(dataList.fileByList).zjd?JSON.parse(dataList.fileByList).zjd[0].fileName:''):''}}</span>
         </li>
 
         <li>
           <span>其他资料：</span>
-          <span style="color: #0689ff" @click="imgClick">其他资料附件.pdf</span>
+          <span style="color: #0689ff" @click="imgClick">{{dataList.fileByList?(JSON.parse(dataList.fileByList).qtzl?JSON.parse(dataList.fileByList).qtzl[0].fileName:''):''}}</span>
         </li>
       </ul>
     </div>
@@ -140,13 +140,16 @@
 <script>
 import {parseTime} from '@/utils'
 import imgMixin from '@/view/mixins/imgMixin'
+import {detailByBack} from '@/api/prodmgr-inv/AcceptanceReturn'
 
 export default {
   name: 'DoReturn',
   mixins: [imgMixin],
   data() {
     return {
+      id:'',
       minDate: new Date(),
+      dataList:[],
       formData: {
         name: '',
         password: '',
@@ -159,8 +162,44 @@ export default {
     }
   },
   mounted() {
+    this.id = this.$route.query.id
+    this.getDetailList() 
+  },
+    filters: {
+    formatDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        const hh = (dt.getHours() + '').padStart(2, '0');
+        const mm = (dt.getMinutes() + '').padStart(2, '0');
+        const ss = (dt.getSeconds() + '').padStart(2, '0');
+        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+      }else{
+        return ""
+      }  
+    },
+    formatToDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }else{
+        return ""
+      }  
+    }
   },
   methods: {
+    getDetailList(){
+       detailByBack(this.id).then((res)=>{
+          if(res.success){
+            this.dataList = res.data
+          }
+       })
+    },
     onClickBack() {
       this.$router.go(-1)
     },
