@@ -3,7 +3,7 @@
     <div class="save-materials-contract">
       <ul class="detail-ul">
         <li>
-          <span class="font-weight">供应需求：</span>
+          <span class="font-weight">供应需求名称：</span>
           <span class="font-weight">{{dataList.planName}}</span>
         </li>
         <li>
@@ -15,8 +15,8 @@
           <span>{{dataList.deptName}}</span>
         </li>
         <li>
-          <span>供应商：</span>
-          <span>{{dataList.sellerName}}</span>
+          <span>操作人：</span>
+          <span>{{dataList.createUserName}}</span>
         </li>
         <li>
           <span>收货时间：</span>
@@ -28,7 +28,7 @@
     <div class="detail-title">发货单附件</div>
     <div class="box-container">
       <ul class="detail-ul">
-        <li style="color: #0689ff" @click="imgClick">发货单附件/清单.pdf</li>
+        <li style="color: #0689ff" @click="imgClick">{{dataList.fileByList? (JSON.parse(dataList.fileByList).fhd?JSON.parse(dataList.fileByList).fhd[0].fileName:''):'' }}</li>
       </ul>
     </div>
 
@@ -41,7 +41,7 @@
         </li>
         <li>
           <span>规格型号：</span>
-          <span>{{ item.specificationModel }}</span>
+          <span>{{ item.specModel }}</span>
         </li>
         <li class="li-item-both">
           <div class="li-item-left">
@@ -50,73 +50,77 @@
           </div>
           <div class="li-item-right li-item-overlength">
             <span>包装形式：</span>
-            <span>{{ item.packagingForm }}</span>
+            <span>{{ item.packagingFm }}</span>
           </div>
         </li>
         <li class="li-item-both">
           <div class="li-item-left">
             <span>需求数量：</span>
-            <span>{{ item.demandQuantity }}</span>
+            <span>{{ item.planAmount }}</span>
           </div>
           <div class="li-item-right li-item-overlength">
             <span>本次发货数量：</span>
-            <span>{{ item.shipmentQuantity }}</span>
+            <span>{{ item.sendTotal }}</span>
           </div>
         </li>
         <li>
           <span>生产日期：</span>
-          <span>{{ item.productionDate }}</span>
+          <span>{{ item.manufactureDate |formatToDate }}</span>
         </li>
         <li class="li-item-overlength">
           <span>有效期截止日期：</span>
-          <span>{{ item.validUntil }}</span>
+          <span>{{ item.expirationDate }}</span>
         </li>
         <li>
           <span>收货地址：</span>
-          <span>{{ item.deliveryAddress }}</span>
+          <span>{{ item.field2 }}</span>
         </li>
         <li>
           <span>供应时间：</span>
-          <span>{{ item.supplyTime }}</span>
+          <span>{{ item.supplyDate |formatToDate}}</span>
         </li>
         <li class="li-item-overlength">
-          <span>收货时间及联系方式：</span>
-          <span>{{ item.contactInfo }}</span>
+          <span>收货人及联系方式：</span>
+          <span>{{ item.receiver }}</span>
         </li>
         <li>
           <span>投资方：</span>
-          <span>{{ item.investor }}</span>
+          <span>{{ item.field0 }}</span>
         </li>
         <li>
           <span>投资比例：</span>
-          <span>{{ item.investmentRatio }}</span>
+          <span>{{ item.field1 }}</span>
+        </li>
+        <li class="li-item-overlength">
+          <span>合格证附件：</span>
+          <span style="color: #0689ff" @click="imgClick">{{ item.fileByList?(JSON.parse(item.fileByList).hgz?JSON.parse(item.fileByList).hgz[0].fileName:''):'' }}</span>
+        </li>
+        <li class="li-item-overlength">
+          <span>厂检报告附件：</span>
+          <span style="color: #0689ff" @click="imgClick">{{ item.fileByList?(JSON.parse(item.fileByList).cjbg?JSON.parse(item.fileByList).cjbg[0].fileName:''):''  }}</span>
+        </li>
+        <li>
+            <span>备注：</span>
+            <span>{{ item.remark }}</span>
         </li>
         <template v-if="!isView">
           <van-cell-group>
-            <van-field v-model="item.receiveQuantity" label="收货数量" placeholder="请输入数量" required clearable :label-width="240"
-                       input-align="right"/>
-            <van-field v-model="item.returnQuantity" label="退货数量" placeholder="请输入数量" required clearable :label-width="240"
-                       input-align="right"/>
+            <van-field v-model="item.putTotal" label="收货数量"   type="number" placeholder="请输入数量" required clearable :label-width="240"
+                       input-align="right" @input="handleInput($event, index,item)" />
+            <van-field v-model="item.refundTotal" label="退货数量" type="number" placeholder="请输入数量" required clearable :label-width="240"
+                       input-align="right" @input="handleInput1($event, index,item)"/>
           </van-cell-group>
         </template>
         <template v-else>
           <li>
             <span>收货数量：</span>
-            <span>{{ item.receiveQuantity }}</span>
+            <span>{{ item.putTotal }}</span>
           </li>
           <li>
             <span>退货数量：</span>
-            <span>{{ item.returnQuantity }}</span>
+            <span>{{ item.refundTotal }}</span>
           </li>
         </template>
-        <li class="li-item-overlength">
-          <span>合格证附件：</span>
-          <span style="color: #0689ff" @click="imgClick">{{ item.certificatePath }}</span>
-        </li>
-        <li class="li-item-overlength">
-          <span>厂检报告附件：</span>
-          <span style="color: #0689ff" @click="imgClick">{{ item.inspectionReportPath }}</span>
-        </li>
         <template v-if="!isView">
           <van-cell-group>
             <van-field required name="uploader" label="退货附件：">
@@ -127,19 +131,16 @@
               </template>
             </van-field>
 
-            <van-field v-model="item.remark" label="备注" placeholder="请输入备注" required clearable :label-width="240"
-                       input-align="right"/>
+            <!-- <van-field v-model="item.remark" label="备注" placeholder="请输入备注" required clearable :label-width="240"
+                       input-align="right"/> -->
           </van-cell-group>
         </template>
         <template v-else>
           <li>
             <span>退货附件：</span>
-            <span style="color: #0689ff" @click="imgClick">{{ item.returnAttachmentPath }}</span>
+            <span style="color: #0689ff" @click="imgClick">{{ item.fileByList?(JSON.parse(item.fileByList).thfj_sh?JSON.parse(item.fileByList).thfj_sh[0].fileName:''):''   }}</span>
           </li>
-          <li>
-            <span>备注：</span>
-            <span>{{ item.remark }}</span>
-          </li>
+        
         </template>
       </ul>
     </div>
@@ -154,7 +155,7 @@
               clickable
               required
               name="calendar"
-              :value="formData.num1"
+              :value="dataList.takeDate"
               label="收货时间："
               placeholder="点击选择日期"
               @click="showDatePicker = true"
@@ -181,11 +182,11 @@
         <template v-else>
           <li>
             <span>自检单：</span>
-            <span style="color: #0689ff" @click="imgClick">自检单附件.pdf</span>
+            <span style="color: #0689ff" @click="imgClick">{{dataList.fileByList?(JSON.parse(dataList.fileByList).zjd?JSON.parse(dataList.fileByList).zjd[0].fileName:''):''}}</span>
           </li>
           <li>
             <span>其他资料：</span>
-            <span style="color: #0689ff" @click="imgClick">其他资料附件.pdf</span>
+            <span style="color: #0689ff" @click="imgClick">{{dataList.fileByList?(JSON.parse(dataList.fileByList).qtzl?JSON.parse(dataList.fileByList).qtzl[0].fileName:''):''}}</span>
           </li>
         </template>
       </ul>
@@ -202,7 +203,7 @@
 <script>
 import {parseTime} from '@/utils'
 import imgMixin from '@/view/mixins/imgMixin'
-import {defaultTake} from '@/api/prodmgr-inv/AcceptanceReturn'
+import {saveTake,defaultTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 
 export default {
   name: 'DoAccept',
@@ -351,34 +352,68 @@ export default {
         const hh = (dt.getHours() + '').padStart(2, '0');
         const mm = (dt.getMinutes() + '').padStart(2, '0');
         const ss = (dt.getSeconds() + '').padStart(2, '0');
-      
         return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
-
       }else{
         return ""
-      }
-        
+      }  
+    },
+    formatToDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }else{
+        return ""
+      }  
     }
-
   },
   methods: {
     getDetailList(){
-
        defaultTake(this.id).then((res)=>{
-          console.log(res,"res")
           if(res.success){
             this.dataList = res.data
+            if(this.isView==false){
+              this.dataList.materialCirculationDetailsTableDTOS.forEach(el => {
+                  el.putTotal = el.sendTotal
+              })  
+            }
           }
        })
-
     },
-    onDateConfirm() {
-      this.formData.currentDate = parseTime(this.minDate, '{y}-{m}-{d}')
+    handleInput(val,index,item){
+      const num = Number(val);
+      if (!isNaN(num) && num <= item.sendTotal) {
+        this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = num; 
+        this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal = this.dataList.materialCirculationDetailsTableDTOS[index].sendTotal - this.dataList.materialCirculationDetailsTableDTOS[index].putTotal
+      } else {
+        this.$toast('收货数量不能大于发货数量'); 
+        this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = 0; 
+      }
+    },
+    handleInput1(val,index,item){
+      const num = Number(val);
+      if (!isNaN(num) && num <= item.sendTotal) {
+        this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal = num; 
+        this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = this.dataList.materialCirculationDetailsTableDTOS[index].sendTotal - this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal
+      } else {
+        this.$toast('退货数量不能大于发货数量'); 
+        this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal=0 
+      }
+    },
+    onDateConfirm(val) {
+      this.dataList.takeDate = parseTime(val, '{y}-{m}-{d}')
       this.showDatePicker = false
     },
     addClick() {
-      this.$toast('保存成功')
-      this.$router.push({path: '/AcceptanceReturn'})
+      let params= this.dataList
+      saveTake(params).then((res)=>{
+        if(res.success){
+          this.$toast('保存成功')
+          this.$router.push({path: '/AcceptanceReturn'})  
+        } 
+      })
     },
     onClickBack() {
       this.$router.push({path: '/AcceptanceReturn'})

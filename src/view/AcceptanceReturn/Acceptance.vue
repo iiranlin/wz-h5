@@ -36,7 +36,7 @@
                     <span>{{ item.shipmentBatchNumber }}</span>
                   </li>
                   <li>
-                    <span>供应需求：</span>
+                    <span>需求名称：</span>
                     <span>{{ item.planName }}</span>
                   </li>
                   <li>
@@ -63,7 +63,7 @@
                   </li>
                 </ul>
                 <div class="list-ul-button" v-if="item.takeStatus === '1'">
-                  <van-button class="button-info" round type="info" @click="handleDoAccept()">初验收货</van-button>
+                  <van-button class="button-info" round type="info" @click="handleDoAccept(item)">初验收货</van-button>
                 </div>
               </div>
             </van-list>
@@ -75,7 +75,7 @@
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
-import {ListTake} from '@/api/prodmgr-inv/AcceptanceReturn'
+import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 
 export default {
   name: 'Acceptance',
@@ -147,7 +147,7 @@ export default {
     //收获列表
     getList(val){
       let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,takeStatus:val?val:''}
-      ListTake(params).then((res) => {
+      listTake(params).then((res) => {
         if(res.success){
           this.dataList = res.data.list
         }
@@ -156,7 +156,6 @@ export default {
     },
     handleChange(val){
       this.getList(val)
-
     },
     //获取全部订单
     loadList() {
@@ -165,14 +164,14 @@ export default {
     },
     //全部列表条目点击
     viewAcceptDetail(item) {
-      if(item.takeStatus==2){
+      if(item.takeStatus==2||item.takeStatus==3||item.takeStatus==4){
         this.$router.push({name: 'DoAcceptDetail', query: {from: 'AcceptanceReturn',id:item.id}})
       }
       
     },
     //去审核点击
-    handleDoAccept() {
-      this.$router.push({name: 'DoAccept'})
+    handleDoAccept(item) {
+      this.$router.push({name: 'DoAccept',query: {from: 'AcceptanceReturn',id:item.id}})
     },
     //搜索点击
     handeSearchClick() {
