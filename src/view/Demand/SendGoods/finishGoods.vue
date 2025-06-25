@@ -120,10 +120,12 @@ export default {
       stopCalendar: false,
       uploader: [{ url: 'https://img01.yzcdn.cn/vant/leaf.jpg' }],
       isActive:0,
-      title:''
+      title:'',
+      goodsId:""
     };
   },
   created() {
+    this.goodsId = this.$route.query.id
     this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData));
     // this.getOrderStatusOptions();
   },
@@ -207,9 +209,9 @@ export default {
         }
       }
       this.$router.push({
-        name:'SendGoods',
-        params: { 
-            goodsList: this.goodsData,
+        path:'/SendGoods',
+        query: { 
+            id:  this.goodsId,
         }
       })
       // this.goodsData.forEach((item,index)=>{

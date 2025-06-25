@@ -89,11 +89,11 @@ export default {
     created() {
         this.goodsId = this.$route.query.id
         this.getSendGoods();
-        this.goodsList = this.$route.params.goodsList
-        console.log(this.goodsList.flat(),'11233')
-        if(Array.isArray(this.goodsList)){
-            this.paramsType=1
-        }
+        // this.goodsList = this.$route.params.goodsList
+        // console.log(this.goodsList.flat(),'11233')
+        // if(Array.isArray(this.goodsList)){
+        //     this.paramsType=1
+        // }
        
         // this.paramsType = this.$route.params.type
     },

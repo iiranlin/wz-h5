@@ -158,7 +158,7 @@ export default {
     // 点击下一步把选择的数据传过去
     addClick() {
       console.log(this.selectArrayData,'点击')
-      this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData)} })
+      this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:this.goodsId} })
     },
     selectGoods(e){
       // console.log(e.flat())
