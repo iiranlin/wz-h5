@@ -8,66 +8,65 @@
     </div>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <van-checkbox-group v-model="result" @change="selectGoods">
-        <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index">
+        <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal==0?true:false"> 
           <ul class="list-ul">
             <li>
               <span class="font-weight">物资名称：</span>
-              <span class="font-weight">计算机联锁设备</span>
+              <span class="font-weight">{{ item.materialName }}</span>
             </li>
             <li>
               <span>规格型号：</span>
-              <span>2x2取2s10组道岔</span>
+              <span>{{ item.specModel }}</span>
             </li>
              <li class="li-item-both">
               <div class="li-item-left">
                 <span>计量单位:</span>
-                <span>套</span>
+                <span>{{ item.unit }}</span>
               </div>
               <div class="li-item-right">
                 <span>合同数量:</span>
-                <span>5</span>
+                <span>{{ item.amount }}</span>
               </div>
             </li>
              <li class="li-item-both">
               <div class="li-item-left">
                 <span>累计计划量(含本次):</span>
-                <span>4</span>
+                <span>{{ item.cumulativeAmount }}</span>
               </div>
               <div class="li-item-right">
                 <span>本次计划数量:</span>
-                <span>5</span>
+                <span>{{ item.planAmount }}</span>
               </div>
             </li>
             <li>
               <span>供应时间:</span>
-              <span>2025-04-20</span>
+              <span>{{ item.supplyDate }}</span>
             </li>
                 <li>
               <span>使用地点:</span>
-              <span>使用地点使用地点使用地点使用地点</span>
+              <span>{{ item.addr }}</span>
             </li>
               <li>
               <span>收货人及联系方式:</span>
-              <span>张晓明 13865444566</span>
+              <span>{{ item.receiver }}</span>
             </li>
              <li>
               <span>投资方:</span>
-              <span>
-投资方名称投资方名称投资方名称投资方名称</span>
+              <span>{{ item.field0 }}</span>
             </li>
              <li class="li-item-both">
               <div class="li-item-left">
                 <span>投资比例:</span>
-                <span>40%，60%</span>
+                <span>{{ item.field1 }}</span>
               </div>
               <div class="li-item-right" style="color:red;">
                 <span >本次需求未发货数量:</span>
-                <span>1</span>
+                <span>{{ item.ssendTotal }}</span>
               </div>
             </li>
             <li>
               <span>备注：</span>
-              <span>备注备注备注备注备注备注备注备注</span>
+              <span>{{ item.remark }}</span>
             </li>
           </ul>
         </van-checkbox>
@@ -98,7 +97,9 @@ export default {
       list: [],
       goodsId:'',
       selectGoodsList:[],
-      selectTotal:0
+      selectTotal:0,
+      //选择的物资
+      selectArrayData:[]
     }
   },
   mounted() {
@@ -110,9 +111,19 @@ export default {
     getSelectGoods(){
       demandChooseGoods(this.goodsId).then((res)=>{
         if(res.code==0){
-          this.selectGoodsList = res.data.details
+          this.selectGoodsList = res.data.details.map(item => ({
+              ...item,
+              createDate:new Date(item.supplyDate).toLocaleDateString().replace(/\//g, "-"),
+              supplyDate: new Date(item.supplyDate).toLocaleDateString().replace(/\//g, "-"), // 或 .toLocaleString()
+              updateDate:new Date(item.supplyDate).toLocaleDateString().replace(/\//g, "-")
+          }));
+          // this.selectGoodsList = res.data.details
         }
       })
+    },
+     formatDate(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString().replace(/\//g, "-"); // 或者使用其他格式化选项，如 toLocaleString 或 toISOString
     },
     onSearch() {
       this.$toast(this.value);
@@ -144,11 +155,15 @@ export default {
     selectClick () {
       this.$router.push({ name: 'SelectContract' })
     },
+    // 点击下一步把选择的数据传过去
     addClick() {
-      this.$router.push({ path: 'finishGoods' })
+      console.log(this.selectArrayData,'点击')
+      this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData)} })
     },
     selectGoods(e){
-      console.log(e.flat())
+      // console.log(e.flat())
+      this.selectArrayData=e.flat()
+      
       this.selectTotal = e.length
     },
   }

@@ -35,10 +35,19 @@ export function demandSnedGoodsUpload(data) {
         }
   })
 }
-//选择发送物资 
+//选择发送物资  
 export function demandChooseGoods(id) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailWz/${id}`,
     method: 'GET',
+  })
+}
+
+//选择发送物资  /materialCirculationTableRest/saveSendGoods
+export function demandSaveSendGoods(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/saveSendGoods`,
+    method: 'post',
+    data
   })
 }
