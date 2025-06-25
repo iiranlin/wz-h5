@@ -1,35 +1,35 @@
 <template>
   <div class="select-Contract">
     <van-sticky class="select-Contract-search">
-      <van-search v-model="value" placeholder="请输入搜索关键词" background="#f8f8f8" :show-action="showAction"
-        @search="onSearch" @cancel="onCancel" @focus="onFocus" />
+      <van-search v-model="searchValue" placeholder="请输入合同名称" background="#f8f8f8" :show-action="showAction"
+        @search="onSearch" />
       <p class="select-Contract-p">请选择合同</p>
     </van-sticky>
     <div class="select-Contract-list">
       <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <van-radio-group v-model="radio">
-            <van-radio :name="index + ''" v-for="(item, index) in list" :key="index">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error" error-text="请求失败，点击重新加载" @load="onLoad">
+          <van-radio-group v-model="radioId">
+            <van-radio :name="item.id" v-for="item in list" :key="item.id">
               <ul class="list-ul">
                 <li>
                   <span class="font-weight">合同名称：</span>
-                  <span class="font-weight">新建南京至淮安城泳铁路第二批建管甲供物资采购会</span>
+                  <span class="font-weight">{{ item.contractName }}</span>
                 </li>
                 <li>
                   <span>合同编号：</span>
-                  <span>NHTL-2024-001</span>
+                  <span>{{ item.contractNo }}</span>
                 </li>
                 <li>
                   <span>物资名称：</span>
-                  <span>特殊桥梁支庄</span>
+                  <span>{{ item.itemName }}</span>
                 </li>
                 <li>
                   <span>供应商：</span>
-                  <span>供应商名称供应商名称供应商名称</span>
+                  <span>{{ item.seller }}</span>
                 </li>
                 <li class="select-Contract-money">
                   <span style="color: red;">计划金额比例：</span>
-                  <span style="color: red;">88.88%</span>
+                  <span style="color: red;">{{ item.materialUsedRatio }}%</span>
                 </li>
               </ul>
             </van-radio>
@@ -40,75 +40,80 @@
     <div class="default-button-container">
       <van-button class="button-info" type="info" round @click="addClick">确定选择</van-button>
     </div>
-    <!-- <van-button class="button-info" round type="info" @click="addClick">确定选择</van-button> -->
     <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
 <script>
 import BackToTop from '@/components/BackToTop'
+import { getBySectionProject } from '@/api/prodmgr-inv/materialContract'
 export default {
   name: 'SelectContract',
   components: { BackToTop },
   data() {
     return {
-      value: '',
+      searchValue: '',
       showAction: false,
       refreshLoading: false,
+      error: false,
       loading: false,
       finished: false,
-      radio: null,
-      list: []
+      radioId: null,
+      list: [],
+      listQuery: {
+        pageNum: 1,
+        pageSize: 10
+      }
     }
   },
   mounted() {
   },
   methods: {
     onSearch() {
-      this.$toast(this.value);
-    },
-    onFocus() {
-      // this.showAction = true;
-    },
-    onCancel() {
-      // this.showAction = false;
+      this.refreshLoading = true
+      this.listQuery.pageNum = 1
+      this.getBySectionProject()
     },
     onLoad() {
-      // 异步更新数据
-      setTimeout(() => {
-        if (this.refreshLoading) {
-          this.list = [];
-          this.refreshLoading = false;
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-        // 加载状态结束
-        this.loading = false;
-
+      this.getBySectionProject()
+    },
+    getBySectionProject () {
+      if (this.refreshLoading) {
+        this.list = [];
+        this.refreshLoading = false;
+      }
+      const params = {
+        contractName: this.searchValue,
+        ...this.listQuery
+      }
+      getBySectionProject(params).then( ({data}) => {
+        this.list.push(...(data.list || []))
         // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
+        if (this.list.length >= data.total) {
+          this.finished = true
         }
-      }, 500);
+      }).catch(() => {
+        this.error = true
+      }).finally( (err) => {
+        this.loading = false
+      })
     },
     //列表刷新
     onRefresh(){
       this.refreshLoading = true
       this.loading = true
       this.finished = false
-      // this.listQuery.pageNum = 1
+      this.listQuery.pageNum = 1
       this.onLoad();
     },
     handleWaitItemClick() {
 
     },
     addClick() {
-      if (!this.radio) {
+      if (!this.radioId) {
         this.$notify({ type: 'warning', message: '请选择合同' });
         return
       }
-      this.$router.push({ name: 'SelectMaterials' })
+      this.$router.push({ name: 'SelectMaterials', query: {radioId: this.radioId} })
     }
   }
 }

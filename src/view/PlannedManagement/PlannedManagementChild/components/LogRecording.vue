@@ -41,11 +41,12 @@
         </ul>
       </div>
     </div>
+    <van-empty v-if="list.length === 0" description="暂无数据" />
   </div>
   <!-- </van-list> -->
 </template>
 <script>
-import { materialOperateLogGetList } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialOperateLogGetList } from '@/api/prodmgr-inv/materialOperateLog'
 export default {
   name: 'LogRecording',
   components: {},
@@ -105,7 +106,5 @@ export default {
       }
     }
   }
-}
-.li-item-both {
 }
 </style>

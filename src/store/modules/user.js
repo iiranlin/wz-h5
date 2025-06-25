@@ -1,6 +1,8 @@
 import { authInfo } from '@/api/login'
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
+import { logout } from '@/api/blcd-base/auth'
 import { setUserInfo } from '@/utils/user-info'
+
 
 const user = {
   state: {
@@ -37,7 +39,18 @@ const user = {
             reject(error)
         })
       })
-    }
+    },
+    // 退出系统
+    LogOut({ commit, state }) {
+      return new Promise(async(resolve, reject) => {
+        logout().then(() => {
+          commit('SET_TOKEN', '')
+          commit('SET_ROLES', null)
+          removeToken()
+          resolve()
+        })
+      })
+    },
   }
 }
 

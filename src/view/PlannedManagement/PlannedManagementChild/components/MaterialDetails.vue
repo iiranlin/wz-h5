@@ -65,6 +65,7 @@
         </ul>
       </div>
     </div>
+    <van-empty v-if="list.length === 0" description="暂无数据" />
   </div>
   <!-- </van-list> -->
 </template>

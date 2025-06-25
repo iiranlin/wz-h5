@@ -5,15 +5,15 @@
         <ul class="list-ul">
           <li>
             <span class="font-weight">合同名称：</span>
-            <span class="font-weight">新建南京至淮安城泳铁路第二批建管甲供物资采购会</span>
+            <span class="font-weight">{{ contractData.contractName }}</span>
           </li>
           <li>
             <span>合同物资：</span>
-            <span>特殊桥梁支庄</span>
+            <span>{{ contractData.itemName }}</span>
           </li>
           <li>
             <span>合同编号：</span>
-            <span>NHTL-2024-001</span>
+            <span>{{ contractData.contractNo }}</span>
           </li>
           <li class="li-status">
             <van-tag type="primary" round size="medium" @click="selectClick">选择合同</van-tag>
@@ -22,38 +22,54 @@
       </div>
       <div class="select-materials-search">
         <p class="select-materials-search-p font-weight">请选择需求物资<span class="select-materials-select">（已选择<span
-              class="select-materials-select-num">2</span>项）</span></p>
-        <van-search v-model="value" placeholder="输入关键字搜索" background="center" :show-action="showAction"
-          @search="onSearch" @cancel="onCancel" @focus="onFocus" />
+              class="select-materials-select-num">{{ materiaList.length }}</span>项）</span></p>
+        <van-search v-model="searchValue" placeholder="输入规格型号" background="center" :show-action="showAction"
+          @search="onSearch" />
       </div>
     </van-sticky>
     <div class="select-materials-list">
-      <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <van-checkbox-group v-model="result">
-            <van-checkbox shape="square" :name="index + ''" v-for="(item, index) in list" :key="index">
-              <ul class="list-ul">
-                <li>
-                  <span class="font-weight">物资名称：</span>
-                  <span class="font-weight">新建南京至淮安城泳铁路第二批建管甲供物资采购会</span>
-                </li>
-                <li>
-                  <span>规格型号：</span>
-                  <span>特殊桥梁支庄</span>
-                </li>
-                <li>
-                  <span>供应商：</span>
-                  <span>供应商名称供应商名称供应商名称</span>
-                </li>
-                <li>
-                  <span style="color: red;">计划金额比例：</span>
-                  <span style="color: red;">88.88%</span>
-                </li>
-              </ul>
-            </van-checkbox>
-          </van-checkbox-group>
-        </van-list>
-      </van-pull-refresh>
+      <div class="van-list">
+        <van-checkbox-group v-model="materiaList">
+          <van-checkbox shape="square" :name="item" v-for="item in filteredList" :key="item.id">
+            <ul class="list-ul">
+              <li>
+                <span class="font-weight">物资名称：</span>
+                <span class="font-weight">{{ item.materialName }}</span>
+              </li>
+              <li>
+                <span>规格型号：</span>
+                <span>{{ item.specModel }}</span>
+              </li>
+              <li class="li-item-both">
+                <div class="li-item-left">
+                  <span>计量单位：</span>
+                  <span>{{ item.unit }}</span>
+                </div>
+                <div class="li-item-right">
+                  <span>合同数量：</span>
+                  <span>{{ item.amount }}</span>
+                </div>
+              </li>
+              <li>
+                <span style="color: red;">已累计计划数量：</span>
+                <span style="color: red;">{{ item.cumulativeAmount }}</span>
+              </li>
+              <li>
+                <span>供应时间：</span>
+                <span>{{ item.deliveryDate }}</span>
+              </li>
+              <li>
+                <span>收货人及联系方式：</span>
+                <span>{{ item.receiver }}</span>
+              </li>
+              <li>
+                <span>使用地点：</span>
+                <span>{{ item.deliveryLocation }}</span>
+              </li>
+            </ul>
+          </van-checkbox>
+        </van-checkbox-group>
+      </div>
     </div>
     <div class="default-button-container">
       <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
@@ -63,72 +79,63 @@
 </template>
 <script>
 import BackToTop from '@/components/BackToTop'
+import { materialContractDetail } from '@/api/prodmgr-inv/materialContract'
+import { getListBySectionId } from '@/api/prodmgr-inv/materialSectionAllocation'
 export default {
   name: 'SelectMaterials',
   components: { BackToTop },
   data() {
     return {
-      value: '',
+      searchValue: '',
       showAction: false,
-      refreshLoading: false,
       loading: false,
-      finished: false,
-      result: [],
-      list: []
+      materiaList: [],
+      list: [],
+      listQuery: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      contractData: {}
+    }
+  }, 
+  computed: {
+    filteredList() {
+      if (!this.searchValue) return this.list; // 如果搜索值为空，返回所有数据
+      return this.list.filter(item => item.specModel.includes(this.searchValue)); // 过滤匹配的数据项
     }
   },
   mounted() {
+    const radioId = this.$route.query.radioId
+    this.materialContractDetail(radioId)
+    this.getListBySectionId(radioId)
   },
   methods: {
     onSearch() {
-      this.$toast(this.value);
-    },
-    onFocus() {
-      // this.showAction = true;
-    },
-    onCancel() {
-      // this.showAction = false;
-    },
-    onLoad() {
-      // 异步更新数据
-      setTimeout(() => {
-        if (this.refreshLoading) {
-          this.list = [];
-          this.refreshLoading = false;
-        }
 
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-        // 加载状态结束
-        this.loading = false;
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 500);
     },
-    //列表刷新
-    onRefresh(){
-      this.refreshLoading = true
+    getListBySectionId(radioId) {
       this.loading = true
-      this.finished = false
-      // this.listQuery.pageNum = 1
-      this.onLoad();
+      getListBySectionId({ contractId: radioId }).then(({ data }) => {
+        this.list = data || []
+      }).finally((err) => {
+        this.loading = false
+      })
     },
-    handleWaitItemClick() {
-
+    materialContractDetail(radioId) {
+      materialContractDetail(radioId).then(({ data }) => {
+        this.contractData = data
+      })
     },
     selectClick() {
       this.$router.push({ name: 'SelectContract' })
     },
     addClick() {
-      if (!this.result.length) {
+      if (!this.materiaList.length) {
         this.$notify({ type: 'warning', message: '请选择需求物资' });
         return
       }
-      this.$router.push({ name: 'SaveMaterials' })
+      this.$store.dispatch('public/setMateriaList', this.materiaList)
+      this.$router.push({ name: 'SaveMaterials', query: {contractId: this.$route.query.radioId} })
     }
   }
 }
@@ -138,8 +145,8 @@ export default {
   display: flex;
   flex-direction: column;
 
-  .select-materials-sticky{
-    ::v-deep .van-sticky{
+  .select-materials-sticky {
+    ::v-deep .van-sticky {
       background: #f8f8f8;
     }
   }

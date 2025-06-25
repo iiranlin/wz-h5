@@ -1,6 +1,7 @@
 import request from '@/utils/request'
 const VUE_APP_PRODMGR_INV = process.env.VUE_APP_PRODMGR_INV
 
+//需求计划列表
 export function materialDemandPlanRestList(params) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/list`,
@@ -9,6 +10,7 @@ export function materialDemandPlanRestList(params) {
   })
 }
 
+//需求计划详情
 export function materialDemandPlanRestDetail(id) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detail/${id}`,
@@ -16,11 +18,15 @@ export function materialDemandPlanRestDetail(id) {
   })
 }
 
-export function materialOperateLogGetList(params) {
+/**
+ * 保存
+ * @param {*} params 
+ * @returns 
+ */
+export const materialDemandPlanRestSave = (data) => {
   return request({
-    url: `${VUE_APP_PRODMGR_INV}/materialOperateLog/getList`,
-    method: 'get',
-    params
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/save`,
+    method: 'post',
+    data
   })
 }
-

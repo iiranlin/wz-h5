@@ -1,8 +1,8 @@
 <template>
   <div class="planned-management">
     <van-sticky class="planned-management-search">
-      <van-search v-model="searchValue" placeholder="请输入搜索关键词" background="#eef6ff" :show-action="showAction"
-        @search="onSearch" @cancel="onCancel" @focus="onFocus" />
+      <van-search v-model="searchValue" placeholder="请输入需求名称" background="#eef6ff" :show-action="showAction"
+        @search="onSearch" />
       <van-dropdown-menu active-color="#028bff">
         <van-dropdown-item v-model="statusValue" :options="statusArr" @change="statusChange" />
       </van-dropdown-menu>
@@ -30,32 +30,25 @@
                 <span>{{ item.materialName }}</span>
               </li>
               <li class="li-status">
-                <van-tag type="primary" round size="medium" v-if="item.status == '0'">未提交</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item.status == 2">已提交</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item.status == 3">已生效</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item.status == 4">修改后生效</van-tag>
-                <van-tag type="danger" round size="medium" v-if="item.status == 5">已驳回</van-tag>
-                <van-tag type="danger" round size="medium" v-if="item.status == 6">已撤回</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item.status == 7">供应中</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item.status == 8">收货完成</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item.status == 9">已入库</van-tag>
-                <van-tag type="primary" round size="medium" v-if="item.status == 10" class="li-status-completed">已完成</van-tag>
+                <template v-for="row in statusArr">
+                  <van-tag :class="{'li-status-completed': row.value == '9'}" :type="['0', '5'].includes(row.value)?'danger' : 'primary'" round size="medium" :key="row.value" v-if="item.planStatus == row.value">{{ row.text }}</van-tag>
+                </template>
               </li>
             </ul>
             <div class="list-ul-button">
-              <van-button class="button-info" plain round type="info" v-if="[7, 8, 9, 10].includes(item)"
+              <van-button class="button-info" plain round type="info" v-if="['6', '7', '8', '9'].includes(item.planStatus)"
                 @click="supplyOverviewClick">供应概览</van-button>
-              <van-button class="button-info" plain round type="info" v-if="[7, 8, 9, 10].includes(item)"
+              <van-button class="button-info" plain round type="info" v-if="['6', '7', '8', '9'].includes(item.planStatus)"
                 @click="logisticsViewClick">物流查看</van-button>
-              <van-button class="button-info" plain round type="info" v-if="[2].includes(item)"
+              <van-button class="button-info" plain round type="info" v-if="['2'].includes(item.planStatus)"
                 @click="withdrawClick">撤回</van-button>
-              <van-button class="button-info" plain round type="danger" v-if="[1, 5, 6].includes(item)"
+              <van-button class="button-info" plain round type="danger" v-if="['1', '0', '5'].includes(item.planStatus)"
                 @click="deleteClick">删除</van-button>
-              <van-button class="button-info" plain round type="info" v-if="[2, 3, 4, 5].includes(item)"
+              <van-button class="button-info" plain round type="info" v-if="['3', '4', '0', '2'].includes(item.planStatus)"
                 @click="handleProcessClick">查看流程</van-button>
-              <van-button class="button-info" plain round type="info" v-if="[1, 4, 5, 6].includes(item)"
+              <van-button class="button-info" plain round type="info" v-if="['1', '4', '0', '5'].includes(item.planStatus)"
                 @click="addClick">编辑</van-button>
-              <van-button class="button-info" round type="info" v-if="[1, 4, 5, 6].includes(item)"
+              <van-button class="button-info" round type="info" v-if="['1', '4', '0', '5'].includes(item.planStatus)"
                 @click="handleExamineClick">提交审核</van-button>
             </div>
           </div>
@@ -85,12 +78,18 @@ export default {
       statusValue: '',
       statusArr: [
         { text: '全部', value: '' },
-        { text: '未提交', value: '0' },
-        { text: '未确认', value: '2' },
-        { text: '已确认', value: '3' },
-        { text: '供货中', value: '4' },
+        { text: '已驳回', value: '0' },
+        { text: '未提交', value: '1' },
+        { text: '已提交', value: '2' },
+        { text: '已生效', value: '3' },
+        { text: '修改后同意', value: '4' },
+        { text: '已撤回', value: '5' },
+        { text: '供应中', value: '6' },
+        { text: '收货完成', value: '7' },
+        { text: '已入库', value: '8' },
+        { text: '已完成', value: '9' },
+        { text: '已退回', value: '10' },
       ],
-      scrollTop1: 0,
       listQuery: {
         pageNum: 1,
         pageSize: 10
@@ -101,16 +100,9 @@ export default {
   },
   methods: {
     onSearch() {
-      // this.$toast(this.searchValue);
       this.refreshLoading = true
       this.listQuery.pageNum = 1
       this.materialDemandPlanRestList()
-    },
-    onFocus() {
-      // this.showAction = true;
-    },
-    onCancel() {
-      // this.showAction = false;
     },
     statusChange () {
       this.refreshLoading = true
@@ -133,7 +125,8 @@ export default {
         this.refreshLoading = false;
       }
       const params = {
-        status: this.statusValue,
+        pageStatus: '0',
+        planStatus: this.statusValue,
         planName: this.searchValue,
         ...this.listQuery
       }
