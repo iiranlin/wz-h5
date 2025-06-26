@@ -2,17 +2,25 @@
     <div class="default-container" ref="container">
         <ul class="list-ul" style="margin: 10px;">
             <li>
-                <span style="width:330px;">需求名称：</span>
-                <span>南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
+                <span style="width:300px;">供应需求名称:</span>
+                <span>{{ result.planName }}</span>
             </li>
 
             <li >
                 <span style="width:330px;">需求项目：</span>
-                <span>南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
+                <span>{{ result.sectionName }}</span>
             </li>
             <li>
                 <span style="width: 220px;">需求组织：</span>
-                <span>施工单位名称</span>
+                <span>{{ result.deptName }}</span>
+            </li>
+            <li>
+                <span style="width: 220px;">提报人：</span>
+                <span>{{ result.createUserName }}</span>
+            </li>
+            <li>
+                <span style="width: 220px;">提报时间：</span>
+                <span>{{ formattedCreateDate(result.createDate) }}</span>
             </li>
         </ul>
         <div class="title">
@@ -20,66 +28,62 @@
         </div>
         <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-             
-
-                    <ul class="list-ul" v-for="(item,index) in 10" :key="index" style="margin: 10px;">
+                    <ul class="list-ul" v-for="(item,index) in result.demandPlanDetailsGyDTOList" :key="index" style="margin: 10px;">
                         <li>
                             <span class="font-weight">物资名称:</span>
-                            <span class="font-weight">计算机联锁设备</span>
+                            <span class="font-weight">{{ item.materialName }}</span>
                         </li>
                         <li>
                             <span>规格型号：</span>
-                            <span>2x2取2s10组道岔</span>
+                            <span>{{ item.specModel }}</span>
                         </li>
                         <li class="li-item-both">
                             <div class="li-item-left">
                                 <span>计量单位:</span>
-                                <span>套</span>
+                                <span>{{ item.unit }}</span>
                             </div>
                             <div class="li-item-right">
                                 <span>合同数量:</span>
-                                <span>5</span>
+                                <span>{{ item.amount }}</span>
                             </div>
                         </li>
                         <li class="li-item-both">
                             <div class="li-item-left">
                                 <span>累计计划量(含本次):</span>
-                                <span>4</span>
+                                <span>{{ item.cumulativeAmount }}</span>
                             </div>
                             <div class="li-item-right">
                                 <span>本次计划数量:</span>
-                                <span>5</span>
+                                <span>{{ item.planAmount }}</span>
                             </div>
                         </li>
                         <li class="li-item-both">
                             <div class="li-item-left">
                                 <span>已发货:</span>
-                                <span>4</span>
+                                <span>{{ item.sendTotal }}</span>
                             </div>
                             <div class="li-item-right">
                                 <span>已验收:</span>
-                                <span>2</span>
+                                <span>{{ item.putTotal }}</span>
                             </div>
                         </li>
                         <li class="li-item-both">
                             <div class="li-item-left">
                                 <span>已入库:</span>
-                                <span>2</span>
+                                <span>{{ item.putTotal }}</span>
                             </div>
                             <div class="li-item-right">
                                 <span>已退回:</span>
-                                <span>1</span>
+                                <span>{{ item.refundAllTotle }}</span>
                             </div>
                         </li>
                         <li class="li-item-both">
                             <div class="li-item-right" style="color:red;">
                                 <span>剩余待发货:</span>
-                                <span>1</span>
+                                <span>{{ item.ssendTotal }}</span>
                             </div>
                         </li>
                     </ul>
-
-              
             </van-list>
         </van-pull-refresh>
 
@@ -89,7 +93,7 @@
 import Vue from 'vue';
 import { Form } from 'vant';
 import { Field } from 'vant';
-
+import {supplyDetails} from '@/api/demand/demandManagement'
 Vue.use(Form);
 Vue.use(Field);
 export default {
@@ -104,14 +108,23 @@ export default {
             showAction: false,
             loading: false,
             finished: false,
-            result: [],
-            list: []
+            result: {},
+            list: [],
+            id:''
         };
     },
     created() {
-        // this.getOrderStatusOptions();
+        this.id = this.$route.query.id
+        this.getList()
     },
     methods: {
+        getList(){
+            supplyDetails(this.id).then((res)=>{
+                if(res.code==0){
+                    this.result = res.data
+                }
+            })
+        },
         onSubmit(values) {
             console.log('submit', values);
         },
@@ -140,6 +153,13 @@ export default {
                 }
             }, 500);
         },
+          formattedCreateDate(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+            const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+            return `${year}-${month}-${day}`;
+            },
     },
 };
 </script>

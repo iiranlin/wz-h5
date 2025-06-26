@@ -84,6 +84,9 @@
 <script>
 import BackToTop from '@/components/BackToTop'
 import {demandChooseGoods,demandSnedGoodsUpload} from '@/api/demand/demandManagement'
+import Vue from 'vue';
+import { Toast } from 'vant';
+Vue.use(Toast);
 export default {
   name: 'SelectMaterials',
   components: { BackToTop },
@@ -109,14 +112,30 @@ export default {
   },
   methods: {
     getSelectGoods(){
+       Toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+            });
       demandChooseGoods(this.goodsId).then((res)=>{
         if(res.code==0){
-          this.selectGoodsList = res.data.details.map(item => ({
+          Toast.clear()
+          this.selectGoodsList = res.data.details.map(item => {
+            // 辅助函数：格式化日期为 YYYY-MM-DD
+            const formatDate = (dateString) => {
+              const date = new Date(dateString);
+              const year = date.getFullYear();
+              const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+              const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
+              return `${year}-${month}-${day}`;
+            };
+          
+            return {
               ...item,
-              createDate:new Date(item.supplyDate).toLocaleDateString().replace(/\//g, "-"),
-              supplyDate: new Date(item.supplyDate).toLocaleDateString().replace(/\//g, "-"), // 或 .toLocaleString()
-              updateDate:new Date(item.supplyDate).toLocaleDateString().replace(/\//g, "-")
-          }));
+              createDate: formatDate(item.createDate),
+              supplyDate: formatDate(item.supplyDate),
+              updateDate: formatDate(item.updateDate)
+            };
+          });
           // this.selectGoodsList = res.data.details
         }
       })
@@ -157,8 +176,12 @@ export default {
     },
     // 点击下一步把选择的数据传过去
     addClick() {
-      console.log(this.selectArrayData,'点击')
-      this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData)} })
+      if(this.selectArrayData.length>0){
+        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:this.goodsId} })
+      }else{
+        Toast.fail('请选择至少一项');
+      }
+      
     },
     selectGoods(e){
       // console.log(e.flat())

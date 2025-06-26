@@ -17,15 +17,15 @@
                             finished-text="没有更多了..." 
                             @load="getAllList">
 
-                            <div class="box-container" v-for="(item,index) in 10" :key="index">
+                            <div class="box-container">
                                 <ul class="list-ul" >
                                     <li>
                                         <span class="font-weight" style="width: 300px;">供应商需求名称:</span>
-                                        <span class="font-weight">北京全路通信信号研究设计院集团有限公司</span>
+                                        <span class="font-weight">{{ carData.planName }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">供应需求：</span>
-                                        <span class="text">标段项目名称</span>
+                                        <span class="text">{{ carData.sectionName }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">发货单号:</span>
@@ -45,7 +45,7 @@
                                     </li>
                                      <li>
                                         <span style="width: 230px;">发货时间:</span>
-                                        <span>2025年06月01日</span>
+                                        <span>{{ carData.shippingDate }}</span>
                                     </li>
                                      <li>
                                         <span style="min-width: 280px;">预计到达时间为:</span>
@@ -77,7 +77,7 @@
                             finished-text="没有更多了..." 
                             @load="getAllList">
 
-                            <div class="box-container" v-for="(item,index) in 10" :key="index">
+                            <div class="box-container" v-for="(item,index) in carData.demandPlanDetailsGyDTOList" :key="index">
                                 <ul class="list-ul" >
                                     <li>
                                         <span class="font-weight" style="width: 300px;">需求组织名称:</span>
@@ -85,26 +85,26 @@
                                     </li>
                                     <li>
                                         <span style="width: 230px;">物资名称:</span>
-                                        <span class="text">计算机联锁设备</span>
+                                        <span class="text">{{ item.materialName }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">规格型号:</span>
-                                        <span>2x2取2s10组道岔</span>
+                                        <span>{{ item.specModel }}</span>
                                     </li>
                                     <li class="li-item-both">
                                         <div class="li-item-left">
                                             <span style="width: 230px;">计量单位:</span>
-                                            <span>套</span>
+                                            <span>{{ item.unit }}</span>
                                         </div>
                                         <div class="li-item-right">
                                             <span style="width: 230px;">发货数量:</span>
-                                            <span>5</span>
+                                            <span>{{ item.sendTotal }}</span>
                                         </div>
                                         </li>
                                      <li class="li-item-both">
                                         <div class="li-item-left">
                                             <span style="width: 300px;">本次计划数量:</span>
-                                            <span>5</span>
+                                            <span>{{ item.planAmount }}</span>
                                         </div>
                                         <div class="li-item-right">
                                             <span style="width: 230px;">包装形式:</span>
@@ -166,7 +166,7 @@
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
-
+import {cargoTransport} from '@/api/demand/sendGoods'
 export default {
     name:'MyToDoList',
     mixins: [keepPages],
@@ -178,55 +178,6 @@ export default {
             formData: {
                 keywords: '',
             },
-            //全部
-            allOrderList:[],
-
-            allRefreshLoading:false,
-            allLoading:false,
-            allFinished:false,
-
-            allListQuery: {
-                pageNum: 1,
-                pageSize: 10,
-            },
-            //待审批
-            waitOrderList:[],
-
-            waitRefreshLoading:false,
-            waitLoading:false,
-            waitFinished:false,
-
-            waitListQuery: {
-                pageNum: 1,
-                pageSize: 10,
-            },
-            //待处理
-            waitHandleList:[],
-
-            waitHandleRefreshLoading:false,
-            waitHandleLoading:false,
-            waitHandleFinished:false,
-
-            waitHandleListQuery: {
-                pageNum: 1,
-                pageSize: 10,
-            },
-            //已审批
-            historyOrderList:[],
-
-            historyRefreshLoading:false,
-            historyLoading:false,
-            historyFinished:false,
-
-            historyListQuery: {
-                pageNum: 1,
-                pageSize: 10,
-            },
-
-            //订单状态字典
-            orderStatusOptions:[],
-            //优先保障字典
-            guaranteeOptions:[],
             tabList:[
                 {
                     id:1,
@@ -236,20 +187,24 @@ export default {
                     id:2,
                     title:'发货物明细',
                 },
-            ]
+            ],
+            id:'',
+            carData:{}
         };
     },
     created () {
+         this.id = this.$route.query.id
+        this.cargoDetails();
         // this.getOrderStatusOptions();
     },
-    activated () {
-        if (this.$route.params.refresh) {
-            this.waitRefresh();
-            this.historyRefresh();
-        }
-        this.$store.commit('removeThisPage', 'MyToDoDetail')
-    },
     methods: {
+        cargoDetails(){
+            cargoTransport(this.id).then((res)=>{
+                if(res.code==0){
+                    this.carData = res.data
+                }
+            })
+        },
         tabsChange(e){
             console.log(e)
         },

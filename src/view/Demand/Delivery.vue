@@ -8,7 +8,7 @@
     <div class="tabs">
       <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
         @change="tabsChange" title-inactive-color="#2e2e2e">
-        <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.id">
+        <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.status">
 
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
@@ -37,27 +37,27 @@
                   </li>
                   <li>
                     <span style="width: 230px;">发货单附件:</span>
-                    <span style="color:#1989fa;">查看附件</span>
+                    <span style="color:#1989fa;" v-if="item.status != 3">查看附件</span>
                   </li>
                   <li class="li-status">
-                    <van-tag type="primary" round size="medium" v-if="index == 0">未发货</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="index == 1">货运中</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="index == 2" class="li-status-completed">已完成</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="item.status == 1">未发货</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="item.status == 2">货运中</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="item.status == 3" class="li-status-completed">已完成</van-tag>
                   </li>
                 </ul>
                 <div class="list-ul-button">
                   <van-button class="button-info" plain round type="danger" @click="handleDelClick()"
-                    v-if="[0, 1].includes(menuActiveIndex)">删除</van-button>
+                    v-if="item.status == 1">删除</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleEditClick()"
-                    v-if="[0, 1].includes(menuActiveIndex)">编辑</van-button>
-                  <van-button class="button-info" round type="info" @click="handleSendGoodsClick()"
-                    v-if="[0, 1].includes(menuActiveIndex)">确认发货</van-button>
+                    v-if="item.status == 1">编辑</van-button>
+                  <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id,item.status)"
+                    v-if="item.status == 1">确认发货</van-button>
                   <van-button class="button-info" round type="info" size="mini" @click="handleConfirmClick()"
-                    v-if="[2].includes(menuActiveIndex)">增加货运位置</van-button>
-                  <van-button class="button-info" plain round type="info" @click="handleCarGoClick()"
-                    v-if="[2].includes(menuActiveIndex)">货运详情</van-button>
+                    v-if="item.status == 2">增加货运位置</van-button>
+                  <van-button class="button-info" plain round type="info" @click="handleCarGoClick(item.planId)"
+                    v-if="item.status == 2">货运详情</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleLookClick()"
-                    v-if="[2].includes(menuActiveIndex)">物流查看</van-button>
+                    v-if="item.status == 2">物流查看</van-button>
                 </div>
               </div>
             </van-list>
@@ -108,7 +108,7 @@ import { Form } from 'vant';
 import { Field } from 'vant';
 import { Toast } from 'vant';
 import { Step, Steps } from 'vant';
-
+import {snedGoodsList,snedGoodsSure} from '@/api/demand/sendGoods'
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Toast);
@@ -140,28 +140,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
       },
-      //待审批
-      waitOrderList: [],
-
-      waitRefreshLoading: false,
-      waitLoading: false,
-      waitFinished: false,
-
-      waitListQuery: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-      //待处理
-      waitHandleList: [],
-
-      waitHandleRefreshLoading: false,
-      waitHandleLoading: false,
-      waitHandleFinished: false,
-
-      waitHandleListQuery: {
-        pageNum: 1,
-        pageSize: 10,
-      },
       //已审批
       historyOrderList: [],
 
@@ -169,7 +147,7 @@ export default {
       historyLoading: false,
       historyFinished: false,
 
-      historyListQuery: {
+      params: {
         pageNum: 1,
         pageSize: 10,
       },
@@ -181,68 +159,70 @@ export default {
       tabList: [
         {
           id: 0,
-          title: '全部'
+          title: '全部',
+          status:''
         },
         {
           id: 1,
           title: '未发货',
+          status:1
         },
         {
           id: 2,
-          title: '货运中'
+          title: '货运中',
+          status:2
         },
         {
           id: 3,
           title: '已完成',
+          status:3
         }
       ],
       freightLocationDiaLog: false,
-       listBySendData:[
-       {
-         status:2,
-         planName:"2025年6甲供物资需求-08",
-         shipmentBatchNumber:'FH202506190002-08',
-         planNumber: "XQ2025060199",
-         sectionName: "沪宁合高铁站前2标",
-         fileList:[
-          {
-            fileList:[
-              {
-                fileName: "需求计划表.pdf",
-                filePath: "sa/saleOrder/202506/9c83f0c415a24228a955afd5ba17322d.pdf"
-              }
-            ]
-          }
-         ],
-         createUserName: "施工单位工程部_提报需求计划",
-         submitTime: 1750309850000
-       }
-
-      ]
+       listBySendData:[]
     };
   },
   created() {
-    // this.getOrderStatusOptions();
-  },
-  activated() {
-    if (this.$route.params.refresh) {
-      this.waitRefresh();
-      this.historyRefresh();
-    }
-    this.$store.commit('removeThisPage', 'MyToDoDetail')
+    this.getList();
   },
   methods: {
+    getList(){
+      Toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+      });
+      snedGoodsList(this.params).then((res)=>{
+        console.log(res)
+        if(res.code==0){
+          Toast.clear()
+          this.listBySendData = res.data.list
+        }
+      })
+    },
     tabsChange(e) {
-      console.log(e)
+      this.params.status = e
+      this.params.pageNum = 1
+      this.getList()
     },
     //发货
-    handleSendGoodsClick() {
+    handleSendGoodsClick(id,status) {
       Dialog.confirm({
         title: '',
         message: '确定已经发货！',
         confirmButtonColor:'#1989fa'
       })
         .then(() => {
+          let params = {
+            id:id,
+            status:status
+          }
+          snedGoodsSure(params).then((res)=>{
+            console.log(res)
+            if(res.code==0){
+              Toast.success(res.data);
+              this.getList()
+            }
+          })
           // on confirm
         })
         .catch(() => {
@@ -255,8 +235,8 @@ export default {
       this.$router.push({ path: '/lookCargo' })
     },
     //货运详情
-    handleCarGoClick() {
-      this.$router.push({ path: '/cargoDetails' })
+    handleCarGoClick(id) {
+      this.$router.push({ path: '/cargoDetails',query:{id:id} })
     },
     //增加货运位置
     handleConfirmClick() {

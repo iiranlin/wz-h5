@@ -143,7 +143,7 @@ export const routes = [
     hidden: true,
     children: [
       {
-        path: '/MyProcess',
+        path: '/MyProcess/:businessId',
         name: 'MyProcess',
         meta: { title: '查看流程' },
         component: () => import('@/view/MyProcess/index.vue')
