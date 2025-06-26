@@ -1,8 +1,8 @@
 <template>
   <div class="finish">
-   
+
     <div class="main">
-     
+
       <div class="box" v-for="(item, index) in goodsData" :key="index">
         <div>
           <ul class="list-ul">
@@ -36,10 +36,11 @@
         <van-divider />
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
           <van-form ref="form">
+            
             <van-field v-model="goodsData[index].ssendTotal" name="发货数量" label="发货数量" placeholder="发货数量"
               input-align="right" :rules="[{ required: true, message: '请填写发货数量' }]" />
-            <van-field v-model="goodsData[index].unit" name="包装形式" label="包装形式" placeholder="请输入包装形式" input-align="right"
-              :rules="[{ required: true, message: '请填写包装形式' }]" />
+            <van-field v-model="goodsData[index].unit" name="包装形式" label="包装形式" placeholder="请输入包装形式"
+              input-align="right" :rules="[{ required: true, message: '请填写包装形式' }]" />
             <van-field readonly clickable v-model="goodsData[index].createDate" name="datetimePicker"
               :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
               @click="showCalendars(item, index, 'show')" :rules="[{ required: true, message: '请填写生产日期' }]"
@@ -54,8 +55,9 @@
 
             <van-field v-model="goodsData[index].addr" label="收货地址" placeholder="收货地址" input-align="right" />
             <van-field readonly clickable v-model="goodsData[index].supplyDate" name="datetimePicker"
-              :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间" @click="showCalendars(item, index, 'gong')" 
-              :rules="[{ required: true, message: '请填写供应时间' }]" input-align="right" />
+              :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
+              @click="showCalendars(item, index, 'gong')" :rules="[{ required: true, message: '请填写供应时间' }]"
+              input-align="right" />
 
             <van-field v-model="goodsData[index].receiver" name="收货人" label="收货人和电话" placeholder="收货人"
               input-align="right" :rules="[{ required: true, message: '请填写收货人和联系方式' }]" />
@@ -63,15 +65,16 @@
               disabled input-align="right" :rules="[{ required: true, message: '请填写投资方' }]" />
             <van-field v-model="goodsData[index].field1" name="投资比例" label="投资比例" disabled placeholder="投资比例"
               input-align="right" :rules="[{ required: true, message: '请填写投资比例' }]" />
-            <van-field name="uploader" label="合格证附件" :max-count="1">
+            <van-field name="uploader" label="合格证附件">
               <template #input>
-                <van-uploader v-model="uploader" :after-read="passReadUpload" />
+                <van-uploader v-model="goodsData[index].fileList01" multiple :max-count="1"
+                  :after-read="(file) => passReadUpload(file, index)" />
               </template>
             </van-field>
-
-            <van-field name="uploader" label="厂检报告附件" :max-count="1">
+            <van-field name="uploader" label="厂检报告附件" >
               <template #input>
-                <van-uploader v-model="uploader" :after-read="checkReadUpload" />
+                <van-uploader v-model="goodsData[index].fileList02"
+                  :after-read="(file) => checkReadUpload(file, index)" multiple :max-count="1"/>
               </template>
             </van-field>
             <van-field v-model="goodsData[index].remark" label="备注" placeholder="请输入备注" input-align="right" />
@@ -118,15 +121,19 @@ export default {
       value: '',
       showPicker: false,
       stopCalendar: false,
-      uploader: [{ url: 'https://img01.yzcdn.cn/vant/leaf.jpg' }],
-      isActive:0,
-      title:'',
-      goodsId:""
+      uploader: [],
+      isActive: 0,
+      title: '',
+      goodsId: ""
     };
   },
   created() {
     this.goodsId = this.$route.query.id
-    this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData));
+    // this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData));
+   this.goodsData= _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item=>({
+    ...item,
+    planDetailId:item.id
+   }))
     // this.getOrderStatusOptions();
   },
   methods: {
@@ -143,38 +150,38 @@ export default {
     showCalendars(data, index, title) {
       this.isActive = index
       this.title = title
-      if(title == 'show'){
+      if (title == 'show') {
         // this.goodsData[index]
         this.showCalendar = true;
       }
-      if(title == 'end'){
+      if (title == 'end') {
         this.showCalendar = true;
       }
-      if(title == 'gong'){
+      if (title == 'gong') {
         this.showCalendar = true;
       }
       // console.log(data,index,title)
     },
     // // 日期格式化
     createConfirm(time) {
-      if(this.title == 'show'){
-         this.goodsData[this.isActive].createDate =  new Date(time).toLocaleDateString().replace(/\//g, "-")
-         this.showCalendar = false;
-      }
-     if(this.title == 'gong'){
-        this.goodsData[this.isActive].supplyDate =  new Date(time).toLocaleDateString().replace(/\//g, "-")
+      if (this.title == 'show') {
+        this.goodsData[this.isActive].createDate = new Date(time).toLocaleDateString().replace(/\//g, "-")
         this.showCalendar = false;
-     }
-     if(this.title == 'end'){
-      this.goodsData[this.isActive].updateDate =  new Date(time).toLocaleDateString().replace(/\//g, "-")
-      this.showCalendar = false;
-     }
+      }
+      if (this.title == 'gong') {
+        this.goodsData[this.isActive].supplyDate = new Date(time).toLocaleDateString().replace(/\//g, "-")
+        this.showCalendar = false;
+      }
+      if (this.title == 'end') {
+        this.goodsData[this.isActive].updateDate = new Date(time).toLocaleDateString().replace(/\//g, "-")
+        this.showCalendar = false;
+      }
       // 
       // 
-      
+
     },
-    passReadUpload(file) {
-      console.log(file)
+    passReadUpload(file, index) {
+      console.log(file, index)
       let imgFile = new FormData();
 
       imgFile.append("businessType", '01');
@@ -182,13 +189,17 @@ export default {
       imgFile.append("file", file.file);
       demandSnedGoodsUpload(imgFile).then((res) => {
         if (res.code == 0) {
-          this.params.fileName = res.data.fileName
-          this.params.filePath = res.data.filePath
+          this.goodsData[index].fileList01 = [{
+            name: res.data.filePath,
+            url: res.data.fileName // 注意Vant通常使用url而不是path
+          }];
+          // this.params.fileName = res.data.fileName
+          // this.params.filePath = res.data.filePath
         }
       })
     },
     //厂检
-    checkReadUpload(file) {
+    checkReadUpload(file, index) {
       console.log(file)
       let imgFile = new FormData();
 
@@ -197,21 +208,33 @@ export default {
       imgFile.append("file", file.file);
       demandSnedGoodsUpload(imgFile).then((res) => {
         if (res.code == 0) {
-          this.params.fileName = res.data.fileName
-          this.params.filePath = res.data.filePath
+          this.goodsData[index].fileList02 = [{
+            name: res.data.filePath,
+            url: res.data.fileName // 注意Vant通常使用url而不是path
+          }];
+          // this.params.fileName = res.data.fileName
+          // this.params.filePath = res.data.filePath
         }
       })
     },
     save() {
       for (let i = 0; i < this.goodsData.length; i++) {
         if (this.goodsData[i].supplyDate == '' || this.goodsData[i].createDate == '' || this.goodsData[i].updateDate == "") {
-          alert('完善信息')
+          Notify({
+            message: '请完善信息',
+            duration: 1000,
+          });
+          return
         }
+
       }
+      
+      //保存完所选择的物资存到store里
+      this.$store.dispatch('public/setGoodsList', this.goodsData)
       this.$router.push({
-        path:'/SendGoods',
-        query: { 
-            id:  this.goodsId,
+        path: '/SendGoods',
+        query: {
+          id: this.goodsId,
         }
       })
       // this.goodsData.forEach((item,index)=>{

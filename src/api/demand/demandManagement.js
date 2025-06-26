@@ -24,7 +24,7 @@ export function demandSnedGoods(id) {
   })
 }
 
-//发货单附件 /materialDemandPlanRest/detailWz/1935557560812425218
+//发货单附件
 export function demandSnedGoodsUpload(data) {
   return request({
     url: `/blcd-base/minio/upload`,
@@ -43,11 +43,28 @@ export function demandChooseGoods(id) {
   })
 }
 
-//选择发送物资  /materialCirculationTableRest/saveSendGoods
+//选择发送物资
 export function demandSaveSendGoods(data) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/saveSendGoods`,
     method: 'post',
     data
+  })
+}
+
+//确认需求
+export function demandSureSave(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/modifyConfirm`,
+    method: 'post',
+    data
+  })
+}
+
+//供应详情   
+export function supplyDetails(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailGyMx?type=view&id=${id}`,
+    method: 'get'
   })
 }
