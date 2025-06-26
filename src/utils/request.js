@@ -68,7 +68,7 @@ service.interceptors.response.use(
         resolve();
       });
       return backoff.then(r => {
-        return service(res.config);
+        return service(response.config);
       });
     } else if (res.code === 401 || res.code === -10006) {
       Dialog.alert({

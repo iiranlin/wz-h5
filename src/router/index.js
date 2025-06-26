@@ -176,7 +176,7 @@ export const routes = [
       {
         path: 'SaveMaterials',
         name: 'SaveMaterials',
-        meta: { title: '保存物资' },
+        meta: { title: '设置物资需求信息' },
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/SaveMaterials.vue')
       },
       {

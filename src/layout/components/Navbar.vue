@@ -40,6 +40,7 @@ export default {
         //清空所有缓存页面
         this.$store.commit('changeKeepPages', 'index') // 经测试include为空值时所有页面都会缓存
         const path = this.$route.path
+        console.log(this.navMenu, path)
         this.active = path === '/'?this.navMenu[0].link:path;
         this.$router.push(this.active)
     }

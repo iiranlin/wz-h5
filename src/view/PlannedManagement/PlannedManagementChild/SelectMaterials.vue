@@ -15,22 +15,30 @@
             <span>合同编号：</span>
             <span>{{ contractData.contractNo }}</span>
           </li>
-          <li class="li-status">
+          <li>
+            <span>供应商：</span>
+            <span>{{ contractData.seller }}</span>
+          </li>
+          <li class="select-Contract-money">
+            <span style="color: red;">计划金额比例：</span>
+            <span style="color: red;">{{ contractData.materialUsedRatio }}%</span>
+          </li>
+          <li class="li-status" v-if="queryType != 'update'">
             <van-tag type="primary" round size="medium" @click="selectClick">选择合同</van-tag>
           </li>
         </ul>
       </div>
       <div class="select-materials-search">
         <p class="select-materials-search-p font-weight">请选择需求物资<span class="select-materials-select">（已选择<span
-              class="select-materials-select-num">{{ materiaList.length }}</span>项）</span></p>
+              class="select-materials-select-num">{{ materiaId.length }}</span>项）</span></p>
         <van-search v-model="searchValue" placeholder="输入规格型号" background="center" :show-action="showAction"
           @search="onSearch" />
       </div>
     </van-sticky>
     <div class="select-materials-list">
       <div class="van-list">
-        <van-checkbox-group v-model="materiaList">
-          <van-checkbox shape="square" :name="item" v-for="item in filteredList" :key="item.id">
+        <van-checkbox-group v-model="materiaId" v-if="filteredList.length">
+          <van-checkbox shape="square" :name="item.uniqueNumber" v-for="item in filteredList" :key="item.uniqueNumber">
             <ul class="list-ul">
               <li>
                 <span class="font-weight">物资名称：</span>
@@ -69,6 +77,7 @@
             </ul>
           </van-checkbox>
         </van-checkbox-group>
+        <van-empty v-else description="暂无数据" />
       </div>
     </div>
     <div class="default-button-container">
@@ -78,24 +87,28 @@
   </div>
 </template>
 <script>
+import keepPages from '@/view/mixins/keepPages'
 import BackToTop from '@/components/BackToTop'
 import { materialContractDetail } from '@/api/prodmgr-inv/materialContract'
 import { getListBySectionId } from '@/api/prodmgr-inv/materialSectionAllocation'
 export default {
   name: 'SelectMaterials',
+  mixins: [keepPages],
   components: { BackToTop },
   data() {
     return {
       searchValue: '',
       showAction: false,
       loading: false,
+      materiaId: [],
       materiaList: [],
       list: [],
       listQuery: {
         pageNum: 1,
         pageSize: 10
       },
-      contractData: {}
+      contractData: {},
+      queryType: ''
     }
   }, 
   computed: {
@@ -104,25 +117,33 @@ export default {
       return this.list.filter(item => item.specModel.includes(this.searchValue)); // 过滤匹配的数据项
     }
   },
+  activated() {
+    this.init()
+  },
   mounted() {
-    const radioId = this.$route.query.radioId
-    this.materialContractDetail(radioId)
-    this.getListBySectionId(radioId)
+    this.init()
   },
   methods: {
+    init () {
+      const {contractId, type} = this.$route.query
+      this.queryType = type
+      this.materialContractDetail(contractId)
+      this.getListBySectionId(contractId)
+    },
     onSearch() {
 
     },
-    getListBySectionId(radioId) {
+    getListBySectionId(contractId) {
       this.loading = true
-      getListBySectionId({ contractId: radioId }).then(({ data }) => {
-        this.list = data || []
+      getListBySectionId({ contractId }).then(({ data }) => {
+        this.list = data //.filter( (row) => Number(row.cumulativeAmount) < Number(row.amount)) || []
+        this.materiaId = (this.$store.state.public.materiaList || []).map(item => item.uniqueNumber || item.allocationUniqueNumber)
       }).finally((err) => {
         this.loading = false
       })
     },
-    materialContractDetail(radioId) {
-      materialContractDetail(radioId).then(({ data }) => {
+    materialContractDetail(contractId) {
+      materialContractDetail(contractId).then(({ data }) => {
         this.contractData = data
       })
     },
@@ -130,12 +151,15 @@ export default {
       this.$router.push({ name: 'SelectContract' })
     },
     addClick() {
-      if (!this.materiaList.length) {
+      if (!this.materiaId.length) {
         this.$notify({ type: 'warning', message: '请选择需求物资' });
         return
       }
+      this.materiaList = this.list.filter(item => this.materiaId.includes(item.uniqueNumber))
       this.$store.dispatch('public/setMateriaList', this.materiaList)
-      this.$router.push({ name: 'SaveMaterials', query: {contractId: this.$route.query.radioId} })
+      const {contractId, id} = this.$route.query
+      const query = this.queryType == 'update'?{contractId, type: this.queryType, id}:{contractId}
+      this.$router.push({ name: 'SaveMaterials', query })
     }
   }
 }
@@ -249,7 +273,16 @@ export default {
   }
 
   .button-info {
-    min-width: 150px;
+    // min-width: 150px;
+  }
+
+  .select-Contract-money {
+    :nth-child(1) {
+      width: auto !important;
+    }
+    :nth-child(2) {
+      width: auto !important;
+    }
   }
 }
 

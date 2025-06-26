@@ -29,6 +29,14 @@
                 <span>物资名称：</span>
                 <span>{{ item.materialName }}</span>
               </li>
+              <li>
+                <span>提报人：</span>
+                <span>{{ item.createUserName }}</span>
+              </li>
+              <li>
+                <span>提报时间：</span>
+                <span>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{s}') }}</span>
+              </li>
               <li class="li-status">
                 <template v-for="row in statusArr">
                   <van-tag :class="{'li-status-completed': row.value == '9'}" :type="['0', '5'].includes(row.value)?'danger' : 'primary'" round size="medium" :key="row.value" v-if="item.planStatus == row.value">{{ row.text }}</van-tag>
@@ -37,33 +45,35 @@
             </ul>
             <div class="list-ul-button">
               <van-button class="button-info" plain round type="info" v-if="['6', '7', '8', '9'].includes(item.planStatus)"
-                @click="supplyOverviewClick">供应概览</van-button>
+                @click="supplyOverviewClick(item)">供应概览</van-button>
               <van-button class="button-info" plain round type="info" v-if="['6', '7', '8', '9'].includes(item.planStatus)"
-                @click="logisticsViewClick">物流查看</van-button>
+                @click="logisticsViewClick(item)">物流查看</van-button>
               <van-button class="button-info" plain round type="info" v-if="['2'].includes(item.planStatus)"
-                @click="withdrawClick">撤回</van-button>
+                @click="withdrawClick(item)">撤回</van-button>
               <van-button class="button-info" plain round type="danger" v-if="['1', '0', '5'].includes(item.planStatus)"
-                @click="deleteClick">删除</van-button>
+                @click="deleteClick(item)">删除</van-button>
               <van-button class="button-info" plain round type="info" v-if="['3', '4', '0', '2'].includes(item.planStatus)"
-                @click="handleProcessClick">查看流程</van-button>
+                @click="handleProcessClick(item)">查看流程</van-button>
               <van-button class="button-info" plain round type="info" v-if="['1', '4', '0', '5'].includes(item.planStatus)"
-                @click="addClick">编辑</van-button>
+                @click="addClick(item)">编辑</van-button>
               <van-button class="button-info" round type="info" v-if="['1', '4', '0', '5'].includes(item.planStatus)"
-                @click="handleExamineClick">提交审核</van-button>
+                @click="handleExamineClick(item)">提交审核</van-button>
             </div>
           </div>
         </van-list>
       </van-pull-refresh>
     </div>
-    <van-icon name="plus" @click="addClick" />
+    <van-icon name="plus" @click="addClick()" />
     <back-to-top className=".planned-management"></back-to-top>
   </div>
 </template>
 <script>
+import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
-import { materialDemandPlanRestList } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'PlannedManagement',
+  mixins: [indexMixin],
   // dicts: ['JLDW'],
   components: { BackToTop },
   data() {
@@ -119,6 +129,11 @@ export default {
     onLoad() {
       this.materialDemandPlanRestList()
     },
+    getList () {
+      this.refreshLoading = true
+      this.listQuery.pageNum = 1
+      this.materialDemandPlanRestList()
+    },
     materialDemandPlanRestList () {
       if (this.refreshLoading) {
         this.list = [];
@@ -153,14 +168,18 @@ export default {
     handleWaitItemClick(item) {
       this.$router.push({ name: 'RequirementDetails', query: {id: item.id} })
     },
-    addClick() {
+    addClick(item) {
+      if(item){
+        this.$router.push({ name: 'SaveMaterials', query: {id: item.id, type: 'update'} })
+        return
+      }
       this.$router.push({ name: 'RequirementFilling' })
     },
-    supplyOverviewClick() {
-      this.$router.push({ name: 'SupplyOverview' })
+    supplyOverviewClick(item) {
+      this.$router.push({ name: 'SupplyOverview', query: { id: item.id } })
     },
-    logisticsViewClick() {
-      this.$router.push({ name: 'LogisticsView' })
+    logisticsViewClick(item) {
+      this.$router.push({ name: 'LogisticsView', query: { id: item.id } })
     },
     //去审核点击
     handleExamineClick() {
@@ -179,27 +198,23 @@ export default {
         },
       });
     },
-    deleteClick() {
+    deleteClick(item) {
       this.$dialog.confirm({
         title: '标题',
         message: '确认要删除吗？',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$toast('删除成功');
-      }).catch(() => {
-      });
+        materialDemandPlanRestBatchRemove({ids: [item.id]}).then( ({message}) => {
+          this.$toast(message)
+          this.refreshLoading = true
+          this.listQuery.pageNum = 1
+          this.materialDemandPlanRestList()
+        })
+      })
     },
-    withdrawClick() {
-      this.$dialog.confirm({
-        title: '标题',
-        message: '确认要撤回吗？',
-        confirmButtonText: '确认',
-        cancelButtonText: '取消'
-      }).then(() => {
-        this.$toast('撤回成功');
-      }).catch(() => {
-      });
+    withdrawClick(item) {
+      this.handleWithdraw({ businessId: item.id, businessType: item.planType == 1 ? 'FBYLXQ' : 'YLXQ'})
     }
   }
 }

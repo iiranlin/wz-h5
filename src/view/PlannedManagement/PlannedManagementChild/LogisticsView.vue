@@ -4,26 +4,28 @@
       <div>
         <ul class="detail-ul">
           <li>
+            <span>需求编号：</span>
+            <span>{{ detailData.planNumber }}</span>
+          </li>
+          <li>
             <span>需求名称：</span>
-            <span>南京枢纽(江北地区)和南通地区工程</span>
+            <span>{{ detailData.planName }}</span>
           </li>
           <li>
             <span>需求项目：</span>
-            <span>南京枢纽(江北地区)和南通地区工程</span>
+            <span>{{ detailData.sectionName }}</span>
           </li>
           <li>
             <span>需求组织：</span>
-            <span>施工单位名称</span>
+            <span>{{ detailData.deptName }}</span>
           </li>
-          <li class="li-item-both">
-            <div class="li-item-left">
-              <span>提报人：</span>
-              <span>张山</span>
-            </div>
-            <div class="li-item-right" style="flex: 2;">
-              <span>提报时间：</span>
-              <span>2025-07-15 15:30</span>
-            </div>
+          <li>
+            <span>提报人：</span>
+            <span>{{ detailData.createUserName }}</span>
+          </li>
+          <li>
+            <span>提报时间：</span>
+            <span>{{ parseTime(detailData.createDate, '{y}-{m}-{d} {h}:{s}') }}</span>
           </li>
         </ul>
       </div>
@@ -53,23 +55,41 @@
 <script>
 import LogisticsInformation from './components/LogisticsInformation'
 import DeliveryMaterialDetails from './components/DeliveryMaterialDetails'
+import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'LogisticsView',
   components: { LogisticsInformation, DeliveryMaterialDetails },
   data() {
     return {
       activeKey: 0,
-      menuActiveIndex: ''
+      menuActiveIndex: '',
+      detailData: {}
     }
   },
   created() {
   },
   activated() {
   },
+  mounted () {
+    const {id = null} = this.$route.query
+    this.materialDemandPlanRestDetail(id)
+  },
   methods: {
     activeKeyChange () {
       console.log(this.activeKey)
-    }
+    },
+    materialDemandPlanRestDetail (id) {
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
+      materialDemandPlanRestDetail(id).then( ({data}) => {
+        this.detailData = data
+      }).finally(() => {
+          toast.clear();
+      });
+    },
   }
 }
 </script>
