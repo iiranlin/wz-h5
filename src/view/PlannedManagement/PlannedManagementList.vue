@@ -50,13 +50,13 @@
                 @click="logisticsViewClick(item)">物流查看</van-button>
               <van-button class="button-info" plain round type="info" v-if="['2'].includes(item.planStatus)"
                 @click="withdrawClick(item)">撤回</van-button>
-              <van-button class="button-info" plain round type="danger" v-if="['1', '0', '5'].includes(item.planStatus)"
+              <van-button class="button-info" plain round type="danger" v-if="['1', '0', '5', '10'].includes(item.planStatus)"
                 @click="deleteClick(item)">删除</van-button>
               <van-button class="button-info" plain round type="info" v-if="['3', '4', '0', '2'].includes(item.planStatus)"
                 @click="handleProcessClick(item)">查看流程</van-button>
-              <van-button class="button-info" plain round type="info" v-if="['1', '4', '0', '5'].includes(item.planStatus)"
+              <van-button class="button-info" plain round type="info" v-if="['1', '4', '0', '5', '10'].includes(item.planStatus)"
                 @click="addClick(item)">编辑</van-button>
-              <van-button class="button-info" round type="info" v-if="['1', '4', '0', '5'].includes(item.planStatus)"
+              <van-button class="button-info" round type="info" v-if="['1', '4', '0', '5', '10'].includes(item.planStatus)"
                 @click="handleExamineClick(item)">提交审核</van-button>
             </div>
           </div>
@@ -191,10 +191,11 @@ export default {
       });
     },
     //查看流程点击
-    handleProcessClick() {
+    handleProcessClick(item) {
       this.$router.push({
         name: "MyProcess",
         params: {
+          businessId: item.id
         },
       });
     },
