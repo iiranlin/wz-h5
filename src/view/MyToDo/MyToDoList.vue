@@ -162,7 +162,7 @@ export default {
         next();
     },
     beforeRouteLeave (to, from, next) {
-        from.meta.navIndex = this.menuActiveIndex;
+        from.meta.myToDoNavIndex = this.menuActiveIndex;
         next();
     },
 
@@ -213,8 +213,8 @@ export default {
       
     },
     created () {
-        if(this.$route.meta.navIndex){
-            this.menuActiveIndex = this.$route.meta.navIndex;
+        if(this.$route.meta.myToDoNavIndex){
+            this.menuActiveIndex = this.$route.meta.myToDoNavIndex;
         }
     },
     activated () {
