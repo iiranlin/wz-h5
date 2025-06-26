@@ -34,6 +34,8 @@ export default {
                 return route.path.includes(item.link)
             })
             this.active = obj.link;
+            //清空meta里的默认tab角标
+            this.$route.meta.navIndex = 0;
         },
     },
     created () {
