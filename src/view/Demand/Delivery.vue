@@ -54,7 +54,7 @@
                     <!-- 增加货运位置是根据物流单号来显示的 -->
                   <van-button class="button-info" round type="info" size="mini" @click="handleConfirmClick()"
                     v-if="item.oddNumbers == '' && item.status==2">增加货运位置</van-button>
-                  <van-button class="button-info" plain round type="info" @click="handleCarGoClick(item.planId)"
+                  <van-button class="button-info" plain round type="info" @click="handleCarGoClick(item.id)"
                     v-if="item.status == 2">货运详情</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleLookClick()"
                     v-if="item.status == 2">物流查看</van-button>

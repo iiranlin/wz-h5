@@ -25,11 +25,18 @@ export function cargoTransport(id) {
     method: 'GET',
   })
 }
-// 删除  
+// 删除   
 export function deleteGoods(data) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/batchRemove`,
     method: 'post',
     data
+  })
+}
+
+export function detailBySend(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/detailBySend/${id}`,
+    method: 'get',
   })
 }

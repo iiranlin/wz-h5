@@ -57,7 +57,7 @@
               @click="showCalendars(item, index, 'end')"
               input-align="right" />
               <van-field v-model="goodsData[index].addr" label="使用地点" placeholder="使用地点" input-align="right" />
-            <van-field v-model="goodsData[index].shippingAddress" label="收货地址" placeholder="收货地址" input-align="right" />
+            <van-field v-model="goodsData[index].field2" label="收货地址" placeholder="收货地址" input-align="right" />
             <van-field readonly clickable v-model="goodsData[index].supplyDate" name="datetimePicker"
               :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
               @click="showCalendars(item, index, 'gong')" :rules="[{ required: true, message: '请填写供应时间' }]"

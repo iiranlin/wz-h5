@@ -21,23 +21,23 @@
                                 <ul class="list-ul" >
                                     <li>
                                         <span class="font-weight" style="width: 300px;">供应商需求名称:</span>
-                                        <span class="font-weight">{{ carData.planName }}</span>
+                                        <span class="font-weight">{{ params.planName }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">供应需求：</span>
-                                        <span class="text">{{ carData.sectionName }}</span>
+                                        <span class="text">{{ params.sectionName }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">发货单号:</span>
-                                        <span>FH20250531004</span>
+                                        <span>{{ params.shipmentBatchNumber }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">物流单号:</span>
-                                        <span>其他</span>
+                                        <span>{{ params.oddNumbers }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">发货地址:</span>
-                                        <span>Xxxxxx</span>
+                                        <span>{{ params.shippingAddress }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">发货单附件:</span>
@@ -45,23 +45,23 @@
                                     </li>
                                      <li>
                                         <span style="width: 230px;">发货时间:</span>
-                                        <span>{{ carData.shippingDate }}</span>
+                                        <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate) }}</span>
                                     </li>
                                      <li>
                                         <span style="min-width: 280px;">预计到达时间为:</span>
-                                        <span>2025年05月03日</span>
+                                        <span v-if="params.arrivalDate">{{ formattedCreateDate(params.arrivalDate) }}</span>
                                     </li>
                                     <li>
                                         <span style="min-width: 230px;">车牌号:</span>
-                                        <span>冀T20874</span>
+                                        <span>{{ params.carNumber }}</span>
                                     </li>
                                     <li>
                                         <span style="min-width: 230px;">联系人:</span>
-                                        <span>张晓明</span>
+                                        <span>{{ params.contacts }}</span>
                                     </li>
                                     <li>
                                         <span style="min-width: 230px;">联系电话:</span>
-                                        <span>13865445632</span>
+                                        <span>{{ params.contactsPhone }}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -69,7 +69,6 @@
                     </van-pull-refresh>
                 </van-tab>
                  <van-tab  title="发货物明细" name="发货物明细">
-                    <div class="tabs"></div>
                     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
                         <van-list 
                             v-model="allLoading" 
@@ -77,11 +76,11 @@
                             finished-text="没有更多了..." 
                             @load="getAllList">
 
-                            <div class="box-container" v-for="(item,index) in carData.demandPlanDetailsGyDTOList" :key="index">
+                            <div class="box-container" v-for="(item,index) in params.materialCirculationDetailsTableDTOS" :key="index">
                                 <ul class="list-ul" >
                                     <li>
                                         <span class="font-weight" style="width: 300px;">需求组织名称:</span>
-                                        <span class="font-weight">施工单位名称</span>
+                                        <span class="font-weight">{{ item.materialName }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">物资名称:</span>
@@ -114,36 +113,36 @@
                                      <li class="li-item-both">
                                         <div class="li-item-left">
                                             <span>生产日期:</span>
-                                            <span>2025/06/01</span>
+                                            <span>{{ formattedCreateDate(item.createDate) }}</span>
                                         </div>
                                         <div class="li-item-right">
                                             <span>截止日期:</span>
-                                            <span>2025/05/03</span>
+                                            <span>{{ formattedCreateDate(item.updateDate) }}</span>
                                         </div>
                                         </li>
                                     <li>
                                         <span style="width: 230px;">收货地址:</span>
-                                        <span>收货地址收货地址收货地址收货地址</span>
+                                        <span>{{ item.field2 }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 230px;">供应时间:</span>
-                                        <span>2025年06月01日</span>
+                                        <span>{{ formattedCreateDate(item.supplyDate) }}</span>
                                     </li>
                                      <li>
                                         <span style="width: 400px;">收货人及联系方式:</span>
-                                        <span>张晓明 13865444566</span>
+                                        <span>{{ item.receiver }}</span>
                                     </li>
                                      <li>
                                         <span style="min-width: 230px;">投资方:</span>
-                                        <span>投资方名称投资方名称投资方名称投资方名称投资方名称投资方名称</span>
+                                        <span>{{ item.field0 }}</span>
                                     </li>
                                     <li>
                                         <span style="min-width: 230px;">投资比例:</span>
-                                        <span>40%;60%</span>
+                                        <span>{{ item.field1 }}</span>
                                     </li>
                                     <li>
                                         <span style="min-width: 230px;">备注:</span>
-                                        <span>备注内容备注内容备注内容备注内容备注内容</span>
+                                        <span>{{ item.remark }}</span>
                                     </li>
                                      <li class="li-item-both">
                                         <div class="li-item-left">
@@ -166,7 +165,7 @@
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
-import {cargoTransport} from '@/api/demand/sendGoods'
+import {detailBySend} from '@/api/demand/sendGoods'
 export default {
     name:'MyToDoList',
     mixins: [keepPages],
@@ -189,7 +188,11 @@ export default {
                 },
             ],
             id:'',
-            carData:{}
+            params:{},
+            allLoading:false,
+            allFinished:false,
+            allRefreshLoading:false,
+            allRefresh:false
         };
     },
     created () {
@@ -198,10 +201,17 @@ export default {
         // this.getOrderStatusOptions();
     },
     methods: {
+        formattedCreateDate(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+            const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+            return `${year}-${month}-${day}`;
+            },
         cargoDetails(){
-            cargoTransport(this.id).then((res)=>{
+            detailBySend(this.id).then((res)=>{
                 if(res.code==0){
-                    this.carData = res.data
+                    this.params = res.data
                 }
             })
         },
@@ -228,161 +238,6 @@ export default {
         getAllList(){
             this.allRefreshLoading = false;
             this.allFinished = true;
-        },
-        //获取待审批的订单
-        getWaitList(){
-            // let toast = this.$toast.loading({
-            //     duration: 0,
-            //     message: "正在加载...",
-            //     forbidClick: true
-            // });
-            // let  params = {
-            //     reviewCompleted: '0',
-            // }
-            // gcywVehicleRequestListPageForH5(Object.assign({}, params,this.waitListQuery)).then(({ data }) => {
-            //     if(this.waitRefreshLoading){
-            //         this.waitOrderList = [];
-                this.waitRefreshLoading = false;
-            //     }
-            //     this.waitLoading = false;
-            //     this.waitOrderList = [...this.waitOrderList, ...data.list];
-
-            //     if (!data.hasNextPage) {
-                    this.waitFinished = true;
-            //         return;
-            //     }
-            //     this.waitListQuery.pageNum = this.waitListQuery.pageNum + 1;
-            // }).catch((error) => {
-            //     this.waitLoading = false;
-            //     this.waitFinished = true;
-            // }).finally(() => {
-            //     toast.clear();
-            // });
-        },
-        //获取待处理数据
-        getWaitHandleList(){
-
-        },
-        
-        //获取已审批订单
-        getHistoryList(){
-            // let toast = this.$toast.loading({
-            //     duration: 0,
-            //     message: "正在加载...",
-            //     forbidClick: true
-            // });
-            // let  params = {
-            //     reviewCompleted: '1',
-            // }
-            // gcywVehicleRequestListPageForH5(Object.assign({}, params,this.historyListQuery)).then(({ data }) => {
-            //     if(this.historyRefreshLoading){
-            //         this.historyOrderList = [];
-                    this.historyRefreshLoading = false;
-            //     }
-            //     this.historyLoading = false;
-            //     this.historyOrderList = [...this.historyOrderList, ...data.list];
-
-            //     if (!data.hasNextPage) {
-                    this.historyFinished = true;
-            //         return;
-            //     }
-            //     this.historyListQuery.pageNum = this.historyListQuery.pageNum + 1;
-            // }).catch((error) => {
-            //     this.historyLoading = false;
-            //     this.historyFinished = true;
-            // }).finally(() => {
-            //     toast.clear();
-            // });
-        },
-        //全部列表条目点击
-        handleAllItemClick(item){
-
-        },
-        //待审核列表条目点击
-        handleWaitItemClick(item){
-            // this.$router.push({
-            //     name: "ApprovalDetail",
-            //     params: { 
-            //         id:item.id,
-            //     },
-            // });
-        },
-        //待处理列表条目点击
-        handleWaitHandleItemClick(item){
-            // this.$router.push({
-            //     name: "ApprovalDetail",
-            //     params: { 
-            //         id:item.id,
-            //     },
-            // });
-        },
-        //已审核列表条目点击
-        handleHistoryItemClick(item){
-            // this.$router.push({
-            //     name: "ApprovalDetail",
-            //     params: { 
-            //         id:item.id,
-            //     },
-            // });
-        },
-        //查看流程点击
-        handleProcessClick(){
-            this.$router.push({
-                name: "MyProcess",
-                params: { 
-                    
-                },
-            });
-        },
-        //去审核点击
-        handleExamineClick(){
-            this.$router.push({
-                name: "MyToDoDetail",
-                params: { 
-                    type: '0',
-                },
-            });
-        },
-        //搜索点击
-        handeSearchClick(){
-            this.$router.push({
-                name: "MyToDoSearch",
-                params: { 
-                    type: '0',
-                },
-            });
-        },
-        //全部列表刷新
-        allRefresh(){
-            this.allRefreshLoading = true;
-            this.allLoading = true;
-            this.allFinished = false;
-            this.allListQuery.pageNum = 1;
-            this.getAllList();
-        },
-        //待审核列表刷新
-        waitRefresh(){
-            this.waitRefreshLoading = true;
-            this.waitLoading = true;
-            this.waitFinished = false;
-            this.waitListQuery.pageNum = 1;
-            this.getWaitList();
-        },
-        //待处理列表刷新
-        waitHandleRefresh(){
-            this.waitHandleRefreshLoading = true;
-            this.waitHandleLoading = true;
-            this.waitHandleFinished = false;
-            this.waitHandleListQuery.pageNum = 1;
-            this.getWaitHandleList();
-        },
-        //已审核列表刷新
-        historyRefresh(){
-            this.historyRefreshLoading = true;
-            this.historyLoading = true;
-            this.historyFinished = false;
-            this.historyListQuery.pageNum = 1;
-            this.getHistoryList();
         },
     },
 };
