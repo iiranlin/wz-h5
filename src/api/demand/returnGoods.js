@@ -1,0 +1,18 @@
+import request from '@/utils/request'
+const VUE_APP_PRODMGR_INV = process.env.VUE_APP_PRODMGR_INV
+//供应商需求计划列表  /materialCirculationTableRest/detailByBack/1937781772949094402
+export function returnGoodsList(params) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/listGysRetreat`,
+    method: 'GET',
+    params
+  })
+}
+
+//供应商需求计划列表  
+export function returnGoodsDetails(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/detailByBack/${id}`,
+    method: 'GET',
+  })
+}

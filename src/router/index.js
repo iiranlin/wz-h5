@@ -291,7 +291,7 @@ export const routes = [
         component: () => import('@/view/Demand/SendGoods/selectGoods.vue'),
         hidden: true,
         name: 'selectGoods',
-        meta: { title: '选择物资' },
+        meta: { title: '选择发货物资' },
       },
       {
 
@@ -299,7 +299,7 @@ export const routes = [
         component: () => import('@/view/Demand/SendGoods/finishGoods.vue'),
         hidden: true,
         name: 'finishGoods',
-        meta: { title: '选择完物资' },
+        meta: { title: '设置发运物资信息' },
       },
       {
 

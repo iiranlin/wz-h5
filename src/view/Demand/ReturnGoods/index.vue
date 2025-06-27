@@ -3,29 +3,30 @@
         <ul class="list-ul" style="margin: 10px;">
             <li>
                 <span style="width:330px;">供应需求：</span>
-                <span>南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
+                <span>{{ params.planName }}</span>
             </li>
 
             <li>
                 <span style="width:220px;">需求项目：</span>
-                <span>标段项目名称</span>
+                <span>{{ params.sectionName }}</span>
             </li>
             <li>
                 <span style="width: 220px;">需求组织：</span>
-                <span>施工单位名称</span>
+                <span>{{ params.deptName }}</span>
             </li>
             <li>
                 <span style="width: 220px;">发货单号：</span>
-                <span>FH65889602032336</span>
+                <span>{{ params.shipmentBatchNumber }}</span>
             </li>
             <li class="li-item-both">
                 <div class="li-item-left">
                     <span style="width: 220px;">退货环节:</span>
-                    <span style="color:red;">报检不通过</span>
+                    <span style="color:red;" v-if="params.backNode==2">收货不通过</span>
+                    <span v-else>收货通过</span>
                 </div>
                 <div class="li-item-right">
                     <span>退货时间:</span>
-                    <span>2025-04-02 18:20</span>
+                    <span>{{ formattedCreateDate(params.backDate) }}</span>
                 </div>
             </li>
         </ul>
@@ -33,10 +34,10 @@
             <span>退货明细</span>
         </div>
         <van-list @load="onLoad">
-            <ul class="list-ul" v-for="(item, index) in 10" :key="index" style="margin: 20px 15px 0 15px;">
+            <ul class="list-ul" v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index" style="margin: 20px 15px 0 15px;">
                 <li>
                     <span class="font-weight">物资名称:</span>
-                    <span class="font-weight">计算机联锁设备</span>
+                    <span class="font-weight">{{ item.materialName }}</span>
                 </li>
                 <li>
                     <span>标段项目: </span>
@@ -45,26 +46,34 @@
                 <li class="li-item-both">
                     <div class="li-item-left">
                         <span>规格型号:</span>
-                        <span>2x2取2s10组道岔</span>
+                        <span>{{ item.specModel }}</span>
                     </div>
                     <div class="li-item-right">
                         <span>计量单位:</span>
-                        <span>套</span>
+                        <span>{{ item.unit }}</span>
                     </div>
                 </li>
                 <li class="li-item-both">
                     <div class="li-item-left">
                         <span>发货数量:</span>
-                        <span>10</span>
+                        <span>{{ item.sendTotal }}</span>
                     </div>
                     <div class="li-item-right">
                         <span>退货数量:</span>
-                        <span>6</span>
+                        <span>{{ item.refundTotal }}</span>
                     </div>
                 </li>
                 <li>
                     <span>退货附件:</span>
-                    <span style="color:#1989fa;">附件/xxxxx.pdf</span>
+                    <span style="color:#1989fa;">
+                         <template>
+                        <div v-for="(item1,index1) in item.fileList" :key="index1">
+                          <div v-for="(item2,index2) in item1.fileList" :key="index2"> 
+                            <a href="javascript:;" @click="dialogPopup(item2.filePath,item2.fileName)">{{ item2.fileName }}</a>
+                          </div>
+                        </div>
+                      </template>
+                    </span>
                 </li>
             </ul>
 
@@ -74,17 +83,17 @@
             <span>初验信息</span>
         </div>
         <div class="tabs">
-            <van-list @load="getAllList">
+            <van-list>
 
                 <div class="box-container">
                     <ul class="list-ul">
                         <li>
                             <span>自检单:</span>
-                            <span style="color:#1989fa;">自检单附件/xxxxx.pdf</span>
+                            <span style="color:#1989fa;" v-if="params.fileByList.zjd">{{ params.fileByList.zjd[0].fileName }}</span>
                         </li>
                         <li>
                             <span>其他资料:</span>
-                            <span style="color:#1989fa;">其他资料/xxxxx.pdf</span>
+                            <span style="color:#1989fa;" v-if="params.fileByList.qtzl">{{ params.fileByList.qtzl[0].fileName }}</span>
                         </li>
                     </ul>
                 </div>
@@ -96,7 +105,10 @@
 import Vue from 'vue';
 import { Form } from 'vant';
 import { Field } from 'vant';
+import { Toast } from 'vant';
+import {returnGoodsDetails} from '@/api/demand/returnGoods'
 
+Vue.use(Toast);
 Vue.use(Form);
 Vue.use(Field);
 export default {
@@ -112,13 +124,40 @@ export default {
             loading: false,
             finished: false,
             result: [],
-            list: []
+            list: [],
+            orderId:'',
+            params:{}
         };
     },
     created() {
-        // this.getOrderStatusOptions();
+        this.orderId = this.$route.query.id
+        this.getGoodsOrderDetails();
     },
-    methods: {
+    methods: { 
+        // 时间戳转换成日期格式
+         formattedCreateDate(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+            const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+            return `${year}-${month}-${day}`;
+            },
+        getGoodsOrderDetails(){
+             Toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+            });
+            returnGoodsDetails(this.orderId).then((res)=>{
+                if(res.code==0){
+                    this.params = {
+                        ...res.data, // 展开原有属性
+                        fileByList: JSON.parse(res.data.fileByList) // 单独解析 fileByList
+                    };
+                    console.log(JSON.parse(res.data.fileByList),'111')
+                }
+                // console.log(res)
+            })
+        },
         onSubmit(values) {
             console.log('submit', values);
         },

@@ -9,7 +9,7 @@ export function snedGoodsList(params) {
   })
 }
 
-//确认发货  /materialDemandPlanRest/detailGyMx
+//确认发货
 export function snedGoodsSure(data) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/modifyQrfh`,
@@ -23,5 +23,13 @@ export function cargoTransport(id) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailGyMx?id=${id}`,
     method: 'GET',
+  })
+}
+// 删除  
+export function deleteGoods(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/batchRemove`,
+    method: 'post',
+    data
   })
 }

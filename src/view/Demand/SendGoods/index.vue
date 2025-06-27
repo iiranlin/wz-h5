@@ -1,9 +1,9 @@
 <template>
-    <div class="default-container" ref="container"  v-bind:style="{ 'padding-bottom': paramsType ? '150px' : '0px' }">
+    <div class="default-container" ref="container">
         <ul class="list-ul">
             <li>
-                <span>供应需求名称：</span>
-                <span>{{ goodsMsg.planName }}</span>
+                <span>需求编号：</span>
+                <span>{{ goodsMsg.planNumber }}</span>
             </li>
 
             <li class="li-item-both">
@@ -18,44 +18,39 @@
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
             <van-form :key="formKey">
                 <van-field v-model="params.oddNumbers" name="物流单号" label="物流单号" placeholder="物流单号" input-align="right"
-                    :rules="[{ validator: checkNotChinese, message: '物流单号不能包含汉字' }]" />
+                    />
                 <van-field v-model="params.shippingAddress" name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
                     :rules="[{ required: true, message: '请填写发货地址' }]" />
-                <van-field readonly clickable name="calendar" v-model="params.shippingDate" :value="params.shippingDate" label="预计发货时间" input-align="right" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" v-model="params.shippingDate" :value="params.shippingDate" label="发货日期" input-align="right" placeholder="点击选择日期"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" />
                 <van-calendar v-model="showCalendar" @confirm="onConfirm" />
                 <van-field readonly clickable name="calendar" :value="params.arrivalDate" label="预计送达时间" input-align="right" placeholder="点击选择日期"
                     @click="sendStop = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
                 <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
-                <van-field v-model="params.carNumber" name="车牌号" label="车牌号" placeholder="车牌号" input-align="right"/>
-                <van-field v-model="params.contacts" name="联系人" label="联系人" placeholder="联系人" input-align="right"
-                    :rules="[{ required: true, message: '请填写联系人' }]" />
-                <van-field v-model="params.contactsPhone" label="手机号" placeholder="手机号" input-align="right"
+                <van-field v-model="params.carNumber" label="车牌号" placeholder="车牌号" input-align="right"/>
+                <van-field v-model="params.contactsPhone" label="联系电话" placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' },{ pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！'}]" />
+                <!-- <van-field v-model="params.contactsPhone" label="手机号" placeholder="手机号" input-align="right"
+                    :rules="[{ required: true, message: '请填写手机号' },{ pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！'}]" /> -->
                 <van-field name="uploader" label="发货单附件">
                     <template #input>
                         <van-uploader v-model="fileList" :after-read="beforeReadUpload" multiple :max-count="1"/>
                     </template>
                     </van-field>
-                <!-- <van-field v-model="params.fileName" center clearable label="发货单附件" placeholder="发货单附件" input-align="right"
-                    :rules="[{ required: true, message: '请填写发货单附件' }]">
+                <!-- <van-field v-model="params.number" center clearable label="已选物资" placeholder="发货单附件" input-align="right">
                     <template #button>
-                        <van-uploader :after-read="beforeReadUpload">
-                            <van-button size="mini" class="button-info" type="primary">请上传发货单</van-button>
-                        </van-uploader>
-                        
+                        <van-button size="mini" type="primary" class="button-info" @click="lookGoods(goodsId)" v-if="paramsType">查看发货物资</van-button>
                     </template>
                 </van-field> -->
-                <van-field v-model="params.number" center clearable label="已选物资" placeholder="发货单附件" input-align="right">
-                    <template #button>
-                        <van-button size="mini" type="primary" class="button-info" @click="chooseGoods(goodsId)" >选择发货物资</van-button>
-                        <van-button size="mini" type="primary" class="button-info" @click="lookGoods(goodsId)" v-if="paramsType">查看发货物资</van-button> <!--保存完回显-->
-                    </template>
-                </van-field>
             </van-form>
         </div>
-        <div class="default-button-container" v-if="paramsType">
+        <!-- <div class="default-button-container" v-if="paramsType">
           <van-button class="button-info" round type="info" @click="saveClick">确认</van-button>
+        </div> -->
+        <div class="default-button-container">
+            <van-button size="mini" type="primary" class="button-info" @click="chooseGoods(goodsId)" v-if="this.text=='add'">选择发货物资</van-button>
+            <!-- 编辑里的选择发货物资传的是planId -->
+            <van-button size="mini" type="primary" class="button-info" @click="editGoods(params.planId,'edit')" v-else>选择发货物资</van-button>
         </div>
     </div>
 </template>
@@ -82,19 +77,39 @@ export default {
             showCalendar: false,
             sendStop:false,
             paramsType: false,
+            //发货时传来的id
             goodsId:'',
             goodsMsg:{},
             params:{
                 shipmentBatchNumber:''
             },
             goodsList:[],
-            fileList:[]
+            fileList:[],
+            // 传过来的标识，用来判断是新增还是编辑
+            text:""
         };
     },
     created() {
        
-        this.goodsId = this.$route.query.id
-        this.getSendGoods();
+       
+        this.text = this.$route.query.title
+        if(this.text=='edit'){
+            this.params = JSON.parse(this.$route.query.data)
+            console.log(this.params,'11111')
+            const {planNumber,sectionName,contractName}= JSON.parse(this.$route.query.data)
+            this.goodsMsg.planNumber=planNumber
+            this.goodsMsg.sectionName=sectionName
+            this.goodsMsg.contractName=contractName
+            // 回显图片
+            let file = JSON.parse(this.params.fileByList)
+            this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
+            // console.log(this.params,'1233')
+        }else{
+             this.goodsId = this.$route.query.id
+             this.getSendGoods();
+        }
+        
+       
         // this.goodsList = this.$route.params.goodsList
         // console.log(this.goodsList.flat(),'11233')
         // if(Array.isArray(this.goodsList)){
@@ -117,13 +132,10 @@ export default {
             return /^[^\u4e00-\u9fa5]+$/.test(val);
         },
         getSendGoods(){
-            Toast.loading({
-                message: '加载中...',
-                forbidClick: true,
-            });
+          
             demandSnedGoods(this.goodsId).then((res)=>{
                 if(res.code == 0){
-                    Toast.clear()
+                    // Toast.clear()
                     this.goodsMsg = res.data
                 }
             })
@@ -165,13 +177,17 @@ export default {
             this.formKey++
             this.$router.push({ path: '/selectGoods',query:{id:id} })
         },
+        // 编辑时选择的下一步传的参数
+        editGoods(id,text){
+            // console.log(data,'1234')
+            this.$router.push({ path: '/selectGoods',query:{id:id,text:text} })
+        },
         lookGoods(id){
             this.formKey++
             this.$router.push({ path: '/selectGoods',query:{id:id} })
         },
         uploadGoosSend(){
             this.formKey++
-            alert('11')
         },
         saveClick () {
             let fileList=[]
@@ -189,7 +205,11 @@ export default {
                 materialCirculationDetailsTableParamList:this.$store.state.public.goodsList //取出store里的物资数据用于保存
             }
             demandSaveSendGoods(params).then((res)=>{
-                console.log(res)
+                if(res.code==0){
+                    Toast.success(res.data);
+                    this.$router.push({path:"/Information"})
+                }
+                // console.log(res)
             })
             console.log(params,'1334')
             // demandSaveSendGoods(params).then((res)=>{
@@ -206,13 +226,9 @@ export default {
             imgFile.append("file", file.file);
             demandSnedGoodsUpload(imgFile).then((res)=>{
                 if(res.code == 0){
-                    // this.params.fileList = [{
-                    // name: res.data.fileName,
-                    // url: res.data.filePath
-                    // }];
                    this.fileList = [{
                         name: res.data.filePath,
-                        url:res.data.fileName // 注意Vant通常使用url而不是path
+                        url:res.data.fileName
                         }];
                     this.params.fileByList = ''
                     // this.params = res.data
@@ -227,7 +243,7 @@ export default {
 <style lang="less" scoped>
 .default-container {
     padding-top: 10px;
-    // padding-bottom: 150px;
+    padding-bottom: 60px;
 }
 
 li :nth-child(1) {

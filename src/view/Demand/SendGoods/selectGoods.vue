@@ -7,12 +7,12 @@
         @search="onSearch" @cancel="onCancel" @focus="onFocus" />
     </div>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <van-checkbox-group v-model="result" @change="selectGoods">
+      <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal==0?true:false"> 
           <ul class="list-ul">
             <li>
-              <span class="font-weight">物资名称：</span>
-              <span class="font-weight">{{ item.materialName }}</span>
+              <span class="font-weight">本次需求未发货数量：</span>
+              <span class="font-weight">{{ item.ssendTotal }}</span>
             </li>
             <li>
               <span>规格型号：</span>
@@ -46,6 +46,10 @@
               <span>使用地点:</span>
               <span>{{ item.addr }}</span>
             </li>
+             <li>
+              <span>收获地点:</span>
+              <span>{{ item.shippingAddress }}</span>
+            </li>
               <li>
               <span>收货人及联系方式:</span>
               <span>{{ item.receiver }}</span>
@@ -59,10 +63,10 @@
                 <span>投资比例:</span>
                 <span>{{ item.field1 }}</span>
               </div>
-              <div class="li-item-right" style="color:red;">
+              <!-- <div class="li-item-right" style="color:red;">
                 <span >本次需求未发货数量:</span>
                 <span>{{ item.ssendTotal }}</span>
-              </div>
+              </div> -->
             </li>
             <li>
               <span>备注：</span>
@@ -73,10 +77,13 @@
       </van-checkbox-group>
     </van-list>
     <div class="default-button-container">
-        <div>
+        <div class="chooseNum">
             已选物资<span class="number">{{ selectTotal }}</span>项
         </div>
-      <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
+        <div class="btns">
+          <van-button round type="info" @click="back" class="btn">上一步</van-button>
+          <van-button round type="info" @click="addClick" class="btn">下一步</van-button>
+        </div>
     </div>
     <back-to-top className=".default-container"></back-to-top>
   </div>
@@ -107,8 +114,17 @@ export default {
   },
   mounted() {
    this.goodsId = this.$route.query.id
-
+   
+  //  编辑时传过来的标识
+    this.text = this.$route.query.text
     this.getSelectGoods()
+    // this.selectArrayData = JSON.parse(this.$route.query.data)
+    // if(this.text=='edit'){
+    //  
+    //   this.$refs.checkboxGroup.toggleAll(true);
+      
+    // }
+    
   },
   methods: {
     getSelectGoods(){
@@ -168,8 +184,8 @@ export default {
         }
       }, 500);
     },
-    handleWaitItemClick() {
-
+    back() {
+      history.back()
     },
     selectClick () {
       this.$router.push({ name: 'SelectContract' })
@@ -305,6 +321,23 @@ export default {
     display: flex;
     font-size: 14px;
     justify-content:space-around;
+    .chooseNum{
+      width: 40%;
+      padding-left: 10px;
+    }
+    .btns{
+      flex: 1;
+      display: flex;
+      justify-content: space-around;
+      .btn{
+        margin: 0 10px;
+        display: flex;
+        justify-content: center;
+        height: 30px;
+        width: 50%;
+        font-size: 12px;
+      }
+    }
 }
 .number{
     font-size: 16px;

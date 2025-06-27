@@ -12,8 +12,7 @@
 
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
-
-              <div v-for="(item, index) in listBySendData" :key="index" class="box-container" @click="handleAllItemClick(item)">
+              <div v-for="(item, index) in listBySendData" :key="index" class="box-container">
                 <ul class="list-ul">
                   <li>
                     <span class="font-weight">发货单号:</span>
@@ -29,7 +28,7 @@
                   </li>
                   <li>
                     <span style="width: 230px;">物流单号：</span>
-                    <span>ES5456889635545</span>
+                    <span>{{ item.oddNumbers }}</span>
                   </li>
                   <li>
                     <span style="width: 230px;">需求项目: </span>
@@ -46,14 +45,15 @@
                   </li>
                 </ul>
                 <div class="list-ul-button">
-                  <van-button class="button-info" plain round type="danger" @click="handleDelClick()"
+                  <van-button class="button-info" plain round type="danger" @click="handleDelClick(item.id)"
                     v-if="item.status == 1">删除</van-button>
-                  <van-button class="button-info" plain round type="info" @click="handleEditClick()"
+                  <van-button class="button-info" plain round type="info" @click="handleEditClick(item,'edit')"
                     v-if="item.status == 1">编辑</van-button>
                   <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id,item.status)"
                     v-if="item.status == 1">确认发货</van-button>
+                    <!-- 增加货运位置是根据物流单号来显示的 -->
                   <van-button class="button-info" round type="info" size="mini" @click="handleConfirmClick()"
-                    v-if="item.status == 2">增加货运位置</van-button>
+                    v-if="item.oddNumbers == '' && item.status==2">增加货运位置</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleCarGoClick(item.planId)"
                     v-if="item.status == 2">货运详情</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleLookClick()"
@@ -108,7 +108,7 @@ import { Form } from 'vant';
 import { Field } from 'vant';
 import { Toast } from 'vant';
 import { Step, Steps } from 'vant';
-import {snedGoodsList,snedGoodsSure} from '@/api/demand/sendGoods'
+import {snedGoodsList,snedGoodsSure,deleteGoods} from '@/api/demand/sendGoods'
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Toast);
@@ -117,7 +117,7 @@ Vue.use(Field);
 // 全局注册
 Vue.use(Dialog);
 export default {
-  name: 'MyToDoList',
+  name: 'Information',
   mixins: [keepPages],
 
   data() {
@@ -129,29 +129,13 @@ export default {
       formData: {
         keywords: '',
       },
-      //全部
-      allOrderList: [],
-
-      allRefreshLoading: false,
-      allLoading: false,
-      allFinished: false,
-
-      allListQuery: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-      //已审批
-      historyOrderList: [],
-
-      historyRefreshLoading: false,
-      historyLoading: false,
-      historyFinished: false,
-
       params: {
         pageNum: 1,
         pageSize: 10,
       },
-
+      allFinished:false,
+      allLoading:false,
+      allRefreshLoading:false,
       //订单状态字典
       orderStatusOptions: [],
       //优先保障字典
@@ -276,18 +260,27 @@ export default {
 
     },
     //编辑
-    handleEditClick() {
-
+    handleEditClick(data,title) {
+      this.$router.push({ path: '/sendGoods',query:{data:JSON.stringify(data),title:title} })
     },
     //删除
-    handleDelClick() {
+    handleDelClick(id) {
       this.$dialog.confirm({
         title: '标题',
         message: '确认要删除吗？',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$toast('删除成功');
+        let params={
+          ids:[id]
+        }
+        deleteGoods(params).then((res)=>{
+            if(res.code==0){
+              Toast.success(res.message);
+              this.getList();
+            }
+        })
+        // this.$toast('删除成功');
       }).catch(() => {
       });
     },
@@ -296,129 +289,6 @@ export default {
       this.formKey++
       this.freightLocationDiaLog = false
       // this.username = null
-    },
-    //获取待审批的订单
-    getWaitList() {
-      // let toast = this.$toast.loading({
-      //     duration: 0,
-      //     message: "正在加载...",
-      //     forbidClick: true
-      // });
-      // let  params = {
-      //     reviewCompleted: '0',
-      // }
-      // gcywVehicleRequestListPageForH5(Object.assign({}, params,this.waitListQuery)).then(({ data }) => {
-      //     if(this.waitRefreshLoading){
-      //         this.waitOrderList = [];
-      this.waitRefreshLoading = false;
-      //     }
-      //     this.waitLoading = false;
-      //     this.waitOrderList = [...this.waitOrderList, ...data.list];
-
-      //     if (!data.hasNextPage) {
-      this.waitFinished = true;
-      //         return;
-      //     }
-      //     this.waitListQuery.pageNum = this.waitListQuery.pageNum + 1;
-      // }).catch((error) => {
-      //     this.waitLoading = false;
-      //     this.waitFinished = true;
-      // }).finally(() => {
-      //     toast.clear();
-      // });
-    },
-    //获取待处理数据
-    getWaitHandleList() {
-
-    },
-
-    //获取已审批订单
-    getHistoryList() {
-      // let toast = this.$toast.loading({
-      //     duration: 0,
-      //     message: "正在加载...",
-      //     forbidClick: true
-      // });
-      // let  params = {
-      //     reviewCompleted: '1',
-      // }
-      // gcywVehicleRequestListPageForH5(Object.assign({}, params,this.historyListQuery)).then(({ data }) => {
-      //     if(this.historyRefreshLoading){
-      //         this.historyOrderList = [];
-      this.historyRefreshLoading = false;
-      //     }
-      //     this.historyLoading = false;
-      //     this.historyOrderList = [...this.historyOrderList, ...data.list];
-
-      //     if (!data.hasNextPage) {
-      this.historyFinished = true;
-      //         return;
-      //     }
-      //     this.historyListQuery.pageNum = this.historyListQuery.pageNum + 1;
-      // }).catch((error) => {
-      //     this.historyLoading = false;
-      //     this.historyFinished = true;
-      // }).finally(() => {
-      //     toast.clear();
-      // });
-    },
-    //全部列表条目点击
-    handleAllItemClick(item) {
-
-    },
-    //待审核列表条目点击
-    handleWaitItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: { 
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //待处理列表条目点击
-    handleWaitHandleItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: { 
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //已审核列表条目点击
-    handleHistoryItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: { 
-      //         id:item.id,
-      //     },
-      // });
-    },
-    //查看流程点击
-    handleProcessClick() {
-      this.$router.push({
-        name: "MyProcess",
-        params: {
-
-        },
-      });
-    },
-    //去审核点击
-    handleExamineClick() {
-      this.$router.push({
-        name: "MyToDoDetail",
-        params: {
-          type: '0',
-        },
-      });
-    },
-    //搜索点击
-    handeSearchClick() {
-      this.$router.push({
-        name: "MyToDoSearch",
-        params: {
-          type: '0',
-        },
-      });
     },
     //全部列表刷新
     allRefresh() {

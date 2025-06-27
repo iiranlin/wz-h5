@@ -69,7 +69,7 @@
                       >供应详情</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleLookClick()"  v-if="item.status==4 || item.status===6"
                     >物流查看</van-button>
-                  <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id)"
+                  <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id,'add')"
                   v-if="item.status==4 || item.status==3" >发货</van-button>
                   <van-button class="button-info" round type="info" v-if="item.status == 2" @click="handleConfirmClick(item.id)"
                    >确认需求</van-button>
@@ -91,6 +91,9 @@
 <script>
 import keepPages from '@/view/mixins/keepPages'
 import {demandManagementList,demandManagementLookPdf} from '@/api/demand/demandManagement'
+import Vue from 'vue';
+import { Toast } from 'vant';
+Vue.use(Toast);
 export default {
   name: 'MyToDoList',
   mixins: [keepPages],
@@ -155,9 +158,13 @@ export default {
   methods: {
     //初始化请求
     getList(){
-       this.loading = true;
+       Toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+      });
       demandManagementList(this.params).then((res) => {
           if (res.code == 0) {
+             Toast.clear()
             this.total = res.data.total
             this.loading = false
             this.allRefreshLoading = false;
@@ -201,8 +208,8 @@ export default {
       this.getList()
     },
     //发货
-    handleSendGoodsClick(id) {
-      this.$router.push({ path: '/sendGoods',query:{id:id} })
+    handleSendGoodsClick(id,title) {
+      this.$router.push({ path: '/sendGoods',query:{id:id,title:title} })
     },
     //查看物流
     handleLookClick() {
