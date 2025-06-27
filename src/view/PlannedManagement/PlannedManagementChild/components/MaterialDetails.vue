@@ -70,15 +70,21 @@
   <!-- </van-list> -->
 </template>
 <script>
-import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'MaterialDetails',
   components: {},
+  props: {
+    list: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    }
+  },
   data() {
     return {
       loading: false,
       finished: false,
-      list: []
     }
   },
   created() {
@@ -86,33 +92,8 @@ export default {
   activated() {
   },
   mounted () {
-    const id = this.$route.query.id
-    id && this.materialDemandPlanRestDetail(id)
   },
   methods: {
-    // onLoad() {
-    //   // 异步更新数据
-    //   setTimeout(() => {
-    //     for (let i = 0; i < 10; i++) {
-    //       this.list.push(this.list.length + 1);
-    //     }
-    //     // 加载状态结束
-    //     this.loading = false;
-
-    //     // 数据全部加载完成
-    //     if (this.list.length >= 40) {
-    //       this.finished = true;
-    //     }
-    //   }, 500);
-    // },
-    materialDemandPlanRestDetail (id) {
-      this.loading = true
-      materialDemandPlanRestDetail(id).then(({data}) => {
-        this.list = data.details || []
-      }).finally( (err) => {
-        this.loading = false
-      })
-    }
   },
 }
 </script>

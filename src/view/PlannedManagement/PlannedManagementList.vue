@@ -127,6 +127,8 @@ export default {
       this.materialDemandPlanRestList()
     },
     onLoad() {
+      // console.log(this.listQuery.pageNum++)
+      // this.listQuery.pageNum
       this.materialDemandPlanRestList()
     },
     getList () {
@@ -150,7 +152,9 @@ export default {
         // 数据全部加载完成
         if (this.list.length >= data.total) {
           this.finished = true
+          return
         }
+        this.listQuery.pageNum++
       }).catch(() => {
         this.error = true
       }).finally( (err) => {
@@ -173,7 +177,8 @@ export default {
         this.$router.push({ name: 'SaveMaterials', query: {id: item.id, type: 'update'} })
         return
       }
-      this.$router.push({ name: 'RequirementFilling' })
+      // this.$router.push({ name: 'RequirementFilling' })
+      this.$router.push({ name: 'SelectContract' })
     },
     supplyOverviewClick(item) {
       this.$router.push({ name: 'SupplyOverview', query: { id: item.id } })

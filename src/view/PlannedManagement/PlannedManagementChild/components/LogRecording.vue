@@ -67,11 +67,15 @@ export default {
   },
   methods: {
     materialOperateLogGetList (businessId) {
-      this.loading = true
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
       materialOperateLogGetList({businessId}).then(({data}) => {
         this.list = data || []
       }).finally( (err) => {
-        this.loading = false
+        toast.clear()
       })
     }
     // onLoad() {

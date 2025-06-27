@@ -44,14 +44,7 @@
           <li class="li-item-overlength">
             <span>累计计划量（含本次）：</span>
             <span>
-              {{
-                queryType == 'update'?
-                +item.cumulativeAmount -
-                +item.backPlanAmount +
-                +(item.planAmount || 0)
-                :
-                +item.cumulativeAmount + (+item.planAmount || 0)
-              }}
+              {{ cumulativeAmount(item) }}
             </span>
           </li>
         </ul>
@@ -87,6 +80,7 @@
   </div>
 </template>
 <script>
+import keepPages from '@/view/mixins/keepPages'
 import { parseTime } from '@/utils/index'
 import { getSectionProject } from '@/api/prodmgr-inv/materialSectionProject'
 import { materialDemandPlanRestSaveModify, materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
@@ -94,6 +88,7 @@ import { getUserInfo } from '@/utils/user-info'
 import dayjs from 'dayjs'
 export default {
   name: 'SaveMaterials',
+  mixins: [keepPages],
   data() {
     return {
       userInfo: getUserInfo(),
@@ -122,6 +117,7 @@ export default {
           { required: true, message: '请输入投资比例' },
         ],
       },
+      temporarilyList: [],
       materiaList: [],
       sectionInfo: {},
       contractId: null,
@@ -129,19 +125,25 @@ export default {
       queryId: ''
     }
   },
+  activated() {
+    const data = this.$store.state.public.materiaList || []
+    const finallyData = data.map( (item) => Object.assign({}, item, {minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
+    this.materiaList.push(...finallyData)
+    this.$store.dispatch('public/setMateriaList', this.materiaList)
+  },
   mounted() {
     this.init()
   },
   methods: {
     init () {
-      this.materiaList = this.$store.state.public.materiaList || []
+      const data = this.$store.state.public.materiaList || []
+      const finallyData = data.map( (item) => Object.assign({}, item, {minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
       const {id = null, contractId = null, type = ''} = this.$route.query
       this.queryId = id
       this.contractId = contractId
       this.queryType = type
-      // 合同数量 - 累计数量
+      this.materiaList.push(...finallyData)
       if(type != 'update'){
-        this.materiaList = this.materiaList.length && this.materiaList.map( (item) => Object.assign({}, item, {minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
         this.getSectionProject()
       }else{
         this.materialDemandPlanRestDetail()
@@ -164,10 +166,13 @@ export default {
           deptName: data.unitName
         }
         this.materiaList = data.details.map( (item) => {
-          return Object.assign({}, item, {supplyDate: parseTime(item.supplyDate, '{y}-{m}-{d}'), minDate: new Date(item.supplyDate), showDatePicker: this.showDatePicker, backPlanAmount: item.planAmount || 0})
+          return Object.assign({}, item, {supplyDate: item.supplyDate && parseTime(item.supplyDate, '{y}-{m}-{d}'), minDate: item.supplyDate?new Date(item.supplyDate):this.minDate, showDatePicker: this.showDatePicker, backPlanAmount: item.planAmount || 0})
         })
         this.$store.dispatch('public/setMateriaList', this.materiaList)
       })
+    },
+    cumulativeAmount (item) {
+      return this.queryType == 'update'?Number(item.cumulativeAmount) - Number(item.backPlanAmount || 0) + (Number(item.planAmount) || 0) : Number(item.cumulativeAmount) + (Number(item.planAmount) || 0)
     },
     dateClick(item, index) {
       this.$set(this.materiaList, index, Object.assign({}, item, {showDatePicker: true}))
@@ -188,6 +193,10 @@ export default {
         type = 'modify'
         id = this.queryId
       }
+      const isValid = this.onCheck(this.materiaList)
+      if(!isValid){
+        return
+      }
       const data = {
         id,
         contractId: this.contractId,
@@ -201,6 +210,54 @@ export default {
     returnClick () {
       const query = this.queryType == 'update'?{contractId: this.contractId, type: this.queryType, id: this.queryId}:{contractId: this.contractId}
       this.$router.push({ name: 'SelectMaterials', query })
+    },
+    onCheck (tableData) {
+      let errors = []
+
+      tableData.forEach((row, index) => {
+        const rowNum = index + 1;
+        if (!row.planAmount && row.planAmount !== 0) {
+          errors.push(`第${rowNum}个，本次计划数量未填写 `)
+        }
+
+        if (!row.supplyDate) {
+          errors.push(`第${rowNum}个，供应时间未填写 `)
+        }
+
+        if (!row.addr || row.addr.trim() === '') {
+          errors.push(`第${rowNum}个，使用地点未填写 `)
+        }
+        if (!row.receiver || row.receiver.trim() === '') {
+          errors.push(`第${rowNum}个，收货人及联系方式未填写 `)
+        }
+        if(!row.field0 || row.field0.trim() === ''){
+          errors.push(`第${rowNum}个，投资方未填写 `)
+        }
+        if(!row.field1 || row.field1.trim() === ''){
+          errors.push(`第${rowNum}个，投资比例未填写 `)
+        }
+
+        const plan = Number(row.planAmount || 0)
+        const cumulative = row.cumulativeAmount - (row.backPlanAmount || 0)
+        const contract = Number(row.amount || 0)
+
+        if (plan <= 0) {
+          errors.push(`第${rowNum}个，本次计划数量必须大于0 `)
+        }
+
+        if (plan + cumulative > contract) {
+          errors.push(`第${rowNum}个，本次计划数量超出合同数量 `)
+        }
+      });
+
+      if (errors.length > 0) {
+        this.$dialog.alert({
+          title: '提示',
+          message: errors.join('<br/> <br/>'),
+        })
+        return false
+      }
+      return true
     }
   }
 }

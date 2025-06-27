@@ -3,35 +3,35 @@
     <ul class="detail-ul">
       <li>
         <span>发货单号：</span>
-        <span>FH202505310001</span>
+        <span>{{ detail.shipmentBatchNumber }}</span>
       </li>
       <li>
         <span>物流单号：</span>
-        <span>XXXxxxxXXXXX</span>
+        <span>{{ detail.oddNumbers }}</span>
       </li>
       <li>
         <span>发货时间：</span>
-        <span>2025年06月01日</span>
+        <span>{{ parseTime(detail.shippingDate, '{y}-{m}-{d}') }}</span>
       </li>
       <li>
         <span>发货地址：</span>
-        <span>XXXxxxxXXXXX</span>
+        <span>{{ detail.shippingAddress }}</span>
       </li>
       <li>
         <span class="li-span-width">预计到达时间为：</span>
-        <span>2025年05月03日</span>
+        <span>{{ parseTime(detail.arrivalDate, '{y}-{m}-{d}') }}</span>
       </li>
       <li>
         <span>车牌号为：</span>
-        <span>翼T20874</span>
+        <span>{{ detail.carNumber }}</span>
       </li>
       <li>
         <span>联系人：</span>
-        <span>name</span>
+        <span>{{ detail.contacts }}</span>
       </li>
       <li>
         <span>联系电话：</span>
-        <span>17703155555</span>
+        <span>{{ detail.contactsPhone }}</span>
       </li>
     </ul>
     <template v-if="activeKey == 0">
@@ -96,19 +96,83 @@ export default {
     activeKey: {
       type: Number,
       default: 0
-    }
+    },
+    detail: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
   },
   data() {
     return {
-      dt
+      appid: "bjhzcZ1hF8rR5gF5mK9qW",
+      dt,
+      formData: {
+        mailNo:'',  //快递单号
+        cpCode:'',  //快递公司编码
+        cpName:'',  //快递公司名称
+        phone:'',   //寄件人电话
+      },
+      expressCompanyOptions: [], //快递公司数据
     }
   },
+	computed: {
+		key() {
+			return this.detail
+		},
+	},
   created() {
     console.log(this.activeKey)
   },
   activated() {
   },
+  mounted () {
+      console.log(this.key)
+    if(!!this.detail.oddNumbers){
+      console.log(this.detail.oddNumbers)
+      this.handleInputChange()
+    }
+  },
   methods: {
+    //快递单号改变后
+    handleInputChange() {
+      if (!this.detail.oddNumbers) {
+        return;
+      }
+      let obj = {
+        mailNo: this.detail.oddNumbers,
+      }
+      let params = {
+        appid: this.appid,
+        sign: this.initSign(JSON.stringify(obj)),
+        requestData: JSON.stringify(obj),
+      }
+      axios.post('https://express.xuanquetech.com/express/v2/exCompany', qs.stringify(params), {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' }
+      }).then((res) => {
+        if (res.data.success) {
+          this.expressCompanyOptions = []
+
+          res.data.list.forEach((item) => {
+            let obj = {
+              companyName: item.cpName,
+              companyCode: item.cpCode
+            }
+            this.expressCompanyOptions.push(obj)
+          })
+          this.formData.cpCode = this.expressCompanyOptions[0].companyCode
+          this.formData.cpName = this.expressCompanyOptions[0].companyName
+
+        } else {
+          this.expressCompanyOptions = this.localExpressCompanyOptions
+          this.formData.cpCode = ''
+          this.formData.cpName = ''
+        }
+      }).catch((err) => {
+
+      })
+    },
   },
 }
 </script>
@@ -149,27 +213,33 @@ export default {
       color: #999999 !important;
     }
   }
-  .tab-div{
+
+  .tab-div {
     border: 1px solid #e9e9e9;
     border-bottom: 0;
     border-right: 0;
-    .th-row, .th-rows{
+
+    .th-row,
+    .th-rows {
       display: flex;
       justify-content: space-between;
       background: #f1f8ff;
       border-bottom: 1px solid #e9e9e9;
-      .van-col{
+
+      .van-col {
         line-height: 40px;
         width: 90px;
         padding: 0 10px;
         border-right: 1px solid #e9e9e9;
         font-size: 12px;
-        &:nth-child(1){
+
+        &:nth-child(1) {
           width: 60px;
         }
       }
     }
-    .th-rows{
+
+    .th-rows {
       background: #fff;
     }
   }

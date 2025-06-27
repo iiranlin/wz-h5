@@ -1,6 +1,6 @@
 <template>
   <div class="logistics-view">
-    <div class="box-container" style="margin-top: 20px;">
+    <div class="box-container" style="margin-top: 20px;" ref="boxContainer">
       <div>
         <ul class="detail-ul">
           <li>
@@ -33,29 +33,27 @@
     <div class="select-materials-search">
       <p class="select-materials-search-p font-weight">物流信息</p>
     </div>
-    <div class="logistics-information">
+    <div class="logistics-information" v-if="tabList.length">
       <van-sidebar v-model="activeKey" @change="activeKeyChange">
-        <van-sidebar-item title="发货批次一" />
-        <van-sidebar-item title="发货批次二" />
-        <van-sidebar-item title="发货批次三" />
-        <van-sidebar-item title="发货批次四" />
-        <van-sidebar-item title="发货批次五" />
+        <van-sidebar-item v-for="item in tabList" :title="item.label" :key="item.value"/>
       </van-sidebar>
       <van-tabs v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff" title-inactive-color="#2e2e2e">
         <van-tab title="物流信息" name="0" key="0">
-          <logistics-information :activeKey="activeKey"></logistics-information>
+          <logistics-information :activeKey="activeKey" :detail="detail"></logistics-information>
         </van-tab>
         <van-tab title="发货物资明细" name="1" key="1">
-          <delivery-material-details></delivery-material-details>
+          <delivery-material-details :materialCirculationDetailsTableDTOS="detail.materialCirculationDetailsTableDTOS"></delivery-material-details>
         </van-tab>
       </van-tabs>
     </div>
+    <van-empty v-else description="暂无数据" />
   </div>
 </template>
 <script>
 import LogisticsInformation from './components/LogisticsInformation'
 import DeliveryMaterialDetails from './components/DeliveryMaterialDetails'
 import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { listPc, detailWlgz } from '@/api/prodmgr-inv/materialCirculationTableRest'
 export default {
   name: 'LogisticsView',
   components: { LogisticsInformation, DeliveryMaterialDetails },
@@ -63,7 +61,9 @@ export default {
     return {
       activeKey: 0,
       menuActiveIndex: '',
-      detailData: {}
+      detailData: {},
+      tabList: [],
+      detail: {}
     }
   },
   created() {
@@ -73,10 +73,11 @@ export default {
   mounted () {
     const {id = null} = this.$route.query
     this.materialDemandPlanRestDetail(id)
+    this.getBatch(id)
   },
   methods: {
     activeKeyChange () {
-      console.log(this.activeKey)
+      this.detailWlgz(this.tabList[this.activeKey].value)
     },
     materialDemandPlanRestDetail (id) {
       let toast = this.$toast.loading({
@@ -90,6 +91,20 @@ export default {
           toast.clear();
       });
     },
+    async getBatch (id) {
+      const res = await listPc(id)
+      this.tabList = res.data.map((item, i) => ({
+        label: `发货批次${i + 1}`,
+        value: item.shipmentBatchNumber,
+      }))
+      if (this.tabList.length) {
+        this.detailWlgz(this.tabList[0].value)
+      }
+    },
+    async detailWlgz (id) {
+      const res = await detailWlgz(id)
+      this.detail = res.data
+    }
   }
 }
 </script>
@@ -116,13 +131,14 @@ export default {
     padding: 10px 10px;
     padding-top: 0px;
     width: 100%;
-    height: calc(100% - 200px);
+    // height: calc(100% - 200px);
+    height: 200px;
     box-sizing: border-box;
     flex: 1;
 
     .van-sidebar {
       display: block;
-      width: 100px;
+      width: 106px;
       padding-right: 10px;
 
       .van-sidebar-item--select::before {
