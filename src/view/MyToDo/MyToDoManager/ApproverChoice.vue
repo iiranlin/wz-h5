@@ -4,9 +4,9 @@
             <div class="detail-title-info">
                 <span class="info-title">请选择审批人</span>
             </div>
-            <van-list v-model="loading" offset="30" :finished="finished" finished-text="没有更多了..." @load="getAssigneeList">
+            <van-list v-model="loading" offset="30" :finished="finished" finished-text="没有更多了...">
                 <div v-for="(item, index) in assigneeList" :key="index" class="item-container" @click="handleItemClick(item)">
-                    <span>{{item.name}}</span>
+                    <span>{{item.nickName}}</span>
                 </div>
             </van-list>
         </div>
@@ -19,7 +19,7 @@
 import eventBus from '@/utils/eventBus.js'
 
 export default {
-    name: 'MyToDoExamineChoice',
+    name: 'ApproverChoice',
 
     data () {
         return {
@@ -27,45 +27,16 @@ export default {
             finished: true,
 
             //审核人信息
-            assigneeList: [
-                {
-                    name: '张三',
-                },
-                {
-                    name: '李四',
-                },
-                {
-                    name: '王五',
-                }
-            ],
+            assigneeList: [],
         }
     },
     created () {
-        
+        this.assigneeList = JSON.parse(this.$route.params.obj);
     },
     methods: {
-        //获取审核人
-        getAssigneeList(params){
-            // let toast = this.$toast.loading({
-            //     duration: 0,
-            //     message: "加载中..",
-            //     forbidClick: true
-            // });
-            // getAvailableDriver(params).then(({data}) => {
-            //     this.loading = true;
-                this.finished = true;
-
-            //     this.driverList = data;
-            //     this.originalDriverList = data;
-            // }).catch(() => {
-                
-            // }).finally(() => {
-            //     toast.clear();
-            // })
-        },
         //列表条目点击
         handleItemClick(item){
-            eventBus.$emit('examineChoiceCallBack',item.name);
+            eventBus.$emit('approverChoiceCallBack',item);
             this.$router.back();
         },
         //上一步点击
