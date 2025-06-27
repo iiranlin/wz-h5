@@ -19,7 +19,7 @@
 import eventBus from '@/utils/eventBus.js'
 
 export default {
-    name: 'MyToDoExamineEdit',
+    name: 'ExamineOpinionEdit',
 
     data () {
         return {
@@ -44,7 +44,7 @@ export default {
                 });
                 return
             }
-            eventBus.$emit('examineEditCallBack',this.opinion,this.type);
+            eventBus.$emit('examineOpinionEdit',this.opinion,this.type);
             this.$router.back();
         },
     }

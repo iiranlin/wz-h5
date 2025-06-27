@@ -16,7 +16,7 @@
         </li>
       </ul>
     </div>
-    <van-form @submit="onSubmit" :rules="rules">
+    <van-form @submit="onSubmit">
       <div class="box-container" v-for="(item, index) in materiaList" :key="item.id">
         <ul class="detail-ul">
           <li class="save-materials-li">
@@ -43,33 +43,45 @@
           </li>
           <li class="li-item-overlength">
             <span>累计计划量（含本次）：</span>
-            <span>{{ +item.cumulativeAmount + (+item.planAmount || 0)}}</span>
+            <span>
+              {{
+                queryType == 'update'?
+                +item.cumulativeAmount -
+                +item.backPlanAmount +
+                +(item.planAmount || 0)
+                :
+                +item.cumulativeAmount + (+item.planAmount || 0)
+              }}
+            </span>
           </li>
         </ul>
         <van-cell-group>
-          <van-field v-model="item.planAmount" type="number" label="本次计划数量" placeholder="请输入数量" required clearable :label-width="240"
+          <van-field v-model="item.planAmount" type="number" label="本次计划数量" placeholder="请输入数量" required clearable :label-width="240" :rules="rules.planAmount"
             input-align="right" />
-          <van-field required readonly is-link v-model="item.supplyDate" label="供应时间" placeholder="请选择日期"
+          <van-field required readonly is-link v-model="item.supplyDate" label="供应时间" placeholder="请选择日期" :rules="rules.supplyDate"
             @click="dateClick(item, index)" input-align="right" />
           <van-popup v-model="item.showDatePicker" position="bottom" round>
-            <van-datetime-picker type="date" :value="item.minDate" @confirm="onDateConfirm(item, index)" @cancel="hideDatePicker(item, index)" />
+            <van-datetime-picker type="date" v-model="item.minDate" @confirm="onDateConfirm(item, index)" @cancel="hideDatePicker(item, index)" />
           </van-popup>
-          <van-field required v-model="item.deliveryLocation" label="使用地点" placeholder="请输入使用地点" :label-width="240"
+          <van-field required v-model="item.addr" label="使用地点" placeholder="请输入使用地点" :label-width="240" :rules="rules.addr"
             input-align="right" />
-          <van-field required v-model="item.field2" label="收货地址" placeholder="请输入收货地址" :label-width="240"
+          <van-field required v-model="item.field2" label="收货地址" placeholder="请输入收货地址" :label-width="240" :rules="rules.field2"
             input-align="right" />
-          <van-field required v-model="item.receiver" label="收货人联系方式" placeholder="请输入收货人联系方式" :label-width="260"
+          <van-field required v-model="item.receiver" label="收货人联系方式" placeholder="请输入收货人联系方式" :label-width="260" :rules="rules.receiver"
             input-align="right" />
-          <van-field required v-model="item.field0" label="投资方" placeholder="请输入投资方" :label-width="240"
+          <van-field required v-model="item.field0" label="投资方" placeholder="请输入投资方" :label-width="240" :rules="rules.field0"
             input-align="right" />
-          <van-field required v-model="item.field1" label="投资比例" placeholder="请输入投资比例" :label-width="240"
+          <van-field required v-model="item.field1" label="投资比例" placeholder="请输入投资比例" :label-width="240" :rules="rules.field1"
             input-align="right" />
           <van-field v-model="item.remark" label="备注" placeholder="请输入备注" :label-width="240" input-align="right" />
         </van-cell-group>
+        <div class="list-ul-button">
+          <van-button class="button-info" plain round type="danger" native-type="button" @click="deleteClick(index)">删除</van-button>
+        </div>
       </div>
       <div class="default-button-container">
         <van-button class="button-info" round type="info" native-type="button" @click="returnClick">上一步</van-button>
-        <van-button class="button-info" round type="info" native-type="submit">设置物资需求信息</van-button>
+        <van-button class="button-info" round type="info" native-type="submit">保存</van-button>
       </div>
     </van-form>
   </div>
@@ -77,7 +89,7 @@
 <script>
 import { parseTime } from '@/utils/index'
 import { getSectionProject } from '@/api/prodmgr-inv/materialSectionProject'
-import { materialDemandPlanRestSave } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialDemandPlanRestSaveModify, materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { getUserInfo } from '@/utils/user-info'
 import dayjs from 'dayjs'
 export default {
@@ -89,54 +101,106 @@ export default {
       showDatePicker: false, // 控制日期选择器显示
       rules: {
         planAmount: [
-          { required: true, message: '请输入本次计划数量', trigger: 'onChange' }, // 触发时机为值变化时校验（可选）
+          { required: true, message: '请输入本次计划数量' },
         ],
         supplyDate: [
-          { required: true, message: '请选择供应时间', trigger: 'onChange' }, // 触发时机为值变化时校验（可选）
+          { required: true, message: '请选择供应时间' },
+        ],
+        addr: [
+          { required: true, message: '请输入使用地点' },
+        ],
+        field2: [
+          { required: true, message: '请输入收货地址' },
+        ],
+        receiver: [
+          { required: true, message: '请输入收货人联系方式' },
+        ],
+        field0: [
+          { required: true, message: '请输入投资方' },
+        ],
+        field1: [
+          { required: true, message: '请输入投资比例' },
         ],
       },
       materiaList: [],
-      sectionInfo: {}
+      sectionInfo: {},
+      contractId: null,
+      queryType: '',
+      queryId: ''
     }
   },
   mounted() {
-    this.materiaList = this.$store.state.public.materiaList || []
-    // 合同数量 - 累计数量
-    this.materiaList = this.materiaList.length && this.materiaList.map( (item) => Object.assign({}, item, {minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount}))
-    this.getSectionProject()
+    this.init()
   },
   methods: {
+    init () {
+      this.materiaList = this.$store.state.public.materiaList || []
+      const {id = null, contractId = null, type = ''} = this.$route.query
+      this.queryId = id
+      this.contractId = contractId
+      this.queryType = type
+      // 合同数量 - 累计数量
+      if(type != 'update'){
+        this.materiaList = this.materiaList.length && this.materiaList.map( (item) => Object.assign({}, item, {minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
+        this.getSectionProject()
+      }else{
+        this.materialDemandPlanRestDetail()
+      }
+    },
     async getSectionProject() {
       const res = await getSectionProject()
       this.sectionInfo = {
         sectionName: res.data.sectionName,
         title: dayjs().format('YYYY年MM月') + '甲供物资计划申请表',
-        deptName: this.userInfo?.unitName
+        deptName: this.userInfo?.deptName
       }
+    },
+    materialDemandPlanRestDetail () {
+      materialDemandPlanRestDetail(this.queryId).then( ({data}) => {
+        this.contractId = data.contractId
+        this.sectionInfo = {
+          sectionName: data.sectionName,
+          title: dayjs().format('YYYY年MM月') + '甲供物资计划申请表',
+          deptName: data.unitName
+        }
+        this.materiaList = data.details.map( (item) => {
+          return Object.assign({}, item, {supplyDate: parseTime(item.supplyDate, '{y}-{m}-{d}'), minDate: new Date(item.supplyDate), showDatePicker: this.showDatePicker, backPlanAmount: item.planAmount || 0})
+        })
+        this.$store.dispatch('public/setMateriaList', this.materiaList)
+      })
     },
     dateClick(item, index) {
       this.$set(this.materiaList, index, Object.assign({}, item, {showDatePicker: true}))
     },
     onDateConfirm(item, index) {
-      this.$set(this.materiaList, index, Object.assign({}, item, {supplyDate: parseTime(this.minDate, '{y}-{m}-{d}'), showDatePicker: false}))
+      this.$set(this.materiaList, index, Object.assign({}, item, {supplyDate: parseTime(item.minDate, '{y}-{m}-{d}'), showDatePicker: false}))
     },
     hideDatePicker(item, index) {
       this.$set(this.materiaList, index, Object.assign({}, item, {showDatePicker: false}))
     },
+    deleteClick (index) {
+      this.materiaList.splice(index, 1)
+      this.$store.dispatch('public/setMateriaList', this.materiaList)
+    },
     onSubmit() {
-      // this.$toast('保存成功');
-      const data = {
-        contractId: this.$route.query.contractId,
-        detailsModifyParams: this.materiaList.map(item => ({...item, id: null, allocationUniqueNumber: item.uniqueNumber}))
+      let type = 'save', id = null
+      if(this.queryType == 'update'){
+        type = 'modify'
+        id = this.queryId
       }
-      materialDemandPlanRestSave(data).then(({message}) => {
+      const data = {
+        id,
+        contractId: this.contractId,
+        detailsModifyParams: this.materiaList.map(item => ({...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
+      }
+      materialDemandPlanRestSaveModify(data, type).then(({message}) => {
         this.$toast(message)
         this.$router.push({ path: '/PlannedManagementList' })
       })
     },
     returnClick () {
-      console.log(1)
-      this.$router.go(-1)
+      const query = this.queryType == 'update'?{contractId: this.contractId, type: this.queryType, id: this.queryId}:{contractId: this.contractId}
+      this.$router.push({ name: 'SelectMaterials', query })
     }
   }
 }
@@ -169,10 +233,6 @@ export default {
         color: #1d93ff;
       }
     }
-  }
-
-  .button-info {
-    min-width: 150px;
   }
 
   .van-cell {

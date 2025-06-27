@@ -23,10 +23,32 @@ export function materialDemandPlanRestDetail(id) {
  * @param {*} params 
  * @returns 
  */
-export const materialDemandPlanRestSave = (data) => {
+export const materialDemandPlanRestSaveModify = (data, type) => {
   return request({
-    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/save`,
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/${type}`,
     method: 'post',
     data
+  })
+}
+
+/**
+ * 批量删除
+ * @param {*} params 
+ * @returns 
+ */
+export const materialDemandPlanRestBatchRemove = (data) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/batchRemove`,
+    method: 'post',
+    data
+  })
+}
+
+// 供应概览
+export const materialDemandPlanRestDetailGyMx = (params) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailGyMx`,
+    method: 'get',
+    params
   })
 }

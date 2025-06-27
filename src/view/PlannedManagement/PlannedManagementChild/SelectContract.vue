@@ -8,7 +8,7 @@
     <div class="select-Contract-list">
       <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error" error-text="请求失败，点击重新加载" @load="onLoad">
-          <van-radio-group v-model="radioId">
+          <van-radio-group v-model="contractId">
             <van-radio :name="item.id" v-for="item in list" :key="item.id">
               <ul class="list-ul">
                 <li>
@@ -57,7 +57,7 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      radioId: null,
+      contractId: null,
       list: [],
       listQuery: {
         pageNum: 1,
@@ -109,11 +109,11 @@ export default {
 
     },
     addClick() {
-      if (!this.radioId) {
+      if (!this.contractId) {
         this.$notify({ type: 'warning', message: '请选择合同' });
         return
       }
-      this.$router.push({ name: 'SelectMaterials', query: {radioId: this.radioId} })
+      this.$router.push({ name: 'SelectMaterials', query: {contractId: this.contractId} })
     }
   }
 }
@@ -183,7 +183,7 @@ export default {
   }
 
   .button-info {
-    min-width: 150px;
+    // min-width: 150px;
   }
 
   .select-Contract-money {

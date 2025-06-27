@@ -6,8 +6,7 @@
                 placeholder="输入关键字搜索" 
                 shape="round" 
                 background="#eef6ff"
-                readonly
-                @click="handeSearchClick()">
+                @search="handeSearch()">
             </van-search>
         </van-sticky>
         <div class="tabs">
@@ -26,7 +25,7 @@
                             finished-text="没有更多了..." 
                             @load="getWaitList">
 
-                            <div v-for="(item,index) in waitOrderList" :key="index" class="box-container" @click="handleWaitItemClick(item)">
+                            <div v-for="(item,index) in waitOrderList" :key="index" class="box-container" @click.stop="handleWaitItemClick(item)">
                                 <ul class="list-ul">
                                     <li>
                                         <span class="font-weight">业务编码：</span>
@@ -51,7 +50,7 @@
                                 </ul>
                                 <div class="list-ul-button">
                                     <van-button class="button-info" plain round type="info" @click.stop="handleProcessClick(item)">查看流程</van-button>
-                                    <van-button class="button-info" round type="info" @click.stop="handleExamineClick()">去审核</van-button>
+                                    <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">去审核</van-button>
                                 </div>
                             </div>
                         </van-list>
@@ -65,7 +64,7 @@
                             finished-text="没有更多了..." 
                             @load="getWaitHandleList">
 
-                            <div v-for="(item,index) in waitHandleList" :key="index" class="box-container" @click="handleWaitHandleItemClick(item)">
+                            <div v-for="(item,index) in waitHandleList" :key="index" class="box-container" @click.stop="handleWaitHandleItemClick(item)">
                                 <ul class="list-ul">
                                     <li>
                                         <span class="font-weight">业务编码：</span>
@@ -103,7 +102,7 @@
                             finished-text="没有更多了..." 
                             @load="getHistoryList">
 
-                            <div v-for="(item,index) in historyOrderList" :key="index" class="box-container" @click="handleHistoryItemClick(item)">
+                            <div v-for="(item,index) in historyOrderList" :key="index" class="box-container" @click.stop="handleHistoryItemClick(item)">
                                 <ul class="list-ul">
                                     <li>
                                         <span class="font-weight">业务编码：</span>
@@ -216,9 +215,10 @@ export default {
         if(this.$route.meta.myToDoNavIndex){
             this.menuActiveIndex = this.$route.meta.myToDoNavIndex;
         }
+        this.$store.commit('removeThisPage', 'DemandPlanningExamine')
     },
     activated () {
-        
+
     },
     methods: {
         //获取待审批的订单
@@ -231,7 +231,7 @@ export default {
             let params = {
                 status: '2',
             }
-            wfTodoList(Object.assign({}, params,this.waitListQuery)).then(({ data }) => {
+            wfTodoList(Object.assign({}, params,this.waitListQuery,this.formData)).then(({ data }) => {
                 if(this.waitRefreshLoading){
                     this.waitOrderList = [];
                     this.waitRefreshLoading = false;
@@ -258,7 +258,7 @@ export default {
                 message: "正在加载...",
                 forbidClick: true
             });
-            wfHandleList(Object.assign({},this.waitHandleListQuery)).then(({ data }) => {
+            wfHandleList(Object.assign({},this.waitHandleListQuery,this.formData)).then(({ data }) => {
                 if(this.waitHandleRefreshLoading){
                     this.waitHandleList = [];
                     this.waitHandleRefreshLoading = false;
@@ -288,7 +288,7 @@ export default {
             let params = {
                 status: '3',
             }
-            wfTodoList(Object.assign({}, params,this.historyListQuery)).then(({ data }) => {
+            wfTodoList(Object.assign({}, params,this.historyListQuery,this.formData)).then(({ data }) => {
                 if(this.historyRefreshLoading){
                     this.historyOrderList = [];
                     this.historyRefreshLoading = false;
@@ -318,12 +318,7 @@ export default {
         },
         //待审核列表条目点击
         handleWaitItemClick(item){
-            this.$router.push({
-                name: "MyToDoDetail",
-                params: { 
-                    type: '0',
-                },
-            });
+            
         },
         //待处理列表条目点击
         handleWaitHandleItemClick(item){
@@ -353,22 +348,19 @@ export default {
             });
         },
         //去审核点击
-        handleExamineClick(){
+        handleExamineClick(item){
             this.$router.push({
-                name: "MyToDoDetail",
+                name: "DemandPlanningExamine",
                 params: { 
-                    type: '0',
+                    obj: JSON.stringify(item),
                 },
             });
         },
         //搜索点击
-        handeSearchClick(){
-            this.$router.push({
-                name: "MyToDoSearch",
-                params: { 
-                    type: '0',
-                },
-            });
+        handeSearch(){
+            this.waitRefresh();
+            this.waitHandleRefresh();       
+            this.historyRefresh();    
         },
         //待审核列表刷新
         waitRefresh(){

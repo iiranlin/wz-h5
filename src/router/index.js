@@ -87,28 +87,22 @@ export const routes = [
     hidden: true,
     children: [
       {
-        path: 'MyToDoDetail/:type',
-        name: 'MyToDoDetail',
-        meta: { title: '我的待办-详情' },
-        component: () => import('@/view/MyToDo/MyToDoManager/MyToDoDetail.vue')
+        path: 'DemandPlanningExamine/:obj',
+        name: 'DemandPlanningExamine',
+        meta: { title: '需求计划-审核' },
+        component: () => import('@/view/MyToDo/MyToDoManager/DemandPlanningExamine.vue')
       },
       {
-        path: 'MyToDoExamineEdit/:type',
-        name: 'MyToDoExamineEdit',
+        path: 'ExamineOpinionEdit/:type',
+        name: 'ExamineOpinionEdit',
         meta: { title: '审核意见' },
-        component: () => import('@/view/MyToDo/MyToDoManager/MyToDoExamineEdit.vue')
+        component: () => import('@/view/MyToDo/MyToDoManager/ExamineOpinionEdit.vue')
       },
       {
-        path: 'MyToDoExamineChoice',
-        name: 'MyToDoExamineChoice',
+        path: 'ApproverChoice/:obj',
+        name: 'ApproverChoice',
         meta: { title: '选择审批人' },
-        component: () => import('@/view/MyToDo/MyToDoManager/MyToDoExamineChoice.vue')
-      },
-      {
-        path: 'MyToDoSearch',
-        name: 'MyToDoSearch',
-        meta: { title: '搜索' },
-        component: () => import('@/view/MyToDo/MyToDoManager/MyToDoSearch.vue')
+        component: () => import('@/view/MyToDo/MyToDoManager/ApproverChoice.vue')
       },
     ]
   },
@@ -176,7 +170,7 @@ export const routes = [
       {
         path: 'SaveMaterials',
         name: 'SaveMaterials',
-        meta: { title: '保存物资' },
+        meta: { title: '设置物资需求信息' },
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/SaveMaterials.vue')
       },
       {

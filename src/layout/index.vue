@@ -94,7 +94,8 @@ export default {
 					normalIcon: '/static/icon_home.png',
 					link: '/MyManager'
 				},
-			]
+			],
+      userInfo: getUserInfo()
 		}
 	},
 	created() {
@@ -103,24 +104,32 @@ export default {
 	methods: {
 		//判断角色菜单
 		checkNavMenu(){
-      console.log(getUserInfo())
-      const username = this.$route.query.username || window.sessionStorage.getItem("username")
-      if(username){
-        window.sessionStorage.setItem("username", username)
+      const deptCode = this.userInfo.deptCode
+      const codeArr = ['FB', 'ZB', 'JL', 'GYS']
+      let code = ''
+      codeArr.forEach( (item) => {
+        if(deptCode.startsWith(item)){
+          code = item
+        }
+      })
+      if(code){
         const obj = {
-          '001': () => {
+          'FB': () => {
             return this.constructionUnit
           },
-          '002': () => {
+          'ZB': () => {
+            return this.constructionUnit
+          },
+          'JL': () => {
             return this.supervisionUnit
           },
-          '003': () => {
+          'GYS': () => {
             return this.supplier
           }
         }
-        return (obj[username] && obj[username]()) || this.constructionUnit
+        return (obj[code] && obj[code]()) || this.constructionUnit
       }
-			return this.supplier;
+      return this.constructionUnit
 		},
 	},
 }
