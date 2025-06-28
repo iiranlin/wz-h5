@@ -10,40 +10,38 @@
         </van-dropdown-menu>
       </div>
     </van-sticky>
-    <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-      <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
+    <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad">
 
-        <div v-for="(item, index) in 10" :key="index" class="box-container">
-          <ul class="list-ul">
+        <div v-for="(item, index) in dataList" :key="index" class="box-container">
+          <ul class="list-ul"  @click="detailsClick('1')">
             <li v-if="[0, 3, 4, 5].includes(value1)">
-              <span>入库单号：</span>
-              <span @click="detailsClick('1')" class="li-span-click">RK2025050001</span>
+              <span class="font-weight">入库单号：</span>
+              <span class="font-weight">{{ item.storeNumber }}</span>
             </li>
             <li>
               <span>收货单号：</span>
-              <span @click="detailsClick('2')" class="li-span-click">SH2025050001</span>
+              <span @click.stop="detailsClick('2')" class="li-span-click">{{ item.takeNumber }}</span>
             </li>
             <li>
               <span>需求名称：</span>
-              <span>需求名称需求名称需求名称需求名称需求名称需求名称</span>
+              <span>{{ item.planName }}</span>
             </li>
             <li>
               <span>需求组织：</span>
-              <span>施工单位名称（分部）</span>
+              <span>{{ item.deptName }}</span>
             </li>
             <li>
               <span>供应商：</span>
-              <span>供应商名称供应商名称供应商名称供应商名称供应商名称供应商名</span>
+              <span>{{ item.sellerName }}</span>
             </li>
-            <li class="li-item-both">
-              <div class="li-item-left">
-                <span>收货时间：</span>
-                <span>2025-04-20</span>
-              </div>
-              <div class="li-item-right">
-                <span>入库时间：</span>
-                <span>2025-04-20</span>
-              </div>
+            <li>
+              <span>收货时间：</span>
+              <span>{{ parseTime(item.takeDate, '{y}-{m}-{d} {h}:{s}') }}</span>
+            </li>
+            <li>
+              <span>入库时间：</span>
+              <span>{{ item.storeDate?parseTime(item.storeDate, '{y}-{m}-{d} {h}:{s}'):'' }}</span>
             </li>
             <li class="li-status" v-if="value1 == 0">
               <template v-for="items in option1">
@@ -64,6 +62,7 @@
   </div>
 </template>
 <script>
+import { listStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
 export default {
   name: 'InListContent',
   data() {
@@ -82,9 +81,14 @@ export default {
         { text: '已退货', value: 5 },
         { text: '已驳回', value: 6 }
       ],
-      allRefreshLoading: false,
-      allLoading: false,
-      allFinished: false,
+      refreshLoading: false,
+      loading: false,
+      finished: false,
+      listQuery: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      dataList: []
     };
   },
   created() {
@@ -92,16 +96,39 @@ export default {
   activated() {
   },
   methods: {
-    //全部列表刷新
-    allRefresh() {
-      this.allRefreshLoading = true
-      this.allLoading = true
-      this.allFinished = false
-      this.getAllList()
+    //列表刷新
+    onRefresh() {
+      this.refreshLoading = true
+      this.loading = true
+      this.finished = false
+      this.listQuery.pageNum = 1
+      this.listStore()
     },
-    getAllList() {
-      this.allRefreshLoading = false
-      this.allFinished = true
+    onLoad() {
+      this.listStore()
+    },
+    listStore () {
+      if (this.refreshLoading) {
+        this.dataList = []
+        this.refreshLoading = false
+      }
+      const params = {
+        ...this.listQuery
+      }
+      listStore(params).then( ({data}) => {
+        this.dataList.push(...(data.list || []))
+        // 数据全部加载完成
+        if (this.dataList.length >= data.total) {
+          this.finished = true
+          return
+        }
+        this.listQuery.pageNum++
+      }).catch(() => {
+        this.finished = true
+        this.error = true
+      }).finally( (err) => {
+        this.loading = false
+      })
     },
     submitStore () {
       this.$router.push({ name: 'SubmitStore', query: {type: 'submit'} })
@@ -131,7 +158,7 @@ export default {
           this.$router.push({ name: 'SubmitStore', query: {type: 'view'} })
         },
         '2': () => {
-          // this.$router.push({ name: 'SubmitStore' })
+          this.$router.push({ name: 'DoAcceptDetail' })
         }
       }
       objKey && objKey[key]()

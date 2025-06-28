@@ -13,14 +13,14 @@
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
         <div v-for="(item, index) in 10" :key="index" class="box-container">
-          <ul class="list-ul">
+          <ul class="list-ul" @click="detailsClick">
             <li>
               <span>当前库存：</span>
               <span>{{ [0, 1].includes(value1)?'有':'无' }}</span>
             </li>
             <li>
-              <span>需求编号：</span>
-              <span class="li-span-click">XQ20250500001</span>
+              <span class="font-weight">需求编号：</span>
+              <span class="font-weight">XQ20250500001</span>
             </li>
             <li>
               <span>需求名称：</span>
@@ -55,7 +55,7 @@
             </li>
           </ul>
           <div class="list-ul-button">
-            <van-button class="button-info" plain round type="info" @click="detailsClick">库存详情</van-button>
+            <!-- <van-button class="button-info" plain round type="info" @click="detailsClick">库存详情</van-button> -->
             <van-button class="button-info" round type="info" @click="outboundClick">出库</van-button>
           </div>
         </div>

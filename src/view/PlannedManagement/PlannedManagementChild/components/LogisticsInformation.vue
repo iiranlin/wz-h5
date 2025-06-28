@@ -3,71 +3,50 @@
     <ul class="detail-ul">
       <li>
         <span>发货单号：</span>
-        <span>{{ detail.shipmentBatchNumber }}</span>
+        <span>{{ detailObj.shipmentBatchNumber }}</span>
       </li>
       <li>
         <span>物流单号：</span>
-        <span>{{ detail.oddNumbers }}</span>
+        <span>{{ detailObj.oddNumbers }}</span>
       </li>
       <li>
         <span>发货时间：</span>
-        <span>{{ parseTime(detail.shippingDate, '{y}-{m}-{d}') }}</span>
+        <span>{{ parseTime(detailObj.shippingDate, '{y}-{m}-{d}') }}</span>
       </li>
       <li>
         <span>发货地址：</span>
-        <span>{{ detail.shippingAddress }}</span>
+        <span>{{ detailObj.shippingAddress }}</span>
       </li>
       <li>
         <span class="li-span-width">预计到达时间为：</span>
-        <span>{{ parseTime(detail.arrivalDate, '{y}-{m}-{d}') }}</span>
+        <span>{{ parseTime(detailObj.arrivalDate, '{y}-{m}-{d}') }}</span>
       </li>
       <li>
         <span>车牌号为：</span>
-        <span>{{ detail.carNumber }}</span>
+        <span>{{ detailObj.carNumber }}</span>
       </li>
       <li>
         <span>联系人：</span>
-        <span>{{ detail.contacts }}</span>
+        <span>{{ detailObj.contacts }}</span>
       </li>
       <li>
         <span>联系电话：</span>
-        <span>{{ detail.contactsPhone }}</span>
+        <span>{{ detailObj.contactsPhone }}</span>
       </li>
     </ul>
-    <template v-if="activeKey == 0">
+    <template v-if="detailObj.oddNumbers">
       <div class="Logistics-Information-dt">
-        <img :src="dt" />
+        <!-- <img :src="dt" /> -->
+        <wuliu :courierNumber="detailObj.oddNumbers" @expressDataFun="expressDataFun" />
       </div>
       <van-steps direction="vertical" active-color="#0086ff" :active="0">
-        <van-step>
+        <van-step v-for="(item, index) in expressData.routeDtos" :key="index">
           <div>
-            <p>派送中</p>
-            <p class="Logistics-Information-text">货物派送中</p>
+            <p>{{ expressData.logisticsStatusDesc }}</p>
+            <p>{{ item.time }}</p>
+            <p class="Logistics-Information-text">{{ item.context }}</p>
           </div>
-          <div class="Logistics-Information-text">2016-07-12 12:40</div>
-        </van-step>
-        <van-step>
-          <div>
-            <p>运输中</p>
-            <p class="Logistics-Information-text">货物运输中</p>
-          </div>
-          <div class="Logistics-Information-text">2016-07-12 12:40</div>
-          <div></div>
-        </van-step>
-        <van-step>
-          <div>
-            <p>发货中</p>
-            <p class="Logistics-Information-text">货物正在发货</p>
-          </div>
-          <div class="Logistics-Information-text">2016-07-12 12:40</div>
-          <div></div>
-        </van-step>
-        <van-step>
-          <div>
-            <p>确认下单</p>
-            <p class="Logistics-Information-text">订单确认中</p>
-          </div>
-          <div class="Logistics-Information-text">2016-07-12 12:40</div>
+          <!-- <div class="Logistics-Information-text">{{ item.time }}</div> -->
         </van-step>
       </van-steps>
     </template>
@@ -78,20 +57,21 @@
           <van-col>货运位置</van-col>
           <van-col>填写时间</van-col>
         </van-row>
-        <van-row class="th-rows" v-for="item in 6" :key="item">
-          <van-col>张三</van-col>
-          <van-col>中铁三局宁</van-col>
-          <van-col>2025-05-06 09:30</van-col>
+        <van-row class="th-rows" v-for="item in detailObj.materialTrackMessageDTOS" :key="item.id">
+          <van-col>{{ item.createUserName }}</van-col>
+          <van-col>{{ item.positionInformation }}</van-col>
+          <van-col>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{s}') }}</van-col>
         </van-row>
       </div>
     </template>
   </div>
 </template>
 <script>
-import dt from '@/assets/img/dt.png';
+import dt from '@/assets/img/dt.png'
+import wuliu from '@/components/wuliu'
 export default {
   name: 'LogisticsInformation',
-  components: {},
+  components: { wuliu },
   props: {
     activeKey: {
       type: Number,
@@ -107,6 +87,7 @@ export default {
   data() {
     return {
       appid: "bjhzcZ1hF8rR5gF5mK9qW",
+      appSecret: "4c18253ddba74d30b1b74a692aab6606",
       dt,
       formData: {
         mailNo:'',  //快递单号
@@ -115,10 +96,11 @@ export default {
         phone:'',   //寄件人电话
       },
       expressCompanyOptions: [], //快递公司数据
+      expressData: {}
     }
   },
 	computed: {
-		key() {
+		detailObj() {
 			return this.detail
 		},
 	},
@@ -128,51 +110,11 @@ export default {
   activated() {
   },
   mounted () {
-      console.log(this.key)
-    if(!!this.detail.oddNumbers){
-      console.log(this.detail.oddNumbers)
-      this.handleInputChange()
-    }
   },
   methods: {
-    //快递单号改变后
-    handleInputChange() {
-      if (!this.detail.oddNumbers) {
-        return;
-      }
-      let obj = {
-        mailNo: this.detail.oddNumbers,
-      }
-      let params = {
-        appid: this.appid,
-        sign: this.initSign(JSON.stringify(obj)),
-        requestData: JSON.stringify(obj),
-      }
-      axios.post('https://express.xuanquetech.com/express/v2/exCompany', qs.stringify(params), {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' }
-      }).then((res) => {
-        if (res.data.success) {
-          this.expressCompanyOptions = []
-
-          res.data.list.forEach((item) => {
-            let obj = {
-              companyName: item.cpName,
-              companyCode: item.cpCode
-            }
-            this.expressCompanyOptions.push(obj)
-          })
-          this.formData.cpCode = this.expressCompanyOptions[0].companyCode
-          this.formData.cpName = this.expressCompanyOptions[0].companyName
-
-        } else {
-          this.expressCompanyOptions = this.localExpressCompanyOptions
-          this.formData.cpCode = ''
-          this.formData.cpName = ''
-        }
-      }).catch((err) => {
-
-      })
-    },
+    expressDataFun (expressData) {
+      this.expressData = expressData
+    }
   },
 }
 </script>
@@ -194,6 +136,7 @@ export default {
 
   .Logistics-Information-dt {
     width: 100%;
+    height: 150px;
 
     img {
       width: 100%;

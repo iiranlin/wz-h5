@@ -10,6 +10,13 @@ import { parseTime } from "@/utils/index.js";
 // Vue.prototype.$echarts = echarts;
 import "./permission"; // permission control
 
+import VueAMap from 'vue-amap';
+Vue.use(VueAMap);
+VueAMap.initAMapApiLoader({
+  key: '06541558d151d51375463a6fcb9192c2', // 替换为你的API Key
+  plugin: ['AMap.Geolocation'], // 根据需要添加插件
+});
+
 import dict from '@/utils/Dict'
 Vue.use(dict)
 

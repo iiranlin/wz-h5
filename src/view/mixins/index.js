@@ -16,6 +16,12 @@ export default {
         }
       }
       return v
+    },
+    filterFiles (files, name) {
+      if (!files) return []
+      const parseFiles = JSON.parse(files)
+      const fileNameArr = parseFiles[name].map(item => item.fileName)
+      return fileNameArr.join(' ')
     }
   },
   methods: {

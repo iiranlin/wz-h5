@@ -5,6 +5,10 @@
         <div>
           <ul class="detail-ul">
             <li>
+              <span>需求编号：</span>
+              <span>XQ20250500001</span>
+            </li>
+            <li>
               <span>需求名称：</span>
               <span>需求名称需求名称需求名称</span>
             </li>
@@ -24,49 +28,43 @@
       </div>
       <div class="box-container" v-for="item in 2" :key="item">
         <ul class="detail-ul">
-          <li class="li-item-overlength">
-            <span>供应商：</span>
-            <span>供应商供应商供应商供应商</span>
-          </li>
           <li>
-            <span>物资名称：</span>
-            <span>物资名称物资名称物资名称</span>
+            <span class="font-weight">物资名称：</span>
+            <span class="font-weight">物资名称物资名称物资名称</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>供应商名称：</span>
+            <span>供应商供应商供应商供应商</span>
           </li>
           <li>
             <span>规格型号：</span>
             <span>规格型号规格型号规格型号</span>
           </li>
-          <li class="li-item-both">
+          <li>
+            <span>计量单位：</span>
+            <span>套</span>
+          </li>
+          <li class="li-item-both li-item-overlength">
             <div class="li-item-left">
-              <span>计量单位：</span>
-              <span>套</span>
+              <span>本次计划数量：</span>
+              <span>5</span>
             </div>
             <div class="li-item-right">
-              <span>需求数量：</span>
+              <span>累计入库数量：</span>
               <span>5</span>
             </div>
           </li>
-          <li class="li-item-overlength">
-            <span>当前库存数量：</span>
+          <!-- <li class="li-item-overlength">
+            <span>本次计划数量：</span>
             <span>5</span>
           </li>
-          <li class="li-item-both">
-            <div class="li-item">
-              <span>生产日期：</span>
-              <span>2025-6-1</span>
-            </div>
-            <div class="li-item">
-              <span>有效截止日期：</span>
-              <span>2026-6-1</span>
-            </div>
-          </li>
           <li class="li-item-overlength">
-            <span>本次出库数量：</span>
+            <span>累计入库数量：</span>
+            <span>5</span>
+          </li> -->
+          <li>
+            <span>当前库存：</span>
             <span>10</span>
-          </li>
-          <li class="li-item-overlength">
-            <span>备注：</span>
-            <span>备注备注备注</span>
           </li>
         </ul>
       </div>

@@ -4,6 +4,12 @@ import { Dialog, Notify } from "vant";
 import { getToken, setToken } from "@/utils/auth";
 import { tansParams } from "@/utils/publicMethods";
 import cache from '@/plugins/cache'
+
+function isAndroid() {
+  let userAgent = navigator.userAgent
+  return /Android|adr/gi.test(userAgent)
+}
+
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: false,
@@ -78,6 +84,9 @@ service.interceptors.response.use(
         confirmButtonText: '重新登录'
       }).then(() => {
         store.dispatch('LogOut')
+        if (isAndroid()) {
+          Android.startToLogin()
+        }
       });
       return Promise.reject(res.message);
     }  else if (res.code !== 0) {

@@ -4,36 +4,22 @@
     <div class="box-container" v-for="(item, index) in list" :key="index">
       <div>
         <ul class="detail-ul">
-          <li>
-            <span class="font-weight">事件组织：</span>
-            <span class="font-weight">{{ item.deptName }}</span>
+          <li class="li-item-both">
+            <div class="li-item-left">
+              <span class="font-weight">{{ item.logName }}</span>
+            </div>
+            <div class="li-item-right">
+              <span class="font-weight">{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{s}') }}</span>
+            </div>
           </li>
           <li>
-            <span>事件：</span>
-            <span>{{ item.logName }}</span>
+            <span>事件组织：</span>
+            <span>{{ item.deptName }}</span>
           </li>
           <li>
             <span>操作人：</span>
             <span>{{ item.createUserName }}</span>
           </li>
-          <li>
-            <span>操作时间：</span>
-            <span>{{ parseTime(item.createDate, '{y}-{m}-{d}') }}</span>
-          </li>
-          <!-- <li class="li-item-both">
-            <div>
-              <span>事件：</span>
-              <span>{{ item.logName }}</span>
-            </div>
-            <div>
-              <span>操作人：</span>
-              <span>{{ item.createUserName }}</span>
-            </div>
-            <div>
-              <span>操作时间：</span>
-              <span>{{ parseTime(item.createDate, '{y}-{m}-{d}') }}</span>
-            </div>
-          </li> -->
           <li>
             <span>备注：</span>
             <span>{{ item.amount }}</span>

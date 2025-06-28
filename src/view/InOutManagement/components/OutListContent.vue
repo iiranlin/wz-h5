@@ -12,8 +12,8 @@
         <div v-for="(item, index) in 10" :key="index" class="box-container" @click="outClick">
           <ul class="list-ul">
             <li>
-              <span>出库单号：</span>
-              <span>CK20250531004</span>
+              <span class="font-weight">出库单号：</span>
+              <span class="font-weight">CK20250531004</span>
             </li>
             <li>
               <span>需求编号：</span>

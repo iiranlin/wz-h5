@@ -56,26 +56,16 @@
               <span>供应商供应商供应商供应商</span>
             </li>
             <li>
-              <span>物资名称：</span>
-              <span>物资名称物资名称物资名称</span>
+              <span class="font-weight">物资名称：</span>
+              <span class="font-weight">物资名称物资名称物资名称</span>
             </li>
             <li>
               <span>规格型号：</span>
               <span>规格型号规格型号规格型号</span>
             </li>
-            <li class="li-item-both">
-              <div class="li-item-left">
-                <span>计量单位：</span>
-                <span>套</span>
-              </div>
-              <div class="li-item-right">
-                <span>需求数量：</span>
-                <span>5</span>
-              </div>
-            </li>
-            <li class="li-item-overlength">
-              <span>当前库存数量：</span>
-              <span>5</span>
+            <li>
+              <span>计量单位：</span>
+              <span>套</span>
             </li>
             <li class="li-item-both">
               <div class="li-item">

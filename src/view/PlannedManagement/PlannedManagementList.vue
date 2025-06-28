@@ -156,6 +156,7 @@ export default {
         }
         this.listQuery.pageNum++
       }).catch(() => {
+        this.finished = true
         this.error = true
       }).finally( (err) => {
         this.loading = false

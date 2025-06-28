@@ -16,3 +16,16 @@ export const detailWlgz = (id) => {
     method: 'get',
   })
 }
+
+/**
+ * 入库列表
+ * @param {*} params 
+ * @returns 
+ */
+export const listStore = (params) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/listStore`,
+    method: 'get',
+    params
+  })
+}

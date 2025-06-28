@@ -1,71 +1,75 @@
 <template>
-  <div>
-    <div class="box-container" v-for="(item, index) in 5" :key="index">
+  <div v-if="materialCirculationDetailsTableDTOS.length">
+    <div class="box-container" v-for="(item, index) in materialCirculationDetailsTableDTOS" :key="index">
       <div>
         <ul class="detail-ul">
           <li>
             <span>物资名称：</span>
-            <span>计算机联锁设备</span>
+            <span>{{ item.materialName }}</span>
           </li>
           <li>
             <span>规格型号：</span>
-            <span>2x2取2s10</span>
+            <span>{{ item.specModel }}</span>
           </li>
           <li>
             <span>计量单位：</span>
-            <span>套</span>
+            <span>{{ item.unit }}</span>
           </li>
           <li>
             <span>本次计划数量：</span>
-            <span>10</span>
+            <span>{{ item.planAmount }}</span>
           </li>
           <li>
             <span>本次发货数量：</span>
-            <span>4</span>
-          </li>
-          <li>
-            <span>生产日期：</span>
-            <span>2025-07-15</span>
-          </li>
-          <li>
-            <span>有效期截止日期：</span>
-            <span>2025-07-15</span>
-          </li>
-          <li>
-            <span>供应时间：</span>
-            <span>2025年6月12日</span>
+            <span>{{ item.sendTotal }}</span>
           </li>
           <li>
             <span>包装形式：</span>
-            <span>捆包</span>
+            <span>{{ item.packagingFm }}</span>
+          </li>
+          <li>
+            <span>生产日期：</span>
+            <span>{{ parseTime(item.manufactureDate, '{y}-{m}-{d}') }}</span>
+          </li>
+          <li>
+            <span>有效期截止日期：</span>
+            <span>{{ parseTime(item.expirationDate, '{y}-{m}-{d}') }}</span>
+          </li>
+          <li>
+            <span>使用地点：</span>
+            <span>{{ item.addr }}</span>
+          </li>
+          <li>
+            <span>供应时间：</span>
+            <span>{{ parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
           </li>
           <li>
             <span>收货地址：</span>
-            <span>华庄/永津路/高里东/浦口北</span>
+            <span>{{ item.field2 }}</span>
           </li>
           <li>
             <span>收货人及联系方式：</span>
-            <span>name 15888888888</span>
+            <span>{{ item.receiver }}</span>
           </li>
           <li>
             <span>投资方：</span>
-            <span>公司名称公司名称公司名称公</span>
+            <span>{{ item.field0 }}</span>
           </li>
           <li>
             <span>投资比例：</span>
-            <span>40%;60%</span>
+            <span>{{ item.field1 }}</span>
           </li>
           <li>
             <span>合格证附件：</span>
-            <span @click="imgClick" class="img-text">合格证附件/xxxxx.pdf</span>
+            <span @click="imgClick" class="img-text">{{ item.fileByList | filterFiles('hgz') }}</span>
           </li>
           <li>
             <span>厂检报告附件：</span>
-            <span @click="imgClick" class="img-text">合格证附件/xxxxx.pdf</span>
+            <span @click="imgClick" class="img-text">{{ item.fileByList | filterFiles('cjbg') }}</span>
           </li>
           <li>
             <span>备注：</span>
-            <span>备注内容备注内容备注内容备</span>
+            <span>{{ item.remark }}</span>
           </li>
         </ul>
       </div>
@@ -74,11 +78,20 @@
       <van-image-preview v-model="showImg" :images="images" :startPosition="startPosition" :loop="false" @close="showPopup = false"/>
     </van-popup>
   </div>
+  <van-empty v-else description="暂无数据" />
 </template>
 <script>
-import dt from '@/assets/img/img.png';
+import indexMixin from '@/view/mixins'
+import dt from '@/assets/img/img.png'
 export default {
   name: 'DeliveryMaterialDetails',
+  mixins: [indexMixin],
+  props: {
+    materialCirculationDetailsTableDTOS:{
+      type: Array,
+      default: []
+    }
+  },
   components: {},
   data() {
     return {

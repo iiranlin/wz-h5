@@ -92,6 +92,7 @@ export default {
           this.finished = true
         }
       }).catch(() => {
+        this.finished = true
         this.error = true
       }).finally( (err) => {
         this.loading = false

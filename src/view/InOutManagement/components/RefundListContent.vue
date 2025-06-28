@@ -11,27 +11,17 @@
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
         <div v-for="(item, index) in 10" :key="index" class="box-container" @click="handleWaitItemClick(item)">
           <ul class="list-ul">
-            <li class="li-item-both">
-              <div class="li-item-left">
-                <span>退货单号：</span>
-                <span>TH20250531004</span>
-              </div>
-              <div class="li-item-right">
-                <span>收货单号：</span>
-                <span>SH20250531004</span>
-              </div>
+            <li>
+              <span>退货单号：</span>
+              <span>TH20250531004</span>
             </li>
             <li>
-              <span>发货单号：</span>
-              <span>FH20250531004</span>
+              <span>收货单号：</span>
+              <span @click.stop="detailsClick" class="li-span-click">SH20250531004</span>
             </li>
             <li>
               <span class="li-item-span-auto">供应需求名称：</span>
               <span>南京枢纽（江北地区）和南通地区工程2025年5月甲供物资需求计划表</span>
-            </li>
-            <li>
-              <span>需求组织：</span>
-              <span>施工单位名称</span>
             </li>
             <li class="li-item-both">
               <div class="li-item-left">
@@ -42,6 +32,14 @@
                 <span class="li-item-span-auto">供应商：</span>
                 <span>供应商供应商</span>
               </div>
+            </li>
+            <li>
+              <span>退货时间：</span>
+              <span>2025-05-21</span>
+            </li>
+            <li>
+              <span>操作人：</span>
+              <span>name</span>
             </li>
           </ul>
         </div>
@@ -83,6 +81,9 @@ export default {
     handleWaitItemClick (item) {
       // this.$router.push({ name: 'SubmitStore', query: {type: 'view'} })
       this.$router.push({name: 'DoReturn'})
+    },
+    detailsClick () {
+      this.$router.push({ name: 'DoAcceptDetail' })
     }
   },
 };

@@ -5,6 +5,10 @@
         <div>
           <ul class="detail-ul">
             <li>
+              <span>入库单号：</span>
+              <span>RK2025050001</span>
+            </li>
+            <li>
               <span>需求名称：</span>
               <span>南京枢纽(江北地区)和南通地区工程</span>
             </li>
@@ -72,6 +76,10 @@
               <span>捆包</span>
             </li>
             <li>
+              <span>使用地点：</span>
+              <span>使用地点使用地点</span>
+            </li>
+            <li>
               <span>收货地址：</span>
               <span>收货地址收货地址</span>
             </li>
@@ -95,8 +103,8 @@
               <span>合格证附件：</span>
               <span @click="imgClick" class="li-span-click">XXXXX.pdf</span>
             </li>
-            <li>
-              <span>厂检附件：</span>
+            <li class="li-item-overlength">
+              <span>厂检报告附件：</span>
               <span @click="imgClick" class="li-span-click">XXXXX.pdf</span>
             </li>
             <van-form @submit="onSubmit" label-align="right" label-width="145px" v-if="queryType === 'submit'">

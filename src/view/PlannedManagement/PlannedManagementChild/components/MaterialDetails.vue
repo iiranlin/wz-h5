@@ -4,21 +4,17 @@
     <div class="box-container" v-for="(item, index) in list" :key="index">
       <div>
         <ul class="detail-ul">
-          <li>
+          <li class="li-item-overlength">
             <span class="font-weight">供应商名称：</span>
             <span class="font-weight">{{ item.sellerName }}</span>
           </li>
           <li>
-            <span>物资名称：</span>
-            <span>{{ item.materialName }}</span>
+            <span class="font-weight">物资名称：</span>
+            <span class="font-weight">{{ item.materialName }}</span>
           </li>
           <li>
-            <span>使用地点：</span>
+            <span>供应商：</span>
             <span>{{ item.addr }}</span>
-          </li>
-          <li>
-            <span>收货人：</span>
-            <span>{{ item.receiver }}</span>
           </li>
           <li class="li-item-both">
             <div class="li-item-left">
@@ -49,6 +45,18 @@
               <span>供应时间：</span>
               <span>{{ parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
             </div>
+          </li>
+          <li>
+            <span>使用地点：</span>
+            <span>{{ item.addr }}</span>
+          </li>
+          <li>
+            <span>收货地址：</span>
+            <span>{{ item.addr }}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>收货人及联系方式：</span>
+            <span>{{ item.receiver }}</span>
           </li>
           <li>
             <span>投资方：</span>
@@ -98,16 +106,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.detail-ul {
-  li {
-    span {
-      &:nth-child(1) {
-        width: 80px;
-      }
-    }
-  }
-}
-
 .li-item-both {
   justify-content: space-between;
 }

@@ -74,8 +74,8 @@
                 <span>供应商供应商供应商供应商</span>
               </li>
               <li>
-                <span>物资名称：</span>
-                <span>物资名称物资名称物资名称</span>
+                <span class="font-weight">物资名称：</span>
+                <span class="font-weight">物资名称物资名称物资名称</span>
               </li>
               <li>
                 <span>规格型号：</span>
@@ -91,9 +91,15 @@
                   <span>5</span>
                 </div>
               </li>
-              <li class="li-item-overlength">
-                <span>当前库存数量：</span>
-                <span>5</span>
+              <li class="li-item-both li-item-overlength">
+                <div class="li-item-left">
+                  <span>入库单号：</span>
+                  <span>RK202506260001</span>
+                </div>
+                <div class="li-item-right">
+                  <span>当前库存数量：</span>
+                  <span>5</span>
+                </div>
               </li>
               <li class="li-item-both">
                 <div class="li-item">
@@ -127,7 +133,8 @@
       </van-form>
     </div>
     <div class="default-button-container">
-      <van-button class="button-info" round type="info" @click="previewClick" v-if="queryType === 'submit'">预览</van-button>
+      <van-button class="button-info" round type="info" @click="previewClick('save')" v-if="queryType === 'submit'">预览</van-button>
+      <van-button class="button-info" round type="info" @click="previewClick('submit')" v-if="queryType === 'save'">上一步</van-button>
       <van-button class="button-info" round type="info" @click="outboundClick" v-if="queryType === 'save'">确定出库</van-button>
     </div>
     <van-popup v-model="showPopup" position="bottom">
@@ -167,8 +174,8 @@ export default {
     activeKeyChange() {
       console.log(this.activeKey)
     },
-    previewClick () {
-      this.queryType = 'save'
+    previewClick (type) {
+      this.queryType = type
     },
     outboundClick() {
       this.$toast('出库成功');
