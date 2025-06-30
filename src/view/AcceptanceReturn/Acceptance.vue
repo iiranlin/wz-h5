@@ -91,7 +91,7 @@ export default {
 
   data() {
     return {
-      menuActiveIndex: 0,
+      menuActiveIndex: '',
 
       formData: {
         keywords: ''
@@ -111,7 +111,11 @@ export default {
         pageNum: 0,
         pageSize: 10
       },
-      status:'',
+    }
+  },
+  computed: {
+    activeTab () {
+      return this.$store.getters.activeTab
     }
   },
   filters: {
@@ -154,7 +158,11 @@ export default {
     }
 
   },
-  created() {
+  created () {
+    this.menuActiveIndex=this.activeTab.activeTab
+    if(this.$route.meta.myToDoNavIndex){
+        this.menuActiveIndex = this.$route.meta.myToDoNavIndex;
+    }
   },
   activated() {
     if (this.$route.params.refresh) {
@@ -166,7 +174,7 @@ export default {
   methods: {
     //收获列表
     getList(){
-      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,planName:this.formData.keywords,takeStatus:this.status}
+      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,planName:this.formData.keywords,takeStatus:this.menuActiveIndex?this.menuActiveIndex:''}
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
@@ -195,7 +203,7 @@ export default {
       });
     },
     handleChange(val){
-      this.status = val?val:''
+      this.menuActiveIndex = val?val:''
       this.allListQuery.pageNum = 1
       this.allRefreshLoading = true
       this.allFinished = true
@@ -211,11 +219,17 @@ export default {
       if(!item.takeNumber){
         return
       }
-      this.$router.push({name: 'DoAcceptDetail', query: {from: 'AcceptanceReturn',id:item.id}})
+     this.$store.dispatch('updateActiveTab', {
+        activeTab:this.menuActiveIndex
+      })
+      this.$router.push({name: 'DoAcceptDetail', query: {id:item.id}})
     },
     //去审核点击
     handleDoAccept(item) {
-      this.$router.push({name: 'DoAccept',query: {from: 'AcceptanceReturn',id:item.id}})
+      this.$store.dispatch('updateActiveTab', {
+        activeTab:this.menuActiveIndex
+      })
+      this.$router.push({name: 'DoAccept',query: {id:item.id}})
     },
     //搜索点击
     handeSearchClick() {

@@ -4,5 +4,6 @@ const getters = {
   userInfo: state => state.user.userInfo,
   permission_routes: state => state.permission.routes,
   getKeepPages:state=>state.keepPages.keepPages,
+  activeTab:state=>state.acceptance.activeTab
 }
 export default getters

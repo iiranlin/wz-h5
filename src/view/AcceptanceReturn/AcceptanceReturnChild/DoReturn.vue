@@ -30,7 +30,7 @@
     </div>
 
     <div class="detail-title">退货明细</div>
-    <div class="box-container" v-for="item in dataList.materialCirculationDetailsTableDTOS" :key="item">
+    <div class="box-container" v-for="(item,index) in dataList.materialCirculationDetailsTableDTOS" :key="index">
       <ul class="detail-ul">
         <li class="save-materials-li">
           <span class="font-weight">物资名称：</span>

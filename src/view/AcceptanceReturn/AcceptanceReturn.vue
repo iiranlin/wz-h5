@@ -42,7 +42,16 @@ export default {
       menuActiveIndex: 0,
     }
   },
-
+  beforeRouteLeave (to, from, next) {
+      from.meta.myToDoNavIndex = this.menuActiveIndex;
+      next();
+  },
+  created () {
+      if(this.$route.meta.myToDoNavIndex){
+        this.menuActiveIndex = this.$route.meta.myToDoNavIndex;
+      }
+      
+  },
   methods: {
     changeTab(index) {
       this.menuActiveIndex = index
