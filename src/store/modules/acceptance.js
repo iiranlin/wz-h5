@@ -5,6 +5,7 @@ const acceptance = {
     },
     mutations: {
       setActiveTab(state, tab) {
+
        state.activeTab = tab;
       }
 
