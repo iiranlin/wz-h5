@@ -2,6 +2,7 @@ import request from '@/utils/request'
 const VUE_APP_PRODMGR_WORKFLOW = process.env.VUE_APP_PRODMGR_WORKFLOW
 const VUE_APP_PRODMGR_INV = process.env.VUE_APP_PRODMGR_INV
 
+//待审核/已审核列表
 export function wfTodoList(params) {
     return request({
         url: `${VUE_APP_PRODMGR_WORKFLOW}/wf/todoList`,
@@ -9,7 +10,7 @@ export function wfTodoList(params) {
         params
     })
 }
-
+//待处理列表
 export function wfHandleList(params) {
     return request({
         url: `${VUE_APP_PRODMGR_WORKFLOW}/wf/handleList`,
@@ -18,6 +19,7 @@ export function wfHandleList(params) {
     })
 }
 
+//获取审批日志
 export function wfHistoryList(businessId) {
     return request({
         url: `${VUE_APP_PRODMGR_WORKFLOW}/wf/historyList/${businessId}`,

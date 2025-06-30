@@ -17,30 +17,34 @@
                     v-model="loading" 
                     :finished="finished" 
                     finished-text="没有更多了..." 
-                    @load="geList">
+                    @load="getList">
 
-                    <div v-for="(item,index) in 10" :key="index" class="box-container" @click="handleItemClick(item)">
+                    <div v-for="(item,index) in dataList" :key="index" class="box-container" @click.stop="handleItemClick(item)">
                         <ul class="list-ul">
                             <li>
-                                <span class="font-weight">业务编号：</span>
-                                <span class="font-weight">XQ2025050007</span>
+                                <span class="font-weight">业务编码：</span>
+                                <span class="font-weight">{{item.businessCode}}</span>
                             </li>
                             <li>
                                 <span>业务类型：</span>
-                                <span>分部用料需求</span>
+                                <span>{{item.businessType | orderTypeFilter(dict.flowBusinessType)}}</span>
                             </li>
                             <li>
-                                <span>需求项目：</span>
-                                <span>标段项目名称</span>
+                                <span>所属部门：</span>
+                                <span>{{item.startDeptName}}</span>
                             </li>
                             <li>
-                                <span>需求名称：</span>
-                                <span>需求计划名称</span>
+                                <span>提交人：</span>
+                                <span>{{item.startUserName}}</span>
+                            </li>
+                            <li>
+                                <span>提交时间：</span>
+                                <span>{{parseTime(item.startTime,'{y}-{m}-{d}')}}</span>
                             </li>
                         </ul>
                         <div class="list-ul-button">
-                            <van-button class="button-info" plain round type="info" @click="handleProcessClick()">查看流程</van-button>
-                            <van-button class="button-info" round type="info" @click="handleExamineClick()">去审核</van-button>
+                            <van-button class="button-info" plain round type="info" @click.stop="handleProcessClick(item)">查看流程</van-button>
+                            <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">去审核</van-button>
                         </div>
                     </div>
                 </van-list>
@@ -50,15 +54,16 @@
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import { wfTodoList } from '@/api/myToDoList'
+import indexMixin from '@/view/mixins'
 
 export default {
     name:'WaitExamineList',
-    mixins: [keepPages],
+    mixins: [keepPages,indexMixin],
+    dicts: ['flowBusinessType'],
 
     data() {
         return {
-            menuActiveIndex:0,
-
             formData: {
                 keywords: '',
             },
@@ -75,86 +80,71 @@ export default {
             },
         };
     },
+    mounted () {
+      
+    },
     created () {
-        // this.getOrderStatusOptions();
+        this.$store.commit('removeThisPage', 'DemandPlanningExamine')
     },
     activated () {
-        if (this.$route.params.refresh) {
-            this.waitRefresh();
-            this.historyRefresh();
-        }
-        this.$store.commit('removeThisPage', 'MyToDoDetail')
+        
     },
     methods: {
-        //获取订单状态字典
-        getOrderStatusOptions(){
-
-            // getListByParentId('1522830760585670657').then(({data}) => {
-            //     this.orderStatusOptions = data;
-            // }).catch((err) => {
-                
-            // })
-        },
         //获取列表数据
-        geList(){
-            // let toast = this.$toast.loading({
-            //     duration: 0,
-            //     message: "正在加载...",
-            //     forbidClick: true
-            // });
-            // let  params = {
-            //     reviewCompleted: '0',
-            // }
-            // gcywVehicleRequestListPageForH5(Object.assign({}, params,this.waitListQuery)).then(({ data }) => {
-            //     if(this.waitRefreshLoading){
-            //         this.waitOrderList = [];
-                this.refreshLoading = false;
-            //     }
-            //     this.waitLoading = false;
-            //     this.waitOrderList = [...this.waitOrderList, ...data.list];
+        getList(){
+            let toast = this.$toast.loading({
+                duration: 0,
+                message: "正在加载...",
+                forbidClick: true
+            });
+            let params = {
+                status: '2',
+            }
+            wfTodoList(Object.assign({}, params,this.listQuery,this.formData)).then(({ data }) => {
+                if(this.refreshLoading){
+                    this.dataList = [];
+                    this.refreshLoading = false;
+                }
+                this.loading = false;
+                this.dataList = [...this.dataList, ...data.list];
 
-            //     if (!data.hasNextPage) {
+                if (data?.list?.length === 0) {
                     this.finished = true;
-            //         return;
-            //     }
-            //     this.waitListQuery.pageNum = this.waitListQuery.pageNum + 1;
-            // }).catch((error) => {
-            //     this.waitLoading = false;
-            //     this.waitFinished = true;
-            // }).finally(() => {
-            //     toast.clear();
-            // });
+                    return;
+                }
+                this.listQuery.pageNum = this.listQuery.pageNum + 1;
+            }).catch((error) => {
+                this.loading = false;
+                this.finished = true;
+            }).finally(() => {
+                toast.clear();
+            });
         },
         //列表条目点击
         handleItemClick(item){
-            this.$router.push({
-                name: "SupervisionUnitDetail",
-                params: { 
-                    type: '0',
-                },
-            });
+            
         },
         //查看流程点击
-        handleProcessClick(){
+        handleProcessClick(item){
             this.$router.push({
                 name: "MyProcess",
                 params: { 
-                    
+                    businessId: item.businessId,
                 },
             });
         },
         //去审核点击
-        handleExamineClick(){
+        handleExamineClick(item){
             this.$router.push({
-                name: "SupervisionUnitDetail",
+                name: "DemandPlanningExamine",
                 params: { 
-                    type: '0',
+                    obj: JSON.stringify(item),
                 },
             });
         },
         //搜索点击
         handeSearch(){
-            
+            this.onRefresh();
         },
         //列表刷新
         onRefresh(){
@@ -162,7 +152,7 @@ export default {
             this.loading = true;
             this.finished = false;
             this.listQuery.pageNum = 1;
-            this.geList();
+            this.getList();
         },
     },
 };
