@@ -34,7 +34,8 @@
       <ul class="detail-ul">
         <li class="save-materials-li">
           <span class="font-weight">物资名称：</span>
-          <span class="font-weight">{{item.materialName}}</span>
+          <span class="font-weight span-secl">{{item.materialName}}</span>
+           <span style="color: #e4393c;">退货数量：{{item.refundTotal}}</span>
         </li>
         <li>
           <span>规格型号：</span>
@@ -56,7 +57,7 @@
             <span>{{item.planAmount}}</span>
           </div>
           <div class="li-item-right li-item-overlength">
-            <span>本次发货数量：</span>
+            <span>本次收货数量：</span>
             <span>{{item.sendTotal}}</span>
           </div>
         </li>
@@ -67,6 +68,10 @@
         <li class="li-item-overlength">
           <span>有效期截止日期：</span>
           <span>{{item.expirationDate |formatToDate}}</span>
+        </li>
+        <li>
+          <span>使用地点：</span>
+          <span>{{ item.addr }}</span>
         </li>
         <li>
           <span>收货地址：</span>
@@ -90,10 +95,9 @@
             <span>投资比例：</span>
             <span>{{item.field1}}</span>
           </div>
-          <div class="li-item-right li-item-overlength">
-            <span>退货数量：</span>
-            <span>{{item.refundTotal}}</span>
-          </div>
+          <!-- <div class="li-item-right li-item-overlength">
+          
+          </div> -->
         </li>
 
         <li class="li-item-overlength">
@@ -194,11 +198,18 @@ export default {
   },
   methods: {
     getDetailList(){
+       let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
        detailByBack(this.id).then((res)=>{
           if(res.success){
             this.dataList = res.data
           }
-       })
+       }).finally(() => {
+          toast.clear();
+      });
     },
     onClickBack() {
       this.$router.go(-1)
@@ -274,6 +285,10 @@ export default {
         text-overflow: inherit;
         white-space: inherit;
       }
+      .span-secl{
+        width: calc(100% - 4rem) !important;
+      }
+
     }
   }
 }

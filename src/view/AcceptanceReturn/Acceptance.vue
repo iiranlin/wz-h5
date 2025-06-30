@@ -6,7 +6,7 @@
         placeholder="输入关键字搜索"
         shape="round"
         background="#eef6ff"
-        @click="handeSearchClick()">
+        @search="handeSearchClick()">
       </van-search>
     </div>
     <div class="tabs">
@@ -23,13 +23,13 @@
               v-model="listLoading"
               :finished="allFinished"
               finished-text="没有更多了..."
-              @load="getList">
+              @load="onLoad">
 
               <div v-for="(item,index) in dataList" :key="index" class="box-container">
-                <ul class="list-ul" @click="viewAcceptDetail(item)">
+                <ul class="list-ul" >
                   <li>
                     <span class="font-weight">收货单号：</span>
-                    <span class="font-weight">{{ item.takeNumber }}</span>
+                    <span class="font-weight" @click="viewAcceptDetail(item)" style="color: #0689ff">{{ item.takeNumber }}</span>
                   </li>
                   <li>
                     <span>发货单号：</span>
@@ -54,6 +54,14 @@
                   <li>
                     <span>发货时间：</span>
                     <span>{{ item.shippingDate | formatDate}}</span>
+                  </li>
+                  <li v-if="item.takeStatus === '2'">
+                    <span>收货时间：</span>
+                    <span>{{ item.takeDate | formatToDate}}</span>
+                  </li>
+                  <li  v-if="item.takeStatus === '2'">
+                    <span>收货人：</span>
+                    <span>{{ item.consigneeOperator}}</span>
                   </li>
                   <li class="li-status">
                     <van-tag :type="item.takeStatus | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.takeStatus == 4}">{{
@@ -99,11 +107,11 @@ export default {
       allRefreshLoading: false,
       listLoading: false,
       allFinished: false,
-
       allListQuery: {
-        pageNum: 1,
+        pageNum: 0,
         pageSize: 10
-      }
+      },
+      status:'',
     }
   },
   filters: {
@@ -129,7 +137,20 @@ export default {
       }else{
         return ""
       }
-        
+    },
+     formatToDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        const hh = (dt.getHours() + '').padStart(2, '0');
+        const mm = (dt.getMinutes() + '').padStart(2, '0');
+        const ss = (dt.getSeconds() + '').padStart(2, '0');
+        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+      }else{
+        return ""
+      }  
     }
 
   },
@@ -143,19 +164,42 @@ export default {
     this.$store.commit('removeThisPage', 'MyToDoDetail')
   },
   methods: {
-
     //收获列表
-    getList(val){
-      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,takeStatus:val?val:''}
+    getList(){
+      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,planName:this.formData.keywords,takeStatus:this.status}
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
       listTake(params).then((res) => {
         if(res.success){
-          this.dataList = res.data.list
-        }
-       })
-       this.allFinished=true
+          this.listLoading = false //加载结束
+            if (this.allRefreshLoading) {
+              this.dataList = [];
+              this.allRefreshLoading = false;
+            }
+            if (this.allListQuery.pageNum === 1) {
+              this.dataList =res.data.list
+            } else {
+              this.dataList = [...this.dataList, ...res.data.list]
+            }
+            if (this.dataList.length == res.data.total) {
+              this.allFinished = true
+            } else {
+              this.allFinished = false
+            }
+          }
+       }).finally(() => {
+          toast.clear();
+      });
     },
     handleChange(val){
-      this.getList(val)
+      this.status = val?val:''
+      this.allListQuery.pageNum = 1
+      this.allRefreshLoading = true
+      this.allFinished = true
+      this.getList()
     },
     //获取全部订单
     loadList() {
@@ -164,10 +208,10 @@ export default {
     },
     //全部列表条目点击
     viewAcceptDetail(item) {
-      if(item.takeStatus==2||item.takeStatus==3||item.takeStatus==4){
-        this.$router.push({name: 'DoAcceptDetail', query: {from: 'AcceptanceReturn',id:item.id}})
+      if(!item.takeNumber){
+        return
       }
-      
+      this.$router.push({name: 'DoAcceptDetail', query: {from: 'AcceptanceReturn',id:item.id}})
     },
     //去审核点击
     handleDoAccept(item) {
@@ -175,16 +219,18 @@ export default {
     },
     //搜索点击
     handeSearchClick() {
-
+      this.allListQuery.pageNum = 1
+      this.getList()
     },
     //全部列表刷新
     allRefresh() {
-      this.allRefreshLoading = true
-      this.listLoading = true
-      this.allFinished = false
       this.allListQuery.pageNum = 1
-      this.loadList()
-    }
+      this.getList()
+    },
+    onLoad() {
+      this.allListQuery.pageNum ++
+      this.getList()
+    },
   }
 }
 </script>

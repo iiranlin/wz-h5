@@ -6,7 +6,7 @@
         placeholder="输入关键字搜索"
         shape="round"
         background="#eef6ff"
-        @click="handeSearchClick()">
+        @search="handeSearchClick()">
       </van-search>
     </div>
     <div class="tabs">
@@ -15,7 +15,7 @@
           v-model="allLoading"
           :finished="allFinished"
           finished-text="没有更多了..."
-          @load="getAllList">
+          @load="onLoad">
 
           <div v-for="(item,index) in allOrderList" :key="index" class="box-container" @click="handleAllItemClick(item)">
             <ul class="list-ul">
@@ -44,6 +44,10 @@
                 <span>{{item.shippingDate | formatDate}}</span>
               </li>
               <li>
+                <span>退货时间：</span>
+                <span>{{item.backDate | formatDate}}</span>
+              </li>
+              <li>
                 <span>操作人：</span>
                 <span>{{item.createUserName}}</span>
               </li>
@@ -65,7 +69,6 @@ export default {
   data() {
     return {
       menuActiveIndex: 0,
-
       formData: {
         keywords: ''
       },
@@ -74,7 +77,7 @@ export default {
 
       allRefreshLoading: false,
       allLoading: false,
-      allFinished: false,
+      allFinished: true,
 
       allListQuery: {
         pageNum: 1,
@@ -88,7 +91,7 @@ export default {
       waitFinished: false,
 
       waitListQuery: {
-        pageNum: 1,
+        pageNum: 0,
         pageSize: 10
       },
       //待处理
@@ -160,17 +163,37 @@ export default {
   methods: {
       //收获列表
     getAllList(val){
-      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,takeStatus:val?val:''}
+      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,planName:this.formData.keywords,takeStatus:val?val:''}
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
       listCyRetreat(params).then((res) => {
-
-
-        console.log(res,"res")
         if(res.success){
-          this.allOrderList = res.data.list
+          this.listLoading = false //加载结束
+            if (this.allRefreshLoading) {
+              this.allOrderList = [];
+              this.allRefreshLoading = false;
+            }
+            if (this.allListQuery.pageNum === 1) {
+              this.allOrderList =res.data.list
+            } else {
+              this.allOrderList = [...this.allOrderList, ...res.data.list]
+            }
+            if (this.allOrderList.length == res.data.total) {
+              this.allFinished = true
+            } else {
+              this.allFinished = false
+            }
         }
-       })
-       this.allRefreshLoading = false
-       this.allFinished=true
+       }).finally(() => {
+          toast.clear();
+      });
+    },
+    onLoad() {
+      this.allListQuery.pageNum ++
+      this.getAllList()
     },
     //获取订单状态字典
     getOrderStatusOptions() {
@@ -258,6 +281,9 @@ export default {
     },
     //搜索点击
     handeSearchClick() {
+      this.allListQuery.pageNum = 1
+      this.getAllList()
+      
     },
     //全部列表刷新
     allRefresh() {

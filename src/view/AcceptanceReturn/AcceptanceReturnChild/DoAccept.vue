@@ -18,7 +18,7 @@
           <span>操作人：</span>
           <span>{{dataList.createUserName}}</span>
         </li>
-        <li>
+        <li v-if="isView">
           <span>收货时间：</span>
           <span>{{dataList.takeDate |formatDate }}</span>
         </li>
@@ -59,7 +59,7 @@
             <span>{{ item.planAmount }}</span>
           </div>
           <div class="li-item-right li-item-overlength">
-            <span>本次发货数量：</span>
+            <span>本次收货数量：</span>
             <span>{{ item.sendTotal }}</span>
           </div>
         </li>
@@ -70,6 +70,10 @@
         <li class="li-item-overlength">
           <span>有效期截止日期：</span>
           <span>{{ item.expirationDate }}</span>
+        </li>
+        <li>
+          <span>使用地点：</span>
+          <span>{{ item.addr }}</span>
         </li>
         <li>
           <span>收货地址：</span>
@@ -371,6 +375,11 @@ export default {
   },
   methods: {
     getDetailList(){
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
        defaultTake(this.id).then((res)=>{
           if(res.success){
             this.dataList = res.data
@@ -380,7 +389,9 @@ export default {
               })  
             }
           }
-       })
+       }).finally(() => {
+          toast.clear();
+      });
     },
     handleInput(val,index,item){
       const num = Number(val);
@@ -408,12 +419,22 @@ export default {
     },
     addClick() {
       let params= this.dataList
+
+      if(!params.takeDate){
+        this.$toast('请选择收货时间'); 
+        return
+      }
+      if(!JSON.parse(params.fileByList).zjd){
+         this.$toast('请上传自检单'); 
+         return
+      }
       saveTake(params).then((res)=>{
         if(res.success){
           this.$toast('保存成功')
           this.$router.push({path: '/AcceptanceReturn'})  
         } 
       })
+      
     },
     onClickBack() {
       this.$router.push({path: '/AcceptanceReturn'})
