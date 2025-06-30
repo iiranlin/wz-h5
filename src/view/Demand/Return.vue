@@ -7,7 +7,7 @@
     </div>
     <div class="tabs">
       <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-        <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
+        <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad">
           <div v-for="(item, index) in returnList" :key="index" class="box-container" @click="handleDetailsItemClick(item.id)">
             <ul class="list-ul">
               <li>
@@ -96,11 +96,11 @@ export default {
           title: '已完成',
         }
       ],
-      returnList:[]
+      returnList:[],
+      total:0
     };
   },
   created() {
-    console.log(getUserInfo(),'----')
     this.getList();
   },
   methods: {
@@ -118,8 +118,17 @@ export default {
       }
       returnGoodsList(params).then((res)=>{
         if(res.code==0){
-          Toast.clear()
-          this.returnList=res.data.list
+            Toast.clear()
+            this.total = res.data.total
+            if(this.total<=this.params.pageSize){
+              this.returnList = res.data.list
+            }else{
+              this.params.pageNum++;
+              this.returnList = this.returnList.concat(res.data.list)
+            }
+            if(this.returnList.length>=this.total){
+              this.allFinished= true
+            }
         }
       })
     },
@@ -136,14 +145,13 @@ export default {
     },
     //全部列表刷新
     allRefresh() {
-      this.allRefreshLoading = true;
-      this.allLoading = true;
-      this.allFinished = false;
-      this.allListQuery.pageNum = 1;
+      this.params.pageNum = 1
+      this.allFinished = false
+      this.allRefreshLoading = false
       this.getList();
     },
-    getAllList(){
-      
+    onLoad(){
+      this.getList()
     }
     //待审核列表刷新
 

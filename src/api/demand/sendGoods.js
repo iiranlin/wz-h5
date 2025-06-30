@@ -40,3 +40,18 @@ export function detailBySend(id) {
     method: 'get',
   })
 }
+//增加货运位置
+export function addFreightLocations(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialTrackMessageRest/create`,
+    method: 'POST',
+    data
+  })
+}
+// 货运列表 
+export function addList(shipmentBatchNumber) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialTrackMessageRest/list?shipmentBatchNumber=${shipmentBatchNumber}`,
+    method: 'get',
+  })
+}

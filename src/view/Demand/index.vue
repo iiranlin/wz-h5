@@ -23,7 +23,7 @@
           
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list v-model="loading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad">
-              <div v-for="(item, index) in listGhsData" :key="index" class="box-container" @click="handleAllItemClick(item)">
+              <div v-for="(item, index) in listGhsData" :key="index" class="box-container">
                 <ul class="list-ul">
                   <li>
                     <span class="font-weight">需求编号:</span>
@@ -107,7 +107,7 @@ export default {
       },
       //全部
       allOrderList: [],
-
+      loading:false,
       allRefreshLoading: false,
       allLoading: false,
       allFinished: false,
@@ -168,12 +168,15 @@ export default {
             this.total = res.data.total
             this.loading = false
             this.allRefreshLoading = false;
-            if(res.data.pageNum=1){
+            if(this.total<=this.params.pageSize){
               this.listGhsData = res.data.list
             }else{
+              this.params.pageNum++;
               this.listGhsData = this.listGhsData.concat(res.data.list)
             }
-            
+            if(this.listGhsData.length>=this.total){
+              this.allFinished= true
+            }
           }
         })
     },
@@ -223,26 +226,20 @@ export default {
     handleConfirmClick(id) {
       this.$router.push({ path: '/confirm',query:{id:id} })
     },
-    //获取全部订单
-    getAllList() {
-      this.allRefreshLoading = false;
-      this.allFinished = true;
-    },
     //全部列表刷新
     allRefresh() {
       this.params.pageNum=1
-       this.allFinished = false;
-     
+      this.allFinished = false;
       this.getList()
       
     },
      // 上拉加载处理函数
-    // onLoad() {
+    onLoad() {
     //  this.params.pageNum++;
-    // // this.allRefreshLoading = false;
-    //   // this.loading = true
-    //   this.getList()
-    // },
+    // this.allRefreshLoading = false;
+      // this.loading = true
+      this.getList()
+    },
   },
 };
 </script>

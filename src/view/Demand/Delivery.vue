@@ -11,7 +11,7 @@
         <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.status">
 
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-            <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
+            <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad" :offset="10" :immediate-check="false"> 
               <div v-for="(item, index) in listBySendData" :key="index" class="box-container">
                 <ul class="list-ul">
                   <li>
@@ -52,7 +52,7 @@
                   <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id,item.status)"
                     v-if="item.status == 1">确认发货</van-button>
                     <!-- 增加货运位置是根据物流单号来显示的 -->
-                  <van-button class="button-info" round type="info" size="mini" @click="handleConfirmClick()"
+                  <van-button class="button-info" round type="info" size="mini" @click="handleConfirmClick(item.shipmentBatchNumber)"
                     v-if="item.oddNumbers == '' && item.status==2">增加货运位置</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleCarGoClick(item.id)"
                     v-if="item.status == 2">货运详情</van-button>
@@ -71,21 +71,13 @@
       :showConfirmButton="false" >
       <div style="padding:10px;">
          <van-form @submit="onSubmit" ref="form" :key="formKey">
-        <van-field v-model="username" name="username" label="当前位置" style="padding:13px 40px;" class="custom-border" placeholder="请输入货运当前位置" input-align="right"
+        <van-field v-model="positionInformation" name="positionInformation" label="当前位置" style="padding:13px 40px;" class="custom-border" placeholder="请输入货运当前位置" input-align="right"
           :rules="[{ required: true, message: '请填写当前位置' }]" required />
         <div class="locationsteps">
           <van-steps direction="vertical" :active="0">
-            <van-step>
-              <h3>第3货运点</h3>
-              <p>2016-07-12 12:40</p>
-            </van-step>
-            <van-step>
-              <h3>第2货运点</h3>
-              <p>2016-07-11 10:00</p>
-            </van-step>
-            <van-step>
-              <h3>第1货运点</h3>
-              <p>2016-07-10 09:30</p>
+            <van-step v-for="(item,index) in cargoList" :key="index">
+              <h3>{{ item.positionInformation }}</h3>
+              <p>{{ formattedCreateDate(item.createDate) }}</p>
             </van-step>
           </van-steps>
         </div>
@@ -108,7 +100,7 @@ import { Form } from 'vant';
 import { Field } from 'vant';
 import { Toast } from 'vant';
 import { Step, Steps } from 'vant';
-import {snedGoodsList,snedGoodsSure,deleteGoods} from '@/api/demand/sendGoods'
+import {snedGoodsList,snedGoodsSure,deleteGoods,addFreightLocations,addList} from '@/api/demand/sendGoods'
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Toast);
@@ -123,7 +115,7 @@ export default {
   data() {
     return {
       formKey: 0,
-      username: '',
+      positionInformation: '',
       menuActiveIndex: 0,
 
       formData: {
@@ -135,6 +127,7 @@ export default {
       },
       allFinished:false,
       allLoading:false,
+      // allRefresh:false,
       allRefreshLoading:false,
       //订单状态字典
       orderStatusOptions: [],
@@ -163,7 +156,13 @@ export default {
         }
       ],
       freightLocationDiaLog: false,
-       listBySendData:[]
+       listBySendData:[],
+       total:0,
+       positionInformation:"",
+       //货运列表
+       cargoList:"",
+       //发货单号
+       shipmentBatchNumber:''
     };
   },
   created() {
@@ -176,10 +175,20 @@ export default {
         forbidClick: true,
       });
       snedGoodsList(this.params).then((res)=>{
-        console.log(res)
         if(res.code==0){
-          Toast.clear()
-          this.listBySendData = res.data.list
+            Toast.clear()
+            this.total = res.data.total
+            this.allRefreshLoading = false;
+            if(this.total<=this.params.pageSize){
+              this.listBySendData = res.data.list
+            }else{
+              this.params.pageNum++;
+              this.listBySendData = this.listBySendData.concat(res.data.list)
+            }
+            if(this.listBySendData.length>=this.total){
+              this.allFinished= true
+            }
+          // this.listBySendData = res.data.list
         }
       })
     },
@@ -214,6 +223,14 @@ export default {
         });
       // this.$router.push({path:'/sendGoods'})
     },
+    // 日期格式化
+     formattedCreateDate(timestamp) {
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+      const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+      return `${year}-${month}-${day}`;
+    },
     //查看物流
     handleLookClick() {
       this.$router.push({ path: '/lookCargo' })
@@ -223,41 +240,45 @@ export default {
       this.$router.push({ path: '/cargoDetails',query:{id:id} })
     },
     //增加货运位置
-    handleConfirmClick() {
+    handleConfirmClick(number) {
       this.formKey++
-      this.freightLocationDiaLog = true
+       this.shipmentBatchNumber = number
+      addList(number).then((res)=>{
+        if(res.code==0){
+          this.cargoList = res.data.list
+          this.freightLocationDiaLog = true
+        }
+      })
     },
-    //获取全部订单
-    getAllList() {
-      this.allRefreshLoading = false;
-      this.allFinished = true;
+    //下拉刷新
+    allRefresh() {
+      this.params.pageNum=1
+      this.allFinished = false
+      this.allRefreshLoading = true
+      this.getList()
     },
     onSubmit(values) {
-
-      console.log(this.form);
+      let params={
+        shipmentBatchNumber:this.shipmentBatchNumber,
+        positionInformation:values.positionInformation
+      }
       this.$refs.form
         .validate()
         .then(() => {
+          addFreightLocations(params).then((res)=>{
+            if(res.code==0){
+              Toast.success(res.message);
+              this.handleConfirmClick(this.shipmentBatchNumber)
+            }
+          })
           // 验证通过
-          Toast.success('添加成功');
-          this.freightLocationDiaLog = false
+          // Toast.success('添加成功');
+          // this.freightLocationDiaLog = false
         })
         .catch(() => {
           //验证失败
 
-        });
-
-      //    this.$refs.form.validate().then(valid => {
-      //         if (valid) {
-      //         // 表单验证通过后的逻辑
-      //         console.log('表单验证通过');
-      //         Toast.success('添加成功');
-      //         this.freightLocationDiaLog = false
-      //         } else {
-      //         console.log('表单验证失败');
-      //         }
-      //     });
-
+        })
     },
     //编辑
     handleEditClick(data,title) {
@@ -290,42 +311,22 @@ export default {
       this.freightLocationDiaLog = false
       // this.username = null
     },
-    //全部列表刷新
-    allRefresh() {
-      this.allRefreshLoading = true;
-      this.allLoading = true;
-      this.allFinished = false;
-      this.allListQuery.pageNum = 1;
-      this.getAllList();
-    },
-    //待审核列表刷新
-    waitRefresh() {
-      this.waitRefreshLoading = true;
-      this.waitLoading = true;
-      this.waitFinished = false;
-      this.waitListQuery.pageNum = 1;
-      this.getWaitList();
-    },
-    //待处理列表刷新
-    waitHandleRefresh() {
-      this.waitHandleRefreshLoading = true;
-      this.waitHandleLoading = true;
-      this.waitHandleFinished = false;
-      this.waitHandleListQuery.pageNum = 1;
-      this.getWaitHandleList();
-    },
-    //已审核列表刷新
-    historyRefresh() {
-      this.historyRefreshLoading = true;
-      this.historyLoading = true;
-      this.historyFinished = false;
-      this.historyListQuery.pageNum = 1;
-      this.getHistoryList();
-    },
+    onLoad(){
+      this.getList()
+    }
   },
 };
 </script>
 <style lang="less" scoped>
+.locationsteps {
+    height: 200px;
+    padding: 10px;
+    background-color: rgb(245, 295, 255);
+    overflow: scroll;
+}
+.locationsteps::-webkit-scrollbar {
+    overflow-x: hidden;
+}
 .custom-border {
   border: 1px solid rgb(208,208,208);
   border-radius: 4px;
