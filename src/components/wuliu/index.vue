@@ -2,9 +2,9 @@
   <div class="app-container">
     <div class="arcgis-container">
       <el-amap ref="map" class="map" :vid="'amap'" :zoom="10" :center="center">
-        <el-amap-marker :position="sendCenter" icon="/map/images/send_point.png" v-if="sendCenter.length > 0">
+        <el-amap-marker :position="sendCenter" icon="/static/map/send_point.png" v-if="sendCenter.length > 0">
         </el-amap-marker>
-        <el-amap-marker :label="endLabel" :position="endCenter" icon="/map/images/express_car.png"
+        <el-amap-marker :label="endLabel" :position="endCenter" icon="/static/map/express_car.png"
           v-if="endCenter.length > 0">
         </el-amap-marker>
         <el-amap-polyline lineJoin="round" strokeWeight="6" strokeColor="#13B347" :path="routePath">
@@ -262,5 +262,9 @@ export default {
     height: 100%;
     position: relative;
   }
+}
+::v-deep .amap-icon img {
+  width: 20px;
+  height: 20px;
 }
 </style>
