@@ -1,13 +1,16 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-      <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff" readonly
-        @click="handeSearchClick()">
-      </van-search>
+       <van-search v-model="params.shipmentBatchNumber" show-action shape="round" background="#eef6ff"
+                placeholder="请输入发货单号">
+                <template #action>
+                    <div @click="onSearch">搜索</div>
+                </template>
+            </van-search>
     </div>
     <div class="tabs">
       <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-        <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad">
+        <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad" :offset="10" :immediate-check="false">
           <div v-for="(item, index) in returnList" :key="index" class="box-container" @click="handleDetailsItemClick(item.id)">
             <ul class="list-ul">
               <li>
@@ -15,23 +18,23 @@
                 <span class="font-weight" style="color:#1989fa;">{{ item.backNumber }}</span>
               </li>
               <li>
-                <span style="width: 230px;">需求编号：</span>
+                <span>需求编号：</span>
                 <span class="text" style="color:#1989fa;">{{ item.planNumber }}</span>
               </li>
               <li>
-                <span style="width: 230px;">发货单号:</span>
+                <span>发货单号:</span>
                 <span class="text" style="color:#1989fa;">{{ item.shipmentBatchNumber }}</span>
               </li>
               <li>
-                <span style="width: 260px;">供应需求名称:</span>
+                <span style="width: 230px;">供应需求名称:</span>
                 <span>{{ item.planName }}</span>
               </li>
               <li>
-                <span style="width: 230px;">需求项目:</span>
+                <span>需求项目:</span>
                 <span>{{ item.sectionName }}</span>
               </li>
               <li>
-                <span style="width: 230px;">退货时间:</span>
+                <span>退货时间:</span>
                 <span v-if="item.backDate !=''">{{ formattedCreateDate(item.backDate)}}</span>
               </li>
               <li class="li-status">
@@ -72,7 +75,8 @@ export default {
         pageNum:1,
         pageSize:10,
         isAsc:"",
-        orderByColumn:""
+        orderByColumn:"",
+        shipmentBatchNumber:""
       },
       tabList: [
         {
@@ -115,6 +119,7 @@ export default {
         pageSize:this.params.pageSize,
         isAsc:this.params.isAsc,
         orderByColumn:this.params.orderByColumn,
+        shipmentBatchNumber:this.params.shipmentBatchNumber,
       }
       returnGoodsList(params).then((res)=>{
         if(res.code==0){
@@ -152,6 +157,10 @@ export default {
     },
     onLoad(){
       this.getList()
+    },
+    onSearch(){
+      this.params.pageNum = 1
+      this.getList();
     }
     //待审核列表刷新
 

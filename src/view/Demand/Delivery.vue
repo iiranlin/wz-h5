@@ -1,9 +1,15 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-      <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff" readonly
+        <van-search v-model="params.planName" show-action shape="round" background="#eef6ff"
+                placeholder="请输入需求名称">
+                <template #action>
+                    <div @click="onSearch">搜索</div>
+                </template>
+            </van-search>
+      <!-- <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff" readonly
         @click="handeSearchClick()">
-      </van-search>
+      </van-search> -->
     </div>
     <div class="tabs">
       <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
@@ -23,20 +29,20 @@
                     <span>{{ item.planNumber }}</span>
                   </li>
                   <li>
-                    <span style="width: 230px;">供应需求：</span>
+                    <span>供应需求：</span>
                     <span class="text">{{ item.planName }}</span>
                   </li>
                   <li>
-                    <span style="width: 230px;">物流单号：</span>
+                    <span>物流单号：</span>
                     <span>{{ item.oddNumbers }}</span>
                   </li>
                   <li>
-                    <span style="width: 230px;">需求项目: </span>
+                    <span>需求项目: </span>
                     <span>{{ item.sectionName }}</span>
                   </li>
                   <li>
-                    <span style="width: 230px;">发货单附件:</span>
-                    <span style="color:#1989fa;" v-if="item.status != 3">查看附件</span>
+                    <span style="width: 200px;">发货单附件:</span>
+                    <span style="color:#1989fa;" v-if="item.fileByList">{{ item.fileByList.fhd[0].fileName }}</span>
                   </li>
                   <li class="li-status">
                     <van-tag type="primary" round size="medium" v-if="item.status == 1">未发货</van-tag>
@@ -44,7 +50,7 @@
                     <van-tag type="primary" round size="medium" v-if="item.status == 3" class="li-status-completed">已完成</van-tag>
                   </li>
                 </ul>
-                <div class="list-ul-button">
+                <div class="list-ul-button" v-if="item.status !=3">
                   <van-button class="button-info" plain round type="danger" @click="handleDelClick(item.id)"
                     v-if="item.status == 1">删除</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleEditClick(item,'edit')"
@@ -56,7 +62,7 @@
                     v-if="item.oddNumbers == '' && item.status==2">增加货运位置</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleCarGoClick(item.id)"
                     v-if="item.status == 2">货运详情</van-button>
-                  <van-button class="button-info" plain round type="info" @click="handleLookClick()"
+                  <van-button class="button-info" plain round type="info" @click="handleLookClick(item.planId,item.shipmentBatchNumber)"
                     v-if="item.status == 2">物流查看</van-button>
                 </div>
               </div>
@@ -180,10 +186,17 @@ export default {
             this.total = res.data.total
             this.allRefreshLoading = false;
             if(this.total<=this.params.pageSize){
-              this.listBySendData = res.data.list
+              this.listBySendData = res.data.list.map((item)=>({
+                ...item,
+                fileByList:item.fileByList ? JSON.parse(item.fileByList) : ''
+              }))
             }else{
               this.params.pageNum++;
-              this.listBySendData = this.listBySendData.concat(res.data.list)
+              let arr = res.data.list.map((item)=>({
+                  ...item,
+                  fileByList:item.fileByList ? JSON.parse(item.fileByList) : ''
+              }))
+              this.listBySendData = this.listBySendData.concat(arr)
             }
             if(this.listBySendData.length>=this.total){
               this.allFinished= true
@@ -193,8 +206,11 @@ export default {
       })
     },
     tabsChange(e) {
+      // 每次切换把数组清空
+      this.listBySendData = []
       this.params.status = e
       this.params.pageNum = 1
+      this.allFinished = false;
       this.getList()
     },
     //发货
@@ -232,8 +248,8 @@ export default {
       return `${year}-${month}-${day}`;
     },
     //查看物流
-    handleLookClick() {
-      this.$router.push({ path: '/lookCargo' })
+    handleLookClick(id,number) {
+      this.$router.push({ path: '/lookCargo',query:{id:id,number:number} })
     },
     //货运详情
     handleCarGoClick(id) {
@@ -313,6 +329,10 @@ export default {
     },
     onLoad(){
       this.getList()
+    },
+    onSearch(){
+      this.params.pageNum=1
+       this.getList()
     }
   },
 };

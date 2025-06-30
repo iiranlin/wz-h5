@@ -2,17 +2,25 @@
     <div class="default-container" ref="container">
         <ul class="list-ul" style="margin: 10px;">
             <li>
-                <span style="width:330px;">需求名称：</span>
-                <span>南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
+                <span style="width: 250px;">供应商需求名称：</span>
+                <span>{{ params.planName }}</span>
             </li>
 
             <li>
-                <span style="width:330px;">需求项目：</span>
-                <span>南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
+                <span>供应需求ID：</span>
+                <span>{{ params.planNumber }}</span>
             </li>
             <li>
-                <span style="width: 220px;">需求组织：</span>
-                <span>施工单位名称</span>
+                <span>需求项目：</span>
+                <span>{{ params.sectionName }}</span>
+            </li>
+            <li>
+                <span>填报人：</span>
+                <span>{{ params.createUserName }}</span>
+            </li>
+            <li>
+                <span>填报时间：</span>
+                <span>{{ formattedCreateDate(params.createDate) }}</span>
             </li>
         </ul>
         <div class="title">
@@ -24,35 +32,35 @@
                         <ul class="list-ul">
                             <li>
                                 <span style="width: 210px;">发货单号:</span>
-                                <span>FH202505310001</span>
+                                <span>{{ logistics.shipmentBatchNumber }}</span>
                             </li>
                             <li>
                                 <span style="width: 210px;">物流单号:</span>
-                                <span class="text">XXXxxxxXXXXX</span>
+                                <span class="text">{{ logistics.oddNumbers }}</span>
                             </li>
                             <li>
                                 <span style="width: 210px;">发货时间:</span>
-                                <span>2025年06月01日</span>
+                                <span v-if="logistics.shippingDate">{{ formattedCreateDate(logistics.shippingDate) }}</span>
                             </li>
                             <li>
                                 <span style="width: 210px;">发货地址:</span>
-                                <span>XxxxxxXXXXXXXXXX</span>
+                                <span>{{ logistics.shippingAddress }}</span>
                             </li>
                             <li>
                                 <span style="width: 280px;">预计到达时间为:</span>
-                                <span>2025年05月03日</span>
+                                <span v-if="logistics.arrivalDate">{{ formattedCreateDate(logistics.arrivalDate) }}</span>
                             </li>
                             <li>
                                 <span style="width: 210px;">车牌号为:</span>
-                                <span>冀T20874</span>
+                                <span>{{ logistics.carNumber }}</span>
                             </li>
                             <li>
                                 <span style="width: 210px;">联系人:</span>
-                                <span>name</span>
+                                <span>{{ logistics.contacts }}</span>
                             </li>
                             <li>
                                 <span style="width: 210px;">联系电话:</span>
-                                <span>17703155555</span>
+                                <span>{{ logistics.contactsPhone }}</span>
                             </li>
                         </ul>
                          <div class="Logistics-Information-dt">
@@ -94,7 +102,46 @@
 
             </div>
         </div>
+        <van-list @load="onLoad">
+            <ul class="list-ul" v-for="(item,index) in logistics.materialCirculationDetailsTableDTOS" :key="index" style="margin: 20px 15px 0 15px;">
+                <li>
+                    <span class="font-weight">物资名称:</span>
+                    <span class="font-weight">{{ item.createUserName }}</span>
+                </li>
+                <li>
+                    <span>标段项目: </span>
+                    <span>南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
+                </li>
+                <li class="li-item-both">
+                    <div class="li-item-left">
+                        <span>规格型号:</span>
+                        <span>22</span>
+                    </div>
+                    <div class="li-item-right">
+                        <span>计量单位:</span>
+                        <span>33</span>
+                    </div>
+                </li>
+                <li class="li-item-both">
+                    <div class="li-item-left">
+                        <span>发货数量:</span>
+                        <span>44</span>
+                    </div>
+                    <div class="li-item-right">
+                        <span>退货数量:</span>
+                        <span>3</span>
+                    </div>
+                </li>
+                <li>
+                    <span>退货附件:</span>
+                    <span style="color:#1989fa;">
+                        11
+                    </span>
+                </li>
+            </ul>
 
+
+        </van-list>
     </div>
 </template>
 <script>
@@ -103,6 +150,7 @@ import { Sidebar, SidebarItem } from 'vant';
 import { Tab, Tabs } from 'vant';
 import { Step, Steps } from 'vant';
 import dt from '@/assets/img/dt.png';
+import {lookGoodsDetails,shippingOrderNumber} from '@/api/demand/returnGoods'
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Tab);
@@ -125,13 +173,31 @@ export default {
             loading: false,
             finished: false,
             result: [],
-            list: []
+            list: [],
+            params:{},
+            logistics:{}
         };
     },
     created() {
-        // this.getOrderStatusOptions();
+         this.wuLiuId = this.$route.query.id
+         this.wuLiuNumber = this.$route.query.number
+        this.getDetails();
     },
     methods: {
+          getDetails(){
+            //需求信息
+            lookGoodsDetails(this.wuLiuId).then((res)=>{
+                if(res.code==0){
+                    this.params=res.data
+                }
+            })
+            //物流信息
+            shippingOrderNumber(this.wuLiuNumber).then((res)=>{
+                if(res.code==0){
+                    this.logistics = res.data
+                }
+            })
+        },
         onSubmit(values) {
             console.log('submit', values);
         },
@@ -159,6 +225,13 @@ export default {
                     this.finished = true;
                 }
             }, 500);
+        },
+         formattedCreateDate(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+            const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+            return `${year}-${month}-${day}`;
         },
     },
 };

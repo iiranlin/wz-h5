@@ -16,7 +16,7 @@
             </li>
         </ul>
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
-            <van-form :key="formKey">
+            <van-form :key="formKey" ref="form">
                 <van-field v-model="params.oddNumbers" name="物流单号" label="物流单号" placeholder="物流单号" input-align="right"
                     />
                 <van-field v-model="params.shippingAddress" name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
@@ -28,11 +28,10 @@
                     @click="sendStop = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
                 <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
                 <van-field v-model="params.carNumber" label="车牌号" placeholder="车牌号" input-align="right"/>
+                <van-field v-model="params.contacts" label="联系人" placeholder="联系人" input-align="right" :rules="[{ required: true, message: '请填写联系人' }]"/>
                 <van-field v-model="params.contactsPhone" label="联系电话" placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' },{ pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！'}]" />
-                <!-- <van-field v-model="params.contactsPhone" label="手机号" placeholder="手机号" input-align="right"
-                    :rules="[{ required: true, message: '请填写手机号' },{ pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！'}]" /> -->
-                <van-field name="uploader" label="发货单附件">
+                <van-field name="uploader" label="发货单附件" :rules="[{ required: true, message: '请上传发货单附件' }]">
                     <template #input>
                         <van-uploader v-model="fileList" :after-read="beforeReadUpload" multiple :max-count="1"/>
                     </template>
@@ -44,9 +43,6 @@
                 </van-field> -->
             </van-form>
         </div>
-        <!-- <div class="default-button-container" v-if="paramsType">
-          <van-button class="button-info" round type="info" @click="saveClick">确认</van-button>
-        </div> -->
         <div class="default-button-container">
             <van-button size="mini" type="primary" class="button-info" @click="chooseGoods(goodsId)" v-if="this.text=='add'">选择发货物资</van-button>
             <!-- 编辑里的选择发货物资传的是planId -->
@@ -93,9 +89,26 @@ export default {
        
        
         this.text = this.$route.query.title
+        // 编辑
         if(this.text=='edit'){
             this.params = JSON.parse(this.$route.query.data)
-            console.log(this.params,'11111')
+            console.log(this.params,'111')
+            //发货日期格式化
+              if (this.params.shippingDate) {
+                const date = new Date(this.params.shippingDate);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+                const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+                this.params.shippingDate = `${year}-${month}-${day}`;
+            }
+            // 预计送达日期格式化
+             if (this.params.arrivalDate) {
+                const date = new Date(this.params.arrivalDate);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+                const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+                this.params.arrivalDate = `${year}-${month}-${day}`;
+            }
             const {planNumber,sectionName,contractName}= JSON.parse(this.$route.query.data)
             this.goodsMsg.planNumber=planNumber
             this.goodsMsg.sectionName=sectionName
@@ -103,29 +116,13 @@ export default {
             // 回显图片
             let file = JSON.parse(this.params.fileByList)
             this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
-            // console.log(this.params,'1233')
+        
         }else{
              this.goodsId = this.$route.query.id
              this.getSendGoods();
         }
-        
-       
-        // this.goodsList = this.$route.params.goodsList
-        // console.log(this.goodsList.flat(),'11233')
-        // if(Array.isArray(this.goodsList)){
-        //     this.paramsType=1
-        // }
-       
-        // this.paramsType = this.$route.params.type
     },
-    mounted(){
-        //如果缓存里有值就显示保存按钮
-
-        if(this.$store.state.public.goodsList.length>0){
-            this.params.number = this.$store.state.public.goodsList.length
-            this.paramsType = true
-        }
-    },
+    
     methods: {
         // 物流单号正则校验
         checkNotChinese(val){
@@ -140,23 +137,22 @@ export default {
                 }
             })
         },
-        
+         formattedCreateDate(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+            const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+            return `${year}-${month}-${day}`;
+            },
         onSubmit(values) {
             console.log('submit', values);
         },
         //发货日期
         onConfirm(date) {
-            // const date = new Date();
- 
-            // 获取年、月、日
             const year = date.getFullYear();
             const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
             const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
-            
-            // 组合成YYYY-MM-DD格式
             this.params.shippingDate = `${year}-${month}-${day}`;
-
-            // this.params.shippingDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
             this.showCalendar = false;
         },
         // 送达时间
@@ -174,13 +170,76 @@ export default {
             this.sendStop = false;
         },
         chooseGoods(id) {
-            this.formKey++
-            this.$router.push({ path: '/selectGoods',query:{id:id} })
+            // this.formKey++
+              this.$refs.form
+                .validate()
+                .then(() => {
+                     let fileList=[]
+                     if(this.fileList.length>0){
+                         this.fileList.forEach(item=>{
+                        fileList.push({fileName:item.name,filePath:item.url})
+                        })
+                     }
+                   
+                let params = {
+                    ...this.params,
+                    fileList:fileList,
+                    sectionName:this.goodsMsg.sectionName,
+                    planName:this.goodsMsg.planName,
+                    planId:this.goodsMsg.id,
+                    id:"",
+                    contractName:this.goodsMsg.contractName,
+                }
+                // console.log(params)
+                // 存到缓存里
+                this.$store.dispatch('public/setGoodsList', params)
+                // 携带参数跳转到选择商品页
+                this.$router.push({ path: '/selectGoods',query:{id:id} })
+               
+                })
+                .catch(() => {
+                //验证失败
+
+                })
+            // if(this.goodsMsg.shippingAddress){
+
+            // }
+            
         },
         // 编辑时选择的下一步传的参数
         editGoods(id,text){
-            // console.log(data,'1234')
-            this.$router.push({ path: '/selectGoods',query:{id:id,text:text} })
+            this.$refs.form
+                .validate()
+                .then(() => {
+                     let fileList=[]
+                     if(this.fileList.length>0){
+                         this.fileList.forEach(item=>{
+                        fileList.push({fileName:item.name,filePath:item.url})
+                        })
+                     }
+                   
+                let params = {
+                    ...this.params,
+                    fileByList:JSON.stringify(fileList),
+                    fileList:fileList,
+                    sectionName:this.goodsMsg.sectionName,
+                    planName:this.goodsMsg.planName,
+                    planId:this.goodsMsg.id,
+                    id:"",
+                    contractName:this.goodsMsg.contractName,
+                }
+                // console.log(params)
+                // 存到缓存里
+                this.$store.dispatch('public/setGoodsList', params)
+                // 携带参数跳转到选择商品页
+                this.$router.push({ path: '/selectGoods',query:{id:id,text:text} })
+               
+                })
+                .catch(() => {
+                //验证失败
+
+                })
+            
         },
         lookGoods(id){
             this.formKey++

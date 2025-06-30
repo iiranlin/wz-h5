@@ -113,6 +113,7 @@ export default {
     }
   },
   mounted() {
+    // console.log(this.$store.public.sendGoods,'111')
    this.goodsId = this.$route.query.id
    
   //  编辑时传过来的标识
