@@ -9,8 +9,9 @@
       <van-button round @click="resetClick">重置</van-button>
     </van-sticky>
     <div class="planned-management-list">
-      <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功" >
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error" error-text="请求失败，点击重新加载" @load="onLoad">
+      <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error"
+          error-text="请求失败，点击重新加载" @load="onLoad">
           <div v-for="(item, index) in list" :key="index" class="box-container">
             <ul class="list-ul" @click="handleWaitItemClick(item)">
               <li>
@@ -39,24 +40,30 @@
               </li>
               <li class="li-status">
                 <template v-for="row in statusArr">
-                  <van-tag :class="{'li-status-completed': row.value == '9'}" :type="['0', '5'].includes(row.value)?'danger' : 'primary'" round size="medium" :key="row.value" v-if="item.planStatus == row.value">{{ row.text }}</van-tag>
+                  <van-tag :class="{ 'li-status-completed': row.value == '9' }"
+                    :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
+                    v-if="item.planStatus == row.value">{{ row.text }}</van-tag>
                 </template>
               </li>
             </ul>
             <div class="list-ul-button">
-              <van-button class="button-info" plain round type="info" v-if="['6', '7', '8', '9'].includes(item.planStatus)"
+              <van-button class="button-info" plain round type="info"
+                v-if="['6', '7', '8', '9'].includes(item.planStatus)"
                 @click="supplyOverviewClick(item)">供应概览</van-button>
-              <van-button class="button-info" plain round type="info" v-if="['6', '7', '8', '9'].includes(item.planStatus)"
+              <van-button class="button-info" plain round type="info"
+                v-if="['6', '7', '8', '9'].includes(item.planStatus)"
                 @click="logisticsViewClick(item)">物流查看</van-button>
               <van-button class="button-info" plain round type="info" v-if="['2'].includes(item.planStatus)"
                 @click="withdrawClick(item)">撤回</van-button>
-              <van-button class="button-info" plain round type="danger" v-if="['1', '0', '5', '10'].includes(item.planStatus)"
-                @click="deleteClick(item)">删除</van-button>
-              <van-button class="button-info" plain round type="info" v-if="['3', '4', '0', '2'].includes(item.planStatus)"
+              <van-button class="button-info" plain round type="danger"
+                v-if="['1', '0', '5', '10'].includes(item.planStatus)" @click="deleteClick(item)">删除</van-button>
+              <van-button class="button-info" plain round type="info"
+                v-if="['3', '4', '0', '2'].includes(item.planStatus)"
                 @click="handleProcessClick(item)">查看流程</van-button>
-              <van-button class="button-info" plain round type="info" v-if="['1', '4', '0', '5', '10'].includes(item.planStatus)"
-                @click="addClick(item)">编辑</van-button>
-              <van-button class="button-info" round type="info" v-if="['1', '4', '0', '5', '10'].includes(item.planStatus)"
+              <van-button class="button-info" plain round type="info"
+                v-if="['1', '4', '0', '5', '10'].includes(item.planStatus)" @click="addClick(item)">编辑</van-button>
+              <van-button class="button-info" round type="info"
+                v-if="['1', '4', '0', '5', '10'].includes(item.planStatus)"
                 @click="handleExamineClick(item)">提交审核</van-button>
             </div>
           </div>
@@ -65,23 +72,26 @@
     </div>
     <van-icon name="plus" @click="addClick()" />
     <back-to-top className=".planned-management"></back-to-top>
+    <activiti-assignee :assigneePopupShow="assigneePopupShow" ref="activitiAssignee"></activiti-assignee>
   </div>
 </template>
 <script>
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
+import activitiAssignee from '@/components/activitiAssignee'
 import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import eventBus from '@/utils/eventBus.js'
 export default {
   name: 'PlannedManagement',
   mixins: [indexMixin],
   // dicts: ['JLDW'],
-  components: { BackToTop },
+  components: { BackToTop, activitiAssignee },
   data() {
     return {
       searchValue: '',
       showAction: false,
       list: [],
-      refreshLoading:false,
+      refreshLoading: false,
       loading: false,
       finished: false,
       error: false,
@@ -103,10 +113,16 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: 10
-      }
+      },
+      assigneePopupShow: false,
+      assigner: '请选择下一级审核人'
     }
   },
-  mounted() {
+  mounted () {
+    eventBus.$on('approverChoiceCallBack', function (item) {
+      console.log(this)
+      this.approverChoiceCallBack(item)
+    }.bind(this))
   },
   methods: {
     onSearch() {
@@ -114,7 +130,7 @@ export default {
       this.listQuery.pageNum = 1
       this.materialDemandPlanRestList()
     },
-    statusChange () {
+    statusChange() {
       this.refreshLoading = true
       this.listQuery.pageNum = 1
       this.materialDemandPlanRestList()
@@ -131,12 +147,12 @@ export default {
       // this.listQuery.pageNum
       this.materialDemandPlanRestList()
     },
-    getList () {
+    getList() {
       this.refreshLoading = true
       this.listQuery.pageNum = 1
       this.materialDemandPlanRestList()
     },
-    materialDemandPlanRestList () {
+    materialDemandPlanRestList() {
       if (this.refreshLoading) {
         this.list = [];
         this.refreshLoading = false;
@@ -147,7 +163,7 @@ export default {
         planName: this.searchValue,
         ...this.listQuery
       }
-      materialDemandPlanRestList(params).then( ({data}) => {
+      materialDemandPlanRestList(params).then(({ data }) => {
         this.list.push(...(data.list || []))
         // 数据全部加载完成
         if (this.list.length >= data.total) {
@@ -158,12 +174,12 @@ export default {
       }).catch(() => {
         this.finished = true
         this.error = true
-      }).finally( (err) => {
+      }).finally((err) => {
         this.loading = false
       })
     },
     //列表刷新
-    onRefresh(){
+    onRefresh() {
       this.refreshLoading = true
       this.loading = true
       this.finished = false
@@ -171,11 +187,11 @@ export default {
       this.onLoad();
     },
     handleWaitItemClick(item) {
-      this.$router.push({ name: 'RequirementDetails', query: {id: item.id} })
+      this.$router.push({ name: 'RequirementDetails', query: { id: item.id } })
     },
     addClick(item) {
-      if(item){
-        this.$router.push({ name: 'SaveMaterials', query: {id: item.id, type: 'update'} })
+      if (item) {
+        this.$router.push({ name: 'SaveMaterials', query: { id: item.id, type: 'update' } })
         return
       }
       // this.$router.push({ name: 'RequirementFilling' })
@@ -187,14 +203,44 @@ export default {
     logisticsViewClick(item) {
       this.$router.push({ name: 'LogisticsView', query: { id: item.id } })
     },
+    //选择审核人回调
+    approverChoiceCallBack(item) {
+      // this.assigneePopupShow = true
+      // this.assigner = item.nickName
+      // setTimeout( () => {
+      //   console.log(this)
+      // }, 1000)
+      // this.$refs.activitiAssignee.titleAssigner(item.nickName)
+      // this.$refs.activitiAssignee.titleAssigner(item.nickName)
+      // this.candidateUser.push(item.id);
+    },
     //去审核点击
-    handleExamineClick() {
-      this.$router.push({
-        name: "MyToDoDetail",
-        params: {
-          type: '0',
-        },
-      });
+    handleExamineClick(item) {
+      const businessCode = {
+        '1': 'FBYLXQ',
+        '2': 'FBYLJH',
+        '3': 'YLXQ',
+        '4': 'YLJH',
+      }
+      console.log(this)
+      this.$refs.activitiAssignee.init(businessCode[item.planType])
+      // const businessCode = {
+      //   '1': 'FBYLXQ',
+      //   '2': 'FBYLJH',
+      //   '3': 'YLXQ',
+      //   '4': 'YLJH',
+      // }
+      // console.log(item)
+      // item = {
+      //   businessId: item.id,
+      //   businessType: businessCode[item.planType],
+      // }
+      // this.$router.push({
+      //   name: "DemandPlanningExamine",
+      //   params: {
+      //     obj: JSON.stringify(item),
+      //   },
+      // });
     },
     //查看流程点击
     handleProcessClick(item) {
@@ -212,7 +258,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        materialDemandPlanRestBatchRemove({ids: [item.id]}).then( ({message}) => {
+        materialDemandPlanRestBatchRemove({ ids: [item.id] }).then(({ message }) => {
           this.$toast(message)
           this.refreshLoading = true
           this.listQuery.pageNum = 1
@@ -221,7 +267,7 @@ export default {
       })
     },
     withdrawClick(item) {
-      this.handleWithdraw({ businessId: item.id, businessType: item.planType == 1 ? 'FBYLXQ' : 'YLXQ'})
+      this.handleWithdraw({ businessId: item.id, businessType: item.planType == 1 ? 'FBYLXQ' : 'YLXQ' })
     }
   }
 }
@@ -270,7 +316,8 @@ export default {
       background: #fff;
     }
   }
-  .planned-management-list{
+
+  .planned-management-list {
     height: 100%;
   }
 
