@@ -26,8 +26,7 @@
         <div class="title">
             <span>供应信息</span>
         </div>
-        <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+        <van-list>
                     <ul class="list-ul" v-for="(item,index) in result.demandPlanDetailsGyDTOList" :key="index" style="margin: 10px;">
                         <li>
                             <span class="font-weight">物资名称:</span>
@@ -85,7 +84,6 @@
                         </li>
                     </ul>
             </van-list>
-        </van-pull-refresh>
 
     </div>
 </template>
@@ -110,6 +108,7 @@ export default {
             finished: false,
             result: {},
             list: [],
+            allRefreshLoading:false,
             id:''
         };
     },
@@ -121,6 +120,8 @@ export default {
         getList(){
             supplyDetails(this.id).then((res)=>{
                 if(res.code==0){
+                    this.allRefreshLoading = false
+                    this.finished = false
                     this.result = res.data
                 }
             })

@@ -22,7 +22,7 @@
         <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.status">
           
           <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-            <van-list v-model="loading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad">
+            <van-list v-model="loading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad" :offset="10" :immediate-check="false">
               <div v-for="(item, index) in listGhsData" :key="index" class="box-container">
                 <ul class="list-ul">
                   <li>
@@ -30,23 +30,23 @@
                     <span class="font-weight">{{ item.planNumber }}</span>
                   </li>
                   <li>
-                    <span style="width: 230px;">需求名称：</span>
+                    <span>需求名称：</span>
                     <span class="text">{{ item.planName }}</span>
                   </li>
                   <li>
-                    <span style="width: 230px;">需求项目：</span>
+                    <span>需求项目：</span>
                     <span>{{ item.sectionName }}</span>
                   </li>
                   <li>
-                    <span style="width: 230px;">提报人：</span>
+                    <span>提报人：</span>
                     <span>{{ item.createUserName }}</span>
                   </li>
                   <li>
-                    <span style="width: 230px;">提报时间：</span>
-                    <span>{{ formattedCreateDate(item.createDate) }}</span>
+                    <span>提报时间：</span>
+                    <span v-if="item.createDate">{{ formattedCreateDate(item.createDate) }}</span>
                   </li>
                   <li>
-                    <span style="width: 230px;">需求计划表:</span>
+                    <span style="width: 200px;">需求计划表:</span>
                     <span style="color:#1989fa;">
                       <template>
                         <div v-for="(item1,index1) in item.fileList" :key="index1">
@@ -188,6 +188,7 @@ export default {
       return `${year}-${month}-${day}`;
     },
     tabsChange(e) {
+      this.listGhsData = []
       this.params.pageNum = 1;
       this.params.status = e
       this.allFinished = false;

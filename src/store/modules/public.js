@@ -1,6 +1,6 @@
 const state = {
   materiaList: null,
-  goodsList:[]
+  sendGoods:{}
 };
 
 const mutations = {
@@ -8,7 +8,7 @@ const mutations = {
     state.materiaList = materiaList;
   },
   SET_GOODS_LIST:(state,goodsList)=>{
-    state.goodsList = goodsList
+    state.sendGoods = goodsList
   }
 };
 

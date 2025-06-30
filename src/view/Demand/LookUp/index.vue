@@ -175,7 +175,7 @@ import Vue from 'vue';
 import { Sidebar, SidebarItem } from 'vant';
 import { Tab, Tabs } from 'vant';
 import { Step, Steps } from 'vant';
-
+import {lookGoodsDetails} from '@/api/demand/returnGoods'
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Tab);
@@ -197,13 +197,26 @@ export default {
             loading: false,
             finished: false,
             result: [],
-            list: []
+            list: [],
+            // 物流id
+            wuLiuId:"",
+            //物流编号
+            wuLiuNumber:''
         };
     },
     created() {
-        // this.getOrderStatusOptions();
+         this.wuLiuId = this.$route.query.id
+         this.wuLiuNumber = this.$route.query.number
+        this.getDetails();
     },
     methods: {
+        getDetails(){
+            lookGoodsDetails(this.wuLiuId).then((res)=>{
+                if(res.code==0){
+
+                }
+            })
+        },
         onSubmit(values) {
             console.log('submit', values);
         },

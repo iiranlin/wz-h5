@@ -2,25 +2,25 @@
     <div class="default-container" ref="container">
         <ul class="list-ul" style="margin: 10px;">
             <li>
-                <span style="width:330px;">供应需求：</span>
+                <span>供应需求：</span>
                 <span>{{ params.planName }}</span>
             </li>
 
             <li>
-                <span style="width:220px;">需求项目：</span>
+                <span>需求项目：</span>
                 <span>{{ params.sectionName }}</span>
             </li>
             <li>
-                <span style="width: 220px;">需求组织：</span>
+                <span>需求组织：</span>
                 <span>{{ params.deptName }}</span>
             </li>
             <li>
-                <span style="width: 220px;">发货单号：</span>
+                <span>发货单号：</span>
                 <span>{{ params.shipmentBatchNumber }}</span>
             </li>
             <li class="li-item-both">
                 <div class="li-item-left">
-                    <span style="width: 220px;">退货环节:</span>
+                    <span style="width: 150px;">退货环节:</span>
                     <span style="color:red;" v-if="params.backNode==2">收货不通过</span>
                     <span v-else>收货通过</span>
                 </div>
@@ -84,7 +84,6 @@
         </div>
         <div class="tabs">
             <van-list>
-
                 <div class="box-container">
                     <ul class="list-ul">
                         <li>
@@ -149,11 +148,11 @@ export default {
             });
             returnGoodsDetails(this.orderId).then((res)=>{
                 if(res.code==0){
+                    Toast.clear()
                     this.params = {
                         ...res.data, // 展开原有属性
                         fileByList: JSON.parse(res.data.fileByList) // 单独解析 fileByList
                     };
-                    console.log(JSON.parse(res.data.fileByList),'111')
                 }
                 // console.log(res)
             })
