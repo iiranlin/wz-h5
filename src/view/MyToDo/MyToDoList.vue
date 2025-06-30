@@ -322,21 +322,11 @@ export default {
         },
         //待处理列表条目点击
         handleWaitHandleItemClick(item){
-            this.$router.push({
-                name: "MyToDoDetail",
-                params: { 
-                    type: '0',
-                },
-            });
+           
         },
         //已审核列表条目点击
         handleHistoryItemClick(item){
-            this.$router.push({
-                name: "MyToDoDetail",
-                params: { 
-                    type: '1',
-                },
-            })
+           
         },
         //查看流程点击
         handleProcessClick(item){
