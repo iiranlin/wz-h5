@@ -107,31 +107,6 @@ export const routes = [
     ]
   },
   {
-    path: '/SupervisionUnitManager',
-    component: ItemHead,
-    hidden: true,
-    children: [
-      {
-        path: '/SupervisionUnitDetail/:type',
-        name: 'SupervisionUnitDetail',
-        meta: { title: '单据详情' },
-        component: () => import('@/view/SupervisionUnit/SupervisionUnitManager/SupervisionUnitDetail.vue')
-      },
-      {
-        path: '/SupervisionUnitExamineEdit/:type',
-        name: 'SupervisionUnitExamineEdit',
-        meta: { title: '审核意见' },
-        component: () => import('@/view/SupervisionUnit/SupervisionUnitManager/SupervisionUnitExamineEdit.vue')
-      },
-      {
-        path: '/SupervisionUnitExamineChoice',
-        name: 'SupervisionUnitExamineChoice',
-        meta: { title: '选择审批人' },
-        component: () => import('@/view/SupervisionUnit/SupervisionUnitManager/SupervisionUnitExamineChoice.vue')
-      },
-    ]
-  },
-  {
     path: '/MyProcess',
     component: ItemHead,
     hidden: true,
