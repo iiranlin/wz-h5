@@ -14,6 +14,11 @@
 import {Navbar} from './components'
 import { getUserInfo } from '@/utils/user-info'
 
+function isAndroid() {
+  let userAgent = navigator.userAgent
+  return /Android|adr/gi.test(userAgent)
+}
+
 export default {
 	name: 'Layout',
 	components: {
@@ -95,11 +100,13 @@ export default {
 					link: '/MyManager'
 				},
 			],
-      userInfo: getUserInfo()
+      		userInfo: getUserInfo()
 		}
 	},
 	created() {
-
+		if (isAndroid()) {
+			Android.setWaterMark(this.userInfo.nickName);
+		}
 	},
 	methods: {
 		//判断角色菜单
