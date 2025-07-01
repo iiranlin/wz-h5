@@ -29,3 +29,16 @@ export const listStore = (params) => {
     params
   })
 }
+
+/**
+* 入库退货列表
+* @param {*} params 
+* @returns 
+*/
+export const listCrRetreat = (params) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/listCrRetreat`,
+    method: 'get',
+    params
+  })
+}

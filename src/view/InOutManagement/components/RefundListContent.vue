@@ -9,37 +9,37 @@
     </van-sticky>
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
-        <div v-for="(item, index) in 10" :key="index" class="box-container" @click="handleWaitItemClick(item)">
+        <div v-for="(item, index) in dataList" :key="index" class="box-container" @click="handleWaitItemClick(item)">
           <ul class="list-ul">
             <li>
               <span>退货单号：</span>
-              <span>TH20250531004</span>
+              <span>{{ item.backQualNumber }}</span>
             </li>
             <li>
               <span>收货单号：</span>
-              <span @click.stop="detailsClick" class="li-span-click">SH20250531004</span>
+              <span @click.stop="detailsClick(item)" class="li-span-click">{{ item.takeNumber }}</span>
             </li>
             <li>
               <span class="li-item-span-auto">供应需求名称：</span>
-              <span>南京枢纽（江北地区）和南通地区工程2025年5月甲供物资需求计划表</span>
+              <span>{{ item.planName }}</span>
             </li>
             <li class="li-item-both">
               <div class="li-item-left">
                 <span>需求组织：</span>
-                <span>施工单位名称</span>
+                <span>{{ item.deptName }}</span>
               </div>
               <div class="li-item-right">
                 <span class="li-item-span-auto">供应商：</span>
-                <span>供应商供应商</span>
+                <span>{{ item.sellerName }}</span>
               </div>
             </li>
             <li>
               <span>退货时间：</span>
-              <span>2025-05-21</span>
+              <span>{{ item.backQualDate && parseTime(item.backQualDate, '{y}-{m}-{d} {h}:{s}') }}</span>
             </li>
             <li>
               <span>操作人：</span>
-              <span>name</span>
+              <span>{{ item.createUserName }}</span>
             </li>
           </ul>
         </div>
@@ -48,6 +48,7 @@
   </div>
 </template>
 <script>
+import {listCrRetreat} from '@/api/prodmgr-inv/materialCirculationTableRest'
 export default {
   name: 'RefundListContent',
   data() {
@@ -60,6 +61,11 @@ export default {
       allRefreshLoading: false,
       allLoading: false,
       allFinished: false,
+      dataList: [],
+      allListQuery: {
+        pageNum: 1,
+        pageSize: 10,
+      }
     };
   },
   created() {
@@ -72,18 +78,44 @@ export default {
       this.allRefreshLoading = true
       this.allLoading = true
       this.allFinished = false
+      this.allListQuery.pageNum = 1;
       this.getAllList()
     },
     getAllList() {
-      this.allRefreshLoading = false
-      this.allFinished = true
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
+      listCrRetreat(Object.assign({},this.allListQuery,this.formData)).then(({ data }) => {
+        if(this.allRefreshLoading){
+          this.dataList = [];
+          this.allRefreshLoading = false;
+        }
+        this.allLoading = false;
+        this.dataList = [...this.dataList, ...data.list];
+
+        if (data?.list?.length === 0) {
+          this.allFinished = true;
+          return;
+        }
+        this.allListQuery.pageNum = this.allListQuery.pageNum + 1;
+      }).catch((error) => {
+        this.allLoading = false;
+        this.allFinished = true;
+      }).finally(() => {
+        toast.clear();
+      });
     },
     handleWaitItemClick (item) {
       // this.$router.push({ name: 'SubmitStore', query: {type: 'view'} })
-      this.$router.push({name: 'DoReturn'})
+      this.$router.push({name: 'DoReturn',query:{id: item.id}})
     },
-    detailsClick () {
-      this.$router.push({ name: 'DoAcceptDetail' })
+    detailsClick (item) {
+      this.$router.push({ name: 'DoAcceptDetail', query: {id: item.id}  })
+    },
+    handeSearchClick () {
+      this.allRefresh()
     }
   },
 };
