@@ -81,3 +81,10 @@ export function materialDemandPlanRestDetailOut(id) {
     method: 'get',
   })
 }
+//物资出库明细-子集
+export function materialCirculationDetailsTableRestListByPlanDetailId(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationDetailsTableRest/listByPlanDetailId/${id}`,
+    method: 'get',
+  })
+}

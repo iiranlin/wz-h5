@@ -41,7 +41,7 @@
                   </li>
                   <li>
                     <span>物流单号：</span>
-                    <span>{{ item.oddNumbers?item.oddNumbers:"其他" }}</span>
+                    <span @click="viewLogistic(item)" style="color: #0689ff">{{ item.oddNumbers?item.oddNumbers:"其他" }}</span>
                   </li>
                   <li>
                     <span>需求组织：</span>
@@ -223,6 +223,10 @@ export default {
         activeTab:this.menuActiveIndex
       })
       this.$router.push({name: 'DoAcceptDetail', query: {id:item.id}})
+    },
+    viewLogistic(item){
+
+      this.$router.push({name: 'LogisticsView', query: {id:item.planId}})
     },
     //去审核点击
     handleDoAccept(item) {

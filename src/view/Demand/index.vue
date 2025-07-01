@@ -67,7 +67,7 @@
                 <div class="list-ul-button">
                   <van-button class="button-info" plain round type="info" @click="handleSupplyClick(item.id)" v-if="item.status==4 || item.status===6"
                       >供应详情</van-button>
-                  <van-button class="button-info" plain round type="info" @click="handleLookClick()"  v-if="item.status==4 || item.status===6"
+                  <van-button class="button-info" plain round type="info" @click="handleLookClick(item)"  v-if="item.status==4 || item.status===6"
                     >物流查看</van-button>
                   <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id,'add')"
                   v-if="item.status==4 || item.status==3" >发货</van-button>
@@ -218,8 +218,8 @@ export default {
       this.$router.push({ path: '/sendGoods',query:{id:id,title:title} })
     },
     //查看物流
-    handleLookClick() {
-      this.$router.push({ name: 'LogisticsView' })
+    handleLookClick(item) {
+      this.$router.push({ name: 'LogisticsView', query: { id: item.id } })
     },
     //供应详情
     handleSupplyClick(id) {
