@@ -48,10 +48,27 @@ export function addFreightLocations(data) {
     data
   })
 }
-// 货运列表 
+// 货运列表
 export function addList(shipmentBatchNumber) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialTrackMessageRest/list?shipmentBatchNumber=${shipmentBatchNumber}`,
     method: 'get',
+  })
+}
+
+// 编辑  /materialCirculationTableRest/modifySend
+export function detailBySendEdit(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/detailBySend/`+id,
+    method: 'get',
+  })
+}
+
+// 编辑  
+export function modifySendGoods(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/modifySend`,
+    method: 'post',
+    data
   })
 }

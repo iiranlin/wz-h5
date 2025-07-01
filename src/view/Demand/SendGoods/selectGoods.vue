@@ -1,6 +1,5 @@
 <template>
   <div class="select-materials">
-   
     <div class="select-materials-search">
      
       <van-search v-model="value" placeholder="输入关键字搜索" background="center" :show-action="showAction"
@@ -82,7 +81,7 @@
         </div>
         <div class="btns">
           <van-button round type="info" @click="back" class="btn">上一步</van-button>
-          <van-button round type="info" @click="addClick" class="btn">下一步</van-button>
+          <van-button round type="info" @click="addClick(text)" class="btn">下一步</van-button>
         </div>
     </div>
     <back-to-top className=".default-container"></back-to-top>
@@ -109,23 +108,40 @@ export default {
       selectGoodsList:[],
       selectTotal:0,
       //选择的物资
-      selectArrayData:[]
+      selectArrayData:[],
+     // 编辑时带过来的参数
+      editData:{}
     }
   },
   mounted() {
     // console.log(this.$store.public.sendGoods,'111')
    this.goodsId = this.$route.query.id
    
-  //  编辑时传过来的标识
+  //  编辑时传过来的标识(应该存在缓存里的)
     this.text = this.$route.query.text
-    this.getSelectGoods()
-    // this.selectArrayData = JSON.parse(this.$route.query.data)
-    // if(this.text=='edit'){
-    //  
-    //   this.$refs.checkboxGroup.toggleAll(true);
-      
-    // }
-    
+    if(this.text=='edit'){
+      let arrdata = JSON.parse(this.$route.query.data)
+       this.selectGoodsList = arrdata.map(item => {
+            // 辅助函数：格式化日期为 YYYY-MM-DD
+            const formatDate = (dateString) => {
+              const date = new Date(dateString);
+              const year = date.getFullYear();
+              const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+              const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
+              return `${year}-${month}-${day}`;
+            };
+          
+            return {
+              ...item,
+              createDate: formatDate(item.createDate),
+              supplyDate: formatDate(item.supplyDate),
+              updateDate: formatDate(item.updateDate)
+            };
+          });
+      this.result = this.selectGoodsList.map(item => item);
+    }else{
+       this.getSelectGoods()
+    }
   },
   methods: {
     getSelectGoods(){
@@ -192,9 +208,10 @@ export default {
       this.$router.push({ name: 'SelectContract' })
     },
     // 点击下一步把选择的数据传过去
-    addClick() {
+    addClick(text) {
+      console.log(this.selectArrayData)
       if(this.selectArrayData.length>0){
-        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:this.goodsId} })
+        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:this.goodsId,text:text} })
       }else{
         Toast.fail('请选择至少一项');
       }
