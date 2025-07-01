@@ -50,16 +50,10 @@ import Pdf from "vue-pdf";
 //引入相关样式
 import '@vue-office/excel/lib/index.css'
 import { renderAsync } from 'docx-preview'
-import { minioDownload } from '@/api/minio';
-import { ImagePreview } from 'vant';
-import 'vant/es/image-preview/style';
+import { minioDownload } from '@/api/blcd-base/minio'
 
 export default {
-  components: {
-    VueOfficeExcel,
-    Pdf,
-    ImagePreview,
-  },
+  components: { VueOfficeExcel, Pdf },
   data() {
     return {
       currentPage: 0, // pdf文件页码

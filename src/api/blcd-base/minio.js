@@ -11,11 +11,12 @@ export const minioUpload = (data) => {
   })
 }
 
-//文件下载
-export const minioDownload = (fileName) => {
-  return request({
-    url: `${VUE_APP_BASE_SERVER}/minio/download?fileName=${fileName}`,
-    method: 'get',
-    responseType: 'blob',
-  })
+// 下载
+export function minioDownload(params) {
+	return request({
+		url: `${VUE_APP_BASE_SERVER}/minio/download`,
+		method: 'get',
+		responseType: 'blob',
+    params
+	})
 }
