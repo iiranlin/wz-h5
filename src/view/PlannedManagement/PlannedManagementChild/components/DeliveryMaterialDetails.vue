@@ -61,11 +61,13 @@
           </li>
           <li>
             <span>合格证附件：</span>
-            <span @click="imgClick" class="img-text">{{ item.fileByList | filterFiles('hgz') }}</span>
+            <span @click="imgClick(item)" class="img-text" v-for="item in filterList(item.fileByList, 'hgz')"
+              :key="item.filePath">{{ item.fileName }}</span>
           </li>
           <li>
             <span>厂检报告附件：</span>
-            <span @click="imgClick" class="img-text">{{ item.fileByList | filterFiles('cjbg') }}</span>
+            <span @click="imgClick(item)" class="img-text" v-for="item in filterList(item.fileByList, 'cjbg')"
+              :key="item.filePath">{{ item.fileName }}</span>
           </li>
           <li>
             <span>备注：</span>
@@ -74,31 +76,26 @@
         </ul>
       </div>
     </div>
-    <van-popup v-model="showPopup" position="bottom">
-      <van-image-preview v-model="showImg" :images="images" :startPosition="startPosition" :loop="false" @close="showPopup = false"/>
-    </van-popup>
+    <!-- 附件预览 -->
+    <file-preview ref="filePreview"></file-preview>
   </div>
   <van-empty v-else description="暂无数据" />
 </template>
 <script>
 import indexMixin from '@/view/mixins'
-import dt from '@/assets/img/img.png'
+import FilePreview from "@/components/FilePreview.vue";
 export default {
   name: 'DeliveryMaterialDetails',
   mixins: [indexMixin],
   props: {
-    materialCirculationDetailsTableDTOS:{
+    materialCirculationDetailsTableDTOS: {
       type: Array,
       default: []
     }
   },
-  components: {},
+  components: { FilePreview },
   data() {
     return {
-      showPopup: false,
-      startPosition: 0,
-      showImg: false,
-      images: [dt]
     }
   },
   created() {
@@ -106,9 +103,8 @@ export default {
   activated() {
   },
   methods: {
-    imgClick() {
-      this.showImg = true
-      this.showPopup = true
+    imgClick({ fileName, filePath }) {
+      this.$refs.filePreview.init(fileName, filePath)
     }
   },
 }
@@ -124,7 +120,8 @@ export default {
         width: auto !important;
         font-size: 12px;
       }
-      .img-text{
+
+      .img-text {
         color: #0689ff;
       }
     }

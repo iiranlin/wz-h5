@@ -52,3 +52,16 @@ export const materialDemandPlanRestDetailGyMx = (params) => {
     params
   })
 }
+
+/**
+ * 需求计划列表提交
+ * @param {*} params
+ * @returns
+ */
+export const materialDemandPlanRestSubmit = (data) => {
+  return request({
+      url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/submit`,
+      method: 'post',
+      data
+  })
+}

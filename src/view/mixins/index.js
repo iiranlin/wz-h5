@@ -38,5 +38,10 @@ export default {
         })
       })
     },
+    filterList (files, name) {
+      if (!files) return []
+      const parseFiles = JSON.parse(files)
+      return parseFiles[name]
+    }
   }
 }

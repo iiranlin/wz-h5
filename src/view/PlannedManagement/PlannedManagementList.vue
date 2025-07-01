@@ -72,15 +72,14 @@
     </div>
     <van-icon name="plus" @click="addClick()" />
     <back-to-top className=".planned-management"></back-to-top>
-    <activiti-assignee :assigneePopupShow="assigneePopupShow" ref="activitiAssignee"></activiti-assignee>
+    <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
   </div>
 </template>
 <script>
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
-import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove } from '@/api/prodmgr-inv/materialDemandPlanRest'
-import eventBus from '@/utils/eventBus.js'
+import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'PlannedManagement',
   mixins: [indexMixin],
@@ -114,15 +113,10 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
-      assigneePopupShow: false,
-      assigner: '请选择下一级审核人'
+      businessCode: { '1': 'FBYLXQ', '2': 'FBYLJH', '3': 'YLXQ', '4': 'YLJH' }
     }
   },
   mounted () {
-    eventBus.$on('approverChoiceCallBack', function (item) {
-      console.log(this)
-      this.approverChoiceCallBack(item)
-    }.bind(this))
   },
   methods: {
     onSearch() {
@@ -143,8 +137,6 @@ export default {
       this.materialDemandPlanRestList()
     },
     onLoad() {
-      // console.log(this.listQuery.pageNum++)
-      // this.listQuery.pageNum
       this.materialDemandPlanRestList()
     },
     getList() {
@@ -163,6 +155,11 @@ export default {
         planName: this.searchValue,
         ...this.listQuery
       }
+      let toast = this.$toast.loading({
+          duration: 0,
+          message: "正在加载...",
+          forbidClick: true
+      });
       materialDemandPlanRestList(params).then(({ data }) => {
         this.list.push(...(data.list || []))
         // 数据全部加载完成
@@ -176,6 +173,7 @@ export default {
         this.error = true
       }).finally((err) => {
         this.loading = false
+        toast.clear()
       })
     },
     //列表刷新
@@ -203,44 +201,18 @@ export default {
     logisticsViewClick(item) {
       this.$router.push({ name: 'LogisticsView', query: { id: item.id } })
     },
-    //选择审核人回调
-    approverChoiceCallBack(item) {
-      // this.assigneePopupShow = true
-      // this.assigner = item.nickName
-      // setTimeout( () => {
-      //   console.log(this)
-      // }, 1000)
-      // this.$refs.activitiAssignee.titleAssigner(item.nickName)
-      // this.$refs.activitiAssignee.titleAssigner(item.nickName)
-      // this.candidateUser.push(item.id);
-    },
     //去审核点击
     handleExamineClick(item) {
-      const businessCode = {
-        '1': 'FBYLXQ',
-        '2': 'FBYLJH',
-        '3': 'YLXQ',
-        '4': 'YLJH',
+      this.$refs.activitiAssignee.init(this.businessCode[item.planType], item)
+    },
+    //选择审核人回调
+    optionsSuccess(assignee, {id, planType}) {
+      if(assignee){
+        materialDemandPlanRestSubmit({ids: [id], planType: planType, assignee}).then( () => {
+          this.$toast('提交审核成功')
+          this.getList()
+        })
       }
-      console.log(this)
-      this.$refs.activitiAssignee.init(businessCode[item.planType])
-      // const businessCode = {
-      //   '1': 'FBYLXQ',
-      //   '2': 'FBYLJH',
-      //   '3': 'YLXQ',
-      //   '4': 'YLJH',
-      // }
-      // console.log(item)
-      // item = {
-      //   businessId: item.id,
-      //   businessType: businessCode[item.planType],
-      // }
-      // this.$router.push({
-      //   name: "DemandPlanningExamine",
-      //   params: {
-      //     obj: JSON.stringify(item),
-      //   },
-      // });
     },
     //查看流程点击
     handleProcessClick(item) {
