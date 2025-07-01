@@ -36,6 +36,7 @@ export default {
             this.active = obj.link;
             //清空meta里的默认tab角标
             this.$route.meta.myToDoNavIndex = 0;
+            this.$route.meta.inOutNavIndex = 0;
         },
     },
     created () {

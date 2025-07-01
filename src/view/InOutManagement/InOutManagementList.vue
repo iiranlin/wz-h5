@@ -27,12 +27,24 @@ import OutListContent from './components/OutListContent'
 export default {
   name: 'InOutManagementList',
   components: { InListContent, InventoryListContent, RefundListContent, OutListContent },
+
+  beforeRouteEnter (to, from, next) {
+    next();
+  },
+  beforeRouteLeave (to, from, next) {
+    from.meta.inOutNavIndex = this.activeIndex;
+    next();
+  },
+
   data() {
     return {
       activeIndex: 0,
     };
   },
   created() {
+    if(this.$route.meta.inOutNavIndex){
+      this.activeIndex = this.$route.meta.inOutNavIndex;
+    }
   },
   activated() {
   },
