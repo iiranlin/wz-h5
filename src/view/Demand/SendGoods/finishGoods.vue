@@ -90,10 +90,13 @@
       <van-button class="button-info" round type="info" @click="back">上一步</van-button>
       <van-button class="button-info" round type="info" @click="save">保存</van-button>
     </div>
-    <van-popup v-model="showCalendar" position="bottom">
+    <!-- 生产日期 -->
+    <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date="minDate" :max-date="maxDate"/>
+    <van-calendar v-model="showCalendar" @confirm="createConfirm" />
+    <!-- <van-popup v-model="showCalendar" position="bottom">
       <van-datetime-picker type="date" title="选择年月日" @confirm="createConfirm" @cancel="showCalendar = false"
         :min-date="minDate" :max-date="maxDate" />
-    </van-popup>
+    </van-popup> -->
   </div>
 
 </template>
@@ -112,6 +115,8 @@ Vue.use(Divider);
 export default {
 
   data() {
+    const today = new Date();
+  today.setHours(23, 59, 59, 999); // 设置为今天的最后一
     return {
       stopDate: "",
       username: '',
@@ -119,16 +124,16 @@ export default {
       value: '',
       showCalendar: false,
       goodsData: [],
-      minDate: new Date(2020, 0, 1),
-      maxDate: new Date(2025, 10, 1),
-      currentDate: new Date(2021, 0, 17),
+      minDate: new Date(2010, 0, 1),
+      maxDate: today,
       value: '',
       showPicker: false,
       stopCalendar: false,
       uploader: [],
       isActive: 0,
       title: '',
-      goodsId: ""
+      goodsId: "",
+      showCreateDates:false
     };
   },
   created() {
@@ -138,7 +143,6 @@ export default {
       ...item,
       planDetailId: item.id
     }))
-    // this.getOrderStatusOptions();
   },
   methods: {
     onSubmit(values) {
@@ -154,9 +158,10 @@ export default {
     showCalendars(data, index, title) {
       this.isActive = index
       this.title = title
+      //生产日期
       if (title == 'show') {
         // this.goodsData[index]
-        this.showCalendar = true;
+        this.showCreateDates = true;
       }
       if (title == 'end') {
         this.showCalendar = true;
@@ -168,16 +173,27 @@ export default {
     },
     // // 日期格式化
     createConfirm(time) {
+      const date = new Date(time);
+      let dateString = date.toLocaleDateString().replace(/\//g, "-");
+      
+      // 分割字符串并补零
+      const parts = dateString.split('-');
+      const year = parts[0];
+      let month = parts[1];
+      let day = parts[2];
+      
+      month = month.length === 1 ? `0${month}` : month;
+      day = day.length === 1 ? `0${day}` : day;
       if (this.title == 'show') {
-        this.goodsData[this.isActive].createDate = new Date(time).toLocaleDateString().replace(/\//g, "-")
-        this.showCalendar = false;
+        this.goodsData[this.isActive].createDate = `${year}-${month}-${day}`
+        this.showCreateDates = false;
       }
       if (this.title == 'gong') {
-        this.goodsData[this.isActive].supplyDate = new Date(time).toLocaleDateString().replace(/\//g, "-")
+        this.goodsData[this.isActive].supplyDate = `${year}-${month}-${day}`
         this.showCalendar = false;
       }
       if (this.title == 'end') {
-        this.goodsData[this.isActive].updateDate = new Date(time).toLocaleDateString().replace(/\//g, "-")
+        this.goodsData[this.isActive].updateDate = `${year}-${month}-${day}`
         this.showCalendar = false;
       }
       // 
@@ -242,7 +258,7 @@ export default {
         ...this.$store.state.public.sendGoods,
         materialCirculationDetailsTableParamList: this.goodsData //取出store里的物资数据用于保存
       }
-      //报错
+      //保存
       demandSaveSendGoods(params).then((res) => {
         if (res.code == 0) {
           Toast.success(res.data);
@@ -278,7 +294,7 @@ export default {
   height: 100vh;
   width: 100%;
   background: #f5f5f5;
-  padding: 10px 10px 70px 10px;
+  padding: 10px 10px 10px 10px;
   box-sizing: border-box;
 
   .main {
