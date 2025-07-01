@@ -34,7 +34,8 @@
                   </li>
                   <li>
                     <span>物流单号：</span>
-                    <span>{{ item.oddNumbers }}</span>
+                    <span v-if="item.oddNumbers">{{ item.oddNumbers }}</span>
+                    <span v-else>其他</span>
                   </li>
                   <li>
                     <span>需求项目: </span>
@@ -54,7 +55,7 @@
                   <van-button class="button-info" plain round type="danger" @click="handleDelClick(item.id)"
                     v-if="item.status == 1">删除</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleEditClick(item,'edit')"
-                    v-if="item.status == 1">编辑</van-button>
+                    v-if="item.status == 1" >编辑</van-button>
                   <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id,item.status)"
                     v-if="item.status == 1">确认发货</van-button>
                     <!-- 增加货运位置是根据物流单号来显示的 -->
@@ -62,7 +63,7 @@
                     v-if="item.oddNumbers == '' && item.status==2">增加货运位置</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleCarGoClick(item.id)"
                     v-if="item.status == 2">货运详情</van-button>
-                  <van-button class="button-info" plain round type="info" @click="handleLookClick(item.planId,item.shipmentBatchNumber)"
+                  <van-button class="button-info" plain round type="info" @click="handleLookClick(item.planId,item.shipmentBatchNumber,item.oddNumbers)"
                     v-if="item.status == 2">物流查看</van-button>
                 </div>
               </div>
@@ -248,8 +249,8 @@ export default {
       return `${year}-${month}-${day}`;
     },
     //查看物流
-    handleLookClick(id,number) {
-      this.$router.push({ path: '/lookCargo',query:{id:id,number:number} })
+    handleLookClick(id,number,logisticsNumber) {
+      this.$router.push({ path: '/lookCargo',query:{id:id,number:number,logisticsNumber:logisticsNumber} })
     },
     //货运详情
     handleCarGoClick(id) {
