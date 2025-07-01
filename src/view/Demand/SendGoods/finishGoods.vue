@@ -91,7 +91,7 @@
       <van-button class="button-info" round type="info" @click="save">保存</van-button>
     </div>
     <!-- 生产日期 -->
-    <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date="minDate" :max-date="maxDate"/>
+    <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date="minDate" :max-date="maxDate" />
     <van-calendar v-model="showCalendar" @confirm="createConfirm" />
     <!-- <van-popup v-model="showCalendar" position="bottom">
       <van-datetime-picker type="date" title="选择年月日" @confirm="createConfirm" @cancel="showCalendar = false"
@@ -109,6 +109,7 @@ import { DatetimePicker } from 'vant';
 
 import _ from 'lodash'
 import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/api/demand/demandManagement'
+import { modifySendGoods } from '@/api/demand/sendGoods'
 Vue.use(DatetimePicker);
 Vue.use(Toast);
 Vue.use(Divider);
@@ -116,7 +117,7 @@ export default {
 
   data() {
     const today = new Date();
-  today.setHours(23, 59, 59, 999); // 设置为今天的最后一
+    today.setHours(23, 59, 59, 999); // 设置为今天的最后一
     return {
       stopDate: "",
       username: '',
@@ -133,11 +134,14 @@ export default {
       isActive: 0,
       title: '',
       goodsId: "",
-      showCreateDates:false
+      showCreateDates: false,
+      text: ""
     };
   },
   created() {
     this.goodsId = this.$route.query.id
+    // 带回来的编辑标识
+    this.text = this.$route.query.text
     // this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData));
     this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
       ...item,
@@ -175,13 +179,13 @@ export default {
     createConfirm(time) {
       const date = new Date(time);
       let dateString = date.toLocaleDateString().replace(/\//g, "-");
-      
+
       // 分割字符串并补零
       const parts = dateString.split('-');
       const year = parts[0];
       let month = parts[1];
       let day = parts[2];
-      
+
       month = month.length === 1 ? `0${month}` : month;
       day = day.length === 1 ? `0${day}` : day;
       if (this.title == 'show') {
@@ -222,7 +226,6 @@ export default {
     checkReadUpload(file, index) {
       console.log(file)
       let imgFile = new FormData();
-
       imgFile.append("businessType", '01');
       imgFile.append("key", file.file.name);
       imgFile.append("file", file.file);
@@ -244,28 +247,69 @@ export default {
       this.goodsData.splice(index)
     },
     save() {
-      for (let i = 0; i < this.goodsData.length; i++) {
-        if (this.goodsData[i].supplyDate == '' || this.goodsData[i].createDate == '' || this.goodsData[i].fileList01 == [] || this.goodsData[i].fileList02 == []) {
+      let hgz = [] //合格证
+      let cjbg = []
+      this.goodsData.forEach((item, index) => {
+        if (this.goodsData[index].supplyDate == '' || this.goodsData[index].createDate == '' || this.goodsData[index].fileList01 == [] || this.goodsData[index].fileList02 == []) {
           Notify({
             message: '请完善信息',
             duration: 1000,
           });
           return
+        } else {
+          hgz.push({
+            fileName: item.fileList01[0].name,
+            filePath: item.fileList01[0].url,
+          });
+          // 处理 fileList02（可能是数组）
+          cjbg.push({
+            fileName: item.fileList02[0].name,
+            filePath: item.fileList02[0].url,
+          });
         }
+      })
 
-      }
+      // for (let i = 0; i < this.goodsData.length; i++) {
+      //   if (this.goodsData[i].supplyDate == '' || this.goodsData[i].createDate == '' || this.goodsData[i].fileList01 == [] || this.goodsData[i].fileList02 == []) {
+      //     Notify({
+      //       message: '请完善信息',
+      //       duration: 1000,
+      //     });
+      //     return
+      //   }else{
+
+      //     // hgz.push({ fileName: this.goodsData[i].fileList01.name, filePath: this.goodsData[i].fileList01.url })
+      //     // cjbg.push({ fileName: this.goodsData[i].fileList02.name, filePath: this.goodsData[i].fileList02.url })
+      //   }
+
+      // }
+      let materialCirculationDetailsTableParamList = this.goodsData.map((item) => ({
+        ...item,
+        fileByList: JSON.stringify({ hgz, cjbg })
+      }))
+      // this.goodsData.fileByList = 
       let params = {
         ...this.$store.state.public.sendGoods,
-        materialCirculationDetailsTableParamList: this.goodsData //取出store里的物资数据用于保存
+        materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
       }
       //保存
-      demandSaveSendGoods(params).then((res) => {
-        if (res.code == 0) {
-          Toast.success(res.data);
-          this.$router.push({ path: "/Information" })
-        }
-        // console.log(res)
-      })
+      if (this.text != 'edit') {
+        demandSaveSendGoods(params).then((res) => {
+          if (res.code == 0) {
+            Toast.success(res.data);
+            this.$router.push({ path: "/Information" })
+          }
+          // console.log(res)
+        })
+      } else {
+        modifySendGoods(params).then((res) => {
+          if (res.code == 0) {
+            Toast.success(res.data);
+            this.$router.push({ path: "/Information" })
+          }
+        })
+      }
+
       //保存完所选择的物资存到store里
       // this.$store.dispatch('public/setGoodsList', this.goodsData)
       // this.$router.push({

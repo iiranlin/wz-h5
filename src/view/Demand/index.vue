@@ -168,10 +168,10 @@ export default {
             this.total = res.data.total
             this.loading = false
             this.allRefreshLoading = false;
-            if(this.total<=this.params.pageSize){
+            if(this.params.pageNum===1){
               this.listGhsData = res.data.list
             }else{
-              this.params.pageNum++;
+             
               this.listGhsData = this.listGhsData.concat(res.data.list)
             }
             if(this.listGhsData.length>=this.total){
@@ -236,7 +236,7 @@ export default {
     },
      // 上拉加载处理函数
     onLoad() {
-    //  this.params.pageNum++;
+     this.params.pageNum++;
     // this.allRefreshLoading = false;
       // this.loading = true
       this.getList()

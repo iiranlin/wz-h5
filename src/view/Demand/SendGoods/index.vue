@@ -46,7 +46,7 @@
         <div class="default-button-container">
             <van-button size="mini" type="primary" class="button-info" @click="chooseGoods(goodsId)" v-if="this.text=='add'">选择发货物资</van-button>
             <!-- 编辑里的选择发货物资传的是planId -->
-            <van-button size="mini" type="primary" class="button-info" @click="editGoods(params.planId,'edit')" v-else>选择发货物资</van-button>
+            <van-button size="mini" type="primary" class="button-info" @click="editGoods(params.materialCirculationDetailsTableDTOS,'edit')" v-else>选择发货物资</van-button>
         </div>
     </div>
 </template>
@@ -55,6 +55,7 @@ import Vue from 'vue';
 import { Form } from 'vant';
 import { Field } from 'vant';
 import {demandSnedGoods,demandSnedGoodsUpload,demandSaveSendGoods} from '@/api/demand/demandManagement'
+import {detailBySendEdit} from '@/api/demand/sendGoods'
 import keepPages from '@/view/mixins/keepPages'
 import { Toast } from 'vant';
 Vue.use(Toast);
@@ -77,7 +78,7 @@ export default {
             goodsId:'',
             goodsMsg:{},
             params:{
-                shipmentBatchNumber:''
+                shipmentBatchNumber:'',
             },
             goodsList:[],
             fileList:[],
@@ -89,38 +90,47 @@ export default {
        
        
         this.text = this.$route.query.title
-        // 编辑
-        if(this.text=='edit'){
-            this.params = JSON.parse(this.$route.query.data)
-            console.log(this.params,'111')
-            //发货日期格式化
-              if (this.params.shippingDate) {
-                const date = new Date(this.params.shippingDate);
-                const year = date.getFullYear();
-                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-                const day = date.getDate().toString().padStart(2, '0'); // 日期加0
-                this.params.shippingDate = `${year}-${month}-${day}`;
-            }
-            // 预计送达日期格式化
-             if (this.params.arrivalDate) {
-                const date = new Date(this.params.arrivalDate);
-                const year = date.getFullYear();
-                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-                const day = date.getDate().toString().padStart(2, '0'); // 日期加0
-                this.params.arrivalDate = `${year}-${month}-${day}`;
-            }
-            const {planNumber,sectionName,contractName}= JSON.parse(this.$route.query.data)
-            this.goodsMsg.planNumber=planNumber
-            this.goodsMsg.sectionName=sectionName
-            this.goodsMsg.contractName=contractName
-            // 回显图片
-            let file = JSON.parse(this.params.fileByList)
-            this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
+        console.log(this.text)
+         this.goodsId = this.$route.query.id
         
+        if(this.text=='edit'){
+            this.editDetails()
         }else{
-             this.goodsId = this.$route.query.id
              this.getSendGoods();
         }
+        
+       
+        // // 编辑
+        // if(this.text=='edit'){
+        //     this.params = JSON.parse(this.$route.query.data)
+        //     console.log(this.params,'111')
+        //     //发货日期格式化
+        //       if (this.params.shippingDate) {
+        //         const date = new Date(this.params.shippingDate);
+        //         const year = date.getFullYear();
+        //         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+        //         const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+        //         this.params.shippingDate = `${year}-${month}-${day}`;
+        //     }
+        //     // 预计送达日期格式化
+        //      if (this.params.arrivalDate) {
+        //         const date = new Date(this.params.arrivalDate);
+        //         const year = date.getFullYear();
+        //         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+        //         const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+        //         this.params.arrivalDate = `${year}-${month}-${day}`;
+        //     }
+        //     const {planNumber,sectionName,contractName}= JSON.parse(this.$route.query.data)
+        //     this.goodsMsg.planNumber=planNumber
+        //     this.goodsMsg.sectionName=sectionName
+        //     this.goodsMsg.contractName=contractName
+        //     // 回显图片
+        //     let file = JSON.parse(this.params.fileByList)
+        //     this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
+        
+        // }else{
+            
+        // }
     },
     
     methods: {
@@ -129,11 +139,29 @@ export default {
             return /^[^\u4e00-\u9fa5]+$/.test(val);
         },
         getSendGoods(){
-          
             demandSnedGoods(this.goodsId).then((res)=>{
                 if(res.code == 0){
                     // Toast.clear()
                     this.goodsMsg = res.data
+                }
+            })
+        },
+        // 编辑回显
+        editDetails(){
+            detailBySendEdit(this.goodsId).then((res)=>{
+                 if(res.code == 0){
+                    // Toast.clear()
+                        const {planNumber,sectionName,contractName}= res.data
+                        this.goodsMsg.planNumber=planNumber
+                        this.goodsMsg.sectionName=sectionName
+                        this.goodsMsg.contractName=contractName
+                        let file = JSON.parse(res.data.fileByList)
+                        this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
+                        this.params = res.data
+                        this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
+                         this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
+                        
+
                 }
             })
         },
@@ -175,15 +203,19 @@ export default {
                 .validate()
                 .then(() => {
                      let fileList=[]
+                     let fhd = [];
                      if(this.fileList.length>0){
                          this.fileList.forEach(item=>{
-                        fileList.push({fileName:item.name,filePath:item.url})
+                            fileList.push({fileName:item.name,filePath:item.url})
+                            fhd.push({ fileName: item.name, filePath: item.url });
                         })
                      }
+                     let fileByList = JSON.stringify({ fhd });
                    
                 let params = {
                     ...this.params,
                     fileList:fileList,
+                    fileByList:fileByList,
                     sectionName:this.goodsMsg.sectionName,
                     planName:this.goodsMsg.planName,
                     planId:this.goodsMsg.id,
@@ -201,38 +233,46 @@ export default {
                 //验证失败
 
                 })
-            // if(this.goodsMsg.shippingAddress){
-
-            // }
-            
         },
         // 编辑时选择的下一步传的参数
-        editGoods(id,text){
+        editGoods(data,text){
             this.$refs.form
                 .validate()
                 .then(() => {
                      let fileList=[]
+                     let fhd = [];
                      if(this.fileList.length>0){
                          this.fileList.forEach(item=>{
-                        fileList.push({fileName:item.name,filePath:item.url})
+                            fileList.push({fileName:item.name,filePath:item.url})
+                            fhd.push({ fileName: item.name, filePath: item.url });
                         })
                      }
+                     let fileByList = JSON.stringify({ fhd });
                    
                 let params = {
-                    ...this.params,
-                    fileByList:JSON.stringify(fileList),
+                    arrivalDate:this.params.arrivalDate,
+                    carNumber: this.params.carNumber,
+                    contacts: this.params.contacts,
+                    contactsPhone:this.params.contactsPhone,
+                    contractName:this.params.contractName,
+                    oddNumbers:this.params.oddNumbers,
+                    shipmentBatchNumber:this.params.shipmentBatchNumber,
+                    shippingAddress:this.params.shippingAddress,
+                    shippingDate:this.params.shippingDate,
+                    // ...this.params,
+                    fileByList:fileByList,
                     fileList:fileList,
                     sectionName:this.goodsMsg.sectionName,
                     planName:this.goodsMsg.planName,
                     planId:this.goodsMsg.id,
-                    id:"",
+                    id:this.params.id,
                     contractName:this.goodsMsg.contractName,
                 }
-                // console.log(params)
+                console.log(params)
                 // 存到缓存里
                 this.$store.dispatch('public/setGoodsList', params)
                 // 携带参数跳转到选择商品页
-                this.$router.push({ path: '/selectGoods',query:{id:id,text:text} })
+                this.$router.push({ path: '/selectGoods',query:{data:JSON.stringify(data),text:text} })
                
                 })
                 .catch(() => {

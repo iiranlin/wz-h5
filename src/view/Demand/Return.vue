@@ -125,6 +125,7 @@ export default {
         if(res.code==0){
             Toast.clear()
             this.total = res.data.total
+            this.allRefreshLoading = false;
             if(this.total<=this.params.pageSize){
               this.returnList = res.data.list
             }else{

@@ -54,7 +54,7 @@
                 <div class="list-ul-button" v-if="item.status !=3">
                   <van-button class="button-info" plain round type="danger" @click="handleDelClick(item.id)"
                     v-if="item.status == 1">删除</van-button>
-                  <van-button class="button-info" plain round type="info" @click="handleEditClick(item,'edit')"
+                  <van-button class="button-info" plain round type="info" @click="handleEditClick(item.id,'edit')"
                     v-if="item.status == 1" >编辑</van-button>
                   <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id,item.status)"
                     v-if="item.status == 1">确认发货</van-button>
@@ -185,30 +185,37 @@ export default {
         if(res.code==0){
             Toast.clear()
             this.total = res.data.total
-            this.allRefreshLoading = false;
-            if(this.total<=this.params.pageSize){
-              this.listBySendData = res.data.list.map((item)=>({
-                ...item,
-                fileByList:item.fileByList ? JSON.parse(item.fileByList) : ''
-              }))
-            }else{
-              this.params.pageNum++;
-              let arr = res.data.list.map((item)=>({
-                  ...item,
-                  fileByList:item.fileByList ? JSON.parse(item.fileByList) : ''
-              }))
-              this.listBySendData = this.listBySendData.concat(arr)
+             if (this.allRefreshLoading) {
+              this.listBySendData = [];
+              this.allRefreshLoading = false;
             }
-            if(this.listBySendData.length>=this.total){
-              this.allFinished= true
+            // this.allRefreshLoading = false;
+             const newData = res.data.list.map((item) => ({
+              ...item,
+              fileByList: item.fileByList ? JSON.parse(item.fileByList) : '', // 默认值设为 [] 避免 JSON.parse 报错
+            }));
+            if(this.params.pageNum==1){
+              this.listBySendData = newData
+            }else{
+              this.listBySendData = this.listBySendData.concat(newData)
+            }
+           if (this.listBySendData.length == res.data.total) {
+           
+              this.allFinished = true;
+            } else {
+              this.params.pageNum++; // 只有成功加载后才增加页码
             }
           // this.listBySendData = res.data.list
         }
-      })
+      }).catch((err) => {
+          Toast.clear();
+          Toast("网络错误，请重试");
+          console.error(err);
+        });
     },
     tabsChange(e) {
       // 每次切换把数组清空
-      this.listBySendData = []
+      // this.listBySendData = []
       this.params.status = e
       this.params.pageNum = 1
       this.allFinished = false;
@@ -298,8 +305,8 @@ export default {
         })
     },
     //编辑
-    handleEditClick(data,title) {
-      this.$router.push({ path: '/sendGoods',query:{data:JSON.stringify(data),title:title} })
+    handleEditClick(id,title) {
+      this.$router.push({ path: '/sendGoods',query:{id:id,title:title} })
     },
     //删除
     handleDelClick(id) {
@@ -333,7 +340,8 @@ export default {
     },
     onSearch(){
       this.params.pageNum=1
-       this.getList()
+     
+      this.getList()
     }
   },
 };
