@@ -69,7 +69,7 @@
                          <template>
                         <div v-for="(item1,index1) in item.fileList" :key="index1">
                           <div v-for="(item2,index2) in item1.fileList" :key="index2"> 
-                            <a href="javascript:;" @click="dialogPopup(item2.filePath,item2.fileName)">{{ item2.fileName }}</a>
+                            <a href="javascript:;" @click="imgClick(item2.fileName,item2.filePath)">{{ item2.fileName }}</a>
                           </div>
                         </div>
                       </template>
@@ -88,16 +88,17 @@
                     <ul class="list-ul">
                         <li>
                             <span>自检单:</span>
-                            <span style="color:#1989fa;" v-if="params.fileByList.zjd">{{ params.fileByList.zjd[0].fileName }}</span>
+                            <span style="color:#1989fa;" v-if="params.fileByList.zjd" @click="imgClick(params.fileByList.zjd[0].fileName,params.fileByList.zjd[0].filePath)">{{ params.fileByList.zjd[0].fileName }}</span>
                         </li>
                         <li>
                             <span>其他资料:</span>
-                            <span style="color:#1989fa;" v-if="params.fileByList.qtzl">{{ params.fileByList.qtzl[0].fileName }}</span>
+                            <span style="color:#1989fa;" v-if="params.fileByList.qtzl" @click="imgClick(params.fileByList.qtzl[0].fileName,params.fileByList.qtzl[0].filePath)">{{ params.fileByList.qtzl[0].fileName }}</span>
                         </li>
                     </ul>
                 </div>
             </van-list>
         </div>
+        <file-preview ref="filePreview"></file-preview>
     </div>
 </template>
 <script>
@@ -106,13 +107,13 @@ import { Form } from 'vant';
 import { Field } from 'vant';
 import { Toast } from 'vant';
 import {returnGoodsDetails} from '@/api/demand/returnGoods'
-
+import FilePreview from "@/components/FilePreview.vue";
 Vue.use(Toast);
 Vue.use(Form);
 Vue.use(Field);
 export default {
     name: 'MyProcess',
-
+    components: { FilePreview },
     data() {
         return {
             username: '',
@@ -170,6 +171,9 @@ export default {
         lookGoods() {
 
         },
+         imgClick(fileName,filePath) {
+            this.$refs.filePreview.init(fileName, filePath)
+            },
         onLoad() {
             // 异步更新数据
             setTimeout(() => {
