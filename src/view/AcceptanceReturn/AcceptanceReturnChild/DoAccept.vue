@@ -2,7 +2,7 @@
   <div class="save-materials">
     <div class="save-materials-contract">
       <ul class="detail-ul">
-        <li>
+        <li class="li-item-overlength">
           <span class="font-weight">供应需求名称：</span>
           <span class="font-weight">{{dataList.planName}}</span>
         </li>
@@ -28,10 +28,10 @@
     <div class="detail-title">发货单附件</div>
     <div class="box-container">
       <ul class="detail-ul">
-        <li style="color: #0689ff" @click="imgClick">{{dataList.fileByList? (JSON.parse(dataList.fileByList).fhd?JSON.parse(dataList.fileByList).fhd[0].fileName:''):'' }}</li>
+        <li @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(dataList.fileByList, 'fhd')"
+                  :key="imgItem.filePath">{{ imgItem.fileName }}</li>
       </ul>
     </div>
-
     <div class="detail-title">收货明细</div>
     <div class="box-container" v-for="(item, index) in dataList.materialCirculationDetailsTableDTOS" :key="index">
       <ul class="detail-ul">
@@ -97,11 +97,13 @@
         </li>
         <li class="li-item-overlength">
           <span>合格证附件：</span>
-          <span style="color: #0689ff" @click="imgClick">{{ item.fileByList?(JSON.parse(item.fileByList).hgz?JSON.parse(item.fileByList).hgz[0].fileName:''):'' }}</span>
+          <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'hgz')"
+          :key="imgItem.filePath">{{ imgItem.fileName }}</span>
         </li>
         <li class="li-item-overlength">
           <span>厂检报告附件：</span>
-          <span style="color: #0689ff" @click="imgClick">{{ item.fileByList?(JSON.parse(item.fileByList).cjbg?JSON.parse(item.fileByList).cjbg[0].fileName:''):''  }}</span>
+           <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'cjbg')"
+              :key="imgItem.filePath">{{ imgItem.fileName }}</span>
         </li>
         <li>
             <span>备注：</span>
@@ -142,7 +144,8 @@
         <template v-else>
           <li>
             <span>退货附件：</span>
-            <span style="color: #0689ff" @click="imgClick">{{ item.fileByList?(JSON.parse(item.fileByList).thfj_sh?JSON.parse(item.fileByList).thfj_sh[0].fileName:''):''   }}</span>
+            <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'thfj_sh')"
+              :key="imgItem.filePath">{{ imgItem.fileName }}</span>
           </li>
         
         </template>
@@ -186,11 +189,13 @@
         <template v-else>
           <li>
             <span>自检单：</span>
-            <span style="color: #0689ff" @click="imgClick">{{dataList.fileByList?(JSON.parse(dataList.fileByList).zjd?JSON.parse(dataList.fileByList).zjd[0].fileName:''):''}}</span>
+             <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(dataList.fileByList, 'zjd')"
+              :key="imgItem.filePath">{{ imgItem.fileName }}</span>
           </li>
           <li>
             <span>其他资料：</span>
-            <span style="color: #0689ff" @click="imgClick">{{dataList.fileByList?(JSON.parse(dataList.fileByList).qtzl?JSON.parse(dataList.fileByList).qtzl[0].fileName:''):''}}</span>
+               <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(dataList.fileByList, 'qtzl')"
+              :key="imgItem.filePath">{{ imgItem.fileName }}</span>
           </li>
         </template>
       </ul>
@@ -199,19 +204,18 @@
       <van-button class="button-info" round type="info" @click="addClick">确定收货</van-button>
     </div>
 
-    <van-popup v-model="showPopup" position="bottom">
-      <van-image-preview v-model="showImg" :images="images" :startPosition="startPosition" :loop="false" @close="showPopup = false"/>
-    </van-popup>
+    <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
 <script>
 import {parseTime} from '@/utils'
-import imgMixin from '@/view/mixins/imgMixin'
+import indexMixin from '@/view/mixins'
 import {saveTake,defaultTake} from '@/api/prodmgr-inv/AcceptanceReturn'
-
+import FilePreview from "@/components/FilePreview.vue";
 export default {
   name: 'DoAccept',
-  mixins: [imgMixin],
+  mixins: [indexMixin],
+  components: { FilePreview },
   props: {
     isView: {
       type: Boolean,
@@ -438,6 +442,9 @@ export default {
     },
     onClickBack() {
       this.$router.push({path: '/AcceptanceReturn'})
+    },
+    imgClick({ fileName, filePath }) {
+      this.$refs.filePreview.init(fileName, filePath)
     }
   },
   mounted() {
@@ -501,6 +508,9 @@ export default {
         text-overflow: inherit;
         white-space: inherit;
       }
+    }
+    .img-text {
+      color: #0689ff;
     }
   }
 }

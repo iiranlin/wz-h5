@@ -17,11 +17,11 @@
           finished-text="没有更多了..."
           @load="onLoad">
 
-          <div v-for="(item,index) in allOrderList" :key="index" class="box-container" @click="handleAllItemClick(item)">
+          <div v-for="(item,index) in allOrderList" :key="index" class="box-container" >
             <ul class="list-ul">
               <li>
                 <span class="font-weight">退货单号：</span>
-                <span class="font-weight">{{item.backNumber}}</span>
+                <span class="font-weight" @click="handleAllItemClick(item)" style="color: #0689ff">{{item.backNumber}}</span>
               </li>
               <li>
                 <span>发货单号：</span>
