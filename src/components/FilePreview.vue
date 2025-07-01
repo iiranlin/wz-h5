@@ -139,8 +139,6 @@ export default {
     //pdf加载时
     loadPdfHandler(e) {
       this.currentPage = 1; // 加载的时候先加载第一页
-      console.log(this.$refs.pdf)
-      return
       this.$refs.pdf.$el.style.width = parseInt(this.scale) + "%";
       this.$refs.pdf.$el.style.height = parseInt(this.scale) + "%";
     },

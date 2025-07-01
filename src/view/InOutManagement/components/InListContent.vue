@@ -21,7 +21,7 @@
             </li>
             <li>
               <span>收货单号：</span>
-              <span @click.stop="detailsClick('2')" class="li-span-click">{{ item.takeNumber }}</span>
+              <span @click.stop="detailsClick('2', item)" class="li-span-click">{{ item.takeNumber }}</span>
             </li>
             <li>
               <span>需求名称：</span>
@@ -152,13 +152,13 @@ export default {
         },
       });
     },
-    detailsClick (key) {
+    detailsClick (key, item) {
       const objKey = {
         '1': () => {
           this.$router.push({ name: 'SubmitStore', query: {type: 'view'} })
         },
         '2': () => {
-          this.$router.push({ name: 'DoAcceptDetail' })
+          this.$router.push({ name: 'DoAcceptDetail', query: {id: item.id}  })
         }
       }
       objKey && objKey[key]()
