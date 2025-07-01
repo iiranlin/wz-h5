@@ -48,7 +48,7 @@
                     <van-button round type="danger" class="outbound-uploader-delete" v-else @click="handleFileDelete()">删除</van-button>
                   </template>
                 </van-field>
-                <span class="li-span-click" v-if="fileList.length > 0">{{fileList[0].fileName}}</span>
+                <span class="li-span-click" v-if="fileList.length > 0" @click="imgClick()">{{fileList[0].fileName}}</span>
               </template>
               <template v-else>
                 <li>
