@@ -88,3 +88,11 @@ export function materialCirculationDetailsTableRestListByPlanDetailId(id) {
     method: 'get',
   })
 }
+//物资出库-提交
+export function materialSupplierOutRestSaveOut(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialSupplierOutRest/saveOut`,
+    method: 'post',
+    data
+  })
+}

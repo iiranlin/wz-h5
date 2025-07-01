@@ -161,7 +161,9 @@
   </div>
 </template>
 <script>
-import {materialDemandPlanRestDetailOut,materialCirculationDetailsTableRestListByPlanDetailId} from '@/api/prodmgr-inv/materialDemandPlanRest'
+import {materialDemandPlanRestDetailOut,
+materialCirculationDetailsTableRestListByPlanDetailId,
+materialSupplierOutRestSaveOut} from '@/api/prodmgr-inv/materialDemandPlanRest'
 import {minioUpload} from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
 
@@ -177,6 +179,9 @@ export default {
       showsTimePop: false, 
 
       formData: {
+        planName: '',     //需求名称
+        sectionName: '',  //需求项目
+        deptName: '',     //需求组织
         receiveDeptName: '',  //领用单位
         pickUserName: '',   //领料人
         pickDate: '',   //领料日期
@@ -206,6 +211,10 @@ export default {
       materialDemandPlanRestDetailOut(this.id).then(({ data }) => {
         this.detailInfo = data;
         this.detailList = data.details;
+
+        this.formData.planName = data.planName;
+        this.formData.sectionName = data.sectionName;
+        this.formData.deptName = data.deptName;
 
         //获取子集
         this.detailList.forEach((item) => {
@@ -346,20 +355,22 @@ export default {
         for (let i = 0; i < this.detailList.length; i++) {
           let childList = this.detailList[i].childList
 
-          for (let j = 0; j < childList.length; j++) {
-            if(!childList[j].outTotal){
-              this.$notify({
-                type: 'warning',
-                message: '出库数量不能为空!',
-              });
-              return
-            }
-            if(Number(childList[j].outTotal) > Number(childList[j].remainingStock)){
-              this.$notify({
-                type: 'warning',
-                message: '出库数量不能大于当前库存数量!',
-              });
-              return
+          if(childList && childList.length> 0){
+            for (let j = 0; j < childList.length; j++) {
+              if(!childList[j].outTotal){
+                this.$notify({
+                  type: 'warning',
+                  message: '出库数量不能为空!',
+                });
+                return
+              }
+              if(Number(childList[j].outTotal) > Number(childList[j].remainingStock)){
+                this.$notify({
+                  type: 'warning',
+                  message: '出库数量不能大于当前库存数量!',
+                });
+                return
+              }
             }
           }
         }
@@ -367,8 +378,32 @@ export default {
       this.queryType = type
     },
     outboundClick(){
-      this.$toast('出库成功');
-      this.$router.push({ path: '/InOutManagementList' })
+      let fileObj = {
+        lld: this.fileList,
+      }
+      let params = {
+        materialSupplierOutDetailParams: this.detailList,
+        fileByList: JSON.stringify(fileObj),
+        fileList: this.fileList,
+        id: this.id,
+      }
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
+      materialSupplierOutRestSaveOut(Object.assign({}, this.formData,params)).then(({ message }) => {
+        this.$notify({
+            type: 'success',
+            message: message
+        });
+        this.$router.push({ path: '/InOutManagementList' })
+      }).catch((error) => {
+
+      }).finally(() => {
+        toast.clear();
+      });
+   
     },
   }
 }
