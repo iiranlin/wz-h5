@@ -47,11 +47,11 @@
                   </li>
                   <li>
                     <span style="width: 200px;">需求计划表:</span>
-                    <span style="color:#1989fa;">
+                    <span style="color:#0689ff;">
                       <template>
                         <div v-for="(item1,index1) in item.fileList" :key="index1">
                           <div v-for="(item2,index2) in item1.fileList" :key="index2"> 
-                            <a href="javascript:;" @click="dialogPopup(item2.filePath,item2.fileName)">{{ item2.fileName }}</a>
+                            <a href="javascript:;" @click="imgClick(item2)" style="color:#0689ff;">{{ item2.fileName }}</a>
                           </div>
                         </div>
                       </template>
@@ -86,18 +86,20 @@
     <van-dialog v-model="showPdf" title="查看pdf" show-cancel-button>
       <img :src="`http://10.59.249.62:7890/api/blcd-base/minio/download?filePath=${filePath}&fileName=${fileName}`" style="height: 400px;width: 100%;"/>
     </van-dialog>
+    <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
 import {demandManagementList,demandManagementLookPdf} from '@/api/demand/demandManagement'
+import FilePreview from "@/components/FilePreview.vue";
 import Vue from 'vue';
 import { Toast } from 'vant';
 Vue.use(Toast);
 export default {
-  name: 'MyToDoList',
+  name: 'dashboard',
   mixins: [keepPages],
-
+  components: { FilePreview },
   data() {
     return {
       menuActiveIndex: 0,
@@ -241,6 +243,9 @@ export default {
       // this.loading = true
       this.getList()
     },
+     imgClick({ fileName, filePath }) {
+      this.$refs.filePreview.init(fileName, filePath)
+    }
   },
 };
 </script>

@@ -43,7 +43,7 @@
                   </li>
                   <li>
                     <span style="width: 200px;">发货单附件:</span>
-                    <span style="color:#1989fa;" v-if="item.fileByList">{{ item.fileByList.fhd[0].fileName }}</span>
+                    <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.fhd[0].fileName,item.fileByList.fhd[0].filePath)">{{ item.fileByList.fhd[0].fileName }}</span>
                   </li>
                   <li class="li-status">
                     <van-tag type="primary" round size="medium" v-if="item.status == 1">未发货</van-tag>
@@ -97,6 +97,7 @@
       </van-form>
       </div>
     </van-dialog>
+    <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
 <script>
@@ -107,6 +108,7 @@ import { Form } from 'vant';
 import { Field } from 'vant';
 import { Toast } from 'vant';
 import { Step, Steps } from 'vant';
+import FilePreview from "@/components/FilePreview.vue";
 import {snedGoodsList,snedGoodsSure,deleteGoods,addFreightLocations,addList} from '@/api/demand/sendGoods'
 Vue.use(Step);
 Vue.use(Steps);
@@ -118,7 +120,7 @@ Vue.use(Dialog);
 export default {
   name: 'Information',
   mixins: [keepPages],
-
+  components: { FilePreview },
   data() {
     return {
       formKey: 0,
@@ -340,8 +342,10 @@ export default {
     },
     onSearch(){
       this.params.pageNum=1
-     
       this.getList()
+    },
+    imgClick(fileName, filePath ) {
+      this.$refs.filePreview.init(fileName, filePath)
     }
   },
 };
