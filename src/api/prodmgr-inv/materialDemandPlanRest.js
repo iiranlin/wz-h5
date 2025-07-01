@@ -65,3 +65,19 @@ export const materialDemandPlanRestSubmit = (data) => {
       data
   })
 }
+
+//需求库存列表
+export function materialDemandPlanRestListStock(params) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/listStock`,
+    method: 'get',
+    params
+  })
+}
+//物资出库
+export function materialDemandPlanRestDetailOut(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailOut/${id}`,
+    method: 'get',
+  })
+}
