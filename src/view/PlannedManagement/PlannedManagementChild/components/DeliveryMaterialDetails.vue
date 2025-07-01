@@ -29,11 +29,11 @@
           </li>
           <li>
             <span>生产日期：</span>
-            <span>{{ parseTime(item.manufactureDate, '{y}-{m}-{d}') }}</span>
+            <span>{{ item.manufactureDate && parseTime(item.manufactureDate, '{y}-{m}-{d}') }}</span>
           </li>
           <li>
             <span>有效期截止日期：</span>
-            <span>{{ parseTime(item.expirationDate, '{y}-{m}-{d}') }}</span>
+            <span>{{ item.expirationDate && parseTime(item.expirationDate, '{y}-{m}-{d}') }}</span>
           </li>
           <li>
             <span>使用地点：</span>
@@ -41,7 +41,7 @@
           </li>
           <li>
             <span>供应时间：</span>
-            <span>{{ parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
+            <span>{{ item.supplyDate && parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
           </li>
           <li>
             <span>收货地址：</span>
