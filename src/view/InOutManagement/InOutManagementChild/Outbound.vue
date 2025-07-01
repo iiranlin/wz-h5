@@ -19,9 +19,9 @@
               </li>
               <template v-if="queryType === 'submit'">
                 <van-field v-model="formData.receiveDeptName" name="领用单位" label="领用单位：" placeholder="请输入领用单位" required clearable
-                  input-align="right" :rules="[{ required: true, message: '请输入领用单位' }]" />
+                  input-align="right"/>
                 <van-field v-model="formData.pickUserName" name="领料人" label="领料人：" placeholder="请输入领料人" required clearable
-                  input-align="right" :rules="[{ required: true, message: '请输入领料人' }]" />
+                  input-align="right"/>
                 <van-field v-model="formData.pickDate" 
                   label="领料日期："
                   required
@@ -29,24 +29,26 @@
                   readonly 
                   clickable 
                   name="领料日期" 
-                  :rules="[{ required: true, message: '请选择领料日期' }]"
                   placeholder="请选择领料日期" 
                   @click="showsTimePop=true" />
                 <van-field v-model="formData.useLocation" name="使用地点" label="使用地点：" placeholder="请输入使用地点" required clearable
-                  input-align="right" :rules="[{ required: true, message: '请输入使用地点' }]" />
+                  input-align="right"/>
                 <van-field v-model="formData.issueUserName" name="发料人" label="发料人：" placeholder="请输入发料人" required clearable
-                  input-align="right" :rules="[{ required: true, message: '请输入发料人' }]" />
-                <van-field v-model="formData.uploader" name="uploader" label="领料单：" class="outbound-field-uploader" required :rules="[{ required: true, message: '请上传领料单' }]">
+                  input-align="right"/>
+                <van-field name="uploader" label="领料单：" class="outbound-field-uploader" required>
                   <template #input>
                     <van-uploader
+                      v-if="fileList.length == 0"
                       :preview-imag='false'
                       :after-read="afterReadTransfer"
                       :before-read="beforeRead"
                       accept="">
-                      <van-button round type="info" class="outbound-uploader">上传</van-button>
+                      <van-button round type="info" class="outbound-uploader" >上传</van-button>
                     </van-uploader>
+                    <van-button round type="danger" class="outbound-uploader-delete" v-else @click="handleFileDelete()">删除</van-button>
                   </template>
                 </van-field>
+                <span class="li-span-click" v-if="fileList.length > 0">{{fileList[0].fileName}}</span>
               </template>
               <template v-else>
                 <li>
@@ -71,7 +73,7 @@
                 </li>
                 <li>
                   <span>领料单：</span>
-                  <span class="li-span-click">{{file.fileName}}</span>
+                  <span @click="imgClick()" class="li-span-click">{{fileList[0].fileName}}</span>
                 </li>
               </template>
             </ul>
@@ -109,66 +111,40 @@
               </li>
             </ul>
           </div>
-          <div class="div-child">
+          <div class="div-child" v-for="(childItem,childIndex) in item.childList" :key="childIndex">
             <ul class="detail-ul">
               <li>
                 <span>入库单号：</span>
-                <span></span>
+                <span>{{childItem.storeNumber}}</span>
               </li>
               <li class="li-item-overlength">
                 <span>当前库存数量：</span>
-                <span></span>
+                <span>{{childItem.remainingStock}}</span>
               </li>
               <li>
                 <span>生产日期：</span>
-                <span></span>
+                <span>{{parseTime(childItem.manufactureDate,'{y}-{m}-{d}')}}</span>
               </li>
               <li class="li-item-overlength">
                 <span>有效期截至日期：</span>
-                <span></span>
+                <span>{{parseTime(childItem.expirationDate,'{y}-{m}-{d}')}}</span>
               </li>
               <template v-if="queryType === 'submit'">
-                <van-field class="outbound-field-text" v-model="formData.num" name="出库数量" label="出库数量：" placeholder="请输入出库数量" input-align="right" label-width="252px" />
-                <van-field class="outbound-field-text" v-model="formData.name" name="备注" label="备注：" placeholder="请输入备注" input-align="right" label-width="110px"/>
+                <van-field class="outbound-field-text" v-model="childItem.outTotal" name="出库数量" label="出库数量：" placeholder="请输入出库数量" input-align="right" label-width="252px" />
+                <van-field class="outbound-field-text" v-model="childItem.remark" name="备注" label="备注：" placeholder="请输入备注" input-align="right" label-width="110px"/>
+              </template>
+              <template v-if="queryType === 'save'">
+                <li>
+                  <span>出库数量：</span>
+                  <span>{{childItem.outTotal}}</span>
+                </li>
+                <li>
+                  <span>备注：</span>
+                  <span>{{childItem.remark}}</span>
+                </li>
               </template>
             </ul>
           </div>
-              <!-- <li class="li-item-both li-item-overlength">
-                <div class="li-item-left">
-                  <span>入库单号：</span>
-                  <span>RK202506260001</span>
-                </div>
-                <div class="li-item-right">
-                  <span>当前库存数量：</span>
-                  <span>5</span>
-                </div>
-              </li>
-              <li class="li-item-both">
-                <div class="li-item">
-                  <span>生产日期：</span>
-                  <span class="li-span-red">2025-6-1</span>
-                </div>
-                <div class="li-item">
-                  <span>有效截止日期：</span>
-                  <span class="li-span-red">2026-6-1</span>
-                </div>
-              </li> -->
-              <!-- <template v-if="queryType === 'submit'"> -->
-                <!-- <van-form @submit="outboundClick" label-align="right" label-width="145px" v-if="queryType === 'submit'"> -->
-                <!-- <van-field class="outbound-field-text" v-model="formData.num" name="本次出库数量" label="本次出库数量：" placeholder="请输入入库数量" input-align="right" label-width="252px" />
-                <van-field class="outbound-field-text" v-model="formData.name" name="备注" label="备注：" placeholder="请输入备注" input-align="right" label-width="110px"/> -->
-                <!-- </van-form> -->
-              <!-- </template>
-              <template v-else>
-                <li class="li-item-overlength">
-                  <span>本次出库数量：</span>
-                  <span>10</span>
-                </li>
-                <li class="li-item-overlength">
-                  <span>备注：</span>
-                  <span>备注备注备注</span>
-                </li>
-              </template> -->
         </div>
       </van-form>
     </div>
@@ -180,16 +156,18 @@
     <van-calendar v-model="showsTimePop" 
       @confirm="timeConfirm">
     </van-calendar>
+    <!-- 附件预览 -->
+    <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
 <script>
-import dt from '@/assets/img/img.png';
-import {materialDemandPlanRestDetailOut} from '@/api/prodmgr-inv/materialDemandPlanRest'
+import {materialDemandPlanRestDetailOut,materialCirculationDetailsTableRestListByPlanDetailId} from '@/api/prodmgr-inv/materialDemandPlanRest'
 import {minioUpload} from '@/api/blcd-base/minio'
+import FilePreview from "@/components/FilePreview.vue";
 
 export default {
   name: 'Outbound',
-  components: {},
+  components: {FilePreview},
   data() {
     return {
       id:'',
@@ -204,16 +182,8 @@ export default {
         pickDate: '',   //领料日期
         useLocation: '',   //使用地点
         issueUserName: '',   //发料人
-        uploader: null
       },
-      file:{},
-
-
-
-      showPopup: false,
-      startPosition: 0,
-      showImg: false,
-      images: [dt]
+      fileList:[],
     }
   },
   created() {
@@ -226,6 +196,7 @@ export default {
 
   },
   methods: {
+    //获取详情信息
     getDetail(){
       let toast = this.$toast.loading({
         duration: 0,
@@ -235,23 +206,36 @@ export default {
       materialDemandPlanRestDetailOut(this.id).then(({ data }) => {
         this.detailInfo = data;
         this.detailList = data.details;
+
+        //获取子集
+        this.detailList.forEach((item) => {
+          if(item.stockStatus != '0'){
+            this.getChildDetail(item);
+          }
+        })
       }).catch((error) => {
 
       }).finally(() => {
         toast.clear();
       });
     },
-    previewClick (type) {
-      console.log(this.formData)
-      this.queryType = type
-    },
-    outboundClick() {
-      this.$toast('出库成功');
-      this.$router.push({ path: '/InOutManagementList' })
-    },
-    imgClick() {
-      this.showImg = true
-      this.showPopup = true
+    //获取明细子集信息
+    getChildDetail(item){
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
+      materialCirculationDetailsTableRestListByPlanDetailId(item.id).then(({ data }) => {
+        data.forEach((item) => {
+          this.$set(item, 'outTotal', item.remainingStock);
+        })
+        this.$set(item, 'childList', data);
+      }).catch((error) => {
+
+      }).finally(() => {
+        toast.clear();
+      });
     },
     //领料日期选择回调
     timeConfirm(value){
@@ -259,7 +243,7 @@ export default {
       this.showsTimePop = false;
     },
     //附件上传前
-    beforeRead(file) {
+    beforeRead(file){
       const isLt10M = file.size / 1024 / 1024 < 10;
       const isFileName = file.name.length < 90;
 
@@ -294,13 +278,97 @@ export default {
           type: 'success',
           message: "上传成功"
         });
-        this.file = data;
+        let file = {
+          fileName: data.fileName,
+          filePath: data.filePath,
+        }
+        this.fileList.push(file);
       }).catch((err) => {
         this.$notify({
           type: 'warning',
           message: "上传失败"
         });
       })
+    },
+    //附件预览
+    imgClick(){
+      this.$refs.filePreview.init(this.fileList[0].fileName, this.fileList[0].filePath)
+    },
+    //附件删除
+    handleFileDelete(){
+      this.fileList = [];
+    },
+    //预览点击
+    previewClick(type) {
+      if(this.queryType == 'submit'){
+        if(!this.formData.receiveDeptName){
+            this.$notify({
+                type: 'warning',
+                message: '请输入领用单位!',
+            });
+            return
+        }
+        if(!this.formData.pickUserName){
+            this.$notify({
+                type: 'warning',
+                message: '请输入领料人!',
+            });
+            return
+        }
+        if(!this.formData.pickDate){
+            this.$notify({
+                type: 'warning',
+                message: '请选择领料日期!',
+            });
+            return
+        }
+        if(!this.formData.useLocation){
+            this.$notify({
+                type: 'warning',
+                message: '请输入使用地点!',
+            });
+            return
+        }
+        if(!this.formData.issueUserName){
+            this.$notify({
+                type: 'warning',
+                message: '请输入发料人!',
+            });
+            return
+        }
+        if(this.fileList.length == 0){
+            this.$notify({
+                type: 'warning',
+                message: '请上传领料单!',
+            });
+            return
+        }
+        for (let i = 0; i < this.detailList.length; i++) {
+          let childList = this.detailList[i].childList
+
+          for (let j = 0; j < childList.length; j++) {
+            if(!childList[j].outTotal){
+              this.$notify({
+                type: 'warning',
+                message: '出库数量不能为空!',
+              });
+              return
+            }
+            if(Number(childList[j].outTotal) > Number(childList[j].remainingStock)){
+              this.$notify({
+                type: 'warning',
+                message: '出库数量不能大于当前库存数量!',
+              });
+              return
+            }
+          }
+        }
+      }
+      this.queryType = type
+    },
+    outboundClick(){
+      this.$toast('出库成功');
+      this.$router.push({ path: '/InOutManagementList' })
     },
   }
 }
@@ -376,12 +444,18 @@ export default {
   ::v-deep .van-field__body {
     float: right;
   }
-  .div-parent {
-    padding-bottom: 5px;
-    border-bottom: 1px solid #f3f5f7;
-  }
   .div-child {
-    margin-top: 10px;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid #f3f5f7;
+  }
+  .li-span-click {
+    word-wrap: break-word;
+  }
+  .outbound-uploader-delete {
+    min-width: 80px;
+    height: 25px;
+    transform: translateY(5px);
   }
 }
 </style>
