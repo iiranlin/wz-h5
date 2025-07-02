@@ -115,12 +115,12 @@ export default {
   },
   mounted() {
     // console.log(this.$store.public.sendGoods,'111')
-   this.goodsId = this.$route.query.id
-   
+   this.goodsId = this.$route.query.id 
   //  编辑时传过来的标识(应该存在缓存里的)
     this.text = this.$route.query.text
+    console.log(this.text)
     if(this.text=='edit'){
-      let arrdata = JSON.parse(this.$route.query.data)
+        let arrdata = JSON.parse(this.$route.query.data)
        this.selectGoodsList = arrdata.map(item => {
             // 辅助函数：格式化日期为 YYYY-MM-DD
             const formatDate = (dateString) => {
@@ -211,7 +211,7 @@ export default {
     addClick(text) {
       console.log(this.selectArrayData)
       if(this.selectArrayData.length>0){
-        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:this.goodsId,text:text} })
+        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),text:text} })
       }else{
         Toast.fail('请选择至少一项');
       }

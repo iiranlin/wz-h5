@@ -44,37 +44,35 @@
         <van-divider />
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
           <van-form ref="form">
-            <van-field v-model="goodsData[index].ssendTotal" name="发货数量" label="发货数量" placeholder="发货数量"
-              input-align="right" :rules="[{ required: true, message: '请填写发货数量' }]" />
-            <van-field v-model="goodsData[index].unit" name="包装形式" label="包装形式" placeholder="请输入包装形式"
-              input-align="right" :rules="[{ required: true, message: '请填写包装形式' }]" />
-            <van-field readonly clickable v-model="goodsData[index].createDate" name="datetimePicker"
-              :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
-              @click="showCalendars(item, index, 'show')" :rules="[{ required: true, message: '请填写生产日期' }]"
+            <van-field v-model="goodsData[index].ssendTotal" required name="发货数量" label="发货数量" placeholder="发货数量"
               input-align="right" />
+            <van-field v-model="goodsData[index].unit" name="包装形式" required label="包装形式" placeholder="请输入包装形式"
+              input-align="right" />
+            <van-field readonly clickable v-model="goodsData[index].createDate" required name="datetimePicker"
+              :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
+              @click="showCalendars(item, index, 'show')" input-align="right" />
             <van-field readonly clickable v-model="goodsData[index].updateDate" name="datetimePicker"
               :value="goodsData[index].updateDate" label="有效截止日期" placeholder="有效截止日期"
               @click="showCalendars(item, index, 'end')" input-align="right" />
-            <van-field v-model="goodsData[index].addr" label="使用地点" placeholder="使用地点" input-align="right" />
-            <van-field v-model="goodsData[index].field2" label="收货地址" placeholder="收货地址" input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].supplyDate" name="datetimePicker"
+            <van-field v-model="goodsData[index].addr" label="使用地点" placeholder="使用地点" input-align="right" required />
+            <van-field v-model="goodsData[index].field2" label="收货地址" required placeholder="收货地址" input-align="right" />
+            <van-field readonly clickable v-model="goodsData[index].supplyDate" name="datetimePicker" required
               :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
-              @click="showCalendars(item, index, 'gong')" :rules="[{ required: true, message: '请填写供应时间' }]"
-              input-align="right" />
+              @click="showCalendars(item, index, 'gong')" input-align="right" />
 
-            <van-field v-model="goodsData[index].receiver" name="收货人" label="收货人和电话" placeholder="收货人"
-              input-align="right" :rules="[{ required: true, message: '请填写收货人和联系方式' }]" />
-            <van-field v-model="goodsData[index].field0" :name="goodsData[index].field0" label="投资方" placeholder="投资方"
-              disabled input-align="right" />
-            <van-field v-model="goodsData[index].field1" name="投资比例" label="投资比例" disabled placeholder="投资比例"
+            <van-field v-model="goodsData[index].receiver" name="收货人" required label="收货人和电话" placeholder="收货人"
               input-align="right" />
-            <van-field name="uploader" label="合格证附件" :rules="[{ required: true, message: '请上传合格证附件' }]">
+            <van-field v-model="goodsData[index].field0" :name="goodsData[index].field0" label="投资方" required
+              placeholder="投资方" disabled input-align="right" />
+            <van-field v-model="goodsData[index].field1" name="投资比例" required label="投资比例" disabled placeholder="投资比例"
+              input-align="right" />
+            <van-field name="uploader" label="合格证附件" :rules="[{ required: true, message: '请上传合格证附件' }]" required>
               <template #input>
                 <van-uploader v-model="goodsData[index].fileList01" multiple :max-count="1"
                   :after-read="(file) => passReadUpload(file, index)" />
               </template>
             </van-field>
-            <van-field name="uploader" label="厂检报告附件" :rules="[{ required: true, message: '请上传厂检报告附件' }]">
+            <van-field name="uploader" label="厂检报告附件" :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
               <template #input>
                 <van-uploader v-model="goodsData[index].fileList02" :after-read="(file) => checkReadUpload(file, index)"
                   multiple :max-count="1" />
@@ -142,13 +140,35 @@ export default {
     this.goodsId = this.$route.query.id
     // 带回来的编辑标识
     this.text = this.$route.query.text
-    // this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData));
-    this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
-      ...item,
-      planDetailId: item.id
-    }))
+    if (this.text == 'add') {
+      this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
+        ...item,
+        planDetailId: item.id,
+      }))
+    } else {
+      this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
+        ...item,
+        planDetailId: item.id,
+        // 回显图片
+        fileList01: this.showHgz(item.fileByList),
+        fileList02: this.showCjbg(item.fileByList),
+      }))
+    }
+
   },
   methods: {
+    showHgz(data) {
+      let imgUrl = JSON.parse(data)
+      console.log(imgUrl)
+      let img = [{ name: imgUrl.hgz[0].fileName, url: imgUrl.hgz[0].filePath }]
+      return img
+    },
+    showCjbg(data) {
+      let imgUrl = JSON.parse(data)
+      console.log(imgUrl)
+      let img = [{ name: imgUrl.cjbg[0].fileName, url: imgUrl.cjbg[0].filePath }]
+      return img
+    },
     onSubmit(values) {
       console.log('submit', values);
     },
@@ -247,47 +267,44 @@ export default {
       this.goodsData.splice(index)
     },
     save() {
+      // 先校验所有数据
+      const isValid = this.goodsData.every((item) => {
+        return (
+          item.supplyDate &&
+          item.createDate &&
+          item.ssendTotal &&
+          item.unit &&
+          item.addr &&
+          item.field2 &&
+          item.fileList01 &&
+          item.receiver &&
+          item.fileList02 &&
+          item.fileList01.length > 0 &&
+          item.fileList02.length > 0
+        );
+      });
+
+      if (!isValid) {
+        Toast.fail('请完善信息');
+        return;
+      }
       let hgz = [] //合格证
       let cjbg = []
-      this.goodsData.forEach((item, index) => {
-        if (this.goodsData[index].supplyDate == '' || this.goodsData[index].createDate == '' || this.goodsData[index].fileList01 == [] || this.goodsData[index].fileList02 == []) {
-          Notify({
-            message: '请完善信息',
-            duration: 1000,
-          });
-          return
-        } else {
-          hgz.push({
-            fileName: item.fileList01[0].name,
-            filePath: item.fileList01[0].url,
-          });
-          // 处理 fileList02（可能是数组）
-          cjbg.push({
-            fileName: item.fileList02[0].name,
-            filePath: item.fileList02[0].url,
-          });
-        }
-      })
 
-      // for (let i = 0; i < this.goodsData.length; i++) {
-      //   if (this.goodsData[i].supplyDate == '' || this.goodsData[i].createDate == '' || this.goodsData[i].fileList01 == [] || this.goodsData[i].fileList02 == []) {
-      //     Notify({
-      //       message: '请完善信息',
-      //       duration: 1000,
-      //     });
-      //     return
-      //   }else{
-
-      //     // hgz.push({ fileName: this.goodsData[i].fileList01.name, filePath: this.goodsData[i].fileList01.url })
-      //     // cjbg.push({ fileName: this.goodsData[i].fileList02.name, filePath: this.goodsData[i].fileList02.url })
-      //   }
-
-      // }
+      this.goodsData.forEach((item) => {
+        hgz.push({
+          fileName: item.fileList01[0].name,
+          filePath: item.fileList01[0].url,
+        });
+        cjbg.push({
+          fileName: item.fileList02[0].name,
+          filePath: item.fileList02[0].url,
+        });
+      });
       let materialCirculationDetailsTableParamList = this.goodsData.map((item) => ({
         ...item,
         fileByList: JSON.stringify({ hgz, cjbg })
       }))
-      // this.goodsData.fileByList = 
       let params = {
         ...this.$store.state.public.sendGoods,
         materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
@@ -375,9 +392,7 @@ export default {
   background: blue;
 }
 
-/deep/.van-cell {
-  padding-left: 0;
-}
+
 
 /deep/.van-button--primary {
   background-color: #1989fa;

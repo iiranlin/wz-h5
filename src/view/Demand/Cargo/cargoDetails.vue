@@ -5,8 +5,7 @@
                 @change="tabsChange" title-inactive-color="#2e2e2e">
                 <van-tab title="需求信息" name="需求信息">
                     <div class="tabs"></div>
-                    <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-                        <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..."
+                      <van-list v-model="allLoading" :finished="allFinished"
                             @load="getAllList">
 
                             <div class="box-container">
@@ -32,15 +31,10 @@
                                         <span>{{ params.shippingAddress }}</span>
                                     </li>
                                     <li>
-                                        <span style="min-width: 250px;">发货单附件:</span>
-                                        <span style="color:#1989fa;" v-if="params.fileList">
+                                        <span style="min-width: 180px;">发货单附件:</span>
+                                        <span style="color:#1989fa;">
                                             <template>
-                                                <div v-for="(item1, index1) in params.fileList" :key="index1">
-                                                    <div v-for="(item2, index2) in item1.fileList" :key="index2">
-                                                        <a href="javascript:;" @click="imgClick(item2.fileName,item2.filePath)"
-                                                            style="color:#0689ff;">{{ item2.fileName }}</a>
-                                                    </div>
-                                                </div>
+                                                 <span style="color:#1989fa;" v-if="params.fileByList" @click="imgClick(params.fileByList.fhd[0].fileName,params.fileByList.fhd[0].filePath)">{{ params.fileByList.fhd[0].fileName }}</span>
                                             </template>
                                         </span>
                                     </li>
@@ -50,7 +44,7 @@
                                             }}</span>
                                     </li>
                                     <li>
-                                        <span style="min-width: 280px;">预计到达时间为:</span>
+                                        <span style="min-width: 230px;">预计到达时间为:</span>
                                         <span v-if="params.arrivalDate">{{ formattedCreateDate(params.arrivalDate)
                                             }}</span>
                                     </li>
@@ -69,18 +63,16 @@
                                 </ul>
                             </div>
                         </van-list>
-                    </van-pull-refresh>
                 </van-tab>
                 <van-tab title="发货物明细" name="发货物明细">
-                    <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-                        <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..."
+                       <van-list v-model="allLoading" :finished="allFinished"
                             @load="getAllList">
 
                             <div class="box-container"
                                 v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
                                 <ul class="list-ul">
                                     <li>
-                                        <span class="font-weight" style="width: 300px;">需求组织名称:</span>
+                                        <span class="font-weight" style="width: 250px;">需求组织名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
                                     </li>
                                     <li>
@@ -130,7 +122,7 @@
                                         <span>{{ formattedCreateDate(item.supplyDate) }}</span>
                                     </li>
                                     <li>
-                                        <span style="width: 400px;">收货人及联系方式:</span>
+                                        <span style="width: 385px;">收货人及联系方式:</span>
                                         <span>{{ item.receiver }}</span>
                                     </li>
                                     <li>
@@ -158,7 +150,6 @@
                                 </ul>
                             </div>
                         </van-list>
-                    </van-pull-refresh>
                 </van-tab>
             </van-tabs>
         </div>
@@ -212,10 +203,16 @@ export default {
             return `${year}-${month}-${day}`;
         },
         cargoDetails() {
+           
             detailBySend(this.id).then((res) => {
                 if (res.code == 0) {
+                
                     this.params = res.data
                     this.params.fileByList = JSON.parse(res.data.fileByList)
+                    this.params.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item)=>({
+                        ...item,
+                        fileByList:JSON.parse(item.fileByList)
+                    }))
                 }
             })
         },
@@ -245,7 +242,7 @@ export default {
         },
         imgClick(fileName, filePath) {
             this.$refs.filePreview.init(fileName, filePath)
-        }
+        },
     },
 };
 </script>

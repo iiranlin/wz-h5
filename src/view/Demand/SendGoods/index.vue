@@ -44,9 +44,9 @@
             </van-form>
         </div>
         <div class="default-button-container">
-            <van-button size="mini" type="primary" class="button-info" @click="chooseGoods(goodsId)" v-if="this.text=='add'">选择发货物资</van-button>
+            <van-button size="mini" type="primary" round class="button-info" @click="chooseGoods(goodsId,text)" v-if="this.text=='add'">选择发货物资</van-button>
             <!-- 编辑里的选择发货物资传的是planId -->
-            <van-button size="mini" type="primary" class="button-info" @click="editGoods(params.materialCirculationDetailsTableDTOS,'edit')" v-else>选择发货物资</van-button>
+            <van-button size="mini" type="primary" round class="button-info" @click="editGoods(params.materialCirculationDetailsTableDTOS,'edit')" v-else>选择发货物资</van-button>
         </div>
     </div>
 </template>
@@ -156,8 +156,9 @@ export default {
                         this.goodsMsg.sectionName=sectionName
                         this.goodsMsg.contractName=contractName
                         let file = JSON.parse(res.data.fileByList)
-                        this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
                         this.params = res.data
+                        this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
+                        console.log(this.fileList,'113')
                         this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
                          this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
                         
@@ -197,7 +198,7 @@ export default {
             this.params.arrivalDate = `${year}-${month}-${day}`;
             this.sendStop = false;
         },
-        chooseGoods(id) {
+        chooseGoods(id,text) {
             // this.formKey++
               this.$refs.form
                 .validate()
@@ -226,7 +227,7 @@ export default {
                 // 存到缓存里
                 this.$store.dispatch('public/setGoodsList', params)
                 // 携带参数跳转到选择商品页
-                this.$router.push({ path: '/selectGoods',query:{id:id} })
+                this.$router.push({ path: '/selectGoods',query:{id:id,text:text} })
                
                 })
                 .catch(() => {
@@ -268,11 +269,16 @@ export default {
                     id:this.params.id,
                     contractName:this.goodsMsg.contractName,
                 }
-                console.log(params)
                 // 存到缓存里
                 this.$store.dispatch('public/setGoodsList', params)
-                // 携带参数跳转到选择商品页
-                this.$router.push({ path: '/selectGoods',query:{data:JSON.stringify(data),text:text} })
+                //判断有没有可供选择的物资
+                if(data.length&&data.length>0){
+                     // 携带参数跳转到选择商品页
+                    this.$router.push({ path: '/selectGoods',query:{data:JSON.stringify(data),text:text} })
+                }else{
+                    Toast('没有可供选择的物资');
+                }
+               
                
                 })
                 .catch(() => {
@@ -326,8 +332,8 @@ export default {
             demandSnedGoodsUpload(imgFile).then((res)=>{
                 if(res.code == 0){
                    this.fileList = [{
-                        name: res.data.filePath,
-                        url:res.data.fileName
+                        name: res.data.fileName,
+                        url:res.data.filePath
                         }];
                     this.params.fileByList = ''
                     // this.params = res.data

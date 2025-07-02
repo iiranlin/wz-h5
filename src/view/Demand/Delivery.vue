@@ -324,7 +324,9 @@ export default {
         deleteGoods(params).then((res)=>{
             if(res.code==0){
               Toast.success(res.message);
+              this.params.pageNum=1
               this.getList();
+              this.$forceUpdate(); // 强制更新视图
             }
         })
         // this.$toast('删除成功');
