@@ -36,7 +36,6 @@
     </ul>
     <template v-if="detailObj.oddNumbers">
       <div class="Logistics-Information-dt">
-        <!-- <img :src="dt" /> -->
         <wuliu :courierNumber="detailObj.oddNumbers" @expressDataFun="expressDataFun" />
       </div>
       <van-steps direction="vertical" active-color="#0086ff" :active="0">
@@ -67,7 +66,6 @@
   </div>
 </template>
 <script>
-import dt from '@/assets/img/dt.png'
 import wuliu from '@/components/wuliu'
 export default {
   name: 'LogisticsInformation',
@@ -88,7 +86,6 @@ export default {
     return {
       appid: "bjhzcZ1hF8rR5gF5mK9qW",
       appSecret: "4c18253ddba74d30b1b74a692aab6606",
-      dt,
       formData: {
         mailNo:'',  //快递单号
         cpCode:'',  //快递公司编码
@@ -105,7 +102,7 @@ export default {
 		},
 	},
   created() {
-    console.log(this.activeKey)
+    // console.log(this.activeKey)
   },
   activated() {
   },

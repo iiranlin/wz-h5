@@ -134,8 +134,11 @@ export default {
     getListBySectionId(contractId) {
       this.loading = true
       getListBySectionId({ contractId }).then(({ data }) => {
-        this.list = data //.filter( (row) => Number(row.cumulativeAmount) < Number(row.amount)) || []
+        // this.list = data //.filter( (row) => Number(row.cumulativeAmount) < Number(row.amount)) || []
         this.materiaId = (this.$store.state.public.materiaList || []).map(item => item.uniqueNumber || item.allocationUniqueNumber)
+        const listDataA = data.filter( item => this.materiaId.includes(item.uniqueNumber) || item.amount === item.cumulativeAmount)
+        const listDataB = data.filter( item => !(this.materiaId.includes(item.uniqueNumber) || item.amount === item.cumulativeAmount))
+        this.list = listDataB.concat(listDataA)
       }).finally((err) => {
         this.loading = false
       })
