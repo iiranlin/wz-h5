@@ -21,13 +21,13 @@
                     />
                 <van-field v-model="params.shippingAddress" required name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
                     :rules="[{ required: true, message: '请填写发货地址' }]" />
-                <van-field readonly clickable name="calendar" required v-model="params.shippingDate" :value="params.shippingDate" label="发货日期" input-align="right" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" required v-model="params.shippingDate" label="发货日期" input-align="right" placeholder="点击选择日期"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" />
                 <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-                <van-field readonly clickable name="calendar" required :value="params.arrivalDate" label="预计送达时间" input-align="right" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" required :value="params.arrivalDate" label="预计送到时间" input-align="right" placeholder="点击选择日期"
                     @click="sendStop = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
                 <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
-                <van-field v-model="params.carNumber" label="车牌号" placeholder="车牌号" input-align="right"/>
+                <van-field v-model="params.carNumber" label="车牌号" type="text" placeholder="车牌号" input-align="right"/>
                 <van-field v-model="params.contacts" required label="联系人" placeholder="联系人" input-align="right" :rules="[{ required: true, message: '请填写联系人' }]"/>
                 <van-field v-model="params.contactsPhone" required label="联系电话" placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' },{ pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！'}]" />
@@ -36,11 +36,6 @@
                         <van-uploader v-model="fileList" :after-read="beforeReadUpload" multiple :max-count="1"/>
                     </template>
                     </van-field>
-                <!-- <van-field v-model="params.number" center clearable label="已选物资" placeholder="发货单附件" input-align="right">
-                    <template #button>
-                        <van-button size="mini" type="primary" class="button-info" @click="lookGoods(goodsId)" v-if="paramsType">查看发货物资</van-button>
-                    </template>
-                </van-field> -->
             </van-form>
         </div>
         <div class="default-button-container">
@@ -129,10 +124,6 @@ export default {
     },
     
     methods: {
-        // 物流单号正则校验
-        checkNotChinese(val){
-            return /^[^\u4e00-\u9fa5]+$/.test(val);
-        },
         getSendGoods(){
             demandSnedGoods(this.goodsId).then((res)=>{
                 if(res.code == 0){

@@ -54,14 +54,13 @@
             <van-field readonly clickable v-model="goodsData[index].updateDate" name="datetimePicker"
               :value="goodsData[index].updateDate" label="有效截止日期" placeholder="有效截止日期"
               @click="showCalendars(item, index, 'end')" input-align="right" />
-            <van-field v-model="goodsData[index].addr" label="使用地点" placeholder="使用地点" input-align="right" required />
             <van-field v-model="goodsData[index].field2" label="收货地址" required placeholder="收货地址" input-align="right" />
             <van-field readonly clickable v-model="goodsData[index].supplyDate" name="datetimePicker" required
               :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
               @click="showCalendars(item, index, 'gong')" input-align="right" />
-
             <van-field v-model="goodsData[index].receiver" name="收货人" required label="收货人和电话" placeholder="收货人"
               input-align="right" />
+               <van-field v-model="goodsData[index].addr" label="使用地点" placeholder="使用地点" input-align="right"  disabled/>
             <van-field v-model="goodsData[index].field0" :name="goodsData[index].field0" label="投资方" required
               placeholder="投资方" disabled input-align="right" />
             <van-field v-model="goodsData[index].field1" name="投资比例" required label="投资比例" disabled placeholder="投资比例"
