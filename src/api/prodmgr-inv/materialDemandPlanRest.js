@@ -96,3 +96,18 @@ export function materialSupplierOutRestSaveOut(data) {
     data
   })
 }
+//出库列表
+export function materialSupplierOutRestList(params) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialSupplierOutRest/list`,
+    method: 'get',
+    params
+  })
+}
+//出库详情
+export function materialSupplierOutRestDetail(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialSupplierOutRest/detail/${id}`,
+    method: 'get',
+  })
+}

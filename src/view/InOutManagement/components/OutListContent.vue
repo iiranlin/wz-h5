@@ -2,44 +2,50 @@
   <div class="in-out-management-list">
     <van-sticky>
       <div class="list-search-container">
-        <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff" readonly
-          @click="handeSearchClick()">
+        <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
+          @search="handeSearch()">
         </van-search>
       </div>
     </van-sticky>
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
-        <div v-for="(item, index) in 10" :key="index" class="box-container" @click="outClick">
+        <div v-for="(item, index) in dataList" :key="index" class="box-container" @click="outClick(item)">
           <ul class="list-ul">
             <li>
               <span class="font-weight">出库单号：</span>
-              <span class="font-weight">CK20250531004</span>
+              <span class="font-weight">{{item.outNumber}}</span>
             </li>
             <li>
               <span>需求编号：</span>
-              <span>XQ20250531004</span>
+              <span>{{item.planNumber}}</span>
             </li>
             <li>
               <span>需求名称：</span>
-              <span>南京枢纽（江北地区）和南通地区工程2025年5月甲供物资需求计划表</span>
+              <span>{{item.planName}}</span>
+            </li>
+            <li>
+              <span>需求组织：</span>
+              <span>{{item.deptName}}</span>
             </li>
             <li>
               <span>领用单位：</span>
-              <span>领用单位领用单位领用单位领用单位领用单位</span>
+              <span>{{item.receiveDeptName}}</span>
             </li>
-            <li class="li-item-both">
-              <div class="li-item-left">
-                <span>发料人：</span>
-                <span>name</span>
-              </div>
-              <div class="li-item-right">
-                <span class="li-item-span-auto">领料人：</span>
-                <span>name</span>
-              </div>
+            <li>
+              <span>发料人：</span>
+              <span>{{item.issueUserName}}</span>
+            </li>
+            <li>
+              <span>领料人：</span>
+              <span>{{item.pickUserName}}</span>
             </li>
             <li>
               <span>领用日期：</span>
-              <span>2025-06-04</span>
+              <span>{{parseTime(item.pickDate,'{y}-{m}-{d}')}}</span>
+            </li>
+            <li>
+              <span>操作人：</span>
+              <span>{{item.createUserName}}</span>
             </li>
           </ul>
         </div>
@@ -48,18 +54,25 @@
   </div>
 </template>
 <script>
+import {materialSupplierOutRestList} from '@/api/prodmgr-inv/materialDemandPlanRest'
+
 export default {
   name: 'OutListContent',
   data() {
     return {
-      activeIndex: 0,
       formData: {
-        keywords: ''
+        keywords: '',
       },
-      value1: 0,
+      dataList:[],
+
       allRefreshLoading: false,
       allLoading: false,
       allFinished: false,
+
+      allListQuery: {
+        pageNum: 1,
+        pageSize: 10,
+      },
     };
   },
   created() {
@@ -72,15 +85,41 @@ export default {
       this.allRefreshLoading = true
       this.allLoading = true
       this.allFinished = false
+      this.allListQuery.pageNum = 1;
       this.getAllList()
     },
     getAllList() {
-      this.allRefreshLoading = false
-      this.allFinished = true
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
+      materialSupplierOutRestList(Object.assign({},this.allListQuery,this.formData)).then(({ data }) => {
+        if(this.allRefreshLoading){
+          this.dataList = [];
+          this.allRefreshLoading = false;
+        }
+        this.allLoading = false;
+        this.dataList = [...this.dataList, ...data.list];
+
+        if (data?.list?.length === 0) {
+          this.allFinished = true;
+          return;
+        }
+        this.allListQuery.pageNum = this.allListQuery.pageNum + 1;
+      }).catch((error) => {
+        this.allLoading = false;
+        this.allFinished = true;
+      }).finally(() => {
+        toast.clear();
+      });
     },
-    outClick () {
-      this.$router.push({ name: 'OutboundDetails' })
-    }
+    outClick(item) {
+      this.$router.push({ name: 'OutboundDetails',query: {id: item.id} })
+    },
+    handeSearch(){
+      this.allRefresh();
+    },
   },
 };
 </script>
@@ -130,22 +169,6 @@ export default {
       border-radius: 50px;
       background: #fff;
     }
-  }
-  .list-ul{
-    li{
-      span{
-        width: auto !important;
-        min-width: auto !important;
-        &:nth-child(2){
-          width: auto !important;
-          flex: 1;
-        }
-      }
-    }
-  } 
-  .li-item-span-auto{
-    width: auto !important;
-    min-width: auto !important;
   }
 }
 </style>

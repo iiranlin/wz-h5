@@ -5,137 +5,134 @@
         <div>
           <ul class="detail-ul">
             <li>
-              <span>出库单号：</span>
-              <span>CK2025050007</span>
+              <span>需求名称：</span>
+              <span>{{detailInfo.planName}}</span>
             </li>
             <li class="li-item-overlength">
-              <span>需求编号：</span>
-              <span>XQ2025050007</span>
-            </li>
-            <li>
-              <span>需求名称：</span>
-              <span>需求名称需求名称需求名称</span>
-            </li>
-            <li>
               <span>需求组织：</span>
-              <span>需求组织需求组织需求组织需求组织</span>
+              <span>{{detailInfo.deptName}}</span>
             </li>
             <li>
               <span>领用单位：</span>
-              <span>领用单位领用单位领用单位</span>
+              <span>{{detailInfo.receiveDeptName}}</span>
             </li>
-            <li class="li-item-both li-item-overlength">
-              <div class="li-item-left">
-                <span>发料人：</span>
-                <span>发料人</span>
-              </div>
-              <div class="li-item-right">
-                <span>领料人：</span>
-                <span>领料人</span>
-              </div>
+            <li>
+              <span>领料人：</span>
+              <span>{{detailInfo.pickUserName}}</span>
+            </li>
+            <li>
+              <span>使用地点：</span>
+              <span>{{detailInfo.useLocation}}</span>
             </li>
             <li>
               <span>领料日期：</span>
-              <span>2025-06-04</span>
+              <span>{{parseTime(detailInfo.pickDate,'{y}-{m}-{d}')}}</span>
             </li>
-            <li class="li-item-overlength">
+            <li>
               <span>领料单：</span>
-              <span @click="imgClick" class="li-span-click">XXXXX领料单.pdf</span>
+              <span @click="imgClick()" class="li-span-click" v-if="fileList.length > 0">{{fileList[0].fileName}}</span>
+            </li>
+            <li>
+              <span>出库单号：</span>
+              <span>{{detailInfo.outNumber}}</span>
+            </li>
+            <li>
+              <span>发料人：</span>
+              <span>{{detailInfo.issueUserName}}</span>
             </li>
           </ul>
         </div>
       </div>
       <div class="select-materials-search">
-        <p class="select-materials-search-p font-weight">物资明细（共7项）</p>
+        <p class="select-materials-search-p font-weight">物资明细（共{{detailList.length}}项）</p>
       </div>
-      <div class="box-container">
+      <div class="box-container" v-for="(item,index) in detailList" :key="index">
         <div>
           <ul class="detail-ul">
-            <li class="li-item-overlength">
+            <li>
               <span>供应商：</span>
-              <span>供应商供应商供应商供应商</span>
+              <span>{{item.sellerName}}</span>
             </li>
             <li>
               <span class="font-weight">物资名称：</span>
-              <span class="font-weight">物资名称物资名称物资名称</span>
+              <span class="font-weight">{{item.materialName}}</span>
             </li>
             <li>
               <span>规格型号：</span>
-              <span>规格型号规格型号规格型号</span>
+              <span>{{item.specModel}}</span>
             </li>
             <li>
               <span>计量单位：</span>
-              <span>套</span>
+              <span>{{item.unit}}</span>
             </li>
-            <li class="li-item-both">
-              <div class="li-item">
-                <span>生产日期：</span>
-                <span>2025-6-1</span>
-              </div>
-              <div class="li-item">
-                <span>有效截止日期：</span>
-                <span>2026-6-1</span>
-              </div>
+            <li>
+              <span>生产日期：</span>
+              <span>{{parseTime(item.manufactureDate,'{y}-{m}-{d}')}}</span>
+            </li>
+            <li class="li-item-overlength">
+              <span>有效截止日期：</span>
+              <span>{{parseTime(item.expirationDate,'{y}-{m}-{d}')}}</span>
             </li>
             <li class="li-item-overlength">
               <span>本次出库数量：</span>
-              <span>10</span>
+              <span>{{item.outTotal}}</span>
             </li>
-            <li class="li-item-overlength">
+            <li>
               <span>备注：</span>
-              <span>备注备注备注</span>
+              <span>{{item.remark}}</span>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <van-popup v-model="showPopup" position="bottom">
-      <van-image-preview v-model="showImg" :images="images" :startPosition="startPosition" :loop="false"
-        @close="showPopup = false" />
-    </van-popup>
+    <!-- 附件预览 -->
+    <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
 <script>
-import dt from '@/assets/img/img.png';
+import {materialSupplierOutRestDetail} from '@/api/prodmgr-inv/materialDemandPlanRest'
+import FilePreview from "@/components/FilePreview.vue";
+
 export default {
   name: 'OutboundDetails',
-  components: {},
+  components: {FilePreview},
+
   data() {
     return {
-      queryType: '',
-      activeKey: 0,
-      menuActiveIndex: '',
-      formData: {
-        num: '',
-        name: '',
-        uploader: null
-      },
-
-      showPopup: false,
-      startPosition: 0,
-      showImg: false,
-      images: [dt]
+      id: '',
+      detailInfo:{},
+      detailList:[],
+      fileList:[],
     }
   },
   created() {
-    this.queryType = this.$route.query.type
+    this.id = this.$route.query.id
+
+    this.getDetail();
   },
   activated() {
+
   },
   methods: {
-    activeKeyChange() {
-      console.log(this.activeKey)
-    },
-    previewClick() {
-      this.queryType = 'save'
-    },
-    outboundClick() {
-      this.$toast('出库成功');
-      this.$router.push({ path: '/InOutManagementList' })
+    //获取详情信息
+    getDetail(){
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
+      materialSupplierOutRestDetail(this.id).then(({ data }) => {
+        this.detailInfo = data;
+        this.detailList = data.materialSupplierOutDetailDTOS;
+        this.fileList = JSON.parse(data.fileByList).lld;
+      }).catch((error) => {
+
+      }).finally(() => {
+        toast.clear();
+      });
     },
     imgClick() {
-      this.showImg = true
-      this.showPopup = true
+      this.$refs.filePreview.init(this.fileList[0].fileName, this.fileList[0].filePath)
     }
   }
 }

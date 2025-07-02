@@ -5,66 +5,52 @@
         <div>
           <ul class="detail-ul">
             <li>
-              <span>需求编号：</span>
-              <span>XQ20250500001</span>
-            </li>
-            <li>
               <span>需求名称：</span>
-              <span>需求名称需求名称需求名称</span>
+              <span>{{detailInfo.planName}}</span>
             </li>
             <li>
               <span>需求项目：</span>
-              <span>需求项目需求项目需求项目</span>
+              <span>{{detailInfo.sectionName}}</span>
             </li>
             <li>
               <span>需求组织：</span>
-              <span>需求组织需求组织需求组织</span>
+              <span>{{detailInfo.deptName}}</span>
             </li>
           </ul>
         </div>
       </div>
       <div class="select-materials-search">
-        <p class="select-materials-search-p font-weight">物资明细（共7项）</p>
+        <p class="select-materials-search-p font-weight">物资明细（共{{detailList.length}}项）</p>
       </div>
-      <div class="box-container" v-for="item in 2" :key="item">
+      <div class="box-container" v-for="(item,index) in detailList" :key="index">
         <ul class="detail-ul">
-          <li>
-            <span class="font-weight">物资名称：</span>
-            <span class="font-weight">物资名称物资名称物资名称</span>
-          </li>
           <li class="li-item-overlength">
             <span>供应商名称：</span>
-            <span>供应商供应商供应商供应商</span>
+            <span>{{item.sellerName}}</span>
+          </li>
+          <li>
+            <span class="font-weight">物资名称：</span>
+            <span class="font-weight">{{item.materialName}}</span>
           </li>
           <li>
             <span>规格型号：</span>
-            <span>规格型号规格型号规格型号</span>
+            <span>{{item.specModel}}</span>
           </li>
           <li>
             <span>计量单位：</span>
-            <span>套</span>
+            <span>{{item.unit}}</span>
           </li>
-          <li class="li-item-both li-item-overlength">
-            <div class="li-item-left">
-              <span>本次计划数量：</span>
-              <span>5</span>
-            </div>
-            <div class="li-item-right">
-              <span>累计入库数量：</span>
-              <span>5</span>
-            </div>
-          </li>
-          <!-- <li class="li-item-overlength">
+          <li class="li-item-overlength">
             <span>本次计划数量：</span>
-            <span>5</span>
+            <span>{{item.planAmount}}</span>
           </li>
           <li class="li-item-overlength">
             <span>累计入库数量：</span>
-            <span>5</span>
-          </li> -->
+            <span>{{item.storeTotal}}</span>
+          </li>
           <li>
             <span>当前库存：</span>
-            <span>10</span>
+            <span>{{item.stockStatus}}</span>
           </li>
         </ul>
       </div>
@@ -72,18 +58,45 @@
   </div>
 </template>
 <script>
+import {materialDemandPlanRestDetailGyMx} from '@/api/prodmgr-inv/materialDemandPlanRest'
+
 export default {
   name: 'InventoryDetails',
   components: {},
   data() {
     return {
+      id: '',
+      detailInfo:{},
+      detailList:[],
     }
   },
   created() {
+    this.id = this.$route.query.id
+
+    this.getDetail();
   },
   activated() {
   },
   methods: {
+    //获取详情信息
+    getDetail(){
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
+      let params = {
+        id: this.id,
+      }
+      materialDemandPlanRestDetailGyMx(params).then(({ data }) => {
+        this.detailInfo = data;
+        this.detailList = data.demandPlanDetailsGyDTOList;
+      }).catch((error) => {
+
+      }).finally(() => {
+        toast.clear();
+      });
+    },
   }
 }
 </script>

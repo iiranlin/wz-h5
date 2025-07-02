@@ -13,13 +13,13 @@
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
         <div v-for="(item, index) in dataList" :key="index" class="box-container">
-          <ul class="list-ul" @click="detailsClick">
+          <ul class="list-ul" @click="detailsClick(item)">
             <li>
               <span>当前库存：</span>
               <span>{{item.relatedCount == 0?'无':'有'}}</span>
             </li>
             <li>
-              <span class="font-weight">需求Id：</span>
+              <span class="font-weight">需求编号：</span>
               <span class="font-weight">{{item.planNumber}}</span>
             </li>
             <li>
@@ -130,8 +130,8 @@ export default {
     outboundClick (item) {
       this.$router.push({ name: 'Outbound', query: {type: 'submit',id: item.id} })
     },
-    detailsClick () {
-      this.$router.push({ name: 'InventoryDetails' })
+    detailsClick (item) {
+      this.$router.push({ name: 'InventoryDetails',query: {id: item.id} })
     },
     handeSearch(){
       this.allRefresh();

@@ -6,7 +6,7 @@
         <van-tab title="入库列表">
           <in-list-content></in-list-content>
         </van-tab>
-        <van-tab title="库存列表">
+        <van-tab title="需求库存">
           <inventory-list-content></inventory-list-content>
         </van-tab>
         <van-tab title="退货列表">
