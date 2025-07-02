@@ -173,11 +173,12 @@ export default {
             if(this.params.pageNum===1){
               this.listGhsData = res.data.list
             }else{
-             
               this.listGhsData = this.listGhsData.concat(res.data.list)
             }
             if(this.listGhsData.length>=this.total){
               this.allFinished= true
+            }else{
+              this.allFinished= false
             }
           }
         })
