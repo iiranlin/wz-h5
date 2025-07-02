@@ -29,6 +29,13 @@
                 <span>操作人：</span>
                 <span>{{ formData.storeOperator }}</span>
               </li>
+              <li class="li-status">
+                <template v-for="row in statusArr">
+                  <van-tag :class="{ 'li-status-completed': ['2', '3'].includes(row.value) }"
+                    :type="['6'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
+                    v-if="formData.storeStatus == row.value">{{ row.text }}</van-tag>
+                </template>
+              </li>
             </ul>
           </div>
         </div>
@@ -119,17 +126,18 @@
               <template v-else>
                 <li class="li-item-both">
                   <div class="li-item-left">
-                    <span>入库数量：</span>
-                    <span>{{ item.storeTotal }}</span>
+                    <span class="font-weight">入库数量：</span>
+                    <span class="font-weight">{{ item.storeTotal }}</span>
                   </div>
                   <div class="li-item-right">
-                    <span>退货数量：</span>
-                    <span>{{ item.refundZjTotal }}</span>
+                    <span class="font-weight">退货数量：</span>
+                    <span class="font-weight">{{ item.refundZjTotal }}</span>
                   </div>
                 </li>
               </template>
 
-              <van-field name="uploader" label="退货附件：" class="outbound-field-uploader" required v-if="queryType != 'view'">
+              <van-field name="uploader" label="退货附件：" class="outbound-field-uploader" required
+                v-if="queryType != 'view'">
                 <template #input>
                   <van-uploader v-if="item.fileList03 && item.fileList03.length == 0" :preview-imag='false'
                     :after-read="(file) => afterReadTransfer(file, item, 'fileList03')" :before-read="beforeRead"
@@ -214,6 +222,15 @@ export default {
       },
       supplyId: null,
       id: null,
+      statusArr: [
+        { value: '', text: '全部' },
+        { value: "1", text: "未入库" },
+        { value: "2", text: "部分退货" },
+        { value: "3", text: "已入库" },
+        { value: "4", text: "已退货" },
+        { value: "5", text: "审核中" },
+        { value: "6", text: "已驳回" }
+      ],
     }
   },
   activated() {
@@ -372,20 +389,20 @@ export default {
         this.$set(fileByList, "byjg", this.formData.fileList03);
       }
       this.formData.fileByList = JSON.stringify(fileByList);
-      
+
       this.$dialog.confirm({
         title: '标题',
         message: '是否确认提交审核?',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
-      }).then( () => {
+      }).then(() => {
         this.$refs.activitiAssignee.init('RK', this.formData)
       })
     },
     //选择审核人回调
-    optionsSuccess(assignee, {id, planType}) {
-      const params = Object.assign({ supplyId: this.supplyId, id: this.id, planType: planType, assignee}, this.formData, {materialCirculationDetailsTableParamList: this.tableData})
-      materialStoreTableRestSubmit(params).then( () => {
+    optionsSuccess(assignee, { id, planType }) {
+      const params = Object.assign({ supplyId: this.supplyId, id: this.id, planType: planType, assignee }, this.formData, { materialCirculationDetailsTableParamList: this.tableData })
+      materialStoreTableRestSubmit(params).then(() => {
         this.$toast('提交入库审核成功')
         this.$router.push({ path: '/InOutManagementList' })
       })
@@ -501,6 +518,26 @@ export default {
     .outbound-uploader-delete {
       float: right;
       transform: translateY(0px);
+    }
+  }
+
+  .li-status {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    span {
+      font-size: 12px;
+      width: inherit !important;
+      padding: 2px 6px;
+      line-height: 16px;
+    }
+
+    & :nth-child(1) {
+      min-width: initial;
+    }
+
+    & :nth-child(2) {
+      width: initial;
     }
   }
 }

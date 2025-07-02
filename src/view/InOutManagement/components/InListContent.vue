@@ -43,13 +43,18 @@
               <span>入库时间：</span>
               <span>{{ item.storeDate ? parseTime(item.storeDate, '{y}-{m}-{d} {h}:{s}') : '' }}</span>
             </li>
-            <li class="li-status" v-if="formData.storeStatus == ''">
-              <template v-for="items in statusArr">
-                <van-tag plain round size="medium" :key="items.value" v-if="items.storeStatus != 0 && item.storeStatus == items.storeStatus">{{ items.text }}</van-tag>
+            <li class="li-status">
+              <template v-for="row in statusArr">
+                <van-tag :class="{ 'li-status-completed': ['2', '3'].includes(row.value) }"
+                  :type="['6'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
+                  v-if="item.storeStatus == row.value">{{ row.text }}</van-tag>
               </template>
-              <!-- <van-tag type="primary" round size="medium" v-if="item == 2">审核中</van-tag>
-              <van-tag type="primary" round size="medium" v-if="item == 3">已生效</van-tag> -->
             </li>
+            <!-- <li class="li-status">
+              <template v-for="items in statusArr">
+                <van-tag plain round size="medium" :key="items.value" v-if="item.storeStatus == items.value">{{ items.text }}</van-tag>
+              </template>
+            </li> -->
           </ul>
           <div class="list-ul-button">
             <van-button class="button-info" plain round type="info" @click="handleProcessClick(item)" v-if="item.storeStatus != '1'">查看流程</van-button>
@@ -225,6 +230,23 @@ export default {
     .van-cell {
       border-radius: 50px;
       background: #fff;
+    }
+  }
+
+  .li-status {
+    .van-tag--primary {
+      color: #028bff;
+      background: #edf4ff;
+    }
+
+    .van-tag--danger {
+      color: #f83738;
+      background: #ffe2e2;
+    }
+
+    .li-status-completed {
+      color: #6f6f6f;
+      background: #ededed;
     }
   }
 }
