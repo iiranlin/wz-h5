@@ -81,8 +81,9 @@
         </div>
         <div class="select-materials-search">
           <p class="select-materials-search-p font-weight">物资明细（共{{detailList.length}}项）</p>
+          <van-search v-model="searchValue" placeholder="输入规格型号" background="center" @search="onSearch" />
         </div>
-        <div class="box-container" v-for="(item,index) in detailList" :key="index">
+        <div class="box-container" v-for="(item,index) in filteredList" :key="index">
           <div class="div-parent">
             <ul class="detail-ul">
               <li>
@@ -146,6 +147,7 @@
             </ul>
           </div>
         </div>
+        <van-empty v-if="filteredList.length == 0" description="暂无数据" />
       </van-form>
     </div>
     <div class="default-button-container">
@@ -170,6 +172,14 @@ import FilePreview from "@/components/FilePreview.vue";
 export default {
   name: 'Outbound',
   components: {FilePreview},
+
+  computed: {
+    filteredList() {
+      if (!this.searchValue) return this.detailList; // 如果搜索值为空，返回所有数据
+      return this.detailList.filter(item => item.specModel.includes(this.searchValue)); // 过滤匹配的数据项
+    }
+  },
+
   data() {
     return {
       id:'',
@@ -177,6 +187,7 @@ export default {
       detailInfo:{},
       detailList:[],
       showsTimePop: false, 
+      searchValue: '',
 
       formData: {
         planName: '',     //需求名称
@@ -250,6 +261,10 @@ export default {
     timeConfirm(value){
       this.formData.pickDate = this.parseTime(value, '{y}-{m}-{d}');
       this.showsTimePop = false;
+    },
+    //物资明细搜索
+    onSearch(){
+
     },
     //附件上传前
     beforeRead(file){
@@ -377,6 +392,7 @@ export default {
       }
       this.queryType = type
     },
+    //出库点击
     outboundClick(){
       let fileObj = {
         lld: this.fileList,
@@ -429,6 +445,21 @@ export default {
       padding: 0 10px;
     }
   }
+  .van-search {
+    padding-top: 0;
+    width: 165px;
+
+    .van-search__content {
+      border-radius: 50px;
+      background: #fff;
+    }
+
+    .van-cell {
+      border-radius: 50px;
+      background: #fff;
+      padding-left: 0px;
+    }
+  }
 
   .li-item-both {
     .li-item {
@@ -436,22 +467,14 @@ export default {
       width: auto !important;
     }
   }
-
-  .van-cell {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
   ::v-deep .van-field__label {
     color: #272b31;
   }
-
   .default-button-container {
     .button-info {
       min-width: 150px;
     }
   }
-
   .van-cell {
     padding-left: 12px;
     padding-right: 0;

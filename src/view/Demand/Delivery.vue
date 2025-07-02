@@ -54,7 +54,7 @@
                     <span>{{ formatTimestamp(item.createDate) }}</span>
                   </li>
                   <li>
-                    <span style="width: 200px;">发货单附件:</span>
+                    <span style="width: 180px;">发货单附件:</span>
                     <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.fhd[0].fileName,item.fileByList.fhd[0].filePath)">{{ item.fileByList.fhd[0].fileName }}</span>
                   </li>
                   <li class="li-status">

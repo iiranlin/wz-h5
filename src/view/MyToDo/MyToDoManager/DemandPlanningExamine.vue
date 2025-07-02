@@ -92,9 +92,9 @@
             </div>
         </div>
         <div class="default-button-container">
-            <van-button class="button-info" block type="info" round @click="handleReject()">不同意</van-button>
-            <van-button class="button-info" block type="info" round @click="handleEditAdopt()">修改后同意</van-button>
-            <van-button class="button-info" block type="info" round @click="handleAdopt()">同意</van-button>
+            <van-button class="button-info" block type="info" round @click="handleReject()">驳回</van-button>
+            <van-button class="button-info" block type="info" round @click="handleEditAdopt()">修改后通过</van-button>
+            <van-button class="button-info" block type="info" round @click="handleAdopt()">通过</van-button>
         </div>
         <!--选择审批人弹框-->
         <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
