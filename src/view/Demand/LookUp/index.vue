@@ -218,7 +218,7 @@ export default {
             })
         },
         onSubmit(values) {
-            console.log('submit', values);
+          
         },
         onConfirm(date) {
             this.value = `${date.getMonth() + 1}/${date.getDate()}`;

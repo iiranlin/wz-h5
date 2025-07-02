@@ -233,7 +233,7 @@ export default {
             })
         },
         tabsChange(e) {
-            console.log(e)
+           
         },
         //发货
         handleSendGoodsClick() {

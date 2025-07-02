@@ -210,7 +210,7 @@ export default {
         fileName: name
       }
       demandManagementLookPdf(params).then((res) => {
-        console.log(res)
+        
       })
       // this.filePath = path
       // this.fileName = name

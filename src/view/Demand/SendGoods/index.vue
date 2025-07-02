@@ -87,12 +87,8 @@ export default {
         };
     },
     created() {
-       
-       
         this.text = this.$route.query.title
-        console.log(this.text)
-         this.goodsId = this.$route.query.id
-        
+        this.goodsId = this.$route.query.id
         if(this.text=='edit'){
             this.editDetails()
         }else{
@@ -103,7 +99,6 @@ export default {
         // // 编辑
         // if(this.text=='edit'){
         //     this.params = JSON.parse(this.$route.query.data)
-        //     console.log(this.params,'111')
         //     //发货日期格式化
         //       if (this.params.shippingDate) {
         //         const date = new Date(this.params.shippingDate);
@@ -158,9 +153,8 @@ export default {
                         let file = JSON.parse(res.data.fileByList)
                         this.params = res.data
                         this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
-                        console.log(this.fileList,'113')
                         this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
-                         this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
+                        this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
                         
 
                 }
@@ -173,9 +167,6 @@ export default {
             const day = date.getDate().toString().padStart(2, '0'); // 日期加0
             return `${year}-${month}-${day}`;
             },
-        onSubmit(values) {
-            console.log('submit', values);
-        },
         //发货日期
         onConfirm(date) {
             const year = date.getFullYear();
@@ -223,7 +214,6 @@ export default {
                     id:"",
                     contractName:this.goodsMsg.contractName,
                 }
-                // console.log(params)
                 // 存到缓存里
                 this.$store.dispatch('public/setGoodsList', params)
                 // 携带参数跳转到选择商品页
@@ -314,13 +304,7 @@ export default {
                     Toast.success(res.data);
                     this.$router.push({path:"/Information"})
                 }
-                // console.log(res)
             })
-            console.log(params,'1334')
-            // demandSaveSendGoods(params).then((res)=>{
-            //     console.log(res)
-            // })
-        //   this.$router.push({ path: '/dashboard' })
         },
         beforeReadUpload(file){
             

@@ -159,18 +159,18 @@ export default {
   methods: {
     showHgz(data) {
       let imgUrl = JSON.parse(data)
-      console.log(imgUrl)
+    
       let img = [{ name: imgUrl.hgz[0].fileName, url: imgUrl.hgz[0].filePath }]
       return img
     },
     showCjbg(data) {
       let imgUrl = JSON.parse(data)
-      console.log(imgUrl)
+     
       let img = [{ name: imgUrl.cjbg[0].fileName, url: imgUrl.cjbg[0].filePath }]
       return img
     },
     onSubmit(values) {
-      console.log('submit', values);
+     
     },
     onConfirm(date) {
       this.gongyingDate = `${date.getMonth() + 1}/${date.getDate()}`;
@@ -193,7 +193,7 @@ export default {
       if (title == 'gong') {
         this.showCalendar = true;
       }
-      // console.log(data,index,title)
+     
     },
     // // 日期格式化
     createConfirm(time) {
@@ -225,7 +225,7 @@ export default {
 
     },
     passReadUpload(file, index) {
-      console.log(file, index)
+    
       let imgFile = new FormData();
 
       imgFile.append("businessType", '01');
@@ -244,7 +244,7 @@ export default {
     },
     //厂检
     checkReadUpload(file, index) {
-      console.log(file)
+   
       let imgFile = new FormData();
       imgFile.append("businessType", '01');
       imgFile.append("key", file.file.name);
@@ -271,7 +271,7 @@ export default {
         Toast('没有可提交的内容');
         return;
       }
-      // console.log(this.goodsData,'1233')
+     
       // 先校验所有数据
       const isValid = this.goodsData.every((item) => {
         return (
@@ -322,7 +322,7 @@ export default {
             Toast.success(res.data);
             this.$router.push({ path: "/Information" })
           }
-          // console.log(res)
+        
         })
       } else {
         modifySendGoods(params).then((res) => {

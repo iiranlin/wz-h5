@@ -251,7 +251,6 @@ export default {
             status:status
           }
           snedGoodsSure(params).then((res)=>{
-            console.log(res)
             if(res.code==0){
               Toast.success(res.data);
               this.getList()

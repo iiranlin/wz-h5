@@ -114,11 +114,9 @@ export default {
     }
   },
   mounted() {
-    // console.log(this.$store.public.sendGoods,'111')
    this.goodsId = this.$route.query.id 
   //  编辑时传过来的标识(应该存在缓存里的)
     this.text = this.$route.query.text
-    console.log(this.text)
     if(this.text=='edit'){
         let arrdata = JSON.parse(this.$route.query.data)
        this.selectGoodsList = arrdata.map(item => {
@@ -209,7 +207,6 @@ export default {
     },
     // 点击下一步把选择的数据传过去
     addClick(text) {
-      console.log(this.selectArrayData)
       if(this.selectArrayData.length>0){
         this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:this.goodsId,text:text} })
       }else{
@@ -218,7 +215,6 @@ export default {
       
     },
     selectGoods(e){
-      // console.log(e.flat())
       this.selectArrayData=e.flat()
       
       this.selectTotal = e.length

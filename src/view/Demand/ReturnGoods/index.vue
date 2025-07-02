@@ -155,11 +155,11 @@ export default {
                         fileByList: JSON.parse(res.data.fileByList) // 单独解析 fileByList
                     };
                 }
-                // console.log(res)
+               
             })
         },
         onSubmit(values) {
-            console.log('submit', values);
+           
         },
         onConfirm(date) {
             this.value = `${date.getMonth() + 1}/${date.getDate()}`;
