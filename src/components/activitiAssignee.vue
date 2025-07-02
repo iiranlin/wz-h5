@@ -1,6 +1,6 @@
 <template>
   <!--选择审批人弹框-->
-  <div class="assignee-list">
+  <div class="assignee-list" v-if="assigneePopupShow">
     <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
       <div class="assignee-popup">
         <span>提示</span>
