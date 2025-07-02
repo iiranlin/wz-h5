@@ -159,7 +159,7 @@
                                             <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.hgz[0].fileName,item.fileByList.hgz[0].filePath)">{{ item.fileByList.hgz[0].fileName }}</span>
                                         </div>
                                         <div class="li-item-right">
-                                            <span>厂检报告附件:</span>
+                                            <span  style="width: 250px;padding-right: 20px;">厂检报告附件:</span>
                                             <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.cjbg[0].fileName,item.fileByList.cjbg[0].filePath)">{{ item.fileByList.cjbg[0].fileName }}</span>
                                         </div>
                                     </li>
