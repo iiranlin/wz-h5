@@ -211,7 +211,7 @@ export default {
     addClick(text) {
       console.log(this.selectArrayData)
       if(this.selectArrayData.length>0){
-        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),text:text} })
+        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:this.goodsId,text:text} })
       }else{
         Toast.fail('请选择至少一项');
       }

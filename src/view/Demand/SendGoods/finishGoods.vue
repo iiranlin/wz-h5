@@ -112,7 +112,7 @@ Vue.use(DatetimePicker);
 Vue.use(Toast);
 Vue.use(Divider);
 export default {
-
+  name:"finishGoods",
   data() {
     const today = new Date();
     today.setHours(23, 59, 59, 999); // 设置为今天的最后一
@@ -267,6 +267,11 @@ export default {
       this.goodsData.splice(index)
     },
     save() {
+      if(this.goodsData.length==0){
+        Toast('没有可提交的内容');
+        return;
+      }
+      // console.log(this.goodsData,'1233')
       // 先校验所有数据
       const isValid = this.goodsData.every((item) => {
         return (
@@ -305,6 +310,7 @@ export default {
         ...item,
         fileByList: JSON.stringify({ hgz, cjbg })
       }))
+      // 如果网络请求只有这个字段的值materialCirculationDetailsTableParamList，那就是缓存里的值被刷新没了，从头开始走流程就可以了
       let params = {
         ...this.$store.state.public.sendGoods,
         materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存

@@ -15,9 +15,9 @@
       <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
         @change="tabsChange" title-inactive-color="#2e2e2e">
         <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.status">
-
-          <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-            <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad" :offset="10" :immediate-check="false"> 
+          <div v-if="listBySendData.length>0">
+              <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad" :offset="10" :immediate-check="false"> 
               <div v-for="(item, index) in listBySendData" :key="index" class="box-container">
                 <ul class="list-ul">
                   <li>
@@ -40,6 +40,18 @@
                   <li>
                     <span>需求项目: </span>
                     <span>{{ item.sectionName }}</span>
+                  </li>
+                   <li>
+                    <span>发货时间: </span>
+                    <span>{{ formattedCreateDate(item.shippingDate) }}</span>
+                  </li>
+                   <li>
+                    <span>操作人: </span>
+                    <span>{{ item.createUserName }}</span>
+                  </li>
+                   <li>
+                    <span>操作时间: </span>
+                    <span>{{ formatTimestamp(item.createDate) }}</span>
                   </li>
                   <li>
                     <span style="width: 200px;">发货单附件:</span>
@@ -69,6 +81,10 @@
               </div>
             </van-list>
           </van-pull-refresh>
+          </div>
+           <div v-else>
+            <van-empty description="暂无数据" />
+          </div>
         </van-tab>
 
       </van-tabs>
@@ -134,8 +150,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
       },
-      allFinished:false,
-      allLoading:false,
+       finished :false,
+      loading:false,
       // allRefresh:false,
       allRefreshLoading:false,
       //订单状态字典
@@ -186,27 +202,25 @@ export default {
       snedGoodsList(this.params).then((res)=>{
         if(res.code==0){
             Toast.clear()
-            this.total = res.data.total
              if (this.allRefreshLoading) {
               this.listBySendData = [];
               this.allRefreshLoading = false;
             }
-            // this.allRefreshLoading = false;
+            this.total = res.data.total
              const newData = res.data.list.map((item) => ({
               ...item,
               fileByList: item.fileByList ? JSON.parse(item.fileByList) : '', // 默认值设为 [] 避免 JSON.parse 报错
             }));
-            if(this.params.pageNum==1){
+            if(res.data.list.length<1){
               this.listBySendData = newData
             }else{
               this.listBySendData = this.listBySendData.concat(newData)
             }
-           if (this.listBySendData.length == res.data.total) {
-           
-              this.allFinished = true;
-            } else {
-              this.params.pageNum++; // 只有成功加载后才增加页码
+           if (this.listBySendData.length >= res.data.total) {
+              this.finished  = true;
             }
+            this.loading = false;
+             this.$forceUpdate(); // 强制更新视图
           // this.listBySendData = res.data.list
         }
       }).catch((err) => {
@@ -217,10 +231,11 @@ export default {
     },
     tabsChange(e) {
       // 每次切换把数组清空
-      // this.listBySendData = []
+      this.listBySendData = []
       this.params.status = e
       this.params.pageNum = 1
-      this.allFinished = false;
+      this.finished  = false;
+      this.allRefreshLoading = true
       this.getList()
     },
     //发货
@@ -251,12 +266,29 @@ export default {
     },
     // 日期格式化
      formattedCreateDate(timestamp) {
+      if (!timestamp) return ''; // 处理空值
       const date = new Date(timestamp);
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
       const day = date.getDate().toString().padStart(2, '0'); // 日期加0
       return `${year}-${month}-${day}`;
     },
+    formatTimestamp(timestamp) {
+    if (!timestamp) return ''; // 处理空值
+    const date = new Date(timestamp); // 时间戳可以是毫秒或秒（需 * 1000）
+    
+    // 补零函数（确保个位数显示为两位，如 1 → '01'）
+    const padZero = (num) => (num < 10 ? `0${num}` : num);
+    
+    const year = date.getFullYear();
+    const month = padZero(date.getMonth() + 1); // 月份从 0 开始
+    const day = padZero(date.getDate());
+    const hours = padZero(date.getHours());
+    const minutes = padZero(date.getMinutes());
+    const seconds = padZero(date.getSeconds());
+    
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  },
     //查看物流
     handleLookClick(id,number,logisticsNumber) {
       this.$router.push({ path: '/lookCargo',query:{id:id,number:number,logisticsNumber:logisticsNumber} })
@@ -273,13 +305,14 @@ export default {
         if(res.code==0){
           this.cargoList = res.data.list
           this.freightLocationDiaLog = true
+          
         }
       })
     },
     //下拉刷新
     allRefresh() {
       this.params.pageNum=1
-      this.allFinished = false
+      this.finished  = false
       this.allRefreshLoading = true
       this.getList()
     },
@@ -324,9 +357,13 @@ export default {
         deleteGoods(params).then((res)=>{
             if(res.code==0){
               Toast.success(res.message);
+              // 手动过滤本地数据（假设 params.id 是删除项的 ID）
+             this.listBySendData = this.listBySendData.filter(
+                item => !params.ids.includes(item.id) // 适用于批量删除
+              );
               this.params.pageNum=1
               this.getList();
-              this.$forceUpdate(); // 强制更新视图
+             
             }
         })
         // this.$toast('删除成功');
@@ -340,6 +377,7 @@ export default {
       // this.username = null
     },
     onLoad(){
+      this.params.pageNum++
       this.getList()
     },
     onSearch(){

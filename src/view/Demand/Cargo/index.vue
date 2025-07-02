@@ -2,17 +2,20 @@
     <div class="default-container" ref="container">
         <ul class="list-ul" style="margin: 10px;">
             <li>
-                <span style="width: 250px;">供应商需求名称：</span>
+                <span>需求名称：</span>
                 <span>{{ params.planName }}</span>
             </li>
-
+             <li>
+                <span>标段项目名称：</span>
+                <span>{{ params.sectionName }}</span>
+            </li>
             <li>
-                <span>供应需求ID：</span>
+                <span>需求编号：</span>
                 <span>{{ params.planNumber }}</span>
             </li>
             <li>
-                <span>需求项目：</span>
-                <span>{{ params.sectionName }}</span>
+                <span>填报组织：</span>
+                <span>{{ params.deptName }}</span>
             </li>
             <li>
                 <span>填报人：</span>
@@ -51,7 +54,7 @@
                         <span v-if="logistics.arrivalDate">{{ formattedCreateDate(logistics.arrivalDate) }}</span>
                     </li>
                     <li>
-                        <span>车牌号为：</span>
+                        <span>车牌号：</span>
                         <span>{{ logistics.carNumber }}</span>
                     </li>
                     <li>

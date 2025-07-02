@@ -8,9 +8,9 @@
                 </template>
             </van-search>
     </div>
-    <div class="tabs">
+    <div class="tabs" v-if="returnList.length>0">
       <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-        <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad" :offset="10" :immediate-check="false">
+        <van-list v-model="loading" :finished="finished " finished-text="没有更多了..." @load="onLoad" :offset="10" :immediate-check="false">
           <div v-for="(item, index) in returnList" :key="index" class="box-container" @click="handleDetailsItemClick(item.id)">
             <ul class="list-ul">
               <li>
@@ -47,6 +47,9 @@
       </van-pull-refresh>
 
     </div>
+    <div v-else>
+      <van-empty description="暂无数据" />
+    </div>
   </div>
 </template>
 <script>
@@ -68,8 +71,8 @@ export default {
         keywords: '',
       },
       allRefreshLoading:false,
-      allFinished:false,
-      allLoading:false,
+      finished :false,
+      loading:false,
       params:{
         sellerId:"",
         pageNum:1,
@@ -78,28 +81,6 @@ export default {
         orderByColumn:"",
         shipmentBatchNumber:""
       },
-      tabList: [
-        {
-          id: 1,
-          title: '全部'
-        },
-        {
-          id: 2,
-          title: '未确认',
-        },
-        {
-          id: 3,
-          title: '已确认'
-        },
-        {
-          id: 4,
-          title: '供货中',
-        },
-        {
-          id: 5,
-          title: '已完成',
-        }
-      ],
       returnList:[],
       total:0
     };
@@ -125,16 +106,45 @@ export default {
         if(res.code==0){
             Toast.clear()
             this.total = res.data.total
-            this.allRefreshLoading = false;
-            if(this.total<=this.params.pageSize){
+            if (this.allRefreshLoading) {
+              this.returnList = [];
+              this.allRefreshLoading = false;
+            }
+            if(res.data.list.length<1){
               this.returnList = res.data.list
             }else{
-              this.params.pageNum++;
+             
               this.returnList = this.returnList.concat(res.data.list)
             }
-            if(this.returnList.length>=this.total){
-              this.allFinished= true
+            if(this.returnList.length>=res.data.total){
+              this.finished = true
             }
+            this.loading = false
+
+
+          //    if (this.allRefreshLoading) {
+          //     this.listBySendData = [];
+          //     this.allRefreshLoading = false;
+          //   }
+          //   this.total = res.data.total
+          //    const newData = res.data.list.map((item) => ({
+          //     ...item,
+          //     fileByList: item.fileByList ? JSON.parse(item.fileByList) : '', // 默认值设为 [] 避免 JSON.parse 报错
+          //   }));
+          //   if(res.data.list.length<1){
+          //     this.listBySendData = newData
+          //   }else{
+          //     this.listBySendData = this.listBySendData.concat(newData)
+          //   }
+          //  if (this.listBySendData.length >= res.data.total) {
+          //     this.finished  = true;
+          //   }
+          //   this.loading = false;
+
+
+
+
+
         }
       })
     },
@@ -152,11 +162,12 @@ export default {
     //全部列表刷新
     allRefresh() {
       this.params.pageNum = 1
-      this.allFinished = false
-      this.allRefreshLoading = false
+      this.finished = false
+      this.allRefreshLoading = true
       this.getList();
     },
     onLoad(){
+      this.params.pageNum++;
       this.getList()
     },
     onSearch(){

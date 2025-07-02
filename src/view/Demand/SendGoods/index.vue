@@ -19,19 +19,19 @@
             <van-form :key="formKey" ref="form">
                 <van-field v-model="params.oddNumbers" name="物流单号" label="物流单号" placeholder="物流单号" input-align="right"
                     />
-                <van-field v-model="params.shippingAddress" name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
+                <van-field v-model="params.shippingAddress" required name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
                     :rules="[{ required: true, message: '请填写发货地址' }]" />
-                <van-field readonly clickable name="calendar" v-model="params.shippingDate" :value="params.shippingDate" label="发货日期" input-align="right" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" required v-model="params.shippingDate" :value="params.shippingDate" label="发货日期" input-align="right" placeholder="点击选择日期"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" />
                 <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-                <van-field readonly clickable name="calendar" :value="params.arrivalDate" label="预计送达时间" input-align="right" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" required :value="params.arrivalDate" label="预计送达时间" input-align="right" placeholder="点击选择日期"
                     @click="sendStop = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
                 <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
                 <van-field v-model="params.carNumber" label="车牌号" placeholder="车牌号" input-align="right"/>
-                <van-field v-model="params.contacts" label="联系人" placeholder="联系人" input-align="right" :rules="[{ required: true, message: '请填写联系人' }]"/>
-                <van-field v-model="params.contactsPhone" label="联系电话" placeholder="联系电话" input-align="right"
+                <van-field v-model="params.contacts" required label="联系人" placeholder="联系人" input-align="right" :rules="[{ required: true, message: '请填写联系人' }]"/>
+                <van-field v-model="params.contactsPhone" required label="联系电话" placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' },{ pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！'}]" />
-                <van-field name="uploader" label="发货单附件" :rules="[{ required: true, message: '请上传发货单附件' }]">
+                <van-field name="uploader" label="发货单附件" required :rules="[{ required: true, message: '请上传发货单附件' }]">
                     <template #input>
                         <van-uploader v-model="fileList" :after-read="beforeReadUpload" multiple :max-count="1"/>
                     </template>

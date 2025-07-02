@@ -1,5 +1,5 @@
 <template>
-  <div class="default-container">
+  <div class="default-container" :style="containerStyle">
     <keep-alive :include="keepPages">
       <router-view :key="key" />
     </keep-alive>
@@ -17,6 +17,12 @@ export default {
     },
     keepPages() {
       return this.$store.getters.getKeepPages;
+    },
+    containerStyle() {
+      // 如果是 finishGoods 路由，返回特定样式，否则默认
+      return this.$route.name === 'finishGoods' 
+        ? { height: 'calc(100vh - 120px)' } 
+        : {}; // 默认无额外样式
     },
   },
 };
