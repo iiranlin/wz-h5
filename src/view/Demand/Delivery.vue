@@ -41,6 +41,18 @@
                     <span>需求项目: </span>
                     <span>{{ item.sectionName }}</span>
                   </li>
+                   <li>
+                    <span>发货时间: </span>
+                    <span>{{ formattedCreateDate(item.shippingDate) }}</span>
+                  </li>
+                   <li>
+                    <span>操作人: </span>
+                    <span>{{ item.createUserName }}</span>
+                  </li>
+                   <li>
+                    <span>操作时间: </span>
+                    <span>{{ formatTimestamp(item.createDate) }}</span>
+                  </li>
                   <li>
                     <span style="width: 200px;">发货单附件:</span>
                     <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.fhd[0].fileName,item.fileByList.fhd[0].filePath)">{{ item.fileByList.fhd[0].fileName }}</span>
@@ -254,12 +266,29 @@ export default {
     },
     // 日期格式化
      formattedCreateDate(timestamp) {
+      if (!timestamp) return ''; // 处理空值
       const date = new Date(timestamp);
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
       const day = date.getDate().toString().padStart(2, '0'); // 日期加0
       return `${year}-${month}-${day}`;
     },
+    formatTimestamp(timestamp) {
+    if (!timestamp) return ''; // 处理空值
+    const date = new Date(timestamp); // 时间戳可以是毫秒或秒（需 * 1000）
+    
+    // 补零函数（确保个位数显示为两位，如 1 → '01'）
+    const padZero = (num) => (num < 10 ? `0${num}` : num);
+    
+    const year = date.getFullYear();
+    const month = padZero(date.getMonth() + 1); // 月份从 0 开始
+    const day = padZero(date.getDate());
+    const hours = padZero(date.getHours());
+    const minutes = padZero(date.getMinutes());
+    const seconds = padZero(date.getSeconds());
+    
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  },
     //查看物流
     handleLookClick(id,number,logisticsNumber) {
       this.$router.push({ path: '/lookCargo',query:{id:id,number:number,logisticsNumber:logisticsNumber} })
