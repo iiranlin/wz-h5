@@ -208,6 +208,7 @@ export default {
               this.finished  = true;
             }
             this.loading = false;
+             this.$forceUpdate(); // 强制更新视图
           // this.listBySendData = res.data.list
         }
       }).catch((err) => {
@@ -275,6 +276,7 @@ export default {
         if(res.code==0){
           this.cargoList = res.data.list
           this.freightLocationDiaLog = true
+          
         }
       })
     },
@@ -326,9 +328,13 @@ export default {
         deleteGoods(params).then((res)=>{
             if(res.code==0){
               Toast.success(res.message);
+              // 手动过滤本地数据（假设 params.id 是删除项的 ID）
+             this.listBySendData = this.listBySendData.filter(
+                item => !params.ids.includes(item.id) // 适用于批量删除
+              );
               this.params.pageNum=1
               this.getList();
-              this.$forceUpdate(); // 强制更新视图
+             
             }
         })
         // this.$toast('删除成功');
