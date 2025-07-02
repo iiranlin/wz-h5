@@ -42,3 +42,15 @@ export const listCrRetreat = (params) => {
     params
   })
 }
+
+/**
+ * 入库明细（未入库、已退货、已入库、部分入库）
+ * @param {*} params 
+ * @returns 
+ */
+export const detailByStore = (id) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/detailByStore/${id}`,
+    method: 'get',
+  })
+}
