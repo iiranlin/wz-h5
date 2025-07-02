@@ -123,6 +123,11 @@ export default {
         ...this.listQuery,
         ...this.formData
       }
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      })
       listStore(params).then(({ data }) => {
         this.dataList.push(...(data.list || []))
         // 数据全部加载完成
@@ -136,6 +141,7 @@ export default {
         this.error = true
       }).finally((err) => {
         this.loading = false
+        toast.clear()
       })
     },
     submitStore(item) {
