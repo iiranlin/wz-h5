@@ -15,12 +15,12 @@
         <div v-for="(item, index) in dataList" :key="index" class="box-container">
           <ul class="list-ul" @click="detailsClick(item)">
             <li>
-              <span>当前库存：</span>
-              <span>{{item.relatedCount == 0?'无':'有'}}</span>
-            </li>
-            <li>
               <span class="font-weight">需求编号：</span>
               <span class="font-weight">{{item.planNumber}}</span>
+            </li>
+            <li>
+              <span>当前库存：</span>
+              <span>{{item.relatedCount == 0?'无':'有'}}</span>
             </li>
             <li>
               <span>需求名称：</span>

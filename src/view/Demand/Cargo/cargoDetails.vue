@@ -4,14 +4,11 @@
             <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
                 @change="tabsChange" title-inactive-color="#2e2e2e">
                 <van-tab title="发货基本信息" name="发货基本信息">
-                    <div class="tabs"></div>
-                      <van-list v-model="allLoading" :finished="allFinished"
-                            @load="getAllList">
-
+                      <van-list>
                             <div class="box-container">
                                 <ul class="list-ul">
                                     <li>
-                                        <span style="width: 220px;">供应需求名称:</span>
+                                        <span style="width: 250px;">供应需求名称:</span>
                                         <span>{{ params.planName }}</span>
                                     </li>
                                     <li>
@@ -31,7 +28,7 @@
                                         <span>{{ params.shippingAddress }}</span>
                                     </li>
                                     <li>
-                                        <span style="min-width: 180px;">发货单附件:</span>
+                                        <span style="min-width: 210px;">发货单附件:</span>
                                         <span style="color:#1989fa;">
                                             <template>
                                                  <span style="color:#1989fa;" v-if="params.fileByList" @click="imgClick(params.fileByList.fhd[0].fileName,params.fileByList.fhd[0].filePath)">{{ params.fileByList.fhd[0].fileName }}</span>
@@ -62,7 +59,7 @@
                                     </li>
                                      <li>
                                         <span>发货时间: </span>
-                                        <span>{{ formattedCreateDate(params.shippingDate) }}</span>
+                                        <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate) }}</span>
                                     </li>
                                     <li>
                                         <span>操作人: </span>
@@ -70,15 +67,14 @@
                                     </li>
                                     <li>
                                         <span>操作时间: </span>
-                                        <span>{{ formatTimestamp(params.createDate) }}</span>
+                                        <span v-if="params.createDate">{{ formatTimestamp(params.createDate) }}</span>
                                     </li>
                                 </ul>
                             </div>
                         </van-list>
                 </van-tab>
                 <van-tab title="发货物资明细" name="发货物资明细">
-                       <van-list v-model="allLoading" :finished="allFinished"
-                            @load="getAllList">
+                       <van-list>
 
                             <div class="box-container"
                                 v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
@@ -112,17 +108,17 @@
                                         </div>
                                         <div class="li-item-right">
                                             <span>包装形式:</span>
-                                            <span>固装</span>
+                                            <span>{{ item.packagingFm }}</span>
                                         </div>
                                     </li>
                                     <li class="li-item-both">
                                         <div class="li-item-left">
                                             <span>生产日期:</span>
-                                            <span>{{ formattedCreateDate(item.createDate) }}</span>
+                                            <span v-if="item.createDate">{{ formattedCreateDate(item.createDate) }}</span>
                                         </div>
-                                        <div class="li-item-right">
-                                            <span style="width: 250px;padding-right: 40px;">有效期截止日期:</span>
-                                            <span>{{ formattedCreateDate(item.updateDate) }}</span>
+                                        <div class="li-item-right" style="display: flex;justify-content: space-between;">
+                                            <span >有效期截止日期：</span>
+                                            <span v-if="item.updateDate" style="margin-left: 60px;">{{ formattedCreateDate(item.updateDate) }}</span>
                                         </div>
                                     </li>
                                     <li>
@@ -135,10 +131,10 @@
                                     </li>
                                     <li>
                                         <span>供应时间:</span>
-                                        <span>{{ formattedCreateDate(item.supplyDate) }}</span>
+                                        <span v-if="item.supplyDate">{{ formattedCreateDate(item.supplyDate) }}</span>
                                     </li>
                                     <li>
-                                        <span style="width: 335px;">收货人及联系方式:</span>
+                                        <span style="width: 360px;">收货人及联系方式:</span>
                                         <span>{{ item.receiver }}</span>
                                     </li>
                                     <li>
@@ -155,7 +151,7 @@
                                     </li>
                                     <li class="li-item-both">
                                         <div class="li-item-left">
-                                            <span style="min-width: 180px;"> 合格证附件:</span>
+                                            <span style="min-width: 200px;"> 合格证附件:</span>
                                             <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.hgz[0].fileName,item.fileByList.hgz[0].filePath)">{{ item.fileByList.hgz[0].fileName }}</span>
                                         </div>
                                         <div class="li-item-right">
@@ -219,42 +215,19 @@ export default {
             return `${year}-${month}-${day}`;
         },
         cargoDetails() {
-           
             detailBySend(this.id).then((res) => {
                 if (res.code == 0) {
-                
                     this.params = res.data
                     this.params.fileByList = JSON.parse(res.data.fileByList)
                     this.params.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item)=>({
                         ...item,
-                        fileByList:JSON.parse(item.fileByList)
+                        fileByList:JSON.parse(item.fileByList) 
                     }))
                 }
             })
         },
-        tabsChange(e) {
-           
-        },
-        //发货
-        handleSendGoodsClick() {
-            this.$router.push({ path: '/sendGoods' })
-        },
-        //查看物流
-        handleLookClick() {
-            this.$router.push({ path: 'lookUp' })
-        },
-        //供应详情
-        handleSupplyClick() {
-            this.$router.push({ path: '/supplyMsg' })
-        },
-        //确认需求
-        handleConfirmClick() {
-            this.$router.push({ path: '/confirm' })
-        },
-        //获取全部订单
-        getAllList() {
-            this.allRefreshLoading = false;
-            this.allFinished = true;
+        tabsChange(){
+
         },
         imgClick(fileName, filePath) {
             this.$refs.filePreview.init(fileName, filePath)

@@ -1,5 +1,5 @@
 <template>
-    <div class="detail-button-container">
+    <div :class="['default-container',type == '0'?'detail-button-container':'']">
         <div class="box-container">
             <div>
                 <ul class="detail-ul">
@@ -26,72 +26,117 @@
                 </ul>
             </div>
         </div>
-        <div class="detail-title-info" style="margin-left:10px;margin-bottom:10px;">
-            <span class="info-title">物资明细</span>
-        </div>
-         <div class="box-container" v-for="(item,index) in detailList" :key="index">
-            <div>
-                <ul class="detail-ul">
-                    <li>
-                        <span>供应商：</span>
-                        <span>{{item.sellerName}}</span>
-                    </li>
-                    <li>
-                        <span>物资名称：</span>
-                        <span>{{item.materialName}}</span>
-                    </li>
-                    <li>
-                        <span>规格型号：</span>
-                        <span>{{item.specModel}}</span>
-                    </li>
-                    <li>
-                        <span>计量单位：</span>
-                        <span>{{item.unit}}</span>
-                    </li>
-                    <li>
-                        <span>合同数量：</span>
-                        <span>{{item.amount}}</span>
-                    </li>
-                    <li class="li-item-overlength">
-                        <span>累计计划量（含本次）：</span>
-                        <span>{{item.cumulativeAmount}}</span>
-                    </li>
-                    <li class="li-item-overlength">
-                        <span>本次计划量：</span>
-                        <span>{{item.planAmount}}</span>
-                    </li>
-                    <li>
-                        <span>供应时间：</span>
-                        <span>{{parseTime(item.supplyDate,'{y}-{m}-{d}')}}</span>
-                    </li>
-                    <li>
-                        <span>使用地点：</span>
-                        <span>{{item.addr}}</span>
-                    </li>
-                    <li>
-                        <span>收货地址：</span>
-                        <span>{{item.field2}}</span>
-                    </li>
-                    <li class="li-item-overlength">
-                        <span>收货人及联系方式：</span>
-                        <span>{{item.receiver}}</span>
-                    </li>
-                    <li>
-                        <span>投资方：</span>
-                        <span>{{item.field0}}</span>
-                    </li>
-                    <li>
-                        <span>投资比例：</span>
-                        <span>{{item.field1}}</span>
-                    </li>
-                    <li>
-                        <span>备注：</span>
-                        <span>{{item.remark}}</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="default-button-container">
+        <van-tabs 
+            sticky
+            v-model="menuActiveIndex" 
+            color="#0571ff"
+            background="#eef6ff"
+            title-active-color="#0571ff"
+            title-inactive-color="#2e2e2e">
+            <van-tab title="物资明细">
+                <div class="box-container" v-for="(item,index) in detailList" :key="index">
+                    <div>
+                        <ul class="detail-ul">
+                            <li>
+                                <span>供应商：</span>
+                                <span>{{item.sellerName}}</span>
+                            </li>
+                            <li>
+                                <span>物资名称：</span>
+                                <span>{{item.materialName}}</span>
+                            </li>
+                            <li>
+                                <span>规格型号：</span>
+                                <span>{{item.specModel}}</span>
+                            </li>
+                            <li>
+                                <span>计量单位：</span>
+                                <span>{{item.unit}}</span>
+                            </li>
+                            <li>
+                                <span>合同数量：</span>
+                                <span>{{item.amount}}</span>
+                            </li>
+                            <li class="li-item-overlength">
+                                <span>累计计划量（含本次）：</span>
+                                <span>{{item.cumulativeAmount}}</span>
+                            </li>
+                            <li class="li-item-overlength">
+                                <span>本次计划量：</span>
+                                <span>{{item.planAmount}}</span>
+                            </li>
+                            <li>
+                                <span>供应时间：</span>
+                                <span>{{parseTime(item.supplyDate,'{y}-{m}-{d}')}}</span>
+                            </li>
+                            <li>
+                                <span>使用地点：</span>
+                                <span>{{item.addr}}</span>
+                            </li>
+                            <li>
+                                <span>收货地址：</span>
+                                <span>{{item.field2}}</span>
+                            </li>
+                            <li class="li-item-overlength">
+                                <span>收货人及联系方式：</span>
+                                <span>{{item.receiver}}</span>
+                            </li>
+                            <li>
+                                <span>投资方：</span>
+                                <span>{{item.field0}}</span>
+                            </li>
+                            <li>
+                                <span>投资比例：</span>
+                                <span>{{item.field1}}</span>
+                            </li>
+                            <li>
+                                <span>备注：</span>
+                                <span>{{item.remark}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </van-tab>
+            <van-tab title="查看流程">
+                <van-list 
+                    v-model="loading" 
+                    :finished="finished" 
+                    finished-text="没有更多了..." 
+                    @load="getList">
+
+                    <div v-for="(item,index) in processList" :key="index" class="box-container">
+                        <ul class="list-ul">
+                            <li>
+                                <span class="font-weight">节点：</span>
+                                <span class="font-weight">{{item.actName}}</span>
+                            </li>
+                            <li>
+                                <span>单位：</span>
+                                <span>{{item.orgName}}</span>
+                            </li>
+                            <li>
+                                <span>操作人：</span>
+                                <span>{{item.assigneeName}}</span>
+                            </li>
+                            <li>
+                                <span>操作时间：</span>
+                                <span>{{item.endTime}}</span>
+                            </li>
+                            <li class="li-status">
+                                <span>状态：</span>
+                                <span class="font-weight" style="color:#158aff" v-if="item.status == '2'">通过</span>
+                                <span class="font-weight" style="color:#ee0a24" v-if="item.status == '3'">驳回</span>
+                            </li>
+                            <li>
+                                <span>意见：</span>
+                                <span>{{item.message}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </van-list>
+            </van-tab>
+        </van-tabs>
+        <div class="default-button-container" v-if="type == 0">
             <van-button class="button-info" block type="info" round @click="handleReject()">驳回</van-button>
             <van-button class="button-info" block type="info" round @click="handleEditAdopt()">修改后通过</van-button>
             <van-button class="button-info" block type="info" round @click="handleAdopt()">通过</van-button>
@@ -112,7 +157,7 @@
 <script>
 import keepPages from '@/view/mixins/keepPages'
 import eventBus from '@/utils/eventBus.js'
-import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove } from '@/api/myToDoList'
+import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,wfHistoryList } from '@/api/myToDoList'
 
 export default {
     name: 'DemandPlanningExamine',
@@ -121,6 +166,8 @@ export default {
 
     data () {
         return {
+            //审核状态
+            type: '',   //0 未审核 1 已审核
             //列表条目信息
             listObj:{},
             //详情信息
@@ -137,10 +184,16 @@ export default {
             assigner: '请选择下一级审核人',
             //审批意见
             opinion: '',
+
+            //流程数据
+            processList:[],
+            loading:false,
+            finished:false,
         }
     },
     created() {
         this.listObj = JSON.parse(this.$route.params.obj);
+        this.type = this.$route.params.type;
         
         //审核意见回调
         eventBus.$off('examineOpinionEdit');
@@ -155,6 +208,7 @@ export default {
         }.bind(this));
 
         this.getDetail();
+        this.getProcessList();
     },
     activated() {
        
@@ -175,6 +229,24 @@ export default {
             }).finally(() => {
                 toast.clear();
             })
+        },
+        //获取流程信息
+        getProcessList(){
+            let toast = this.$toast.loading({
+                duration: 0,
+                message: "正在加载...",
+                forbidClick: true
+            });
+            wfHistoryList(this.listObj.businessId).then(({ data }) => {
+                this.processList = data.recordList;
+                this.loading = false;
+                this.finished = true;
+            }).catch((error) => {
+                this.loading = false;
+                this.finished = true;
+            }).finally(() => {
+                toast.clear();
+            });
         },
         //不同意
         handleReject(){
@@ -319,5 +391,21 @@ export default {
 <style lang="less" scoped>
 .default-container {
     padding-top: 10px;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.detail-button-container {
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+}
+::v-deep .van-tabs {
+    flex: 1;
+    overflow-y: auto
+}
+::v-deep .van-tabs__content {
+    height: calc(100% - 56px);
+    overflow-y: auto;
 }
 </style>

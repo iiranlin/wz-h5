@@ -18,6 +18,10 @@
                 <span>发货单号：</span>
                 <span>{{ params.shipmentBatchNumber }}</span>
             </li>
+             <li>
+                <span>使用地点：</span>
+                <span>{{ params.addr }}</span>
+            </li>
             <li class="li-item-both">
                 <div class="li-item-left">
                     <span style="width: 150px;">退货环节:</span>
@@ -33,12 +37,22 @@
         <div class="title">
             <span>退货明细</span>
         </div>
-        <van-list @load="onLoad">
+        <van-list>
             <ul class="list-ul" v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index" style="margin: 20px 15px 0 15px;">
-                <li>
+                <li class="li-item-both">
+                    <div class="li-item-left">
+                         <span class="font-weight">物资名称:</span>
+                       <span class="font-weight">{{ item.materialName }}</span>
+                    </div>
+                    <div class="li-item-right" style="color: rgb(224,70,70);">
+                        <span>退货数量:</span>
+                        <span>{{ item.refundTotal }}</span>
+                    </div>
+                </li>
+                <!-- <li>
                     <span class="font-weight">物资名称:</span>
                     <span class="font-weight">{{ item.materialName }}</span>
-                </li>
+                </li> -->
                 <li>
                     <span>标段项目: </span>
                     <span>南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
@@ -58,10 +72,10 @@
                         <span>发货数量:</span>
                         <span>{{ item.sendTotal }}</span>
                     </div>
-                    <div class="li-item-right">
+                    <!-- <div class="li-item-right" style="color: rgb(224,70,70);">
                         <span>退货数量:</span>
                         <span>{{ item.refundTotal }}</span>
-                    </div>
+                    </div> -->
                 </li>
                 <li>
                     <span>退货附件:</span>
@@ -88,11 +102,11 @@
                     <ul class="list-ul">
                         <li>
                             <span>自检单:</span>
-                            <span style="color:#1989fa;" v-if="params.fileByList.zjd" @click="imgClick(params.fileByList.zjd[0].fileName,params.fileByList.zjd[0].filePath)">{{ params.fileByList.zjd[0].fileName }}</span>
+                            <span style="color:#1989fa;" v-if="params.fileByList && params.fileByList.zjd && params.fileByList.zjd.length > 0" @click="imgClick(params.fileByList.zjd[0].fileName,params.fileByList.zjd[0].filePath)">{{ params.fileByList.zjd[0].fileName }}</span>
                         </li>
                         <li>
                             <span>其他资料:</span>
-                            <span style="color:#1989fa;" v-if="params.fileByList.qtzl" @click="imgClick(params.fileByList.qtzl[0].fileName,params.fileByList.qtzl[0].filePath)">{{ params.fileByList.qtzl[0].fileName }}</span>
+                            <span style="color:#1989fa;" v-if="params.fileByList && params.fileByList.qtzl && params.fileByList.qtzl.length > 0" @click="imgClick(params.fileByList.qtzl[0].fileName,params.fileByList.qtzl[0].filePath)">{{ params.fileByList.qtzl[0].fileName }}</span>
                         </li>
                     </ul>
                 </div>
@@ -136,6 +150,7 @@ export default {
     methods: { 
         // 时间戳转换成日期格式
          formattedCreateDate(timestamp) {
+             if (!timestamp) return ''; // 处理空值
             const date = new Date(timestamp);
             const year = date.getFullYear();
             const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
@@ -161,34 +176,9 @@ export default {
         onSubmit(values) {
            
         },
-        onConfirm(date) {
-            this.value = `${date.getMonth() + 1}/${date.getDate()}`;
-            this.showCalendar = false;
-        },
-        chooseGoods() {
-            this.$router.push({ path: '/selectGoods' })
-        },
-        lookGoods() {
-
-        },
          imgClick(fileName,filePath) {
             this.$refs.filePreview.init(fileName, filePath)
             },
-        onLoad() {
-            // 异步更新数据
-            setTimeout(() => {
-                for (let i = 0; i < 10; i++) {
-                    this.list.push(this.list.length + 1);
-                }
-                // 加载状态结束
-                this.loading = false;
-
-                // 数据全部加载完成
-                if (this.list.length >= 40) {
-                    this.finished = true;
-                }
-            }, 500);
-        },
     },
 };
 </script>

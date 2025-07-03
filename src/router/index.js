@@ -87,7 +87,7 @@ export const routes = [
     hidden: true,
     children: [
       {
-        path: 'DemandPlanningExamine/:obj',
+        path: 'DemandPlanningExamine/:obj/:type',
         name: 'DemandPlanningExamine',
         meta: { title: '需求计划-审核' },
         component: () => import('@/view/MyToDo/MyToDoManager/DemandPlanningExamine.vue')
@@ -292,7 +292,7 @@ export const routes = [
         component: () => import('@/view/Demand/Cargo/index.vue'),
         hidden: true,
         name: 'lookCargo',
-        meta: { title: '货运详情' },
+        meta: { title: '物流查看' },
       },
       {
 

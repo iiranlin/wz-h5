@@ -49,7 +49,6 @@
                                     </li>
                                 </ul>
                                 <div class="list-ul-button">
-                                    <van-button class="button-info" plain round type="info" @click.stop="handleProcessClick(item)">查看流程</van-button>
                                     <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">审核</van-button>
                                 </div>
                             </div>
@@ -88,7 +87,6 @@
                                     </li>
                                 </ul>
                                 <div class="list-ul-button">
-                                    <van-button class="button-info" plain round type="info" @click.stop="handleProcessClick(item)">查看流程</van-button>
                                     <van-button class="button-info" round type="info" @click.stop="handleClick(item)">处理</van-button>
                                 </div>
                             </div>
@@ -137,9 +135,6 @@
                                         <van-tag :type="checkAuditStatus(item.auditStatus)" round size="medium">{{item.auditStatus | orderTypeFilter(dict.flowTaskStatus)}}</van-tag>
                                     </li>
                                 </ul>
-                                <div class="list-ul-button">
-                                    <van-button class="button-info" plain round type="info" @click.stop="handleProcessClick(item)">查看流程</van-button>
-                                </div>
                             </div>
                         </van-list>
                     </van-pull-refresh>
@@ -319,28 +314,43 @@ export default {
         },
         //待审核列表条目点击
         handleWaitItemClick(item){
-            
+            this.$router.push({
+                name: "DemandPlanningExamine",
+                params: { 
+                    obj: JSON.stringify(item),
+                    type: '0',
+                },
+            });
         },
         //待处理列表条目点击
         handleWaitHandleItemClick(item){
-           
+           this.$router.push({
+                name: "DemandPlanningExamine",
+                params: { 
+                    obj: JSON.stringify(item),
+                    type: '1',
+                },
+            });
         },
         //已审核列表条目点击
         handleHistoryItemClick(item){
-           
-        },
-        //查看流程点击
-        handleProcessClick(item){
             this.$router.push({
-                name: "MyProcess",
+                name: "DemandPlanningExamine",
                 params: { 
-                    businessId: item.businessId,
+                    obj: JSON.stringify(item),
+                    type: '1',
                 },
             });
         },
         //处理点击
-        handleClick(){
-
+        handleClick(item){
+            this.$router.push({
+                name: "SaveMaterials",
+                query: { 
+                    id: item.businessId,
+                    type: 'update',
+                },
+            });
         },
         //去审核点击
         handleExamineClick(item){
@@ -348,6 +358,7 @@ export default {
                 name: "DemandPlanningExamine",
                 params: { 
                     obj: JSON.stringify(item),
+                    type: '0',
                 },
             });
         },
