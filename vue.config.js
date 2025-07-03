@@ -44,8 +44,15 @@ module.exports = {
 			},**/
       "/api": {
         // 开发
+<<<<<<< Updated upstream
         // target: `http://10.59.248.226:8000/`,
         target: `http://39.107.57.20:38001/api/`,
+=======
+        // target: `https://car.rails.cn/gwycserver/gwyc`,
+        // target: `http://10.59.248.226:8000/`,
+        target: `http://39.107.57.20:38222/`,
+        // target: `http://10.59.248.230:8019/gwyc`,
+>>>>>>> Stashed changes
         changeOrigin: true,
         pathRewrite: {
           "^/api": "",
