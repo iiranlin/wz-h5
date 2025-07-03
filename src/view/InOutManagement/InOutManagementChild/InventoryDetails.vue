@@ -5,6 +5,10 @@
         <div>
           <ul class="detail-ul">
             <li>
+              <span>需求编号：</span>
+              <span>{{detailInfo.planNumber}}</span>
+            </li>
+            <li>
               <span>需求名称：</span>
               <span>{{detailInfo.planName}}</span>
             </li>
@@ -16,6 +20,10 @@
               <span>需求组织：</span>
               <span>{{detailInfo.deptName}}</span>
             </li>
+            <li>
+              <span>需求状态：</span>
+              <span>{{detailInfo.status == '5'?'已完成':'未完成'}}</span>
+            </li>
           </ul>
         </div>
       </div>
@@ -24,13 +32,13 @@
       </div>
       <div class="box-container" v-for="(item,index) in detailList" :key="index">
         <ul class="detail-ul">
-          <li class="li-item-overlength">
-            <span>供应商名称：</span>
-            <span>{{item.sellerName}}</span>
-          </li>
           <li>
             <span class="font-weight">物资名称：</span>
             <span class="font-weight">{{item.materialName}}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>供应商名称：</span>
+            <span>{{item.sellerName}}</span>
           </li>
           <li>
             <span>规格型号：</span>

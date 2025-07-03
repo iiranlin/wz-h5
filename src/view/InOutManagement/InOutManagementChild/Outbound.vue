@@ -87,12 +87,12 @@
           <div class="div-parent">
             <ul class="detail-ul">
               <li>
-                <span>供应商：</span>
-                <span>{{item.sellerName}}</span>
-              </li>
-              <li>
                 <span class="font-weight">物资名称：</span>
                 <span class="font-weight">{{item.materialName}}</span>
+              </li>
+              <li>
+                <span>供应商：</span>
+                <span>{{item.sellerName}}</span>
               </li>
               <li>
                 <span>规格型号：</span>

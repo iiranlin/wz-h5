@@ -87,7 +87,7 @@ export const routes = [
     hidden: true,
     children: [
       {
-        path: 'DemandPlanningExamine/:obj',
+        path: 'DemandPlanningExamine/:obj/:type',
         name: 'DemandPlanningExamine',
         meta: { title: '需求计划-审核' },
         component: () => import('@/view/MyToDo/MyToDoManager/DemandPlanningExamine.vue')
