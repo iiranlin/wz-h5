@@ -74,7 +74,10 @@
                   <van-button class="button-info" round type="info" size="mini" @click="handleConfirmClick(item.shipmentBatchNumber)"
                     v-if="item.oddNumbers == '' && item.status==2">增加货运位置</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleCarGoClick(item.id)"
+                  
                     v-if="item.status == 2">货运详情</van-button>
+                     <van-button class="button-info" plain round type="info" size="mini" @click="handleUpload(item.id,'file')"
+                    v-if="item.status==2">修改发货单</van-button>
                   <van-button class="button-info" plain round type="info" @click="handleLookClick(item.planId,item.shipmentBatchNumber,item.oddNumbers)"
                     v-if="item.status == 2">物流查看</van-button>
                 </div>
@@ -341,6 +344,10 @@ export default {
     //编辑
     handleEditClick(id,title) {
       this.$router.push({ path: '/sendGoods',query:{id:id,title:title} })
+    },
+    //文件修改
+    handleUpload(id,title){
+       this.$router.push({ path: '/sendGoods',query:{id:id,title:title} })
     },
     //删除
     handleDelClick(id) {

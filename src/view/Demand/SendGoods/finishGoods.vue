@@ -44,40 +44,40 @@
         <van-divider />
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
           <van-form ref="form">
-            <van-field v-model="goodsData[index].ssendTotal" required name="发货数量" label="发货数量" placeholder="发货数量"
+            <van-field v-model="goodsData[index].ssendTotal" :disabled="fileDisabled" required name="发货数量" label="发货数量" placeholder="发货数量"
               input-align="right" />
-            <van-field v-model="goodsData[index].unit" name="包装形式" required label="包装形式" placeholder="请输入包装形式"
+            <van-field v-model="goodsData[index].unit" :disabled="fileDisabled" name="包装形式" required label="包装形式" placeholder="请输入包装形式"
               input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].createDate" required name="datetimePicker"
+            <van-field readonly clickable v-model="goodsData[index].createDate" :disabled="fileDisabled" required name="datetimePicker"
               :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
               @click="showCalendars(item, index, 'show')" input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].updateDate" name="datetimePicker"
+            <van-field readonly clickable v-model="goodsData[index].updateDate" :disabled="fileDisabled" name="datetimePicker"
               :value="goodsData[index].updateDate" label="有效截止日期" placeholder="有效截止日期"
               @click="showCalendars(item, index, 'end')" input-align="right" />
-            <van-field v-model="goodsData[index].field2" label="收货地址" required placeholder="收货地址" input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].supplyDate" name="datetimePicker" required
+            <van-field v-model="goodsData[index].field2" label="收货地址" required :disabled="fileDisabled" placeholder="收货地址" input-align="right" />
+            <van-field readonly clickable v-model="goodsData[index].supplyDate" :disabled="fileDisabled" name="datetimePicker" required
               :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
               @click="showCalendars(item, index, 'gong')" input-align="right" />
-            <van-field v-model="goodsData[index].receiver" name="收货人" required label="收货人和电话" placeholder="收货人"
+            <van-field v-model="goodsData[index].receiver" name="收货人" :disabled="fileDisabled" required label="收货人和电话" placeholder="收货人"
               input-align="right" />
                <van-field v-model="goodsData[index].addr" label="使用地点" placeholder="使用地点" input-align="right"  disabled/>
             <van-field v-model="goodsData[index].field0" :name="goodsData[index].field0" label="投资方" required
               placeholder="投资方" disabled input-align="right" />
             <van-field v-model="goodsData[index].field1" name="投资比例" required label="投资比例" disabled placeholder="投资比例"
               input-align="right" />
-            <van-field name="uploader" label="合格证附件" :rules="[{ required: true, message: '请上传合格证附件' }]" required>
+            <van-field name="uploader" label="合格证附件" :disabled="fileDisabled" :rules="[{ required: true, message: '请上传合格证附件' }]" required>
               <template #input>
-                <van-uploader v-model="goodsData[index].fileList01" multiple :max-count="1"
+                <van-uploader v-model="goodsData[index].fileList01" multiple :max-count="1" :disabled="fileDisabled"
                   :after-read="(file) => passReadUpload(file, index)" />
               </template>
             </van-field>
-            <van-field name="uploader" label="厂检报告附件" :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
+            <van-field name="uploader" label="厂检报告附件" :disabled="fileDisabled" :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
               <template #input>
-                <van-uploader v-model="goodsData[index].fileList02" :after-read="(file) => checkReadUpload(file, index)"
+                <van-uploader v-model="goodsData[index].fileList02" :disabled="fileDisabled" :after-read="(file) => checkReadUpload(file, index)"
                   multiple :max-count="1" />
               </template>
             </van-field>
-            <van-field v-model="goodsData[index].remark" label="备注" placeholder="请输入备注" input-align="right" />
+            <van-field v-model="goodsData[index].remark" label="备注" :disabled="fileDisabled" placeholder="请输入备注" input-align="right" />
           </van-form>
         </div>
       </div>
@@ -132,7 +132,9 @@ export default {
       title: '',
       goodsId: "",
       showCreateDates: false,
-      text: ""
+      text: "",
+      //如果是修改文件禁用其他禁用
+      fileDisabled:false
     };
   },
   created() {
@@ -144,7 +146,8 @@ export default {
         ...item,
         planDetailId: item.id,
       }))
-    } else {
+    } 
+    if(this.text=='edit') {
       this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
         ...item,
         planDetailId: item.id,
@@ -152,6 +155,17 @@ export default {
         fileList01: this.showHgz(item.fileByList),
         fileList02: this.showCjbg(item.fileByList),
       }))
+    }
+    //修改文件
+    if(this.text=='file') {
+      this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
+        ...item,
+        planDetailId: item.id,
+        // 回显图片
+        fileList01: this.showHgz(item.fileByList),
+        fileList02: this.showCjbg(item.fileByList),
+      }))
+      this.fileDisabled=true
     }
 
   },
@@ -315,7 +329,7 @@ export default {
         materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
       }
       //保存
-      if (this.text != 'edit') {
+      if (this.text == 'add') {
         demandSaveSendGoods(params).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);
@@ -323,13 +337,25 @@ export default {
           }
         
         })
-      } else {
+      } 
+       if (this.text == 'edit') {
+        modifySendGoods(params).then((res) => {
+          if (res.code == 0) {
+            Toast.success(res.data);
+            this.$router.push({ path: "/Information" })
+          }
+        
+        })
+      } 
+      if(this.text=='file'){
+        
         modifySendGoods(params).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);
             this.$router.push({ path: "/Information" })
           }
         })
+      
       }
 
       //保存完所选择的物资存到store里

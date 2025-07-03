@@ -17,31 +17,48 @@
         </ul>
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
             <van-form :key="formKey" ref="form">
-                <van-field v-model="params.oddNumbers" name="物流单号" label="物流单号" placeholder="物流单号" input-align="right"
+                <van-field v-model="params.oddNumbers" :disabled="fileDisabled" name="物流单号" label="物流单号" placeholder="物流单号" input-align="right"
                     />
-                <van-field v-model="params.shippingAddress" required name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
+                <van-field v-model="params.shippingAddress" :disabled="fileDisabled" required name="发货地址" label="发货地址" placeholder="发货地址" input-align="right"
                     :rules="[{ required: true, message: '请填写发货地址' }]" />
-                <van-field readonly clickable name="calendar" required v-model="params.shippingDate" label="发货日期" input-align="right" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" :disabled="fileDisabled" required v-model="params.shippingDate" label="发货日期" input-align="right" placeholder="点击选择日期"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" />
                 <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-                <van-field readonly clickable name="calendar" required :value="params.arrivalDate" label="预计送到时间" input-align="right" placeholder="点击选择日期"
+                <van-field readonly clickable name="calendar" :disabled="fileDisabled" required :value="params.arrivalDate" label="预计送到时间" input-align="right" placeholder="点击选择日期"
                     @click="sendStop = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
                 <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
-                <van-field v-model="params.carNumber" label="车牌号" type="text" placeholder="车牌号" input-align="right"/>
-                <van-field v-model="params.contacts" required label="联系人" placeholder="联系人" input-align="right" :rules="[{ required: true, message: '请填写联系人' }]"/>
-                <van-field v-model="params.contactsPhone" required label="联系电话" placeholder="联系电话" input-align="right"
+                <van-field v-model="params.carNumber" label="车牌号" :disabled="fileDisabled" type="text" placeholder="车牌号" input-align="right"/>
+                <van-field v-model="params.contacts" required label="联系人" :disabled="fileDisabled" placeholder="联系人" input-align="right" :rules="[{ required: true, message: '请填写联系人' }]"/>
+                <van-field v-model="params.contactsPhone" required label="联系电话" :disabled="fileDisabled" placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' },{ pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！'}]" />
-                <van-field name="uploader" label="发货单附件" required :rules="[{ required: true, message: '请上传发货单附件' }]">
+                <van-field name="uploader" v-model="fileByList" label="发货单附件：" class="outbound-field-uploader" required
+                >
+                <template #button>
+                  <van-uploader :preview-imag='false'
+                   :after-read="beforeReadUpload" :before-read="beforeRead"
+                    accept="">
+                    <van-button type="info" size="small" class="outbound-uploader" native-type="button">请上传发货单</van-button>
+                  </van-uploader>
+                </template>
+              </van-field>
+
+
+
+
+
+
+                <!-- <van-field name="uploader" label="发货单附件" required :rules="[{ required: true, message: '请上传发货单附件' }]">
                     <template #input>
                         <van-uploader v-model="fileList" :after-read="beforeReadUpload" multiple :max-count="1"/>
                     </template>
-                    </van-field>
+                    </van-field> -->
             </van-form>
         </div>
         <div class="default-button-container">
             <van-button size="mini" type="primary" round class="button-info" @click="chooseGoods(goodsId,text)" v-if="this.text=='add'">选择发货物资</van-button>
             <!-- 编辑里的选择发货物资传的是planId -->
-            <van-button size="mini" type="primary" round class="button-info" @click="editGoods(params.materialCirculationDetailsTableDTOS,'edit')" v-else>选择发货物资</van-button>
+            <van-button size="mini" type="primary" round class="button-info" @click="editGoods(params.materialCirculationDetailsTableDTOS,'edit')" v-if="text=='edit'">选择发货物资</van-button>
+             <van-button size="mini" type="primary" round class="button-info" @click="editGoods(params.materialCirculationDetailsTableDTOS,'file')" v-if="text=='file'">选择发货物资</van-button>
         </div>
     </div>
 </template>
@@ -78,18 +95,28 @@ export default {
             goodsList:[],
             fileList:[],
             // 传过来的标识，用来判断是新增还是编辑
-            text:""
+            text:"",
+            fileDisabled:false,
+            fileByList:''
         };
     },
     created() {
         this.text = this.$route.query.title
         this.goodsId = this.$route.query.id
+        //编辑
         if(this.text=='edit'){
+           
             this.editDetails()
-        }else{
-             this.getSendGoods();
         }
-        
+        // 增加
+        if(this.text=='add'){
+             this.getSendGoods()
+        }
+        // 修改文件
+        if(this.text=='file'){
+             this.editDetails()
+            this.fileDisabled=true
+        }
        
         // // 编辑
         // if(this.text=='edit'){
@@ -143,7 +170,8 @@ export default {
                         this.goodsMsg.contractName=contractName
                         let file = JSON.parse(res.data.fileByList)
                         this.params = res.data
-                        this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
+                        // this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
+                        this.fileByList = file.fhd[0].fileName
                         this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
                         this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
                         
@@ -310,13 +338,34 @@ export default {
                         name: res.data.fileName,
                         url:res.data.filePath
                         }];
-                    this.params.fileByList = ''
+                    this.fileByList = this.fileList[0].name
                     // this.params = res.data
                     // this.params.fileName = res.data.fileName
                     // this.params.fileName = res.data.fileName
                 }
             })
-        }
+        },
+           //附件上传前
+            beforeRead(file) {
+            const isLt10M = file.size / 1024 / 1024 < 10;
+            const isFileName = file.name.length < 90;
+
+            if (!isLt10M) {
+                this.$notify({
+                type: 'warning',
+                message: '上传文件大小不能超过 10MB!',
+                });
+                return false;
+            }
+            if (!isFileName) {
+                this.$notify({
+                type: 'warning',
+                message: '上传文件名过长!',
+                });
+                return false;
+            }
+            return true;
+            },
     },
 };
 </script>
