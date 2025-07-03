@@ -40,7 +40,7 @@
                     <template #button>
                         <van-uploader :preview-imag='false' :after-read="beforeReadUpload" :before-read="beforeRead"
                             accept="">
-                            <van-button type="info" size="small" class="outbound-uploader"
+                            <van-button type="info" round size="small" class="outbound-uploader"
                                 native-type="button">请上传发货单</van-button>
                         </van-uploader>
                     </template>
