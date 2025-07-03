@@ -8,7 +8,7 @@
                             <div class="box-container">
                                 <ul class="list-ul">
                                     <li>
-                                        <span style="width: 220px;">供应需求名称:</span>
+                                        <span style="width: 250px;">供应需求名称:</span>
                                         <span>{{ params.planName }}</span>
                                     </li>
                                     <li>
@@ -28,7 +28,7 @@
                                         <span>{{ params.shippingAddress }}</span>
                                     </li>
                                     <li>
-                                        <span style="min-width: 180px;">发货单附件:</span>
+                                        <span style="min-width: 210px;">发货单附件:</span>
                                         <span style="color:#1989fa;">
                                             <template>
                                                  <span style="color:#1989fa;" v-if="params.fileByList" @click="imgClick(params.fileByList.fhd[0].fileName,params.fileByList.fhd[0].filePath)">{{ params.fileByList.fhd[0].fileName }}</span>
@@ -116,9 +116,9 @@
                                             <span>生产日期:</span>
                                             <span v-if="item.createDate">{{ formattedCreateDate(item.createDate) }}</span>
                                         </div>
-                                        <div class="li-item-right">
-                                            <span style="width: 250px;padding-right: 40px;">有效期截止日期:</span>
-                                            <span v-if="item.updateDate">{{ formattedCreateDate(item.updateDate) }}</span>
+                                        <div class="li-item-right" style="display: flex;justify-content: space-between;">
+                                            <span >有效期截止日期：</span>
+                                            <span v-if="item.updateDate" style="margin-left: 60px;">{{ formattedCreateDate(item.updateDate) }}</span>
                                         </div>
                                     </li>
                                     <li>
@@ -134,7 +134,7 @@
                                         <span v-if="item.supplyDate">{{ formattedCreateDate(item.supplyDate) }}</span>
                                     </li>
                                     <li>
-                                        <span style="width: 335px;">收货人及联系方式:</span>
+                                        <span style="width: 360px;">收货人及联系方式:</span>
                                         <span>{{ item.receiver }}</span>
                                     </li>
                                     <li>
@@ -151,7 +151,7 @@
                                     </li>
                                     <li class="li-item-both">
                                         <div class="li-item-left">
-                                            <span style="min-width: 180px;"> 合格证附件:</span>
+                                            <span style="min-width: 200px;"> 合格证附件:</span>
                                             <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.hgz[0].fileName,item.fileByList.hgz[0].filePath)">{{ item.fileByList.hgz[0].fileName }}</span>
                                         </div>
                                         <div class="li-item-right">

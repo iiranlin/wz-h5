@@ -46,7 +46,7 @@
               <span>{{ item.addr }}</span>
             </li>
              <li>
-              <span>收获地点:</span>
+              <span>收货地点:</span>
               <span>{{ item.shippingAddress }}</span>
             </li>
               <li>
