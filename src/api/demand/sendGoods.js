@@ -19,10 +19,11 @@ export function snedGoodsSure(data) {
 }
 
 //货运详情  
-export function cargoTransport(id) {
+export function cargoTransport(params) {
   return request({
-    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailGyMx?id=${id}`,
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailGyMx`,
     method: 'GET',
+    params
   })
 }
 // 删除   
@@ -49,10 +50,11 @@ export function addFreightLocations(data) {
   })
 }
 // 货运列表
-export function addList(shipmentBatchNumber) {
+export function addList(params) {
   return request({
-    url: `${VUE_APP_PRODMGR_INV}/materialTrackMessageRest/list?shipmentBatchNumber=${shipmentBatchNumber}`,
+    url: `${VUE_APP_PRODMGR_INV}/materialTrackMessageRest/list`,
     method: 'get',
+    params
   })
 }
 

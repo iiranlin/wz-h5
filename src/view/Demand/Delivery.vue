@@ -229,7 +229,6 @@ export default {
       }).catch((err) => {
           Toast.clear();
           Toast("网络错误，请重试");
-          console.error(err);
         });
     },
     tabsChange(e) {
@@ -303,7 +302,10 @@ export default {
     handleConfirmClick(number) {
       this.formKey++
        this.shipmentBatchNumber = number
-      addList(number).then((res)=>{
+       let params={
+        shipmentBatchNumber:number
+       }
+      addList(params).then((res)=>{
         if(res.code==0){
           this.cargoList = res.data.list
           this.freightLocationDiaLog = true

@@ -118,7 +118,10 @@ export default {
     },
     methods: {
         getList(){
-            supplyDetails(this.id).then((res)=>{
+            let params={
+                id:this.id
+            }
+            supplyDetails(params).then((res)=>{
                 if(res.code==0){
                     this.allRefreshLoading = false
                     this.finished = false

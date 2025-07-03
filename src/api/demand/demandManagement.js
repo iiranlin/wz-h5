@@ -62,9 +62,10 @@ export function demandSureSave(data) {
 }
 
 //供应详情   
-export function supplyDetails(id) {
+export function supplyDetails(params) {
   return request({
-    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailGyMx?type=view&id=${id}`,
-    method: 'get'
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailGyMx`,
+    method: 'get',
+    params
   })
 }

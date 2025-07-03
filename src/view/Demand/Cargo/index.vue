@@ -163,8 +163,11 @@ export default {
                     this.logistics = res.data
                 }
             })
+            let params={
+                shipmentBatchNumber:this.wuLiuNumber
+            }
             //有单号就显示位置列表
-            addList(this.wuLiuNumber).then((res) => {
+            addList(params).then((res) => {
                 if (res.code == 0) {
                     this.cargoList = res.data.list
                 }
