@@ -62,7 +62,7 @@
                                     </li>
                                      <li>
                                         <span>发货时间: </span>
-                                        <span>{{ formattedCreateDate(params.shippingDate) }}</span>
+                                        <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate) }}</span>
                                     </li>
                                     <li>
                                         <span>操作人: </span>
@@ -70,7 +70,7 @@
                                     </li>
                                     <li>
                                         <span>操作时间: </span>
-                                        <span>{{ formatTimestamp(params.createDate) }}</span>
+                                        <span v-if="params.createDate">{{ formatTimestamp(params.createDate) }}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -118,11 +118,11 @@
                                     <li class="li-item-both">
                                         <div class="li-item-left">
                                             <span>生产日期:</span>
-                                            <span>{{ formattedCreateDate(item.createDate) }}</span>
+                                            <span v-if="item.createDate">{{ formattedCreateDate(item.createDate) }}</span>
                                         </div>
                                         <div class="li-item-right">
                                             <span style="width: 250px;padding-right: 40px;">有效期截止日期:</span>
-                                            <span>{{ formattedCreateDate(item.updateDate) }}</span>
+                                            <span v-if="item.updateDate">{{ formattedCreateDate(item.updateDate) }}</span>
                                         </div>
                                     </li>
                                     <li>
@@ -135,7 +135,7 @@
                                     </li>
                                     <li>
                                         <span>供应时间:</span>
-                                        <span>{{ formattedCreateDate(item.supplyDate) }}</span>
+                                        <span v-if="item.supplyDate">{{ formattedCreateDate(item.supplyDate) }}</span>
                                     </li>
                                     <li>
                                         <span style="width: 335px;">收货人及联系方式:</span>
