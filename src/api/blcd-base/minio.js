@@ -7,7 +7,8 @@ export const minioUpload = (data) => {
   return request({
     url: `${VUE_APP_BASE_SERVER}/minio/upload`,
     method: 'post',
-    data
+    data,
+    minioSm4: true //上传不需要加密
   })
 }
 
@@ -17,6 +18,7 @@ export function minioDownload(params) {
 		url: `${VUE_APP_BASE_SERVER}/minio/download`,
 		method: 'get',
 		responseType: 'blob',
-    params
+    params,
+    minioSm4: true //下载不需要加密
 	})
 }

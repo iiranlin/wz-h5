@@ -4,6 +4,8 @@ import { Dialog, Notify } from "vant";
 import { getToken, setToken } from "@/utils/auth";
 import { tansParams } from "@/utils/publicMethods";
 import cache from '@/plugins/cache'
+import { encrypt, decrypt } from './sm4'
+const secretKey = '1234567890abcdef'
 
 function isAndroid() {
   let userAgent = navigator.userAgent
@@ -26,6 +28,14 @@ service.interceptors.request.use(
     }
     // get请求映射params参数
     if (config.method === 'get' && config.params) {
+      if (!config.minioSm4) {
+        for (const key in config.params) {
+          if (Object.hasOwnProperty.call(config.params, key)) {
+            const element = config.params[key] + ''
+            config.params[key] = config.params[key] && encrypt(element, secretKey)
+          }
+        }
+      }
       let url = config.url + '?' + tansParams(config.params);
       url = url.slice(0, -1);
       config.params = {};
@@ -54,6 +64,11 @@ service.interceptors.request.use(
         }
       }
     }
+
+    if (config.data && !config.minioSm4) {
+      config.data = encrypt(config.data, secretKey)
+      config.headers['content-type'] = 'application/json'
+    }
     return config
   },
   (error) => {
@@ -62,6 +77,10 @@ service.interceptors.request.use(
 );
 service.interceptors.response.use(
   (response) => {
+    if(!response.config.minioSm4){
+      response.data = JSON.parse(decrypt(response.data, secretKey))
+    }
+    console.info(response.data)
     // 二进制数据则直接返回
     if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
       return response.data
@@ -89,7 +108,7 @@ service.interceptors.response.use(
         }
       });
       return Promise.reject(res.message);
-    }  else if (res.code !== 0) {
+    } else if (res.code !== 0) {
       Dialog.alert({
         title: "提示",
         message: res.message || JSON.stringify(res),
