@@ -68,12 +68,12 @@
             <van-field name="uploader" label="合格证附件" :disabled="fileDisabled" :rules="[{ required: true, message: '请上传合格证附件' }]" required>
               <template #input>
                 <van-uploader v-model="goodsData[index].fileList01" multiple :max-count="1" :disabled="fileDisabled"
-                  :after-read="(file) => passReadUpload(file, index)" />
+                  :after-read="(file) => passReadUpload(file, index)" :before-read="beforeRead"/>
               </template>
             </van-field>
             <van-field name="uploader" label="厂检报告附件" :disabled="fileDisabled" :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
               <template #input>
-                <van-uploader v-model="goodsData[index].fileList02" :disabled="fileDisabled" :after-read="(file) => checkReadUpload(file, index)"
+                <van-uploader v-model="goodsData[index].fileList02" :disabled="fileDisabled" :after-read="(file) => checkReadUpload(file, index)" :before-read="beforeRead"
                   multiple :max-count="1" />
               </template>
             </van-field>
@@ -107,6 +107,8 @@ import { DatetimePicker } from 'vant';
 import _ from 'lodash'
 import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/api/demand/demandManagement'
 import { modifySendGoods } from '@/api/demand/sendGoods'
+import { Notify } from 'vant';
+Vue.use(Notify)
 Vue.use(DatetimePicker);
 Vue.use(Toast);
 Vue.use(Divider);
@@ -257,7 +259,6 @@ export default {
     },
     //厂检
     checkReadUpload(file, index) {
-   
       let imgFile = new FormData();
       imgFile.append("businessType", '01');
       imgFile.append("key", file.file.name);
@@ -357,7 +358,7 @@ export default {
         })
       
       }
-
+      
       //保存完所选择的物资存到store里
       // this.$store.dispatch('public/setGoodsList', this.goodsData)
       // this.$router.push({
@@ -376,7 +377,28 @@ export default {
       //       type: '1',
       //   }
       // })
-    }
+    },
+     //附件上传前
+        beforeRead(file) {
+            const isLt10M = file.size / 1024 / 1024 < 10;
+            const isFileName = file.name.length < 90;
+
+            if (!isLt10M) {
+                this.$notify({
+                    type: 'warning',
+                    message: '上传文件大小不能超过 10MB!',
+                });
+                return false;
+            }
+            if (!isFileName) {
+                this.$notify({
+                    type: 'warning',
+                    message: '上传文件名过长!',
+                });
+                return false;
+            }
+            return true;
+        },
   },
 };
 </script>
