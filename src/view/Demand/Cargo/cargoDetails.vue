@@ -4,10 +4,7 @@
             <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
                 @change="tabsChange" title-inactive-color="#2e2e2e">
                 <van-tab title="发货基本信息" name="发货基本信息">
-                    <div class="tabs"></div>
-                      <van-list v-model="allLoading" :finished="allFinished"
-                            @load="getAllList">
-
+                      <van-list>
                             <div class="box-container">
                                 <ul class="list-ul">
                                     <li>
@@ -77,8 +74,7 @@
                         </van-list>
                 </van-tab>
                 <van-tab title="发货物资明细" name="发货物资明细">
-                       <van-list v-model="allLoading" :finished="allFinished"
-                            @load="getAllList">
+                       <van-list>
 
                             <div class="box-container"
                                 v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
@@ -112,7 +108,7 @@
                                         </div>
                                         <div class="li-item-right">
                                             <span>包装形式:</span>
-                                            <span>固装</span>
+                                            <span>{{ item.unit }}</span>
                                         </div>
                                     </li>
                                     <li class="li-item-both">
@@ -219,10 +215,8 @@ export default {
             return `${year}-${month}-${day}`;
         },
         cargoDetails() {
-           
             detailBySend(this.id).then((res) => {
                 if (res.code == 0) {
-                
                     this.params = res.data
                     this.params.fileByList = JSON.parse(res.data.fileByList)
                     this.params.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item)=>({
@@ -231,30 +225,6 @@ export default {
                     }))
                 }
             })
-        },
-        tabsChange(e) {
-           
-        },
-        //发货
-        handleSendGoodsClick() {
-            this.$router.push({ path: '/sendGoods' })
-        },
-        //查看物流
-        handleLookClick() {
-            this.$router.push({ path: 'lookUp' })
-        },
-        //供应详情
-        handleSupplyClick() {
-            this.$router.push({ path: '/supplyMsg' })
-        },
-        //确认需求
-        handleConfirmClick() {
-            this.$router.push({ path: '/confirm' })
-        },
-        //获取全部订单
-        getAllList() {
-            this.allRefreshLoading = false;
-            this.allFinished = true;
         },
         imgClick(fileName, filePath) {
             this.$refs.filePreview.init(fileName, filePath)
