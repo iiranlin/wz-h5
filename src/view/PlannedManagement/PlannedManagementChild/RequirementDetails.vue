@@ -1,41 +1,44 @@
 <template>
   <div class="requirement-details">
     <!-- <van-sticky class="select-materials-sticky"> -->
-      <div class="requirement-details-contract">
-        <ul class="detail-ul">
-          <li>
-            <span>需求编号：</span>
-            <span>{{ detail.planNumber }}</span>
-          </li>
-          <li>
-            <span>需求名称：</span>
-            <span>{{ detail.planName }}</span>
-          </li>
-          <li>
-            <span>需求项目：</span>
-            <span>{{ detail.sectionName }}</span>
-          </li>
-          <li>
-            <span>需求组织：</span>
-            <span>{{ detail.deptName }}</span>
-          </li>
-          <li>
-            <span>提报人：</span>
-            <span>{{ detail.createUserName }}</span>
-          </li>
-          <li>
-            <span>提报时间：</span>
-            <span>{{ parseTime(detail.createDate, '{y}-{m}-{d} {h}:{s}') }}</span>
-          </li>
-          <li class="li-status">
-            <template v-for="row in statusArr">
-              <van-tag :class="{'li-status-completed': row.value == '9'}" :type="['0', '5'].includes(row.value)?'danger' : 'primary'" round size="medium" :key="row.value" v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
-            </template>
-          </li>
-        </ul>
-      </div>
+    <div class="requirement-details-contract">
+      <ul class="detail-ul">
+        <li>
+          <span>需求编号：</span>
+          <span>{{ detail.planNumber }}</span>
+        </li>
+        <li>
+          <span>需求名称：</span>
+          <span>{{ detail.planName }}</span>
+        </li>
+        <li>
+          <span>需求项目：</span>
+          <span>{{ detail.sectionName }}</span>
+        </li>
+        <li>
+          <span>需求组织：</span>
+          <span>{{ detail.deptName }}</span>
+        </li>
+        <li>
+          <span>提报人：</span>
+          <span>{{ detail.createUserName }}</span>
+        </li>
+        <li>
+          <span>提报时间：</span>
+          <span>{{ parseTime(detail.createDate, '{y}-{m}-{d} {h}:{s}') }}</span>
+        </li>
+        <li class="li-status">
+          <template v-for="row in statusArr">
+            <van-tag :class="{ 'li-status-completed': row.value == '9' }"
+              :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
+              v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
+          </template>
+        </li>
+      </ul>
+    </div>
     <!-- </van-sticky> -->
-    <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff" title-inactive-color="#2e2e2e">
+    <van-tabs :class="{'details-van-tabs': ['1', '4', '0', '5', '10'].includes(detail.planStatus)}" sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
+      title-inactive-color="#2e2e2e">
       <van-tab title="物资明细">
         <material-details :list="detail.details"></material-details>
       </van-tab>
@@ -43,15 +46,21 @@
         <log-recording></log-recording>
       </van-tab>
     </van-tabs>
+    <div class="default-button-container" v-if="['1', '4', '0', '5', '10'].includes(detail.planStatus)">
+      <van-button class="button-info" round type="info"
+        @click="handleExamineClick(detail)">提交审核</van-button>
+    </div>
+    <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
   </div>
 </template>
 <script>
 import MaterialDetails from './components/MaterialDetails'
 import LogRecording from './components/LogRecording'
-import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialDemandPlanRestDetail, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import activitiAssignee from '@/components/activitiAssignee'
 export default {
   name: 'RequirementDetails',
-  components: { MaterialDetails, LogRecording },
+  components: { MaterialDetails, LogRecording, activitiAssignee },
   data() {
     return {
       menuActiveIndex: '',
@@ -72,41 +81,55 @@ export default {
         { text: '已完成', value: '9' },
         { text: '已退回', value: '10' },
       ],
+      businessCode: { '1': 'FBYLXQ', '2': 'FBYLJH', '3': 'YLXQ', '4': 'YLJH' }
     }
   },
   created() {
   },
   activated() {
   },
-  mounted () {
+  mounted() {
     const id = this.$route.query.id
     id && this.materialDemandPlanRestDetail(id)
   },
   methods: {
-    materialDemandPlanRestDetail (id) {
+    materialDemandPlanRestDetail(id) {
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
         forbidClick: true
       });
-      materialDemandPlanRestDetail(id).then(({data}) => {
+      materialDemandPlanRestDetail(id).then(({ data }) => {
         this.detail = data
-      }).finally( (err) => {
-          toast.clear()
+      }).finally((err) => {
+        toast.clear()
       })
-    }
+    },
+    //去审核点击
+    handleExamineClick(item) {
+      this.$refs.activitiAssignee.init(this.businessCode[item.planType], item)
+    },
+    //选择审核人回调
+    optionsSuccess(assignee, { id, planType }) {
+      materialDemandPlanRestSubmit({ ids: [id], planType: planType, assignee }).then(() => {
+        this.$toast('提交审核成功')
+        this.$router.push({ name: 'PlannedManagementList' })
+      })
+    },
   },
 }
 </script>
 <style lang="less" scoped>
-.requirement-details{
+.requirement-details {
   display: flex;
   flex-direction: column;
+
   .select-materials-sticky {
     ::v-deep .van-sticky {
       background: #f8f8f8;
     }
   }
+
   .requirement-details-contract {
     margin-top: 10px;
     box-sizing: border-box;
@@ -123,12 +146,14 @@ export default {
       position: absolute;
       right: 15px;
       top: 12px;
+
       span {
         font-size: 12px;
         width: inherit !important;
         padding: 2px 6px;
         line-height: 16px;
       }
+
       .van-tag--primary {
         color: #028bff;
         background: #edf4ff;
@@ -145,7 +170,11 @@ export default {
       }
     }
   }
+  .details-van-tabs{
+    margin-bottom: 50px;
+  }
 }
+
 ::v-deep .van-tabs__wrap {
   // position: fixed;
   // z-index: 1;
