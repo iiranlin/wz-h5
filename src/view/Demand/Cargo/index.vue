@@ -89,7 +89,7 @@
                 <!-- 如果没物流单号就显示地图 -->
                 <div v-else>
                     <div class="Logistics-Information-dt">
-                        <img :src="dt" />
+                        <wuliu :courierNumber="logistics.oddNumbers" @expressDataFun="cargoList" />
                     </div>
                     <van-steps direction="vertical" active-color="#0086ff" :active="0">
                         <van-step v-for="(item, index) in cargoList" :key="index">
@@ -114,6 +114,7 @@ import { Step, Steps } from 'vant';
 import dt from '@/assets/img/dt.png';
 import { lookGoodsDetails, shippingOrderNumber } from '@/api/demand/returnGoods'
 import {addList} from '@/api/demand/sendGoods'
+import wuliu from '@/components/wuliu'
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Tab);
@@ -122,7 +123,7 @@ Vue.use(Sidebar);
 Vue.use(SidebarItem);
 export default {
     name: 'MyProcess',
-
+ components: { wuliu },
     data() {
         return {
             dt,
@@ -139,7 +140,8 @@ export default {
             list: [],
             params: {},
             logistics: {},
-            cargoList: []
+            cargoList: [],
+            expressData:{}
             // logisticsNumber:""
         };
     },
@@ -208,6 +210,9 @@ export default {
             const day = date.getDate().toString().padStart(2, '0'); // 日期加0
             return `${year}-${month}-${day}`;
         },
+         expressDataFun (expressData) {
+      this.expressData = expressData
+    }
     },
 };
 </script>
