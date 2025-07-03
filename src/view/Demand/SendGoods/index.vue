@@ -36,7 +36,7 @@
                 <van-field v-model="params.contactsPhone" required label="联系电话" :disabled="fileDisabled"
                     placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' }, { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }]" />
-                <van-field name="uploader" v-model="fileByList" label="发货单附件：" class="outbound-field-uploader" required>
+                <van-field name="uploader" v-model="fileByList" label="发货单附件：" class="outbound-field-uploader" required :rules="[{ required: true, message: '请上传发货单附件' }]">
                     <template #button>
                         <van-uploader :preview-imag='false' :after-read="beforeReadUpload" :before-read="beforeRead"
                             accept="">
