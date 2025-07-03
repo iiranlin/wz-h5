@@ -58,7 +58,7 @@
           </div>
           <div class="li-item-right li-item-overlength">
             <span>本次收货数量：</span>
-            <span>{{item.sendTotal}}</span>
+            <span>{{item.putTotal}}</span>
           </div>
         </li>
         <li>
