@@ -26,7 +26,7 @@
                 <span class="text" style="color:#1989fa;">{{ item.shipmentBatchNumber }}</span>
               </li>
               <li>
-                <span style="width: 230px;">供应需求名称:</span>
+                <span style="width: 250px;">供应需求名称:</span>
                 <span>{{ item.planName }}</span>
               </li>
               <li>
