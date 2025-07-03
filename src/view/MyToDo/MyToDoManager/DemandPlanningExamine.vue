@@ -102,7 +102,7 @@
                     v-model="loading" 
                     :finished="finished" 
                     finished-text="没有更多了..." 
-                    @load="getList">
+                    @load="getProcessList">
 
                     <div v-for="(item,index) in processList" :key="index" class="box-container">
                         <ul class="list-ul">
@@ -166,6 +166,7 @@ export default {
 
     data () {
         return {
+            menuActiveIndex: 0,
             //审核状态
             type: '',   //0 未审核 1 已审核
             //列表条目信息
@@ -208,7 +209,6 @@ export default {
         }.bind(this));
 
         this.getDetail();
-        this.getProcessList();
     },
     activated() {
        
