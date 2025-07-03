@@ -59,7 +59,7 @@
             <span>{{ item.planAmount }}</span>
           </div>
           <div class="li-item-right li-item-overlength">
-            <span>本次收货数量：</span>
+            <span>本次发货数量：</span>
             <span>{{ item.sendTotal }}</span>
           </div>
         </li>
@@ -234,118 +234,6 @@ export default {
         remark: ''
       },
       showDatePicker: false, // 控制日期选择器显示
-      // dataList: [
-      //   {
-      //     materialName: '计算机联锁设备',
-      //     specificationModel: '2x2取2s10组道岔',
-      //     unit: '套',
-      //     packagingForm: '捆包',
-      //     demandQuantity: 5,
-      //     shipmentQuantity: 2,
-      //     productionDate: '2025年6月1日',
-      //     validUntil: '2026年6月1日',
-      //     supplyTime: '2025年6月16日',
-      //     usageLocation: '地点1, 地点2',
-      //     deliveryAddress: '领航科技大厦',
-      //     contactInfo: '张晓明 15888888888',
-      //     investor: '五道口投资公司',
-      //     investmentRatio: '40%; 60%',
-      //     receiveQuantity: null,
-      //     returnQuantity: null,
-      //     certificatePath: '道岔合格证.pdf',
-      //     inspectionReportPath: '道岔厂检报告.pdf',
-      //     returnAttachmentPath: '不合格道岔附件.pdf',
-      //     remark: '不合格道岔进行退货处理'
-      //   },
-      //   {
-      //     materialName: '计算机联锁设备',
-      //     specificationModel: '2x2取2s10组道岔',
-      //     unit: '套',
-      //     packagingForm: '捆包',
-      //     demandQuantity: 5,
-      //     shipmentQuantity: 3,
-      //     productionDate: '2025年6月1日',
-      //     validUntil: '2026年6月1日',
-      //     supplyTime: '2025年6月16日',
-      //     usageLocation: '地点1, 地点2',
-      //     deliveryAddress: '领航科技大厦',
-      //     contactInfo: '张晓明 15888888888',
-      //     investor: '五道口投资公司',
-      //     investmentRatio: '40%; 60%',
-      //     receiveQuantity: null,
-      //     returnQuantity: null,
-      //     certificatePath: '道岔合格证.pdf',
-      //     inspectionReportPath: '道岔厂检报告.pdf',
-      //     returnAttachmentPath: '不合格道岔附件.pdf',
-      //     remark: ''
-      //   },
-      //   {
-      //     materialName: '计算机联锁设备',
-      //     specificationModel: '2x2取2s10组道岔',
-      //     unit: '套',
-      //     packagingForm: '捆包',
-      //     demandQuantity: 5,
-      //     shipmentQuantity: 2,
-      //     productionDate: '2025年6月1日',
-      //     validUntil: '2026年6月1日',
-      //     supplyTime: '2025年6月16日',
-      //     usageLocation: '地点1, 地点2',
-      //     deliveryAddress: '领航科技大厦',
-      //     contactInfo: '张晓明 15888888888',
-      //     investor: '五道口投资公司',
-      //     investmentRatio: '40%; 60%',
-      //     receiveQuantity: null,
-      //     returnQuantity: null,
-      //     certificatePath: '道岔合格证.pdf',
-      //     inspectionReportPath: '道岔厂检报告.pdf',
-      //     returnAttachmentPath: '不合格道岔附件.pdf',
-      //     remark: ''
-      //   },
-      //   {
-      //     materialName: '计算机联锁设备',
-      //     specificationModel: '2x2取2s10组道岔',
-      //     unit: '套',
-      //     packagingForm: '捆包',
-      //     demandQuantity: 5,
-      //     shipmentQuantity: 2,
-      //     productionDate: '2025年6月1日',
-      //     validUntil: '2026年6月1日',
-      //     supplyTime: '2025年6月16日',
-      //     usageLocation: '地点1, 地点2',
-      //     deliveryAddress: '领航科技大厦',
-      //     contactInfo: '张晓明 15888888888',
-      //     investor: '五道口投资公司',
-      //     investmentRatio: '40%; 60%',
-      //     receiveQuantity: null,
-      //     returnQuantity: null,
-      //     certificatePath: '道岔合格证.pdf',
-      //     inspectionReportPath: '道岔厂检报告.pdf',
-      //     returnAttachmentPath: '不合格道岔附件.pdf',
-      //     remark: ''
-      //   },
-      //   {
-      //     materialName: '计算机联锁设备',
-      //     specificationModel: '2x2取2s10组道岔',
-      //     unit: '套',
-      //     packagingForm: '捆包',
-      //     demandQuantity: 5,
-      //     shipmentQuantity: 1,
-      //     productionDate: '2025年6月1日',
-      //     validUntil: '2026年6月1日',
-      //     supplyTime: '2025年6月16日',
-      //     usageLocation: '地点1, 地点2',
-      //     deliveryAddress: '领航科技大厦',
-      //     contactInfo: '张晓明 15888888888',
-      //     investor: '五道口投资公司',
-      //     investmentRatio: '40%; 60%',
-      //     receiveQuantity: null,
-      //     returnQuantity: null,
-      //     certificatePath: '道岔合格证.pdf',
-      //     inspectionReportPath: '道岔厂检报告.pdf',
-      //     returnAttachmentPath: '不合格道岔附件.pdf',
-      //     remark: ''
-      //   }
-      // ],
       id:"",
       dataList:[]
     }
