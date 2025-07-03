@@ -55,7 +55,7 @@
                   </li>
                   <li>
                     <span style="width: 180px;">发货单附件:</span>
-                    <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.fhd[0].fileName,item.fileByList.fhd[0].filePath)">{{ item.fileByList.fhd[0].fileName }}</span>
+                    <span style="color:#1989fa;" v-if="item.fileByList && item.fileByList.fhd && item.fileByList.fhd.length > 0"  @click="imgClick(item.fileByList.fhd[0].fileName,item.fileByList.fhd[0].filePath)">{{ item.fileByList.fhd[0].fileName }}</span>
                   </li>
                   <li class="li-status">
                     <van-tag type="primary" round size="medium" v-if="item.status == 1">未发货</van-tag>
