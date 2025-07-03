@@ -2,24 +2,24 @@
     <div class="default-container" ref="container">
         <ul class="list-ul" style="margin: 10px;">
             <li>
-                <span style="width:300px;">供应需求名称:</span>
+                <span>供应需求名称:</span>
                 <span>{{ result.planName }}</span>
             </li>
 
             <li >
-                <span style="width:330px;">需求项目：</span>
+                <span>需求项目：</span>
                 <span>{{ result.sectionName }}</span>
             </li>
             <li>
-                <span style="width: 220px;">需求组织：</span>
+                <span>需求组织：</span>
                 <span>{{ result.deptName }}</span>
             </li>
             <li>
-                <span style="width: 220px;">提报人：</span>
+                <span>提报人：</span>
                 <span>{{ result.createUserName }}</span>
             </li>
             <li>
-                <span style="width: 220px;">提报时间：</span>
+                <span>提报时间：</span>
                 <span>{{ formattedCreateDate(result.createDate) }}</span>
             </li>
         </ul>
@@ -69,7 +69,7 @@
                         <li class="li-item-both">
                             <div class="li-item-left">
                                 <span>已入库:</span>
-                                <span>{{ item.putTotal }}</span>
+                                <span>{{ item.storeTotal }}</span>
                             </div>
                             <div class="li-item-right">
                                 <span>已退回:</span>
@@ -152,6 +152,7 @@ export default {
             }, 500);
         },
           formattedCreateDate(timestamp) {
+            if (!timestamp) return ''; // 处理空值
             const date = new Date(timestamp);
             const year = date.getFullYear();
             const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0

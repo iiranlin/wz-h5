@@ -9,9 +9,13 @@
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="(item.ssendTotal == 0 ? true : false) || fileDisabled"> 
           <ul class="list-ul">
-            <li>
-              <span class="font-weight">本次需求未发货数量：</span>
-              <span class="font-weight">{{ item.ssendTotal }}</span>
+             <li>
+              <span class="font-weight">物资名称：</span>
+              <span class="font-weight">{{ item.materialName }}</span>
+            </li>
+            <li style="color: red;">
+              <span>本次需求未发货数量：</span>
+              <span>{{ item.ssendTotal }}</span>
             </li>
             <li>
               <span>规格型号：</span>
