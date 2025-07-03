@@ -108,7 +108,7 @@
                                         </div>
                                         <div class="li-item-right">
                                             <span>包装形式:</span>
-                                            <span>{{ item.unit }}</span>
+                                            <span>{{ item.packagingFm }}</span>
                                         </div>
                                     </li>
                                     <li class="li-item-both">
@@ -221,10 +221,13 @@ export default {
                     this.params.fileByList = JSON.parse(res.data.fileByList)
                     this.params.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item)=>({
                         ...item,
-                        fileByList:JSON.parse(item.fileByList)
+                        fileByList:JSON.parse(item.fileByList) 
                     }))
                 }
             })
+        },
+        tabsChange(){
+
         },
         imgClick(fileName, filePath) {
             this.$refs.filePreview.init(fileName, filePath)

@@ -44,9 +44,9 @@
         <van-divider />
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
           <van-form ref="form">
-            <van-field v-model="goodsData[index].ssendTotal" :disabled="fileDisabled" required name="发货数量" label="发货数量" placeholder="发货数量"
+            <van-field v-model="goodsData[index].sendTotal" :disabled="fileDisabled" required name="发货数量" label="发货数量" placeholder="发货数量"
               input-align="right" />
-            <van-field v-model="goodsData[index].unit" :disabled="fileDisabled" name="包装形式" required label="包装形式" placeholder="请输入包装形式"
+            <van-field v-model="goodsData[index].packagingFm" :disabled="fileDisabled" name="包装形式" required label="包装形式" placeholder="请输入包装形式"
               input-align="right" />
             <van-field readonly clickable v-model="goodsData[index].createDate" :disabled="fileDisabled" required name="datetimePicker"
               :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
