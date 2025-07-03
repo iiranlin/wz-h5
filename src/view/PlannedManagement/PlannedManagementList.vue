@@ -207,12 +207,10 @@ export default {
     },
     //选择审核人回调
     optionsSuccess(assignee, {id, planType}) {
-      if(assignee){
-        materialDemandPlanRestSubmit({ids: [id], planType: planType, assignee}).then( () => {
-          this.$toast('提交审核成功')
-          this.getList()
-        })
-      }
+      materialDemandPlanRestSubmit({ids: [id], planType: planType, assignee}).then( () => {
+        this.$toast('提交审核成功')
+        this.getList()
+      })
     },
     //查看流程点击
     handleProcessClick(item) {
