@@ -4,17 +4,17 @@
     <div class="box-container" v-for="(item, index) in list" :key="index">
       <div>
         <ul class="detail-ul">
-          <li class="li-item-overlength">
+          <!-- <li class="li-item-overlength">
             <span class="font-weight">供应商名称：</span>
             <span class="font-weight">{{ item.sellerName }}</span>
-          </li>
+          </li> -->
           <li>
             <span class="font-weight">物资名称：</span>
             <span class="font-weight">{{ item.materialName }}</span>
           </li>
           <li>
             <span>供应商：</span>
-            <span>{{ item.addr }}</span>
+            <span>{{ item.sellerName }}</span>
           </li>
           <li class="li-item-both">
             <div class="li-item-left">

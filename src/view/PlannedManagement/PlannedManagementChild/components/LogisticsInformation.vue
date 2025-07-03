@@ -18,11 +18,11 @@
         <span>{{ detailObj.shippingAddress }}</span>
       </li>
       <li>
-        <span class="li-span-width">预计到达时间为：</span>
+        <span class="li-span-width">预计到达时间：</span>
         <span>{{ parseTime(detailObj.arrivalDate, '{y}-{m}-{d}') }}</span>
       </li>
       <li>
-        <span>车牌号为：</span>
+        <span>车牌号：</span>
         <span>{{ detailObj.carNumber }}</span>
       </li>
       <li>
