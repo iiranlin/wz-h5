@@ -25,7 +25,7 @@
           </li>
           <li>
             <span>提报时间：</span>
-            <span>{{ parseTime(detailData.createDate, '{y}-{m}-{d} {h}:{s}') }}</span>
+            <span>{{ parseTime(detailData.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
           </li>
         </ul>
       </div>

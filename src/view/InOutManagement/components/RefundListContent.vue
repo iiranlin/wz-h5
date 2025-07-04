@@ -35,7 +35,7 @@
             </li>
             <li>
               <span>退货时间：</span>
-              <span>{{ item.backQualDate && parseTime(item.backQualDate, '{y}-{m}-{d} {h}:{s}') }}</span>
+              <span>{{ item.backQualDate && parseTime(item.backQualDate, '{y}-{m}-{d} {h}:{i}') }}</span>
             </li>
             <li>
               <span>操作人：</span>

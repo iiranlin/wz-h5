@@ -56,9 +56,9 @@
           <van-popup v-model="item.showDatePicker" position="bottom" round>
             <van-datetime-picker type="date" v-model="item.minDate" @confirm="onDateConfirm(item, index)" @cancel="hideDatePicker(item, index)" />
           </van-popup>
-          <van-field required v-model="item.addr" label="使用地点" placeholder="请输入使用地点" :label-width="240" :rules="rules.addr"
+          <van-field required v-model="item.addr" label="使用地点" placeholder="请输入使用地点" :label-width="240" :rules="rules.addr" @click="fieldClick(index, '使用地点')"
             input-align="right" />
-          <van-field required v-model="item.field2" label="收货地址" placeholder="请输入收货地址" :label-width="240" :rules="rules.field2"
+          <van-field required v-model="item.field2" label="收货地址" placeholder="请输入收货地址" :label-width="240" :rules="rules.field2" @click="fieldClick(index, '收货地址')"
             input-align="right" />
           <van-field required v-model="item.receiver" label="收货人联系方式" placeholder="请输入收货人联系方式" :label-width="260" :rules="rules.receiver"
             input-align="right" />
@@ -77,9 +77,11 @@
         <van-button class="button-info" round type="info" native-type="submit">保存</van-button>
       </div>
     </van-form>
+    <!-- <history-list ref="historyList" :label="labelName" @historyClick="historyClick"></history-list> -->
   </div>
 </template>
 <script>
+// import historyList from '@/components/historyList'
 import keepPages from '@/view/mixins/keepPages'
 import { parseTime } from '@/utils/index'
 import { getSectionProject } from '@/api/prodmgr-inv/materialSectionProject'
@@ -89,6 +91,7 @@ import dayjs from 'dayjs'
 export default {
   name: 'SaveMaterials',
   mixins: [keepPages],
+  // components: { historyList },
   data() {
     return {
       userInfo: getUserInfo(),
@@ -122,7 +125,9 @@ export default {
       sectionInfo: {},
       contractId: null,
       queryType: '',
-      queryId: ''
+      queryId: '',
+      historyIndex: 0,
+      labelName: ''
     }
   },
   activated() {
@@ -207,7 +212,11 @@ export default {
         contractId: this.contractId,
         detailsModifyParams: this.materiaList.map(item => ({...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
       }
+      // const addrList = this.materiaList.map(item =>  item.addr)
+      // const field2List = this.materiaList.map(item =>  item.field2)
+      // const historyList = addrList.concat(field2List)
       materialDemandPlanRestSaveModify(data, type).then(({message}) => {
+        // this.$store.dispatch('public/setHistoryList', historyList)
         this.$toast(message)
         this.$router.push({ path: '/PlannedManagementList' })
       })
@@ -263,7 +272,15 @@ export default {
         return false
       }
       return true
-    }
+    },
+    fieldClick (index, name) {
+      // this.historyIndex = index
+      // this.labelName = name
+      // this.$refs.historyList.init()
+    },
+    historyClick (value) {
+      this.$set(this.materiaList, this.historyIndex, Object.assign({}, this.materiaList[this.historyIndex], {field2: value}))
+    },
   }
 }
 </script>

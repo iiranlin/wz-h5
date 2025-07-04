@@ -23,7 +23,7 @@
               </li>
               <li v-if="formData.storeDate">
                 <span>入库时间：</span>
-                <span>{{ formData.storeDate ? parseTime(formData.storeDate, '{y}-{m}-{d} {h}:{s}') : '' }}</span>
+                <span>{{ formData.storeDate ? parseTime(formData.storeDate, '{y}-{m}-{d} {h}:{i}') : '' }}</span>
               </li>
               <li v-if="formData.storeOperator">
                 <span>操作人：</span>
@@ -166,10 +166,9 @@
           <p class="select-materials-search-p font-weight">报检信息</p>
         </div>
         <div class="box-container">
-          <div>
+          <div class="box-container-uploader">
             <ul class="detail-ul">
-              <van-field name="uploader" label="报检材料上传（支持多个）：" class="outbound-field-uploader" required
-                label-width="468px">
+              <van-field name="uploader" label="报检材料上传（支持多个）：" class="outbound-field-uploader" required>
                 <template #input>
                   <van-uploader :preview-imag='false' v-if="queryType != 'view'"
                     :after-read="(file) => afterReadTransfer(file, formData, 'fileList01')" :before-read="beforeRead"
@@ -417,6 +416,12 @@ export default {
 .submit-store-view {
   width: 100%;
   height: 100%;
+
+  .box-container-uploader{
+    ::v-deep .van-cell__title{
+      width: 190px !important;
+    }
+  }
 
   .submit-store-view-mian {
     display: flex;

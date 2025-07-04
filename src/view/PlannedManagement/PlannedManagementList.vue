@@ -36,7 +36,7 @@
               </li>
               <li>
                 <span>提报时间：</span>
-                <span>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{s}') }}</span>
+                <span>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
               </li>
               <li class="li-status">
                 <template v-for="row in statusArr">
