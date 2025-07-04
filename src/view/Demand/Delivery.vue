@@ -256,6 +256,8 @@ export default {
           snedGoodsSure(params).then((res)=>{
             if(res.code==0){
               Toast.success(res.data);
+              this.params.pageNum = 1
+              this.allRefreshLoading = true
               this.getList()
             }
           })
