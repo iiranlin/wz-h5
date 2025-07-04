@@ -1,5 +1,5 @@
 <template>
-    <div class="default-container" ref="container">
+    <div class="default-container" ref="container" :style="{ paddingBottom: result.status === 6 ? '120px' : '0px' }">
         <ul class="list-ul" style="margin: 10px;">
             <li>
                 <span>供应需求名称:</span>
@@ -21,6 +21,13 @@
             <li>
                 <span>提报时间：</span>
                 <span>{{ formattedCreateDate(result.createDate) }}</span>
+            </li>
+             <li>
+                <span>状态：</span>
+                <span v-if="result.status == 2">未确认</span>
+                <span v-if="result.status == 3">已确认</span>
+                <span v-if="result.status == 4">供应中</span>
+                <span v-if="result.status == 6">已完成</span>
             </li>
         </ul>
         <div class="title">
@@ -84,7 +91,13 @@
                         </li>
                     </ul>
             </van-list>
-
+             <div class="default-button-container" v-if="result.status == 2 || result.status == 4 || result.status == 3">
+            <van-button size="mini" type="info" round class="button-info" v-if="result.status == 2"
+                 @click="handleConfirmClick(result.id)" >确认需求</van-button>
+            <van-button size="mini" type="info" round class="button-info" v-if="result.status == 4 || result.status == 3"
+                 @click="handleSendGoodsClick(result.id, 'add')" >发货</van-button>
+            <!-- 编辑里的选择发货物资传的是planId -->
+        </div>
     </div>
 </template>
 <script>
@@ -139,6 +152,14 @@ export default {
         lookGoods() {
 
         },
+        //确认需求
+    handleConfirmClick(id) {
+      this.$router.push({ path: '/confirm', query: { id: id } })
+    },
+      //发货
+    handleSendGoodsClick(id, title) {
+      this.$router.push({ path: '/sendGoods', query: { id: id, title: title } })
+    },
         onLoad() {
             // 异步更新数据
             setTimeout(() => {
