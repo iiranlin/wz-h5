@@ -30,15 +30,15 @@
       </div>
       <div class="select-materials-search">
         <p class="select-materials-search-p font-weight">请选择需求物资<span class="select-materials-select">（已选择<span
-              class="select-materials-select-num">{{ materiaList.length }}</span>项）</span></p>
+              class="select-materials-select-num">{{ materiaId.length }}</span>项）</span></p>
         <van-search v-model="searchValue" placeholder="输入规格型号" background="center" :show-action="showAction"
           @search="onSearch" />
       </div>
     </van-sticky>
     <div class="select-materials-list">
       <div class="van-list">
-        <van-checkbox-group v-model="materiaList" v-if="filteredList.length">
-          <van-checkbox shape="square" :name="item" v-for="item in filteredList" :key="item.uniqueNumber" :disabled="materiaId.includes(item.uniqueNumber) || item.amount === item.cumulativeAmount">
+        <van-checkbox-group v-model="materiaId" v-if="filteredList.length">
+          <van-checkbox shape="square" :name="item.uniqueNumber" v-for="item in filteredList" :key="item.uniqueNumber" :disabled="item.amount === item.cumulativeAmount">
             <ul class="list-ul">
               <li>
                 <span class="font-weight">物资名称：</span>
@@ -136,8 +136,9 @@ export default {
       getListBySectionId({ contractId }).then(({ data }) => {
         // this.list = data //.filter( (row) => Number(row.cumulativeAmount) < Number(row.amount)) || []
         this.materiaId = (this.$store.state.public.materiaList || []).map(item => item.uniqueNumber || item.allocationUniqueNumber)
-        const listDataA = data.filter( item => this.materiaId.includes(item.uniqueNumber) || item.amount === item.cumulativeAmount)
-        const listDataB = data.filter( item => !(this.materiaId.includes(item.uniqueNumber) || item.amount === item.cumulativeAmount))
+        this.materiaList = this.$store.state.public.materiaList
+        const listDataA = data.filter( item => item.amount === item.cumulativeAmount)
+        const listDataB = data.filter( item => !(item.amount === item.cumulativeAmount))
         this.list = listDataB.concat(listDataA)
       }).finally((err) => {
         this.loading = false
@@ -152,11 +153,11 @@ export default {
       this.$router.push({ name: 'SelectContract' })
     },
     addClick() {
-      if (!this.materiaList.length) {
+      if (!this.materiaId.length) {
         this.$notify({ type: 'warning', message: '请选择需求物资' });
         return
       }
-      // this.materiaList = this.list.filter(item => this.materiaList.includes(item.uniqueNumber))
+      this.materiaList = this.list.filter(item => this.materiaId.includes(item.uniqueNumber))
       this.$store.dispatch('public/setMateriaList', this.materiaList)
       const {contractId, id} = this.$route.query
       const query = this.queryType == 'update'?{contractId, type: this.queryType, id }:{contractId}

@@ -66,8 +66,8 @@
             <img src="/static/icon-file.png"/>
             <span class="info-title">附件</span>
           </div>
-          <file-upload-view v-if="queryType === 'submit'" title="领料单" :fileList="fileList" businessType="01"></file-upload-view>
-          <file-download-view v-else title="领料单" :fileList="fileList"></file-download-view>
+          <file-upload-view v-if="queryType === 'submit'" title="领料单" :fileList="fileList" businessType="01"/>
+          <file-download-view v-else title="领料单" :fileList="fileList"/>
         </div>
         <div class="select-materials-search">
           <p class="select-materials-search-p font-weight">物资明细（共{{detailList.length}}项）</p>

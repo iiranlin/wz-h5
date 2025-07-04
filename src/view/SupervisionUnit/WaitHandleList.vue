@@ -43,7 +43,7 @@
                             </li>
                         </ul>
                         <div class="list-ul-button">
-                            <van-button class="button-info" plain round type="info" @click.stop="handleProcessClick(item)">查看流程</van-button>
+                            <van-button class="button-info" plain round type="info" @click.stop="handleClick(item)">处理</van-button>
                         </div>
                     </div>
                 </van-list>
@@ -117,14 +117,21 @@ export default {
         },
         //列表条目点击
         handleItemClick(item){
-           
-        },
-        //查看流程点击
-        handleProcessClick(){
             this.$router.push({
-                name: "MyProcess",
+                name: "DemandPlanningExamine",
                 params: { 
-                    businessId: item.businessId,
+                    obj: JSON.stringify(item),
+                    type: '1',
+                },
+            });
+        },
+        //处理点击
+        handleClick(){
+            this.$router.push({
+                name: "SaveMaterials",
+                query: { 
+                    id: item.businessId,
+                    type: 'update',
                 },
             });
         },

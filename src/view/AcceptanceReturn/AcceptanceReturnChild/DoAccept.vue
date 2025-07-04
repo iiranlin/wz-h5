@@ -129,13 +129,14 @@
         </template>
         <template v-if="!isView">
           <van-cell-group>
-            <van-field required name="uploader" label="退货附件：">
+            <!-- <van-field required name="uploader" label="退货附件：">
               <template #input>
                 <van-uploader>
                   <van-button round type="info" class="outbound-uploader">上传</van-button>
                 </van-uploader>
-              </template>
-            </van-field>
+              </template>  
+            </van-field> -->
+              <file-upload-view  title="退货附件" :fileList="fileList" businessType="01"/>
 
             <!-- <van-field v-model="item.remark" label="备注" placeholder="请输入备注" required clearable :label-width="240"
                        input-align="right"/> -->
@@ -212,10 +213,11 @@ import {parseTime} from '@/utils'
 import indexMixin from '@/view/mixins'
 import {saveTake,defaultTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 import FilePreview from "@/components/FilePreview.vue";
+import FileUploadView from "@/components/FileUploadViewType.vue";
 export default {
   name: 'DoAccept',
   mixins: [indexMixin],
-  components: { FilePreview },
+  components: { FilePreview,FileUploadView },
   props: {
     isView: {
       type: Boolean,
@@ -235,7 +237,8 @@ export default {
       },
       showDatePicker: false, // 控制日期选择器显示
       id:"",
-      dataList:[]
+      dataList:[],
+      fileList:[],
     }
   },
   filters: {

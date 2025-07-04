@@ -5,10 +5,15 @@
         <van-search v-model="formData.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
           @search="handeSearch()">
         </van-search>
-        <van-dropdown-menu active-color="#028bff">
+        <!-- <van-dropdown-menu active-color="#028bff">
           <van-dropdown-item v-model="formData.storeStatus" :options="statusArr" @change="statusChange" />
-        </van-dropdown-menu>
+        </van-dropdown-menu> -->
       </div>
+      <van-tabs sticky v-model="formData.storeStatus" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
+        title-inactive-color="#2e2e2e" @change="tabsChange">
+        <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value">
+        </van-tab>
+      </van-tabs>
     </van-sticky>
     <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad">
@@ -73,7 +78,6 @@ export default {
   name: 'InListContent',
   data() {
     return {
-      activeIndex: 0,
       formData: {
         planName: '',
         storeStatus: ''
@@ -105,7 +109,10 @@ export default {
     handeSearch() {
       this.onRefresh()
     },
-    statusChange() {
+    // statusChange() {
+    //   this.onRefresh()
+    // },
+    tabsChange () {
       this.onRefresh()
     },
     //列表刷新
@@ -188,8 +195,12 @@ export default {
 </script>
 <style lang="less" scoped>
 .in-out-management-list {
+  ::v-deep .van-tabs__wrap{
+    margin-bottom: 10px !important;
+    height: 44px !important;
+  }
   ::v-deep .van-sticky--fixed {
-    top: 44px !important;
+    top: 69px !important;
   }
 
   .list-search-container {

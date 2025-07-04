@@ -53,9 +53,6 @@
                                 <van-tag :type="checkAuditStatus(item.auditStatus)" round size="medium">{{item.auditStatus | orderTypeFilter(dict.flowTaskStatus)}}</van-tag>
                             </li>
                         </ul>
-                        <div class="list-ul-button">
-                            <van-button class="button-info" plain round type="info" @click.stop="handleProcessClick(item)">查看流程</van-button>
-                        </div>
                     </div>
                 </van-list>
             </van-pull-refresh>
@@ -140,14 +137,11 @@ export default {
         },
         //列表条目点击
         handleItemClick(item){
-            
-        },
-        //查看流程点击
-        handleProcessClick(item){
             this.$router.push({
-                name: "MyProcess",
+                name: "DemandPlanningExamine",
                 params: { 
-                    businessId: item.businessId,
+                    obj: JSON.stringify(item),
+                    type: '1',
                 },
             });
         },

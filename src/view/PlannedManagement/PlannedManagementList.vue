@@ -99,7 +99,7 @@ export default {
         { text: '全部', value: '' },
         { text: '已驳回', value: '0' },
         { text: '未提交', value: '1' },
-        { text: '已提交', value: '2' },
+        { text: '审核中', value: '2' },
         { text: '已生效', value: '3' },
         { text: '修改后同意', value: '4' },
         { text: '已撤回', value: '5' },

@@ -292,7 +292,6 @@ import Vue from 'vue';
 import { Sidebar, SidebarItem } from 'vant';
 import { Tab, Tabs } from 'vant';
 import { Step, Steps } from 'vant';
-import dt from '@/assets/img/dt.png';
 import { lookGoodsDetails, shippingOrderNumber } from '@/api/demand/returnGoods'
 import {addList} from '@/api/demand/sendGoods'
 import wuliu from '@/components/wuliu'
