@@ -5,10 +5,12 @@
         <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
           @search="handeSearch()">
         </van-search>
-        <van-dropdown-menu active-color="#028bff">
-          <van-dropdown-item v-model="value1" :options="option1" @change="handleMenuChange"/>
-        </van-dropdown-menu>
       </div>
+      <van-tabs sticky v-model="formData.status" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
+        title-inactive-color="#2e2e2e" @change="tabsChange">
+        <van-tab v-for="item in option1" :title="item.text" :name="item.value" :key="item.value">
+        </van-tab>
+      </van-tabs>
     </van-sticky>
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
@@ -73,9 +75,9 @@ export default {
       dataList:[],
       value1: 0,
       option1: [
-        { text: '全部', value: 0 },
-        { text: '未完成', value: 4 },
-        { text: '已完成', value: 5 },
+        { text: '全部', value: '' },
+        { text: '未完成', value: '4' },
+        { text: '已完成', value: '5' },
       ],
       allRefreshLoading: false,
       allLoading: false,
@@ -136,12 +138,7 @@ export default {
     handeSearch(){
       this.allRefresh();
     },
-    handleMenuChange(value){
-      if(value == 0){
-        this.formData.status = '';
-      }else{
-        this.formData.status = value;
-      }
+    tabsChange(){
       this.allRefresh();
     },
   },
@@ -150,8 +147,13 @@ export default {
 <style lang="less" scoped>
 .in-out-management-list {
 
+  ::v-deep .van-tabs__wrap{
+    margin-bottom: 10px !important;
+    height: 44px !important;
+  }
+
   ::v-deep .van-sticky--fixed{
-    top: 44px !important;
+    top: 69px !important;
   }
   
   .list-search-container {

@@ -127,7 +127,7 @@ export default {
 .in-out-management-list {
 
   ::v-deep .van-sticky--fixed{
-    top: 44px !important;
+    top: 69px !important;
   }
   
   .list-search-container {

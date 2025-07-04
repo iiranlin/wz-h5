@@ -128,7 +128,12 @@ export default {
   activated() {
     const data = this.$store.state.public.materiaList || []
     const finallyData = data.map( (item) => Object.assign({}, item, {minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
-    this.materiaList.push(...finallyData)
+    const materiaList = this.materiaList.concat(finallyData)
+    let obj = {}
+    this.materiaList = materiaList.reduce((cur, next) => {
+        obj[next.uniqueNumber || next.allocationUniqueNumber] ? "" : obj[next.uniqueNumber || next.allocationUniqueNumber] = true && cur.push(next);
+        return cur;
+    }, [])
     this.$store.dispatch('public/setMateriaList', this.materiaList)
   },
   mounted() {
