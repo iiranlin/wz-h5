@@ -65,9 +65,7 @@
             <van-button size="mini" type="primary" round class="button-info"
                 @click="editGoods(params.materialCirculationDetailsTableDTOS, 'edit')"
                 v-if="text == 'edit'">选择发货物资</van-button>
-            <van-button size="mini" type="primary" round class="button-info"
-                @click="editGoods(params.materialCirculationDetailsTableDTOS, 'file')"
-                v-if="text == 'file'">选择发货物资</van-button>
+          
         </div>
     </div>
 </template>
@@ -124,11 +122,7 @@ export default {
         if (this.text == 'add') {
             this.getSendGoods()
         }
-        // 修改文件
-        if (this.text == 'file') {
-            this.editDetails()
-            this.fileDisabled = true
-        }
+       
 
         // // 编辑
         // if(this.text=='edit'){

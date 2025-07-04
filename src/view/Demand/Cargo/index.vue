@@ -66,7 +66,6 @@
                         <span>{{ logistics.contactsPhone }}</span>
                     </li>
                 </ul>
-                <!-- 根据物流单号显示操作人列表 -->
                 <div v-if="logistics.oddNumbers">
                     <van-list @load="onLoad">
                         <ul class="list-ul" v-for="(item, index) in logistics.materialTrackMessageDTOS" :key="index"
@@ -86,7 +85,6 @@
                         </ul>
                     </van-list>
                 </div>
-                <!-- 如果没物流单号就显示地图 -->
                 <div v-else>
                     <div class="Logistics-Information-dt">
                         <wuliu :courierNumber="logistics.oddNumbers" @expressDataFun="cargoList" />

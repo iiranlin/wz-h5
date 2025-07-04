@@ -22,7 +22,7 @@
           <div v-if="total != 0">
             <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
               <van-list v-model="loading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad">
-                <div v-for="(item, index) in listGhsData" :key="index" class="box-container">
+                <div v-for="(item, index) in listGhsData" :key="index" class="box-container" @click="handleSupplyClick(item.id)">
                   <ul class="list-ul">
                     <li>
                       <span class="font-weight">需求编号:</span>
@@ -66,14 +66,14 @@
                     </li>
                   </ul>
                   <div class="list-ul-button">
-                    <van-button class="button-info" plain round type="info" @click="handleSupplyClick(item.id)"
+                    <van-button class="button-info" plain round type="info" @click.stop="handleSupplyClick(item.id)"
                       v-if="item.status == 4 || item.status === 6">供应详情</van-button>
-                    <van-button class="button-info" plain round type="info" @click="handleLookClick(item)"
+                    <van-button class="button-info" plain round type="info" @click.stop="handleLookClick(item)"
                       v-if="item.status == 4 || item.status === 6">物流查看</van-button>
-                    <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id, 'add')"
+                    <van-button class="button-info" round type="info" @click.stop="handleSendGoodsClick(item.id, 'add')"
                       v-if="item.status == 4 || item.status == 3">发货</van-button>
                     <van-button class="button-info" round type="info" v-if="item.status == 2"
-                      @click="handleConfirmClick(item.id)">确认需求</van-button>
+                      @click.stop="handleConfirmClick(item.id)">确认需求</van-button>
                   </div>
                 </div>
               </van-list>
@@ -85,12 +85,6 @@
         </van-tab>
       </van-tabs>
     </div>
-
-    <!-- 查看pdf -->
-    <van-dialog v-model="showPdf" title="查看pdf" show-cancel-button>
-      <img :src="`http://10.59.249.62:7890/api/blcd-base/minio/download?filePath=${filePath}&fileName=${fileName}`"
-        style="height: 400px;width: 100%;" />
-    </van-dialog>
     <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
@@ -203,18 +197,6 @@ export default {
       this.allFinished = false;
       this.allRefreshLoading = true
       this.getList()
-    },
-    dialogPopup(path, name) {
-      let params = {
-        filePath: path,
-        fileName: name
-      }
-      demandManagementLookPdf(params).then((res) => {
-        
-      })
-      // this.filePath = path
-      // this.fileName = name
-      // this.showPdf = true
     },
     //搜索
     onSearch() {

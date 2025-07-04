@@ -256,6 +256,14 @@ export const routes = [
       },
       {
 
+        path: '/sendDetails',
+        component: () => import('@/view/Demand/SendGoods/sendDetails.vue'),
+        hidden: true,
+        name: 'sendDetails',
+        meta: { title: '发货详情' },
+      },
+      {
+
         path: '/selectGoods',
         component: () => import('@/view/Demand/SendGoods/selectGoods.vue'),
         hidden: true,
