@@ -16,11 +16,11 @@
         </li>
         <li>
           <span>退货环节：</span>
-          <span>{{dataList.backNode=='2'?"收货不通过":""}}</span>
+          <span>{{dataList.backNode=='2'?"收货不通过":"报检不通过"}}</span>
         </li>
         <li>
           <span>退货时间：</span>
-          <span>{{dataList.backDate | formatToDate}}</span>
+          <span>{{  dataList.backNode=='2'? dataList.backDate : dataList.backQualDate | formatDate}}</span>
         </li>
         <li>
           <span>操作人：</span>
