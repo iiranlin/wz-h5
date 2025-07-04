@@ -143,28 +143,6 @@ export default {
           });
       this.result = this.selectGoodsList.map(item => item);
     }
-    if(this.text=='file'){
-        let arrdata = JSON.parse(this.$route.query.data)
-       this.selectGoodsList = arrdata.map(item => {
-            // 辅助函数：格式化日期为 YYYY-MM-DD
-            const formatDate = (dateString) => {
-              const date = new Date(dateString);
-              const year = date.getFullYear();
-              const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-              const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
-              return `${year}-${month}-${day}`;
-            };
-          
-            return {
-              ...item,
-              createDate: formatDate(item.createDate),
-              supplyDate: formatDate(item.supplyDate),
-              updateDate: formatDate(item.updateDate)
-            };
-          });
-      this.result = this.selectGoodsList.map(item => item);
-      this.fileDisabled=true
-    }
     if(this.text=='add'){
        this.getSelectGoods()
     }

@@ -35,20 +35,6 @@
                   input-align="right"/>
                 <van-field v-model="formData.issueUserName" name="发料人" label="发料人：" placeholder="请输入发料人" required clearable
                   input-align="right"/>
-                <van-field name="uploader" label="领料单：" class="outbound-field-uploader" required>
-                  <template #input>
-                    <van-uploader
-                      v-if="fileList.length == 0"
-                      :preview-imag='false'
-                      :after-read="afterReadTransfer"
-                      :before-read="beforeRead"
-                      accept="">
-                      <van-button round type="info" class="outbound-uploader" >上传</van-button>
-                    </van-uploader>
-                    <van-button round type="danger" class="outbound-uploader-delete" v-else @click="handleFileDelete()">删除</van-button>
-                  </template>
-                </van-field>
-                <span class="li-span-click" v-if="fileList.length > 0" @click="imgClick()">{{fileList[0].fileName}}</span>
               </template>
               <template v-else>
                 <li>
@@ -71,13 +57,17 @@
                   <span>发料人：</span>
                   <span>{{formData.issueUserName}}</span>
                 </li>
-                <li>
-                  <span>领料单：</span>
-                  <span @click="imgClick()" class="li-span-click">{{fileList[0].fileName}}</span>
-                </li>
               </template>
             </ul>
           </div>
+        </div>
+        <div class="box-container">
+          <div class="detail-title-info">
+            <img src="/static/icon-file.png"/>
+            <span class="info-title">附件</span>
+          </div>
+          <file-upload-view v-if="queryType === 'submit'" title="领料单" :fileList="fileList" businessType="01"/>
+          <file-download-view v-else title="领料单" :fileList="fileList"/>
         </div>
         <div class="select-materials-search">
           <p class="select-materials-search-p font-weight">物资明细（共{{detailList.length}}项）</p>
@@ -168,10 +158,12 @@ materialCirculationDetailsTableRestListByPlanDetailId,
 materialSupplierOutRestSaveOut} from '@/api/prodmgr-inv/materialDemandPlanRest'
 import {minioUpload} from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
+import FileUploadView from "@/components/FileUploadView.vue";
+import FileDownloadView from "@/components/FileDownloadView.vue";
 
 export default {
   name: 'Outbound',
-  components: {FilePreview},
+  components: {FilePreview,FileUploadView,FileDownloadView},
 
   computed: {
     filteredList() {

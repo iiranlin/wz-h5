@@ -66,20 +66,35 @@
               placeholder="投资方" disabled input-align="right" />
             <van-field v-model="goodsData[index].field1" name="投资比例" required label="投资比例" disabled placeholder="投资比例"
               input-align="right" />
-            <van-field name="uploader" label="合格证附件" :disabled="fileDisabled"
+            <van-field name="uploader" v-model="goodsData[index].certificateFileName" label="合格证附件" disabled
               :rules="[{ required: true, message: '请上传合格证附件' }]" required>
-              <template #input>
-                <van-uploader v-model="goodsData[index].fileList01" multiple :max-count="1" :disabled="fileDisabled"
+             <template #button>
+                        <van-uploader :preview-imag='false' :after-read="(file) => passReadUpload(file, index)" :disabled="fileDisabled" :before-read="beforeRead"
+                            accept="" :max-count="1">
+                            <van-button type="info" round size="small" class="outbound-uploader"
+                                native-type="button">请上传合格证</van-button>
+                        </van-uploader>
+                    </template>
+              <!-- <template #input>
+                <van-uploader v-model="goodsData[index].fileList01" :max-count="1" :disabled="fileDisabled"
                   :after-read="(file) => passReadUpload(file, index)" :before-read="beforeRead" />
-              </template>
+              </template> -->
             </van-field>
-            <van-field name="uploader" label="厂检报告附件" :disabled="fileDisabled"
+            <van-field name="uploader" v-model="goodsData[index].factoryFileName" label="厂检报告附件" disabled
               :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
-              <template #input>
+
+              <template #button>
+                        <van-uploader :preview-imag='false' :after-read="(file) => checkReadUpload(file, index)" :disabled="fileDisabled" :before-read="beforeRead"
+                            accept="" :max-count="1">
+                            <van-button type="info" round size="small" class="outbound-uploader"
+                                native-type="button">请上传厂检报告</van-button>
+                        </van-uploader>
+                    </template>
+              <!-- <template #input>
                 <van-uploader v-model="goodsData[index].fileList02" :disabled="fileDisabled"
-                  :after-read="(file) => checkReadUpload(file, index)" :before-read="beforeRead" multiple
+                  :after-read="(file) => checkReadUpload(file, index)" :before-read="beforeRead"
                   :max-count="1" />
-              </template>
+              </template> -->
             </van-field>
             <van-field v-model="goodsData[index].remark" label="备注" :disabled="fileDisabled" placeholder="请输入备注"
               input-align="right" />
@@ -142,7 +157,9 @@ export default {
       showCreateDates: false,
       text: "",
       //如果是修改文件禁用其他禁用
-      fileDisabled: false
+      fileDisabled: false,
+      fileList01:'',
+      fileList02:''
     };
   },
   created() {
@@ -160,34 +177,26 @@ export default {
         ...item,
         planDetailId: item.id,
         // 回显图片
-        fileList01: this.showHgz(item.fileByList),
-        fileList02: this.showCjbg(item.fileByList),
+        certificateFileName: this.showHgz(item.fileByList),
+        factoryFileName: this.showCjbg(item.fileByList),
       }))
     }
-    //修改文件
-    if (this.text == 'file') {
-      this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
-        ...item,
-        planDetailId: item.id,
-        // 回显图片
-        fileList01: this.showHgz(item.fileByList),
-        fileList02: this.showCjbg(item.fileByList),
-      }))
-      this.fileDisabled = true
-    }
+    
 
   },
   methods: {
+    // 用于编辑回显
     showHgz(data) {
       let imgUrl = JSON.parse(data)
 
-      let img = [{ name: imgUrl.hgz[0].fileName, url: imgUrl.hgz[0].filePath }]
+      let img = imgUrl.hgz[0].fileName
       return img
     },
+    // 用于编辑回显
     showCjbg(data) {
       let imgUrl = JSON.parse(data)
 
-      let img = [{ name: imgUrl.cjbg[0].fileName, url: imgUrl.cjbg[0].filePath }]
+      let img = imgUrl.cjbg[0].fileName
       return img
     },
     onSubmit(values) {
@@ -262,6 +271,7 @@ export default {
             name: res.data.filePath,
             url: res.data.fileName // 注意Vant通常使用url而不是path
           }];
+          this.$set(this.goodsData[index], 'certificateFileName', res.data.fileName); // 显示文件名
           // this.params.fileName = res.data.fileName
           // this.params.filePath = res.data.filePath
         }
@@ -288,6 +298,8 @@ export default {
             name: res.data.filePath,
             url: res.data.fileName // 注意Vant通常使用url而不是path
           }];
+          this.$set(this.goodsData[index], 'factoryFileName', res.data.fileName); // 显示文件名
+          
           // this.params.fileName = res.data.fileName
           // this.params.filePath = res.data.filePath
         }

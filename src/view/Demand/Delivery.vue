@@ -18,7 +18,7 @@
           <div v-if="listBySendData.length>0">
               <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad" :offset="10" :immediate-check="false"> 
-              <div v-for="(item, index) in listBySendData" :key="index" class="box-container">
+              <div v-for="(item, index) in listBySendData" :key="index" class="box-container" @click="handleCarGoClick(item.id)">
                 <ul class="list-ul">
                   <li>
                     <span class="font-weight">发货单号:</span>
@@ -26,7 +26,7 @@
                   </li>
                   <li>
                     <span>需求编号:</span>
-                    <span>{{ item.planNumber }}</span>
+                    <span style="color:#1989fa;" @click.stop="requirementDetails(item.planId)">{{ item.planNumber }}</span>
                   </li>
                   <li>
                     <span>供应需求：</span>
@@ -34,7 +34,7 @@
                   </li>
                   <li>
                     <span>物流单号：</span>
-                    <span v-if="item.oddNumbers">{{ item.oddNumbers }}</span>
+                    <span style="color:#1989fa;" v-if="item.oddNumbers" @click.stop="handleLookClick(item.planId,item.shipmentBatchNumber,item.oddNumbers)">{{ item.oddNumbers }}</span>
                     <span v-else>其他</span>
                   </li>
                   <li>
@@ -64,21 +64,21 @@
                   </li>
                 </ul>
                 <div class="list-ul-button" v-if="item.status !=3">
-                    <van-button class="button-info" round type="info" @click="handleSendGoodsClick(item.id,item.status)"
+                    <van-button class="button-info" round type="info" @click.stop="handleSendGoodsClick(item.id,item.status)"
                     v-if="item.status == 1">确认发货</van-button>
-                     <van-button class="button-info" plain round type="info" @click="handleEditClick(item.id,'edit')"
+                     <van-button class="button-info" plain round type="info" @click.stop="handleEditClick(item.id,'edit')"
                     v-if="item.status == 1" >编辑</van-button>
-                  <van-button class="button-info" plain round type="danger" @click="handleDelClick(item.id)"
+                  <van-button class="button-info" plain round type="danger" @click.stop="handleDelClick(item.id)"
                     v-if="item.status == 1">删除</van-button>
-                 <van-button class="button-info" plain round type="info" @click="handleLookClick(item.planId,item.shipmentBatchNumber,item.oddNumbers)"
+                 <van-button class="button-info" plain round type="info" @click.stop="handleLookClick(item.planId,item.shipmentBatchNumber,item.oddNumbers)"
                     v-if="item.status == 2">物流查看</van-button>
                 
                     <!-- 增加货运位置是根据物流单号来显示的 -->   
-                     <van-button class="button-info" plain round type="info" size="mini" @click="handleUpload(item.id,'file')"
-                    v-if="item.status==2">修改</van-button>
-                    <van-button class="button-info" plain round type="info" @click="handleCarGoClick(item.id)"
+                     <van-button class="button-info" plain round type="info" size="mini" @click.stop="handleUpload(item.id)"
+                    v-if="item.status==2">修改附件</van-button>
+                    <van-button class="button-info" plain round type="info" @click.stop="handleCarGoClick(item.id)"
                     v-if="item.status == 2">货运详情</van-button>
-                   <van-button class="button-info" round type="info" size="mini" @click="handleConfirmClick(item.shipmentBatchNumber)"
+                   <van-button class="button-info" round type="info" size="mini" @click.stop="handleConfirmClick(item.shipmentBatchNumber)"
                     v-if="item.oddNumbers == '' && item.status==2">增加货运位置</van-button>
                 </div>
               </div>
@@ -100,7 +100,7 @@
         <van-field v-model="positionInformation" name="positionInformation" label="当前位置" style="padding:13px 40px;" class="custom-border" placeholder="请输入货运当前位置" input-align="right"
           :rules="[{ required: true, message: '请填写当前位置' }]" required />
         <div class="locationsteps">
-          <van-steps direction="vertical" :active="0">
+          <van-steps direction="vertical" active-color="#0086ff" :active="0">
             <van-step v-for="(item,index) in cargoList" :key="index">
               <h3>{{ item.positionInformation }}</h3>
               <p>{{ formattedCreateDate(item.createDate) }}</p>
@@ -294,6 +294,10 @@ export default {
     handleLookClick(id,number,logisticsNumber) {
       this.$router.push({ path: '/lookCargo',query:{id:id,number:number,logisticsNumber:logisticsNumber} })
     },
+    // 需求详情
+    requirementDetails(id){
+      this.$router.push({ path: '/supplyMsg', query: { id: id } })
+    },
     //货运详情
     handleCarGoClick(id) {
       this.$router.push({ path: '/cargoDetails',query:{id:id} })
@@ -348,8 +352,8 @@ export default {
       this.$router.push({ path: '/sendGoods',query:{id:id,title:title} })
     },
     //文件修改
-    handleUpload(id,title){
-       this.$router.push({ path: '/sendGoods',query:{id:id,title:title} })
+    handleUpload(id){
+       this.$router.push({ path: '/sendDetails',query:{id:id} })
     },
     //删除
     handleDelClick(id) {
