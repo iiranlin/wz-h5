@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="file-upload-title">
-            <span class="title">{{uploadTitle}}</span>
+            <span class="title">{{title}}</span>
         </div>
         <div>
             <ul>
@@ -35,7 +35,7 @@ export default {
     components: {FilePreview},
 
     props: {
-        uploadTitle:{
+        title:{
             type: String,
             default: '',
         },
