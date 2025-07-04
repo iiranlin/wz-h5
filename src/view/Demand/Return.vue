@@ -1,12 +1,15 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-       <van-search v-model="params.shipmentBatchNumber" show-action shape="round" background="#eef6ff"
+       <!-- <van-search v-model="params.shipmentBatchNumber" show-action shape="round" background="#eef6ff"
                 placeholder="请输入发货单号">
                 <template #action>
                     <div @click="onSearch">搜索</div>
                 </template>
-            </van-search>
+            </van-search> -->
+            <van-search v-model="params.shipmentBatchNumber" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
+            >
+          </van-search>
     </div>
     <div class="tabs" v-if="returnList.length>0">
       <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">

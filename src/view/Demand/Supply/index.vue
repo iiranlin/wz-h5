@@ -1,12 +1,22 @@
 <template>
-    <div class="default-container" ref="container" :style="{ paddingBottom: result.status === 6 ? '120px' : '0px' }">
-        <ul class="list-ul" style="margin: 10px;">
-            <li>
+    <div class="default-container" ref="container" :style="{ paddingBottom: result.status === 6 ? '0' : '140px' }">
+        <ul class="list-ul" style="margin: 10px;position: relative;">
+            <li class="li-item-both">
+              <div class="li-item-left">
+                <span style="width: 300px;">供应需求名称:</span>
+                <span>{{ result.planName }}</span>
+              </div>
+              <div class="li-item-right">
+                <span></span>
+                <!-- <span>{{ item.amount }}</span> -->
+              </div>
+            </li>
+            <!-- <li>
                 <span>供应需求名称:</span>
                 <span>{{ result.planName }}</span>
-            </li>
+            </li> -->
 
-            <li >
+            <li>
                 <span>需求项目：</span>
                 <span>{{ result.sectionName }}</span>
             </li>
@@ -22,80 +32,85 @@
                 <span>提报时间：</span>
                 <span>{{ formattedCreateDate(result.createDate) }}</span>
             </li>
-             <li>
-                <span>状态：</span>
-                <span v-if="result.status == 2">未确认</span>
-                <span v-if="result.status == 3">已确认</span>
-                <span v-if="result.status == 4">供应中</span>
-                <span v-if="result.status == 6">已完成</span>
+            <li>
+                <!-- <span>状态：</span> -->
+                <span class="li-status" style="position: absolute;top: 10px;right:10px;">
+                     <van-tag type="primary" round size="medium" v-if="result.status == 2">未确认</van-tag>
+                      <van-tag type="primary" round size="medium" v-if="result.status == 3">已确认</van-tag>
+                      <van-tag type="primary" round size="medium" v-if="result.status == 4">供应中</van-tag>
+                      <van-tag type="primary" round size="medium" v-if="result.status == 6"
+                        class="li-status-completed">已完成</van-tag>
+                </span>
             </li>
         </ul>
         <div class="title">
             <span>供应信息</span>
         </div>
         <van-list>
-                    <ul class="list-ul" v-for="(item,index) in result.demandPlanDetailsGyDTOList" :key="index" style="margin: 10px;">
-                        <li>
-                            <span class="font-weight">物资名称:</span>
-                            <span class="font-weight">{{ item.materialName }}</span>
-                        </li>
-                        <li>
-                            <span>规格型号：</span>
-                            <span>{{ item.specModel }}</span>
-                        </li>
-                        <li class="li-item-both">
-                            <div class="li-item-left">
-                                <span>计量单位:</span>
-                                <span>{{ item.unit }}</span>
-                            </div>
-                            <div class="li-item-right">
-                                <span>合同数量:</span>
-                                <span>{{ item.amount }}</span>
-                            </div>
-                        </li>
-                        <li class="li-item-both">
-                            <div class="li-item-left">
-                                <span>累计计划量(含本次):</span>
-                                <span>{{ item.cumulativeAmount }}</span>
-                            </div>
-                            <div class="li-item-right">
-                                <span>本次计划数量:</span>
-                                <span>{{ item.planAmount }}</span>
-                            </div>
-                        </li>
-                        <li class="li-item-both">
-                            <div class="li-item-left">
-                                <span>已发货:</span>
-                                <span>{{ item.sendTotal }}</span>
-                            </div>
-                            <div class="li-item-right">
-                                <span>已验收:</span>
-                                <span>{{ item.putTotal }}</span>
-                            </div>
-                        </li>
-                        <li class="li-item-both">
-                            <div class="li-item-left">
-                                <span>已入库:</span>
-                                <span>{{ item.storeTotal }}</span>
-                            </div>
-                            <div class="li-item-right">
-                                <span>已退回:</span>
-                                <span>{{ item.refundAllTotle }}</span>
-                            </div>
-                        </li>
-                        <li class="li-item-both">
-                            <div class="li-item-right" style="color:red;">
-                                <span>剩余待发货:</span>
-                                <span>{{ item.ssendTotal }}</span>
-                            </div>
-                        </li>
-                    </ul>
-            </van-list>
-             <div class="default-button-container" v-if="result.status == 2 || result.status == 4 || result.status == 3">
+            <ul class="list-ul" v-for="(item, index) in result.demandPlanDetailsGyDTOList" :key="index"
+                style="margin: 10px;">
+                <li>
+                    <span class="font-weight">物资名称:</span>
+                    <span class="font-weight">{{ item.materialName }}</span>
+                </li>
+                <li>
+                    <span>规格型号：</span>
+                    <span>{{ item.specModel }}</span>
+                </li>
+                <li class="li-item-both">
+                    <div class="li-item-left">
+                        <span>计量单位:</span>
+                        <span>{{ item.unit }}</span>
+                    </div>
+                    <div class="li-item-right">
+                        <span>合同数量:</span>
+                        <span>{{ item.amount }}</span>
+                    </div>
+                </li>
+                <li class="li-item-both">
+                    <div class="li-item-left">
+                        <span>累计计划量(含本次):</span>
+                        <span>{{ item.cumulativeAmount }}</span>
+                    </div>
+                    <div class="li-item-right">
+                        <span>本次计划数量:</span>
+                        <span>{{ item.planAmount }}</span>
+                    </div>
+                </li>
+                <li class="li-item-both">
+                    <div class="li-item-left">
+                        <span>已发货:</span>
+                        <span>{{ item.sendTotal }}</span>
+                    </div>
+                    <div class="li-item-right">
+                        <span>已验收:</span>
+                        <span>{{ item.putTotal }}</span>
+                    </div>
+                </li>
+                <li class="li-item-both">
+                    <div class="li-item-left">
+                        <span>已入库:</span>
+                        <span>{{ item.storeTotal }}</span>
+                    </div>
+                    <div class="li-item-right">
+                        <span>已退回:</span>
+                        <span>{{ item.refundAllTotle }}</span>
+                    </div>
+                </li>
+                <li class="li-item-both">
+                    <div class="li-item-right" style="color:red;">
+                        <span>剩余待发货:</span>
+                        <span>{{ item.ssendTotal }}</span>
+                    </div>
+                </li>
+            </ul>
+        </van-list>
+        <div class="default-button-container" v-if="result.status == 2 || result.status == 4 || result.status == 3">
             <van-button size="mini" type="info" round class="button-info" v-if="result.status == 2"
-                 @click="handleConfirmClick(result.id)" >确认需求</van-button>
-            <van-button size="mini" type="info" round class="button-info" v-if="result.status == 4 || result.status == 3"
-                 @click="handleSendGoodsClick(result.id, 'add')" >发货</van-button>
+                @click="handleConfirmClick(result.id)">确认需求</van-button>
+            <van-button size="mini" type="info" round class="button-info"
+                v-if="result.status == 4 || result.status == 3"
+                @click="handleSendGoodsClick(result.id, 'add')">发货</van-button>
             <!-- 编辑里的选择发货物资传的是planId -->
         </div>
     </div>
@@ -104,7 +119,7 @@
 import Vue from 'vue';
 import { Form } from 'vant';
 import { Field } from 'vant';
-import {supplyDetails} from '@/api/demand/demandManagement'
+import { supplyDetails } from '@/api/demand/demandManagement'
 Vue.use(Form);
 Vue.use(Field);
 export default {
@@ -121,8 +136,8 @@ export default {
             finished: false,
             result: {},
             list: [],
-            allRefreshLoading:false,
-            id:''
+            allRefreshLoading: false,
+            id: ''
         };
     },
     created() {
@@ -130,12 +145,12 @@ export default {
         this.getList()
     },
     methods: {
-        getList(){
-            let params={
-                id:this.id
+        getList() {
+            let params = {
+                id: this.id
             }
-            supplyDetails(params).then((res)=>{
-                if(res.code==0){
+            supplyDetails(params).then((res) => {
+                if (res.code == 0) {
                     this.allRefreshLoading = false
                     this.finished = false
                     this.result = res.data
@@ -153,13 +168,13 @@ export default {
 
         },
         //确认需求
-    handleConfirmClick(id) {
-      this.$router.push({ path: '/confirm', query: { id: id } })
-    },
-      //发货
-    handleSendGoodsClick(id, title) {
-      this.$router.push({ path: '/sendGoods', query: { id: id, title: title } })
-    },
+        handleConfirmClick(id) {
+            this.$router.push({ path: '/confirm', query: { id: id } })
+        },
+        //发货
+        handleSendGoodsClick(id, title) {
+            this.$router.push({ path: '/sendGoods', query: { id: id, title: title } })
+        },
         onLoad() {
             // 异步更新数据
             setTimeout(() => {
@@ -175,18 +190,19 @@ export default {
                 }
             }, 500);
         },
-          formattedCreateDate(timestamp) {
+        formattedCreateDate(timestamp) {
             if (!timestamp) return ''; // 处理空值
             const date = new Date(timestamp);
             const year = date.getFullYear();
             const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
             const day = date.getDate().toString().padStart(2, '0'); // 日期加0
             return `${year}-${month}-${day}`;
-            },
+        },
     },
 };
 </script>
 <style lang="less" scoped>
+
 .default-container {
     padding-top: 10px;
 }

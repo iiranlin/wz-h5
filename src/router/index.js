@@ -256,10 +256,10 @@ export const routes = [
       },
       {
 
-        path: '/sendDetails',
-        component: () => import('@/view/Demand/SendGoods/sendDetails.vue'),
+        path: '/Modifyfile',
+        component: () => import('@/view/Demand/SendGoods/Modifyfile.vue'),
         hidden: true,
-        name: 'sendDetails',
+        name: 'Modifyfile',
         meta: { title: '发货详情' },
       },
       {
