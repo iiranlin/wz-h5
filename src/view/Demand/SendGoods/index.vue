@@ -36,7 +36,7 @@
                 <van-field v-model="params.contactsPhone" required label="联系电话" :disabled="fileDisabled"
                     placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' }, { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }]" />
-                <van-field name="uploader" v-model="fileByList" label="发货单附件：" class="outbound-field-uploader" required :rules="[{ required: true, message: '请上传发货单附件' }]">
+                <van-field name="uploader" v-model="fileByList" disabled label="发货单附件：" class="outbound-field-uploader" required :rules="[{ required: true, message: '请上传发货单附件' }]">
                     <template #button>
                         <van-uploader :preview-imag='false' :after-read="beforeReadUpload" :before-read="beforeRead"
                             accept="">
@@ -76,6 +76,7 @@ import Vue from 'vue';
 import { Form } from 'vant';
 import { Field } from 'vant';
 import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/api/demand/demandManagement'
+import {minioUpload} from '@/api/blcd-base/minio'
 import { detailBySendEdit } from '@/api/demand/sendGoods'
 import keepPages from '@/view/mixins/keepPages'
 import { Toast } from 'vant';
@@ -341,8 +342,12 @@ export default {
             imgFile.append("businessType", '01');
             imgFile.append("key", file.file.name);
             imgFile.append("file", file.file);
-            demandSnedGoodsUpload(imgFile).then((res) => {
+            minioUpload(imgFile).then((res) => {
                 if (res.code == 0) {
+                    this.$notify({
+                    type: 'success',
+                    message: "上传成功"
+                    });
                     this.fileList = [{
                         name: res.data.fileName,
                         url: res.data.filePath
@@ -353,6 +358,11 @@ export default {
                     // this.params.fileName = res.data.fileName
                     // this.params.fileName = res.data.fileName
                 }
+            }).catch((err) => {
+                this.$notify({
+                type: 'warning',
+                message: "上传失败"
+                });
             })
         },
         //附件上传前

@@ -44,40 +44,45 @@
         <van-divider />
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
           <van-form ref="form">
-            <van-field v-model="goodsData[index].sendTotal" :disabled="fileDisabled" required name="发货数量" label="发货数量" placeholder="发货数量"
-              input-align="right" />
-            <van-field v-model="goodsData[index].packagingFm" :disabled="fileDisabled" name="包装形式" required label="包装形式" placeholder="请输入包装形式"
-              input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].createDate" :disabled="fileDisabled" required name="datetimePicker"
-              :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
+            <van-field v-model="goodsData[index].sendTotal" :disabled="fileDisabled" required name="发货数量" label="发货数量"
+              placeholder="发货数量" input-align="right" />
+            <van-field v-model="goodsData[index].packagingFm" :disabled="fileDisabled" name="包装形式" required label="包装形式"
+              placeholder="请输入包装形式" input-align="right" />
+            <van-field readonly clickable v-model="goodsData[index].createDate" :disabled="fileDisabled" required
+              name="datetimePicker" :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
               @click="showCalendars(item, index, 'show')" input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].updateDate" :disabled="fileDisabled" name="datetimePicker"
-              :value="goodsData[index].updateDate" label="有效截止日期" placeholder="有效截止日期"
+            <van-field readonly clickable v-model="goodsData[index].updateDate" :disabled="fileDisabled"
+              name="datetimePicker" :value="goodsData[index].updateDate" label="有效截止日期" placeholder="有效截止日期"
               @click="showCalendars(item, index, 'end')" input-align="right" />
-            <van-field v-model="goodsData[index].field2" label="收货地址" required :disabled="fileDisabled" placeholder="收货地址" input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].supplyDate" :disabled="fileDisabled" name="datetimePicker" required
-              :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
+            <van-field v-model="goodsData[index].field2" label="收货地址" required :disabled="fileDisabled"
+              placeholder="收货地址" input-align="right" />
+            <van-field readonly clickable v-model="goodsData[index].supplyDate" :disabled="fileDisabled"
+              name="datetimePicker" required :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
               @click="showCalendars(item, index, 'gong')" input-align="right" />
-            <van-field v-model="goodsData[index].receiver" name="收货人" :disabled="fileDisabled" required label="收货人和电话" placeholder="收货人"
-              input-align="right" />
-               <van-field v-model="goodsData[index].addr" label="使用地点" placeholder="使用地点" input-align="right"  disabled/>
+            <van-field v-model="goodsData[index].receiver" name="收货人" :disabled="fileDisabled" required label="收货人和电话"
+              placeholder="收货人" input-align="right" />
+            <van-field v-model="goodsData[index].addr" label="使用地点" placeholder="使用地点" input-align="right" disabled />
             <van-field v-model="goodsData[index].field0" :name="goodsData[index].field0" label="投资方" required
               placeholder="投资方" disabled input-align="right" />
             <van-field v-model="goodsData[index].field1" name="投资比例" required label="投资比例" disabled placeholder="投资比例"
               input-align="right" />
-            <van-field name="uploader" label="合格证附件" :disabled="fileDisabled" :rules="[{ required: true, message: '请上传合格证附件' }]" required>
+            <van-field name="uploader" label="合格证附件" :disabled="fileDisabled"
+              :rules="[{ required: true, message: '请上传合格证附件' }]" required>
               <template #input>
                 <van-uploader v-model="goodsData[index].fileList01" multiple :max-count="1" :disabled="fileDisabled"
-                  :after-read="(file) => passReadUpload(file, index)" :before-read="beforeRead"/>
+                  :after-read="(file) => passReadUpload(file, index)" :before-read="beforeRead" />
               </template>
             </van-field>
-            <van-field name="uploader" label="厂检报告附件" :disabled="fileDisabled" :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
+            <van-field name="uploader" label="厂检报告附件" :disabled="fileDisabled"
+              :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
               <template #input>
-                <van-uploader v-model="goodsData[index].fileList02" :disabled="fileDisabled" :after-read="(file) => checkReadUpload(file, index)" :before-read="beforeRead"
-                  multiple :max-count="1" />
+                <van-uploader v-model="goodsData[index].fileList02" :disabled="fileDisabled"
+                  :after-read="(file) => checkReadUpload(file, index)" :before-read="beforeRead" multiple
+                  :max-count="1" />
               </template>
             </van-field>
-            <van-field v-model="goodsData[index].remark" label="备注" :disabled="fileDisabled" placeholder="请输入备注" input-align="right" />
+            <van-field v-model="goodsData[index].remark" label="备注" :disabled="fileDisabled" placeholder="请输入备注"
+              input-align="right" />
           </van-form>
         </div>
       </div>
@@ -107,13 +112,14 @@ import { DatetimePicker } from 'vant';
 import _ from 'lodash'
 import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/api/demand/demandManagement'
 import { modifySendGoods } from '@/api/demand/sendGoods'
+import { minioUpload } from '@/api/blcd-base/minio'
 import { Notify } from 'vant';
 Vue.use(Notify)
 Vue.use(DatetimePicker);
 Vue.use(Toast);
 Vue.use(Divider);
 export default {
-  name:"finishGoods",
+  name: "finishGoods",
   data() {
     const today = new Date();
     today.setHours(23, 59, 59, 999); // 设置为今天的最后一
@@ -136,7 +142,7 @@ export default {
       showCreateDates: false,
       text: "",
       //如果是修改文件禁用其他禁用
-      fileDisabled:false
+      fileDisabled: false
     };
   },
   created() {
@@ -148,8 +154,8 @@ export default {
         ...item,
         planDetailId: item.id,
       }))
-    } 
-    if(this.text=='edit') {
+    }
+    if (this.text == 'edit') {
       this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
         ...item,
         planDetailId: item.id,
@@ -159,7 +165,7 @@ export default {
       }))
     }
     //修改文件
-    if(this.text=='file') {
+    if (this.text == 'file') {
       this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
         ...item,
         planDetailId: item.id,
@@ -167,25 +173,25 @@ export default {
         fileList01: this.showHgz(item.fileByList),
         fileList02: this.showCjbg(item.fileByList),
       }))
-      this.fileDisabled=true
+      this.fileDisabled = true
     }
 
   },
   methods: {
     showHgz(data) {
       let imgUrl = JSON.parse(data)
-    
+
       let img = [{ name: imgUrl.hgz[0].fileName, url: imgUrl.hgz[0].filePath }]
       return img
     },
     showCjbg(data) {
       let imgUrl = JSON.parse(data)
-     
+
       let img = [{ name: imgUrl.cjbg[0].fileName, url: imgUrl.cjbg[0].filePath }]
       return img
     },
     onSubmit(values) {
-     
+
     },
     onConfirm(date) {
       this.gongyingDate = `${date.getMonth() + 1}/${date.getDate()}`;
@@ -208,7 +214,7 @@ export default {
       if (title == 'gong') {
         this.showCalendar = true;
       }
-     
+
     },
     // // 日期格式化
     createConfirm(time) {
@@ -240,14 +246,18 @@ export default {
 
     },
     passReadUpload(file, index) {
-    
+
       let imgFile = new FormData();
 
       imgFile.append("businessType", '01');
       imgFile.append("key", file.file.name);
       imgFile.append("file", file.file);
-      demandSnedGoodsUpload(imgFile).then((res) => {
+      minioUpload(imgFile).then((res) => {
         if (res.code == 0) {
+          this.$notify({
+            type: 'success',
+            message: "上传成功"
+          });
           this.goodsData[index].fileList01 = [{
             name: res.data.filePath,
             url: res.data.fileName // 注意Vant通常使用url而不是path
@@ -255,6 +265,11 @@ export default {
           // this.params.fileName = res.data.fileName
           // this.params.filePath = res.data.filePath
         }
+      }).catch((err) => {
+        this.$notify({
+          type: 'warning',
+          message: "上传失败"
+        });
       })
     },
     //厂检
@@ -263,8 +278,12 @@ export default {
       imgFile.append("businessType", '01');
       imgFile.append("key", file.file.name);
       imgFile.append("file", file.file);
-      demandSnedGoodsUpload(imgFile).then((res) => {
+      minioUpload(imgFile).then((res) => {
         if (res.code == 0) {
+          this.$notify({
+            type: 'success',
+            message: "上传成功"
+          });
           this.goodsData[index].fileList02 = [{
             name: res.data.filePath,
             url: res.data.fileName // 注意Vant通常使用url而不是path
@@ -272,6 +291,11 @@ export default {
           // this.params.fileName = res.data.fileName
           // this.params.filePath = res.data.filePath
         }
+      }).catch((err) => {
+        this.$notify({
+          type: 'warning',
+          message: "上传失败"
+        });
       })
     },
     back() {
@@ -281,11 +305,11 @@ export default {
       this.goodsData.splice(index)
     },
     save() {
-      if(this.goodsData.length==0){
+      if (this.goodsData.length == 0) {
         Toast('没有可提交的内容');
         return;
       }
-     
+
       // 先校验所有数据
       const isValid = this.goodsData.every((item) => {
         return (
@@ -336,69 +360,50 @@ export default {
             Toast.success(res.data);
             this.$router.push({ path: "/Information" })
           }
-        
-        })
-      } 
-       if (this.text == 'edit') {
-        modifySendGoods(params).then((res) => {
-          if (res.code == 0) {
-            Toast.success(res.data);
-            this.$router.push({ path: "/Information" })
-          }
-        
-        })
-      } 
-      if(this.text=='file'){
-        
-        modifySendGoods(params).then((res) => {
-          if (res.code == 0) {
-            Toast.success(res.data);
-            this.$router.push({ path: "/Information" })
-          }
-        })
-      
-      }
-      
-      //保存完所选择的物资存到store里
-      // this.$store.dispatch('public/setGoodsList', this.goodsData)
-      // this.$router.push({
-      //   path: '/SendGoods',
-      //   query: {
-      //     id: this.goodsId,
-      //   }
-      // })
-      // this.goodsData.forEach((item,index)=>{
-      //   if(item)
-      // })
-      // Toast.success('保存成功');
-      // this.$router.push({
-      //   name:'SendGoods',
-      //   params: { 
-      //       type: '1',
-      //   }
-      // })
-    },
-     //附件上传前
-        beforeRead(file) {
-            const isLt10M = file.size / 1024 / 1024 < 10;
-            const isFileName = file.name.length < 90;
 
-            if (!isLt10M) {
-                this.$notify({
-                    type: 'warning',
-                    message: '上传文件大小不能超过 10MB!',
-                });
-                return false;
-            }
-            if (!isFileName) {
-                this.$notify({
-                    type: 'warning',
-                    message: '上传文件名过长!',
-                });
-                return false;
-            }
-            return true;
-        },
+        })
+      }
+      if (this.text == 'edit') {
+        modifySendGoods(params).then((res) => {
+          if (res.code == 0) {
+            Toast.success(res.data);
+            this.$router.push({ path: "/Information" })
+          }
+
+        })
+      }
+      // 只修改文件
+      if (this.text == 'file') {
+        modifySendGoods(params).then((res) => {
+          if (res.code == 0) {
+            Toast.success(res.data);
+            this.$router.push({ path: "/Information" })
+          }
+        })
+
+      }
+    },
+    //附件上传前
+    beforeRead(file) {
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      const isFileName = file.name.length < 90;
+
+      if (!isLt10M) {
+        this.$notify({
+          type: 'warning',
+          message: '上传文件大小不能超过 10MB!',
+        });
+        return false;
+      }
+      if (!isFileName) {
+        this.$notify({
+          type: 'warning',
+          message: '上传文件名过长!',
+        });
+        return false;
+      }
+      return true;
+    },
   },
 };
 </script>
@@ -444,9 +449,6 @@ export default {
   height: 6px;
   background: blue;
 }
-
-
-
 /deep/.van-button--primary {
   background-color: #1989fa;
   border: 1px solid #1989fa;
