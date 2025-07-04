@@ -73,68 +73,70 @@
           <p class="select-materials-search-p font-weight">物资明细（共{{detailList.length}}项）</p>
           <van-search v-model="searchValue" placeholder="输入规格型号" background="center" @search="onSearch" />
         </div>
-        <div class="box-container" v-for="(item,index) in filteredList" :key="index">
-          <div class="div-parent">
-            <ul class="detail-ul">
-              <li>
-                <span>供应商：</span>
-                <span>{{item.sellerName}}</span>
-              </li>
-              <li>
-                <span class="font-weight">物资名称：</span>
-                <span class="font-weight">{{item.materialName}}</span>
-              </li>
-              <li>
-                <span>规格型号：</span>
-                <span>{{item.specModel}}</span>
-              </li>
-              <li>
-                <span>计量单位：</span>
-                <span>{{item.unit}}</span>
-              </li>
-              <li>
-                <span>需求数量：</span>
-                <span>{{item.planAmount}}</span>
-              </li>
-              <li class="li-item-overlength">
-                <span>当前库存数量：</span>
-                <span>{{item.stockStatus}}</span>
-              </li>
-            </ul>
-          </div>
-          <div class="div-child" v-for="(childItem,childIndex) in item.childList" :key="childIndex">
-            <ul class="detail-ul">
-              <li>
-                <span>入库单号：</span>
-                <span>{{childItem.storeNumber}}</span>
-              </li>
-              <li class="li-item-overlength">
-                <span>当前库存数量：</span>
-                <span>{{childItem.remainingStock}}</span>
-              </li>
-              <li>
-                <span>生产日期：</span>
-                <span>{{parseTime(childItem.manufactureDate,'{y}-{m}-{d}')}}</span>
-              </li>
-              <li class="li-item-overlength">
-                <span>有效期截至日期：</span>
-                <span>{{parseTime(childItem.expirationDate,'{y}-{m}-{d}')}}</span>
-              </li>
-              <template v-if="queryType === 'submit'">
-                <van-field class="outbound-field-text" v-model="childItem.outTotal" name="出库数量" label="出库数量：" placeholder="请输入出库数量" input-align="right" label-width="252px" />
-                <van-field class="outbound-field-text" v-model="childItem.remark" name="备注" label="备注：" placeholder="请输入备注" input-align="right" label-width="110px"/>
-              </template>
-              <template v-if="queryType === 'save'">
+        <div v-for="(item,index) in filteredList" :key="index">
+          <div class="box-container" v-if="checkParent(item)">
+            <div class="div-parent">
+              <ul class="detail-ul">
                 <li>
-                  <span>出库数量：</span>
-                  <span>{{childItem.outTotal}}</span>
+                  <span>供应商：</span>
+                  <span>{{item.sellerName}}</span>
                 </li>
                 <li>
-                  <span>备注：</span>
-                  <span>{{childItem.remark}}</span>
+                  <span class="font-weight">物资名称：</span>
+                  <span class="font-weight">{{item.materialName}}</span>
                 </li>
-              </template>
-            </ul>
+                <li>
+                  <span>规格型号：</span>
+                  <span>{{item.specModel}}</span>
+                </li>
+                <li>
+                  <span>计量单位：</span>
+                  <span>{{item.unit}}</span>
+                </li>
+                <li>
+                  <span>需求数量：</span>
+                  <span>{{item.planAmount}}</span>
+                </li>
+                <li class="li-item-overlength">
+                  <span>当前库存数量：</span>
+                  <span>{{item.stockStatus}}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="div-child" v-for="(childItem,childIndex) in item.childList" :key="childIndex">
+              <ul class="detail-ul" v-if="checkChild(childItem)">
+                <li>
+                  <span>入库单号：</span>
+                  <span>{{childItem.storeNumber}}</span>
+                </li>
+                <li class="li-item-overlength">
+                  <span>当前库存数量：</span>
+                  <span>{{childItem.remainingStock}}</span>
+                </li>
+                <li>
+                  <span>生产日期：</span>
+                  <span>{{parseTime(childItem.manufactureDate,'{y}-{m}-{d}')}}</span>
+                </li>
+                <li class="li-item-overlength">
+                  <span>有效期截至日期：</span>
+                  <span>{{parseTime(childItem.expirationDate,'{y}-{m}-{d}')}}</span>
+                </li>
+                <template v-if="queryType === 'submit'">
+                  <van-field class="outbound-field-text" v-model="childItem.outTotal" name="出库数量" label="出库数量：" placeholder="请输入出库数量" input-align="right" label-width="252px" />
+                  <van-field class="outbound-field-text" v-model="childItem.remark" name="备注" label="备注：" placeholder="请输入备注" input-align="right" label-width="110px"/>
+                </template>
+                <template v-if="queryType === 'save'">
+                  <li>
+                    <span>出库数量：</span>
+                    <span>{{childItem.outTotal}}</span>
+                  </li>
+                  <li>
+                    <span>备注：</span>
+                    <span>{{childItem.remark}}</span>
+                  </li>
+                </template>
+              </ul>
+            </div>
           </div>
         </div>
         <van-empty v-if="filteredList.length == 0" description="暂无数据" />
@@ -257,6 +259,26 @@ export default {
     //物资明细搜索
     onSearch(){
 
+    },
+    //判断预览状态下明细父元素显示与否
+    checkParent(item){
+      if(this.queryType == 'submit'){
+        return true
+      }
+      if(!item.childList){
+        return false
+      }
+      let findResult = item.childList.some((childItem) => {
+        return childItem.outTotal != '0' && !!childItem.outTotal;
+      })
+      return findResult
+    },
+    //判断预览状态下明细子元素显示与否
+    checkChild(childItem){
+      if(this.queryType == 'submit'){
+        return true
+      }
+      return childItem.outTotal != '0' && !!childItem.outTotal;
     },
     //附件上传前
     beforeRead(file){
