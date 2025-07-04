@@ -308,7 +308,6 @@ export default {
     data() {
         return {
             menuActiveIndex:0,
-            dt,
             active: 2,
             activeKey: 0,
             username: '',
@@ -323,7 +322,12 @@ export default {
             params: {},
             logistics: {},
             cargoList: [],
-            expressData:{}
+            expressData:{},
+            listPageQuery:{
+                pageName:1,
+                pageSize:10
+                
+            }
             // logisticsNumber:""
         };
     },
@@ -359,11 +363,14 @@ export default {
                 }
             })
             let params={
+                // pageName:this.listPageQuery.pageName,
+                // pageSize:this.listPageQuery.pageSize,
                 shipmentBatchNumber:this.wuLiuNumber
             }
             //有单号就显示位置列表
             addList(params).then((res) => {
                 if (res.code == 0) {
+                    console.log(res.data,'yaoyuan')
                     this.cargoList = res.data.list
                 }
             })
