@@ -35,13 +35,16 @@
             </div>
         </div>
         <div class="title">
-            <span>供应信息</span>
+             <div class="detail-title-content" style="display: flex;align-items: center;">
+                <img src="/static/icon-xqjh.png">
+                <span style="padding-left: 0.2rem;font-weight: 600;">供应信息</span>
+            </div>
         </div>
         <van-list>
-            <ul class="list-ul" v-for="(item, index) in result.demandPlanDetailsGyDTOList" :key="index"
-                style="margin: 0.2rem;">
-                <li>
-                    <span class="font-weight">物资名称:</span>
+            <ul class="detail-list-ul" v-for="(item, index) in result.demandPlanDetailsGyDTOList" :key="index"
+                style="margin: 0.2rem;background: #fff;border-radius: 16px;">
+                <li class="save-materials-li">
+                    <span class="font-weight dot-before">物资名称:</span>
                     <span class="font-weight">{{ item.materialName }}</span>
                 </li>
                 <li>
@@ -216,7 +219,16 @@ li :nth-child(2) {
 }
 
 .title {
+    height: 0.85rem;
+    display: flex;
+    align-items: center;
     margin: 10px;
     font-size: 14px;
+}
+.dot-before::before {
+  content: "•";          /* 圆点符号 */
+  color: #1890ff;        /* 蓝色（可自定义） */
+  margin-right: 5px;     /* 与文字的间距 */
+  font-size: 1.2em;      /* 可选：调整圆点大小 */
 }
 </style>

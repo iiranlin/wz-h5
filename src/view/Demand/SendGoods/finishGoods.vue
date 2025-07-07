@@ -2,7 +2,41 @@
   <div class="finish">
     <div class="main">
       <div class="box" v-for="(item, index) in goodsData" :key="index">
+        <div class="detail-base-info">
+        <div class="detail-title-content">
+            <img src="/static/icon-xqjh.png">
+            <span>物资名称：</span>
+            <span>{{item.materialName}}</span>
+        </div>
         <div>
+            <ul class="detail-ul">
+          <li>
+            <span>规格型号：</span>
+            <span>{{ item.specModel }}</span>
+          </li>
+          <li>
+            <span>计量单位：</span>
+            <span>{{ item.unit }}</span>
+          </li>
+          <li>
+            <span style="min-width: 2rem;">次计划数量：</span>
+            <span>{{ item.planAmount }}</span>
+          </li>
+          <li>
+            <span style="min-width: 4rem;">本次需求未发货数量：</span>
+            <span>{{ item.ssendTotal }}</span>
+          </li>
+          <!-- <li class="li-status">
+            <template v-for="row in statusArr">
+              <van-tag :class="{ 'li-status-completed': row.value == '9' }"
+                :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
+                v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
+            </template>
+            </li> -->
+            </ul>
+        </div>
+    </div>
+        <!-- <div>
           <ul class="list-ul">
             <li class="li-item-both">
               <div class="li-item-left" style="width: 70%;flex:none;">
@@ -14,11 +48,6 @@
                 <span style="text-align: right;color: red;" @click="delgoods(index)">删除</span>
               </div>
             </li>
-            <!-- <li class="list_title">
-             
-              <span class="font-weight">物资名称：</span>
-              <span class="font-weight">{{ item.materialName }}</span>
-            </li> -->
             <li>
               <span>规格型号：</span>
               <span>{{ item.specModel }}</span>
@@ -40,7 +69,7 @@
               </div>
             </li>
           </ul>
-        </div>
+        </div> -->
         <van-divider />
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
           <van-form ref="form">

@@ -14,7 +14,7 @@
           </li>
           <li>
             <span>合同名称：</span>
-            <span>{{ goodsMsg.deptName }}</span>
+            <span class="text">{{ goodsMsg.deptName }}</span>
           </li>
           <!-- <li class="li-status">
             <template v-for="row in statusArr">
@@ -428,5 +428,10 @@ li :nth-child(2) {
 /deep/.van-button--primary {
     background-color: #1989fa;
     border: 1px solid #1989fa;
+}
+.text{
+     white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 }
 </style>

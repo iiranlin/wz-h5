@@ -87,11 +87,15 @@
                 <van-tab title="发货基本信息" name="发货基本信息">
                     <van-list>
                         <div class="box-container">
-                            <ul class="list-ul">
+                            <ul class="detail-list-ul">
                                 <li>
+                                        <span class="font-weight dot-before" style="min-width: 2.5rem;">供应需求名称:</span>
+                                        <span class="font-weight">{{ params.planName }}</span>
+                                    </li>
+                                <!-- <li>
                                     <span style="width: 250px;">供应需求名称:</span>
                                     <span>{{ params.planName }}</span>
-                                </li>
+                                </li> -->
                                 <li>
                                     <span>需求项目：</span>
                                     <span class="text">{{ params.sectionName }}</span>
@@ -163,52 +167,44 @@
                         v-if="params.materialCirculationDetailsTableDTOS && params.materialCirculationDetailsTableDTOS.length > 0">
                         <van-list>
                             <div class="box-container"
-                                v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
-                                <ul class="list-ul">
+                               >
+                                <ul class="detail-list-ul"  v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
                                     <!-- <li>
                                         <span class="font-weight" style="width: 250px;">需求组织名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
                                     </li> -->
-                                    <li>
-                                        <span class="font-weight">物资名称:</span>
+                                    <li class="save-materials-li">
+                                        <span class="font-weight dot-before">物资名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
                                     </li>
                                     <li>
                                         <span>规格型号:</span>
                                         <span>{{ item.specModel }}</span>
                                     </li>
-                                    <li class="li-item-both">
-                                        <div class="li-item-left">
-                                            <span>计量单位:</span>
-                                            <span>{{ item.unit }}</span>
-                                        </div>
-                                        <div class="li-item-right">
-                                            <span>发货数量:</span>
-                                            <span>{{ item.sendTotal }}</span>
-                                        </div>
+                                     <li>
+                                        <span>计量单位:</span>
+                                        <span>{{ item.unit }}</span>
                                     </li>
-                                    <li class="li-item-both">
-                                        <div class="li-item-left">
-                                            <span style="width: 300px;">本次计划数量:</span>
-                                            <span>{{ item.planAmount }}</span>
-                                        </div>
-                                        <div class="li-item-right">
-                                            <span>包装形式:</span>
-                                            <span>{{ item.packagingFm }}</span>
-                                        </div>
+                                     <li>
+                                        <span>发货数量:</span>
+                                        <span>{{ item.sendTotal }}</span>
                                     </li>
-                                    <li class="li-item-both">
-                                        <div class="li-item-left">
-                                            <span>生产日期:</span>
-                                            <span v-if="item.createDate">{{ formattedCreateDate(item.createDate)
+                                    <li>
+                                        <span>本次计划数量:</span>
+                                        <span>{{ item.planAmount }}</span>
+                                    </li>
+                                    <li>
+                                        <span>包装形式:</span>
+                                        <span>{{ item.packagingFm }}</span>
+                                    </li>
+                                    <li>
+                                        <span>生产日期:</span>
+                                        <span v-if="item.createDate">{{ formattedCreateDate(item.createDate)
                                                 }}</span>
-                                        </div>
-                                        <div class="li-item-right"
-                                            style="display: flex;justify-content: space-between;">
-                                            <span>有效期截止日期：</span>
-                                            <span v-if="item.updateDate" style="margin-left: 60px;">{{
-                                                formattedCreateDate(item.updateDate) }}</span>
-                                        </div>
+                                    </li>
+                                    <li>
+                                        <span>有效期截止日期:</span>
+                                        <span>{{formattedCreateDate(item.updateDate) }}</span>
                                     </li>
                                     <li>
                                         <span>收货地址:</span>
@@ -223,7 +219,7 @@
                                         <span v-if="item.supplyDate">{{ formattedCreateDate(item.supplyDate) }}</span>
                                     </li>
                                     <li>
-                                        <span style="width: 360px;">收货人及联系方式:</span>
+                                        <span>收货人及联系方式:</span>
                                         <span>{{ item.receiver }}</span>
                                     </li>
                                     <li>
@@ -239,14 +235,14 @@
                                         <span>{{ item.remark }}</span>
                                     </li>
                                     <li>
-                                        <span style="min-width: 200px;">合格证附件:</span>
+                                        <span>合格证附件:</span>
                                         <span style="color:#1989fa;"
                                             v-if="item.fileByList && item.fileByList.hgz && item.fileByList.hgz.length > 0"
                                             @click="imgClick(item.fileByList.hgz[0].fileName, item.fileByList.hgz[0].filePath)">{{
                                             item.fileByList.hgz[0].fileName }}</span>
                                     </li>
                                     <li>
-                                        <span style="min-width: 250px;">厂检报告附件:</span>
+                                        <span style="min-width: 3rem;">厂检报告附件:</span>
                                         <span style="color:#1989fa;"
                                             v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0"
                                             @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
@@ -393,5 +389,11 @@ export default {
     // margin: 0 10px;
     border-radius: 15px;
     padding: 10px;
+}
+.dot-before::before {
+  content: "•";          /* 圆点符号 */
+  color: #1890ff;        /* 蓝色（可自定义） */
+  margin-right: 5px;     /* 与文字的间距 */
+  font-size: 1.2em;      /* 可选：调整圆点大小 */
 }
 </style>
