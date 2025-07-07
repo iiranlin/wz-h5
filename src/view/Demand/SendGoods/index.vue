@@ -1,20 +1,46 @@
 <template>
     <div class="default-container" ref="container">
-        <ul class="list-ul">
+        <div class="detail-base-info">
+        <div class="detail-title-content">
+            <img src="/static/icon-xqjh.png">
+            <span>需求编号：</span>
+            <span>{{goodsMsg.planNumber}}</span>
+        </div>
+        <div>
+            <ul class="detail-ul">
+          <li>
+            <span>需求项目：</span>
+            <span>{{ goodsMsg.sectionName }}</span>
+          </li>
+          <li>
+            <span>合同名称：</span>
+            <span>{{ goodsMsg.deptName }}</span>
+          </li>
+          <!-- <li class="li-status">
+            <template v-for="row in statusArr">
+              <van-tag :class="{ 'li-status-completed': row.value == '9' }"
+                :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
+                v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
+            </template>
+            </li> -->
+            </ul>
+        </div>
+    </div>
+        <!-- <ul class="list-ul">
             <li>
                 <span>需求编号：</span>
                 <span>{{ goodsMsg.planNumber }}</span>
             </li>
 
-            <li class="li-item-both">
+            <li>
                 <span>需求项目：</span>
                 <span>{{ goodsMsg.sectionName }}</span>
             </li>
-            <li class="li-item-both">
+            <li>
                 <span style="min-width: 1rem;">合同名称：</span>
                 <span>{{ goodsMsg.contractName }}</span>
             </li>
-        </ul>
+        </ul> -->
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
             <van-form :key="formKey" ref="form">
                 <van-field v-model="params.oddNumbers" :disabled="fileDisabled" label="物流单号"

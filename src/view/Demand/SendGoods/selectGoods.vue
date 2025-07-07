@@ -22,25 +22,21 @@
               <span>规格型号：</span>
               <span>{{ item.specModel }}</span>
             </li>
-             <li class="li-item-both">
-              <div class="li-item-left">
-                <span>计量单位:</span>
-                <span>{{ item.unit }}</span>
-              </div>
-              <div class="li-item-right">
-                <span>合同数量:</span>
-                <span>{{ item.amount }}</span>
-              </div>
+              <li>
+              <span>计量单位：</span>
+              <span>{{ item.unit }}</span>
             </li>
-             <li class="li-item-both">
-              <div class="li-item-left">
-                <span>累计计划量(含本次):</span>
-                <span>{{ item.cumulativeAmount }}</span>
-              </div>
-              <div class="li-item-right">
-                <span>本次计划数量:</span>
-                <span>{{ item.planAmount }}</span>
-              </div>
+             <li>
+              <span>合同数量：</span>
+              <span>{{ item.amount }}</span>
+            </li>
+            <li>
+              <span>累计计划量(含本次)：</span>
+              <span>{{ item.cumulativeAmount }}</span>
+            </li>
+            <li>
+              <span>本次计划数量：</span>
+              <span>{{ item.planAmount }}</span>
             </li>
             <li>
               <span>供应时间:</span>
@@ -62,20 +58,14 @@
               <span>投资方:</span>
               <span>{{ item.field0 }}</span>
             </li>
-             <li class="li-item-both">
-              <div class="li-item-left">
-                <span>投资比例:</span>
-                <span>{{ item.field1 }}</span>
-              </div>
-              <!-- <div class="li-item-right" style="color:red;">
-                <span >本次需求未发货数量:</span>
-                <span>{{ item.ssendTotal }}</span>
-              </div> -->
+             <li>
+              <span>投资比例:</span>
+              <span>{{ item.field1 }}</span>
             </li>
-            <li>
-              <span>备注：</span>
-              <span>{{ item.remark }}</span>
-            </li>
+             <li class="li-item-remark"> 
+            <span>备注：</span>
+            <div class="remark-detail">{{item.remark || '未填写'}}</div>
+          </li>
           </ul>
         </van-checkbox>
       </van-checkbox-group>
