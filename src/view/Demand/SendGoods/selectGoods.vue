@@ -7,7 +7,8 @@
     </div>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
-        <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="(item.ssendTotal == 0 ? true : false) || fileDisabled"> 
+        <!--本次需求未发货数量为0不可选-->
+        <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false"> 
           <ul class="list-ul">
              <li>
               <span class="font-weight">物资名称：</span>
