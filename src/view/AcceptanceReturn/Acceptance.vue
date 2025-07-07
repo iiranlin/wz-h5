@@ -1,5 +1,6 @@
 <template>
-  <div class="tab-list">
+  <div class="tab-list in-out-management-list">
+     <!-- <van-sticky>
     <div class="list-search-container">
       <van-search
         v-model="formData.keywords"
@@ -9,28 +10,41 @@
         @search="handeSearchClick()">
       </van-search>
     </div>
-    <div class="tabs">
-      <van-tabs
-        v-model="menuActiveIndex"
-        color="#0571ff"
-        background="#eef6ff"
-        title-active-color="#0571ff"
-        title-inactive-color="#2e2e2e"
-        @click="handleChange">
-        <van-tab v-for="(item,index) in tabList" :key="index" :title="item.title">
-          <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
+    </van-sticky> -->
+    <van-sticky>
+      <div class="list-search-container">
+        <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" left-icon="none" @search="handeSearchClick()">
+          <template slot='right-icon'>
+            <van-icon name="search" @click="handeSearchClick()"/>
+          </template>
+        </van-search>
+      </div>
+      <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
+        title-inactive-color="#2e2e2e" @change="tabsChange">
+        <van-tab v-for="item in tabList" :title="item.title" :name="item.status" :key="item.status">
+        </van-tab>
+      </van-tabs>
+    </van-sticky>
+      <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
             <van-list
               v-model="listLoading"
               :finished="allFinished"
               finished-text="没有更多了..."
               @load="onLoad">
 
-              <div v-for="(item,index) in dataList" :key="index" class="box-container">
+              <div v-for="(item,index) in dataList" :key="index" class="box-container"  @click="viewAcceptDetail(item)">
+                <div class="list-title-content">
+                  <span>收货单号：</span>
+                  <span class="font-weight" style="color:#134daa;" >{{ item.takeNumber}}</span>
+                  <div class="li-title-status">
+                    <img :src="checkAuditStatus(item.takeStatus)"/>
+                    <span :type="item.takeStatus | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.takeStatus == 4}">{{
+                        item.takeStatus | statusFilter(tabList)
+                      }}
+                    </span>
+                  </div>
+                </div>
                 <ul class="list-ul" >
-                  <li>
-                    <span class="font-weight">收货单号：</span>
-                    <span class="font-weight" @click="viewAcceptDetail(item)" style="color: #0689ff">{{ item.takeNumber }}</span>
-                  </li>
                   <li>
                     <span>发货单号：</span>
                     <span>{{ item.shipmentBatchNumber }}</span>
@@ -41,7 +55,7 @@
                   </li>
                   <li>
                     <span>物流单号：</span>
-                    <span @click="viewLogistic(item)" style="color: #0689ff">{{ item.oddNumbers?item.oddNumbers:"其他" }}</span>
+                    <span @click.stop="viewLogistic(item)" style="color: #0689ff">{{ item.oddNumbers?item.oddNumbers:"其他" }}</span>
                   </li>
                   <li>
                     <span>需求组织：</span>
@@ -63,12 +77,12 @@
                     <span>收货人：</span>
                     <span>{{ item.consigneeOperator}}</span>
                   </li>
-                  <li class="li-status">
+                  <!-- <li class="li-status">
                     <van-tag :type="item.takeStatus | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.takeStatus == 4}">{{
                         item.takeStatus | statusFilter(tabList)
                       }}
                     </van-tag>
-                  </li>
+                  </li> -->
                 </ul>
                 <div class="list-ul-button" v-if="item.takeStatus === '1'">
                   <van-button class="button-info" round type="info" @click="handleDoAccept(item)">初验收货</van-button>
@@ -76,9 +90,6 @@
               </div>
             </van-list>
           </van-pull-refresh>
-        </van-tab>
-      </van-tabs>
-    </div>
   </div>
 </template>
 <script>
@@ -97,7 +108,7 @@ export default {
         keywords: ''
       },
       tabList: [
-        {title: '全部', status: '0'},
+        {title: '全部', status: ''},
         {title: '未收货', status: '1'},
         {title: '已收货', status: '2'},
         {title: '部分退货', status: '3'},
@@ -249,24 +260,62 @@ export default {
       this.allListQuery.pageNum ++
       this.getList()
     },
+    checkAuditStatus(status){
+      if(status == '1'){
+        return '/static/icon-reject.png'
+      }else if(status == '2'){
+        return '/static/icon-success.png'
+      }else if(status == '3'){
+        return '/static/icon-xqjh.png'
+      }else if(status == '4'){
+        return '/static/icon-return.png'
+      }
+        
+    },
+    tabsChange(){
+      this.allRefresh();
+    },
   }
 }
 </script>
 <style lang="less" scoped>
-::v-deep .van-tabs__content {
-  height: calc(100vh - 5.7rem);
-  overflow-y: scroll;
-}
+.in-out-management-list {
 
-.van-search {
-  .van-search__content {
-    border-radius: 50px;
-    background: #fff;
+  ::v-deep .van-tabs__wrap{
+    margin-bottom: 10px !important;
+    height: 44px !important;
   }
 
-  .van-cell {
-    border-radius: 50px;
-    background: #fff;
+  ::v-deep .van-sticky--fixed{
+    top: 69px !important;
+  }
+  
+  .list-search-container {
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    background: #eef6ff;
+
+    .van-search {
+      flex: 1;
+    }
+
+    ::v-deep .van-dropdown-menu__bar {
+      border-radius: 50px;
+      width: 90px;
+      height: 32px;
+      margin-top: 10px;
+      margin-right: 15px;
+      font-size: 12px;
+      box-shadow: inherit;
+
+      .van-dropdown-menu__title {
+        font-size: 12px;
+      }
+
+    }
   }
 }
 </style>

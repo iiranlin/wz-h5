@@ -1,62 +1,61 @@
 <template>
-  <div ref="container">
-    <div class="list-search-container">
-      <van-search
-        v-model="formData.keywords"
-        placeholder="输入关键字搜索"
-        shape="round"
-        background="#eef6ff"
-        @search="handeSearchClick()">
-      </van-search>
+  <div ref="container" class="in-out-management-list">
+     <van-sticky>
+      <div class="list-search-container">
+       <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" left-icon="none" @search="handeSearchClick()">
+          <template slot='right-icon'>
+            <van-icon name="search" @click="handeSearchClick()"/>
+          </template>
+        </van-search>
     </div>
-    <div class="tabs">
-      <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-        <van-list
-          v-model="allLoading"
-          :finished="allFinished"
-          finished-text="没有更多了..."
-          @load="onLoad">
+    </van-sticky>
+    <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
+      <van-list
+        v-model="allLoading"
+        :finished="allFinished"
+        finished-text="没有更多了..."
+        @load="onLoad">
 
-          <div v-for="(item,index) in allOrderList" :key="index" class="box-container" >
-            <ul class="list-ul">
-              <li>
-                <span class="font-weight">退货单号：</span>
-                <span class="font-weight" @click="handleAllItemClick(item)" style="color: #0689ff">{{item.backNumber}}</span>
-              </li>
-              <li>
-                <span>发货单号：</span>
-                <span>{{item.shipmentBatchNumber}}</span>
-              </li>
-              <li>
-                <span>供应需求名称：</span>
-                <span>{{item.planName}}</span>
-              </li>
-              <li>
-                <span>需求组织：</span>
-                <span>{{item.deptName}}</span>
-              </li>
-              <li>
-                <span>供应商：</span>
-                <span>{{item.sellerName}}</span>
-              </li>
-              <li>
-                <span>发货时间：</span>
-                <span>{{item.shippingDate | formatDate}}</span>
-              </li>
-              <li>
-                <span>退货时间：</span>
-                <span>{{item.backDate | formatDate}}</span>
-              </li>
-              <li>
-                <span>操作人：</span>
-                <span>{{item.createUserName}}</span>
-              </li>
-            </ul>
-          </div>
-        </van-list>
-      </van-pull-refresh>
-    </div>
+        <div v-for="(item,index) in allOrderList" :key="index" class="box-container" @click="handleAllItemClick(item)">
+          <div class="list-title-content">
+          <span>退货单号：</span>
+          <span class="font-weight" style="color:#134daa;"  >{{item.backNumber}}</span>
+        </div>
+          <ul class="list-ul">
+            <li>
+              <span>发货单号：</span>
+              <span>{{item.shipmentBatchNumber}}</span>
+            </li>
+            <li class="li-item-overlength">
+              <span>供应需求名称：</span>
+              <span>{{item.planName}}</span>
+            </li>
+            <li>
+              <span>需求组织：</span>
+              <span>{{item.deptName}}</span>
+            </li>
+            <li>
+              <span>供应商：</span>
+              <span>{{item.sellerName}}</span>
+            </li>
+            <li>
+              <span>发货时间：</span>
+              <span>{{item.shippingDate | formatDate}}</span>
+            </li>
+            <li>
+              <span>退货时间：</span>
+              <span>{{item.backDate | formatDate}}</span>
+            </li>
+            <li>
+              <span>操作人：</span>
+              <span>{{item.createUserName}}</span>
+            </li>
+          </ul>
+        </div>
+      </van-list>
+    </van-pull-refresh>
   </div>
+
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
@@ -313,23 +312,39 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.tabs {
-  height: calc(100vh - 4.4rem);
-  overflow-y: scroll;
-}
+.in-out-management-list {
 
-.van-search {
-  .van-search__content {
-    border-radius: 50px;
-    background: #fff;
+  ::v-deep .van-sticky--fixed{
+    top: 69px !important;
   }
+  
+  .list-search-container {
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    background: #eef6ff;
+    margin-bottom: 10px;
 
-  .van-cell {
-    border-radius: 50px;
-    background: #fff;
+    .van-search {
+      flex: 1;
+    }
+
+    ::v-deep .van-dropdown-menu__bar {
+      border-radius: 50px;
+      width: 90px;
+      height: 32px;
+      margin-top: 10px;
+      margin-right: 15px;
+      font-size: 12px;
+      box-shadow: inherit;
+
+      .van-dropdown-menu__title {
+        font-size: 12px;
+      }
+
+    }
   }
-}
-.list-ul li :nth-child(1){
-  min-width: 2.6rem;
 }
 </style>
