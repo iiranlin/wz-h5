@@ -36,15 +36,10 @@
                 <van-field v-model="params.contactsPhone" required label="联系电话" :disabled="fileDisabled"
                     placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' }, { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }]" />
-                <van-field name="uploader" v-model="fileByList" disabled label="发货单附件：" class="outbound-field-uploader" required :rules="[{ required: true, message: '请上传发货单附件' }]">
-                    <template #button>
-                        <van-uploader :preview-imag='false' :after-read="beforeReadUpload" :before-read="beforeRead"
-                            accept="">
-                            <van-button type="info" round size="mini" class="outbound-uploader"
-                                native-type="button">请上传发货单</van-button>
-                        </van-uploader>
-                    </template>
-                </van-field>
+
+
+  
+                <file-upload-view title="发货单附件" :fileList="fileList" businessType="01"/>
 
 
 
@@ -77,6 +72,7 @@ import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/a
 import {minioUpload} from '@/api/blcd-base/minio'
 import { detailBySendEdit } from '@/api/demand/sendGoods'
 import keepPages from '@/view/mixins/keepPages'
+import FileUploadView from "@/components/FileUploadViewType.vue";
 import { Toast } from 'vant';
 import { Notify } from 'vant';
 Vue.use(Notify)
@@ -87,6 +83,7 @@ Vue.use(Field);
 export default {
     name: 'SendGoods',
     mixins: [keepPages],
+    components:{FileUploadView},
     data() {
         return {
             formKey: "",
@@ -176,7 +173,7 @@ export default {
                     this.goodsMsg.contractName = contractName
                     let file = JSON.parse(res.data.fileByList)
                     this.params = res.data
-                    // this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
+                    this.fileList.push({fileName:file.fhd[0].fileName,filePath:file.fhd[0].filePath})
                     this.fileByList = file.fhd[0].fileName
                     this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
                     this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
@@ -223,8 +220,8 @@ export default {
                     let fhd = [];
                     if (this.fileList.length > 0) {
                         this.fileList.forEach(item => {
-                            fileList.push({ fileName: item.name, filePath: item.url })
-                            fhd.push({ fileName: item.name, filePath: item.url });
+                            fileList.push({ fileName: item.fileName, filePath: item.filePath })
+                            fhd.push({ fileName: item.fileName, filePath: item.filePath });
                         })
                     }
                     let fileByList = JSON.stringify({ fhd });
@@ -259,8 +256,8 @@ export default {
                     let fhd = [];
                     if (this.fileList.length > 0) {
                         this.fileList.forEach(item => {
-                            fileList.push({ fileName: item.name, filePath: item.url })
-                            fhd.push({ fileName: item.name, filePath: item.url });
+                            fileList.push({ fileName: item.fileName, filePath: item.filePath })
+                            fhd.push({ fileName: item.fileName, filePath: item.filePath });
                         })
                     }
                     let fileByList = JSON.stringify({ fhd });

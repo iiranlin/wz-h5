@@ -69,10 +69,14 @@
                                     <span>发货地址:</span>
                                     <span>{{ params.shippingAddress }}</span>
                                 </li>
-                                <li style="display: flex; justify-content: space-between; align-items: center;">
+                                <li>
+
+                                </li>
+                                 <file-upload-view title="发货单附件" :fileList="fileList" businessType="01"/>
+                                <!-- <li style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="min-width: 210px;">发货单附件:</span>
                                     <div style="display: flex; align-items: center; gap: 10px;">
-                                        <!-- 显示文件名（如果存在） -->
+                                       
                                          <div v-if="fileList ==''">
                                              <span v-if="params.fileByList" style="color: #1989fa;">
                                                 {{ params.fileByList.fhd[0].fileName }}
@@ -84,7 +88,7 @@
                                             </span>
                                          </div>
 
-                                        <!-- 上传按钮 -->
+                                        
                                         <van-uploader ref="uploaderRef" :after-read="beforeReadUpload"
                                             :preview-image="false" style="display: none;" />
                                         <van-button type="info" size="mini" round style="min-width: 70px;"
@@ -92,7 +96,7 @@
                                             上传文件
                                         </van-button>
                                     </div>
-                                </li>
+                                </li> -->
                                 <li>
                                     <span>发货时间:</span>
                                     <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate)
@@ -258,6 +262,7 @@ import { detailBySend } from '@/api/demand/sendGoods'
 import { minioUpload } from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
 import { modifySendGoods } from '@/api/demand/sendGoods'
+import FileUploadView from "@/components/FileUploadViewType.vue";
 import Vue from 'vue';
 import { Uploader } from 'vant';
 import { Toast } from 'vant';
@@ -265,7 +270,7 @@ Vue.use(Uploader,Toast);
 export default {
     name: 'MyToDoList',
     mixins: [keepPages],
-    components: { FilePreview },
+    components: { FilePreview,FileUploadView },
     data() {
         return {
             menuActiveIndex: 0,
@@ -289,7 +294,7 @@ export default {
             allFinished: false,
             allRefreshLoading: false,
             allRefresh: false,
-            fileList: '',
+            fileList: [],
             showFile: false,
             materialCirculationDetailsTableDTOS:[]
         };
@@ -317,6 +322,9 @@ export default {
                     // this.params.createDate = this.formattedCreateDate(res.data.createDate)
                     this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
                     this.params.createDate = this.formatTimestamp(res.data.createDate)
+                    //  let file = JSON.parse(res.data.fileByList)
+                    // console.log(res.data.fileByList,'111')
+                    this.fileList.push({fileName:res.data.fileByList.fhd[0].fileName,filePath:res.data.fileByList.fhd[0].filePath})
                     this.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item) => ({
                         ...item,
                         createDate:this.formatTimestamp(item.createDate),
@@ -386,8 +394,8 @@ export default {
           chooseGoods(id, text) {
             let fileList = []
                     let fhd = [];
-                    if (this.params.fileList.length > 0) {
-                        this.params.fileList.forEach(item => {
+                    if (this.fileList.length > 0) {
+                        this.fileList.forEach(item => {
                             fileList.push({ fileName: item.fileName, filePath: item.filePath })
                             fhd.push({ fileName: item.fileName, filePath: item.filePath });
                         })
