@@ -2,11 +2,13 @@
   <div class="in-out-management-list">
     <van-sticky>
       <div class="list-search-container">
-        <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
-          @search="handeSearch()">
+        <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" left-icon="none" @search="handeSearch()">
+          <template slot='right-icon'>
+            <van-icon name="search" @click="handeSearch()"/>
+          </template>
         </van-search>
       </div>
-      <van-tabs sticky v-model="formData.status" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
+      <van-tabs sticky v-model="formData.status" color="#0571ff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" @change="tabsChange">
         <van-tab v-for="item in option1" :title="item.text" :name="item.value" :key="item.value">
         </van-tab>
@@ -15,11 +17,15 @@
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
         <div v-for="(item, index) in dataList" :key="index" class="box-container">
+          <div class="list-title-content">
+            <span>需求编号：</span>
+            <span class="font-weight" style="color:#134daa;">{{item.planNumber}}</span>
+            <div class="li-title-status">
+              <img :src="checkAuditStatus(item.status)"/>
+              <span>{{item.status == '5'?'已完成':'未完成'}}</span>
+            </div>
+          </div>
           <ul class="list-ul" @click="detailsClick(item)">
-            <li>
-              <span class="font-weight">需求编号：</span>
-              <span class="font-weight">{{item.planNumber}}</span>
-            </li>
             <li>
               <span>当前库存：</span>
               <span>{{item.relatedCount == 0?'无':'有'}}</span>
@@ -47,9 +53,6 @@
             <li>
               <span>提报时间：</span>
               <span>{{parseTime(item.createDate,'{y}-{m}-{d} {h}:{i}')}}</span>
-            </li>
-            <li class="li-status">
-                <van-tag type="primary" round size="medium">{{item.status == '5'?'已完成':'未完成'}}</van-tag>
             </li>
           </ul>
           <div class="list-ul-button" v-if="item.relatedCount == '1'">
@@ -141,6 +144,12 @@ export default {
     tabsChange(){
       this.allRefresh();
     },
+    checkAuditStatus(status){
+      if(status == '5'){
+        return '/static/icon-success.png'
+      }else
+        return '/static/icon-reject.png'
+    },
   },
 };
 </script>
@@ -181,19 +190,6 @@ export default {
         font-size: 12px;
       }
 
-    }
-  }
-
-  .van-search {
-
-    .van-search__content {
-      border-radius: 50px;
-      background: #fff;
-    }
-
-    .van-cell {
-      border-radius: 50px;
-      background: #fff;
     }
   }
 }

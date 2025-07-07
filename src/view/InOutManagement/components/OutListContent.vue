@@ -2,19 +2,22 @@
   <div class="in-out-management-list">
     <van-sticky>
       <div class="list-search-container">
-        <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
+        <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" left-icon="none"
           @search="handeSearch()">
+          <template slot='right-icon'>
+            <van-icon name="search" @click="handeSearch()"/>
+          </template>
         </van-search>
       </div>
     </van-sticky>
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
         <div v-for="(item, index) in dataList" :key="index" class="box-container" @click="outClick(item)">
+           <div class="list-title-content">
+            <span>出库单号：</span>
+            <span class="font-weight" style="color:#134daa;">{{item.outNumber}}</span>
+          </div>
           <ul class="list-ul">
-            <li>
-              <span class="font-weight">出库单号：</span>
-              <span class="font-weight">{{item.outNumber}}</span>
-            </li>
             <li>
               <span>需求编号：</span>
               <span>{{item.planNumber}}</span>
@@ -137,6 +140,7 @@ export default {
     z-index: 1;
     display: flex;
     background: #eef6ff;
+    margin-bottom: 10px;
 
     .van-search {
       flex: 1;
@@ -155,19 +159,6 @@ export default {
         font-size: 12px;
       }
 
-    }
-  }
-
-  .van-search {
-
-    .van-search__content {
-      border-radius: 50px;
-      background: #fff;
-    }
-
-    .van-cell {
-      border-radius: 50px;
-      background: #fff;
     }
   }
 }
