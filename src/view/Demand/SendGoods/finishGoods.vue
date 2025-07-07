@@ -147,7 +147,6 @@ export default {
         fileList01:[],
         fileList02:[]
       }))
-      console.log(this.goodsData,'新增')
     }
     if (this.text == 'edit') {
       this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
@@ -166,11 +165,9 @@ export default {
   methods: {
     // 用于编辑回显
     fileLists(data){
-      console.log(data,'1223')
       let imgUrl = JSON.parse(data)
 
       let img = [{fileName:imgUrl.hgz[0].fileName,filePath:imgUrl.hgz[0].filePath}]
-      console.log(img,'file1')
       return img
     },
     fileListss(data){
@@ -345,7 +342,6 @@ export default {
         ...this.$store.state.public.sendGoods,
         materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
       }
-       console.log(params,'日胶')
       //保存
       if (this.text == 'add') {
         demandSaveSendGoods(params).then((res) => {
