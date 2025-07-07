@@ -36,21 +36,7 @@
                 <van-field v-model="params.contactsPhone" required label="联系电话" :disabled="fileDisabled"
                     placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' }, { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }]" />
-
-
-  
                 <file-upload-view title="发货单附件" :fileList="fileList" businessType="01"/>
-
-
-
-
-
-
-                <!-- <van-field name="uploader" label="发货单附件" required :rules="[{ required: true, message: '请上传发货单附件' }]">
-                    <template #input>
-                        <van-uploader v-model="fileList" :after-read="beforeReadUpload" multiple :max-count="1"/>
-                    </template>
-                    </van-field> -->
             </van-form>
         </div>
         <div class="default-button-container">
@@ -223,6 +209,9 @@ export default {
                             fileList.push({ fileName: item.fileName, filePath: item.filePath })
                             fhd.push({ fileName: item.fileName, filePath: item.filePath });
                         })
+                    }else{
+                        Toast.fail('请上传的附件');
+                        return
                     }
                     let fileByList = JSON.stringify({ fhd });
 
@@ -259,6 +248,9 @@ export default {
                             fileList.push({ fileName: item.fileName, filePath: item.filePath })
                             fhd.push({ fileName: item.fileName, filePath: item.filePath });
                         })
+                    }else{
+                        Toast.fail('请上传的附件');
+                        return
                     }
                     let fileByList = JSON.stringify({ fhd });
 

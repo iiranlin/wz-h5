@@ -68,36 +68,6 @@
               input-align="right" />
                <file-upload-view  title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01"/>
                 <file-upload-view  title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01"/>
-
-
-            <!-- <van-field name="uploader" v-model="goodsData[index].fileList01" label="合格证附件" disabled
-              :rules="[{ required: true, message: '请上传合格证附件' }]" required>
-             <template #button>
-                        <van-uploader :preview-imag='false' :after-read="(file) => passReadUpload(file, index)" :disabled="fileDisabled" :before-read="beforeRead"
-                            accept="" :max-count="1">
-                            <van-button type="info" round size="small" class="outbound-uploader"
-                                native-type="button">请上传合格证</van-button>
-                        </van-uploader>
-                    </template>
-            
-            </van-field> -->
-           
-            <!-- <van-field name="uploader" v-model="goodsData[index].fileList02" label="厂检报告附件" disabled
-              :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
-
-              <template #button>
-                        <van-uploader :preview-imag='false' :after-read="(file) => checkReadUpload(file, index)" :disabled="fileDisabled" :before-read="beforeRead"
-                            accept="" :max-count="1">
-                            <van-button type="info" round size="small" class="outbound-uploader"
-                                native-type="button">请上传厂检报告</van-button>
-                        </van-uploader>
-                    </template>
-              <template #input>
-                <van-uploader v-model="goodsData[index].fileList02" :disabled="fileDisabled"
-                  :after-read="(file) => checkReadUpload(file, index)" :before-read="beforeRead"
-                  :max-count="1" />
-              </template>
-            </van-field> -->
             <van-field v-model="goodsData[index].remark" label="备注" :disabled="fileDisabled" placeholder="请输入备注"
               input-align="right" />
           </van-form>
@@ -112,10 +82,6 @@
     <!-- 生产日期 -->
     <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date="minDate" :max-date="maxDate" />
     <van-calendar v-model="showCalendar" @confirm="createConfirm" />
-    <!-- <van-popup v-model="showCalendar" position="bottom">
-      <van-datetime-picker type="date" title="选择年月日" @confirm="createConfirm" @cancel="showCalendar = false"
-        :min-date="minDate" :max-date="maxDate" />
-    </van-popup> -->
   </div>
 
 </template>
@@ -341,17 +307,15 @@ export default {
         return (
           item.supplyDate &&
           item.createDate &&
-          // item.factoryFileName &&
-          // item.certificateFileName &&
           item.sendTotal &&
           item.packagingFm &&
           item.addr &&
           item.field2 &&
-          // item.fileList01 &&
-          item.receiver
-          // item.fileList02 &&
-          // item.fileList01.length > 0 &&
-          // item.fileList02.length > 0
+          item.fileList01 &&
+          item.receiver &&
+          item.fileList02 &&
+          item.fileList01.length > 0 &&
+          item.fileList02.length > 0
         );
       });
 
