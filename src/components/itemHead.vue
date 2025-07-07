@@ -21,7 +21,7 @@ export default {
     containerStyle() {
       // 如果是 finishGoods 路由，返回特定样式，否则默认
       return this.$route.name === 'finishGoods' 
-        ? { height: 'calc(100vh - 120px)' } 
+        ? { height: 'calc(100vh - 130px)' } 
         : {}; // 默认无额外样式
     },
   },

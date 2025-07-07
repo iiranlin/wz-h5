@@ -66,7 +66,11 @@
               placeholder="投资方" disabled input-align="right" />
             <van-field v-model="goodsData[index].field1" name="投资比例" required label="投资比例" disabled placeholder="投资比例"
               input-align="right" />
-            <van-field name="uploader" v-model="goodsData[index].fileList01" label="合格证附件" disabled
+               <file-upload-view  title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01"/>
+                <file-upload-view  title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01"/>
+
+
+            <!-- <van-field name="uploader" v-model="goodsData[index].fileList01" label="合格证附件" disabled
               :rules="[{ required: true, message: '请上传合格证附件' }]" required>
              <template #button>
                         <van-uploader :preview-imag='false' :after-read="(file) => passReadUpload(file, index)" :disabled="fileDisabled" :before-read="beforeRead"
@@ -75,12 +79,10 @@
                                 native-type="button">请上传合格证</van-button>
                         </van-uploader>
                     </template>
-              <!-- <template #input>
-                <van-uploader v-model="goodsData[index].fileList01" :max-count="1" :disabled="fileDisabled"
-                  :after-read="(file) => passReadUpload(file, index)" :before-read="beforeRead" />
-              </template> -->
-            </van-field>
-            <van-field name="uploader" v-model="goodsData[index].fileList02" label="厂检报告附件" disabled
+            
+            </van-field> -->
+           
+            <!-- <van-field name="uploader" v-model="goodsData[index].fileList02" label="厂检报告附件" disabled
               :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
 
               <template #button>
@@ -90,12 +92,12 @@
                                 native-type="button">请上传厂检报告</van-button>
                         </van-uploader>
                     </template>
-              <!-- <template #input>
+              <template #input>
                 <van-uploader v-model="goodsData[index].fileList02" :disabled="fileDisabled"
                   :after-read="(file) => checkReadUpload(file, index)" :before-read="beforeRead"
                   :max-count="1" />
-              </template> -->
-            </van-field>
+              </template>
+            </van-field> -->
             <van-field v-model="goodsData[index].remark" label="备注" :disabled="fileDisabled" placeholder="请输入备注"
               input-align="right" />
           </van-form>
@@ -129,13 +131,16 @@ import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/a
 import { modifySendGoods } from '@/api/demand/sendGoods'
 import { minioUpload } from '@/api/blcd-base/minio'
 import { Notify } from 'vant';
-import Return from '../Return.vue';
+import FileUploadView from "@/components/FileUploadViewType.vue";
 Vue.use(Notify)
 Vue.use(DatetimePicker);
 Vue.use(Toast);
 Vue.use(Divider);
 export default {
   name: "finishGoods",
+  components:{
+    FileUploadView
+  },
   data() {
     const today = new Date();
     today.setHours(23, 59, 59, 999); // 设置为今天的最后一
@@ -159,8 +164,10 @@ export default {
       text: "",
       //如果是修改文件禁用其他禁用
       fileDisabled: false,
-      fileList01:'',
-      fileList02:''
+      fileList01:[],
+      fileList02:[],
+      // fileList1:[],
+      // fileList2:[]
     };
   },
   created() {
@@ -171,17 +178,20 @@ export default {
       this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
         ...item,
         planDetailId: item.id,
+        fileList01:[],
+        fileList02:[]
       }))
+      console.log(this.goodsData,'新增')
     }
     if (this.text == 'edit') {
       this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
         ...item,
         planDetailId: item.id,
         // 回显图片
-        certificateFileName: this.showHgz(item.fileByList),
-        factoryFileName: this.showCjbg(item.fileByList),
-        fileList01:this.fileList01(item.fileByList),
-        fileList02:this.fileList02(item.fileByList),
+        // certificateFileName: this.showHgz(item.fileByList),
+        // factoryFileName: this.showCjbg(item.fileByList),
+        fileList01:this.fileLists(item.fileByList),
+        fileList02:this.fileListss(item.fileByList),
       }))
     }
     
@@ -189,29 +199,18 @@ export default {
   },
   methods: {
     // 用于编辑回显
-    showHgz(data) {
-      console.log(data,'1345')
-      let imgUrl = JSON.parse(data)
-      let img = imgUrl.hgz[0].fileName
-      return img
-    },
-    // 用于编辑回显
-    showCjbg(data) {
+    fileLists(data){
+      console.log(data,'1223')
       let imgUrl = JSON.parse(data)
 
-      let img = imgUrl.cjbg[0].fileName
+      let img = [{fileName:imgUrl.hgz[0].fileName,filePath:imgUrl.hgz[0].filePath}]
+      console.log(img,'file1')
       return img
     },
-    fileList01(data){
+    fileListss(data){
       let imgUrl = JSON.parse(data)
 
-      let img = [{name:imgUrl.hgz[0].fileName,url:imgUrl.hgz[0].filePath}]
-      return img
-    },
-    fileList01(data){
-      let imgUrl = JSON.parse(data)
-
-      let img = [{name:imgUrl.cjbg[0].fileName,url:imgUrl.cjbg[0].filePath}]
+      let img = [{fileName:imgUrl.cjbg[0].fileName,filePath:imgUrl.cjbg[0].filePath}]
       return img
     },
     onSubmit(values) {
@@ -336,23 +335,23 @@ export default {
         Toast('没有可提交的内容');
         return;
       }
-      console.log(this.goodsData,'日胶')
+     
       // 先校验所有数据
       const isValid = this.goodsData.every((item) => {
         return (
           item.supplyDate &&
           item.createDate &&
-          item.factoryFileName &&
-          item.certificateFileName &&
+          // item.factoryFileName &&
+          // item.certificateFileName &&
           item.sendTotal &&
           item.packagingFm &&
           item.addr &&
           item.field2 &&
-          item.fileList01 &&
-          item.receiver &&
-          item.fileList02 &&
-          item.fileList01.length > 0 &&
-          item.fileList02.length > 0
+          // item.fileList01 &&
+          item.receiver
+          // item.fileList02 &&
+          // item.fileList01.length > 0 &&
+          // item.fileList02.length > 0
         );
       });
 
@@ -362,15 +361,15 @@ export default {
       }
       let hgz = [] //合格证
       let cjbg = []
-
+      let fileList = []
       this.goodsData.forEach((item) => {
         hgz.push({
-          fileName: item.fileList01[0].name,
-          filePath: item.fileList01[0].url,
+          fileName: item.fileList01[0].fileName,
+          filePath: item.fileList01[0].filePath,
         });
         cjbg.push({
-          fileName: item.fileList02[0].name,
-          filePath: item.fileList02[0].url,
+          fileName: item.fileList02[0].fileName,
+          filePath: item.fileList02[0].filePath,
         });
       });
       let materialCirculationDetailsTableParamList = this.goodsData.map((item) => ({
@@ -382,6 +381,7 @@ export default {
         ...this.$store.state.public.sendGoods,
         materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
       }
+       console.log(params,'日胶')
       //保存
       if (this.text == 'add') {
         demandSaveSendGoods(params).then((res) => {
