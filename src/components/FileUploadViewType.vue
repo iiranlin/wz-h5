@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="file-upload-title">
+        <div class="file-upload-title" v-if="title">
             <span class="title">{{title}}</span>
         </div>
         <div>
