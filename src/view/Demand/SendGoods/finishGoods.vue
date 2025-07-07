@@ -66,8 +66,8 @@
               placeholder="投资方" disabled input-align="right" />
             <van-field v-model="goodsData[index].field1" name="投资比例" required label="投资比例" disabled placeholder="投资比例"
               input-align="right" />
-               <file-upload-view  title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01"/>
-                <file-upload-view  title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01"/>
+            <file-upload-view title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01" />
+            <file-upload-view title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01" />
             <van-field v-model="goodsData[index].remark" label="备注" :disabled="fileDisabled" placeholder="请输入备注"
               input-align="right" />
           </van-form>
@@ -104,7 +104,7 @@ Vue.use(Toast);
 Vue.use(Divider);
 export default {
   name: "finishGoods",
-  components:{
+  components: {
     FileUploadView
   },
   data() {
@@ -130,8 +130,8 @@ export default {
       text: "",
       //如果是修改文件禁用其他禁用
       fileDisabled: false,
-      fileList01:[],
-      fileList02:[],
+      fileList01: [],
+      fileList02: [],
       // fileList1:[],
       // fileList2:[]
     };
@@ -144,8 +144,8 @@ export default {
       this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
         ...item,
         planDetailId: item.id,
-        fileList01:[],
-        fileList02:[]
+        fileList01: [],
+        fileList02: []
       }))
     }
     if (this.text == 'edit') {
@@ -155,25 +155,25 @@ export default {
         // 回显图片
         // certificateFileName: this.showHgz(item.fileByList),
         // factoryFileName: this.showCjbg(item.fileByList),
-        fileList01:this.fileLists(item.fileByList),
-        fileList02:this.fileListss(item.fileByList),
+        fileList01: this.fileLists(item.fileByList),
+        fileList02: this.fileListss(item.fileByList),
       }))
     }
-    
+
 
   },
   methods: {
     // 用于编辑回显
-    fileLists(data){
+    fileLists(data) {
       let imgUrl = JSON.parse(data)
 
-      let img = [{fileName:imgUrl.hgz[0].fileName,filePath:imgUrl.hgz[0].filePath}]
+      let img = [{ fileName: imgUrl.hgz[0].fileName, filePath: imgUrl.hgz[0].filePath }]
       return img
     },
-    fileListss(data){
+    fileListss(data) {
       let imgUrl = JSON.parse(data)
 
-      let img = [{fileName:imgUrl.cjbg[0].fileName,filePath:imgUrl.cjbg[0].filePath}]
+      let img = [{ fileName: imgUrl.cjbg[0].fileName, filePath: imgUrl.cjbg[0].filePath }]
       return img
     },
     onSubmit(values) {
@@ -248,7 +248,7 @@ export default {
             name: res.data.fileName,
             url: res.data.filePath // 注意Vant通常使用url而不是path
           }];
-          this.$set(this.goodsData[index], 'certificateFileName', res.data.fileName); // 显示文件名
+          // this.$set(this.goodsData[index], 'certificateFileName', res.data.fileName); // 显示文件名
           // this.params.fileName = res.data.fileName
           // this.params.filePath = res.data.filePath
         }
@@ -275,8 +275,8 @@ export default {
             name: res.data.fileName,
             url: res.data.filePath // 注意Vant通常使用url而不是path
           }];
-          this.$set(this.goodsData[index], 'factoryFileName', res.data.fileName); // 显示文件名
-          
+          // this.$set(this.goodsData[index], 'factoryFileName', res.data.fileName); // 显示文件名
+
           // this.params.fileName = res.data.fileName
           // this.params.filePath = res.data.filePath
         }
@@ -298,7 +298,7 @@ export default {
         Toast('没有可提交的内容');
         return;
       }
-     
+
       // 先校验所有数据
       const isValid = this.goodsData.every((item) => {
         return (
@@ -438,6 +438,7 @@ export default {
   height: 6px;
   background: blue;
 }
+
 /deep/.van-button--primary {
   background-color: #1989fa;
   border: 1px solid #1989fa;

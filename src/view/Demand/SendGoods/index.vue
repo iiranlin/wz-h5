@@ -10,16 +10,16 @@
                 <span>需求项目：</span>
                 <span>{{ goodsMsg.sectionName }}</span>
             </li>
-            <li>
-                <span>合同名称：</span>
+            <li class="li-item-both">
+                <span style="min-width: 1rem;">合同名称：</span>
                 <span>{{ goodsMsg.contractName }}</span>
             </li>
         </ul>
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
             <van-form :key="formKey" ref="form">
-                <van-field v-model="params.oddNumbers" :disabled="fileDisabled" name="物流单号" label="物流单号"
+                <van-field v-model="params.oddNumbers" :disabled="fileDisabled" label="物流单号"
                     placeholder="物流单号" input-align="right" />
-                <van-field v-model="params.shippingAddress" :disabled="fileDisabled" required name="发货地址" label="发货地址"
+                <van-field v-model="params.shippingAddress" :disabled="fileDisabled" required label="发货地址"
                     placeholder="发货地址" input-align="right" :rules="[{ required: true, message: '请填写发货地址' }]" />
                 <van-field readonly clickable name="calendar" :disabled="fileDisabled" required
                     v-model="params.shippingDate" label="发货日期" input-align="right" placeholder="点击选择日期"
