@@ -43,44 +43,6 @@
                 </ul>
             </div>
         </div>
-        <!-- <ul class="list-ul" style="margin: 10px;position: relative;">
-            <li>
-                <span>发货单号：</span>
-                <span>{{ params.shipmentBatchNumber }}</span>
-            </li>
-             <li>
-               
-                <span class="li-status" style="position: absolute;top: 10px;right:10px;">
-                     <van-tag type="primary" round size="medium" v-if="params.status == 1">未发货</van-tag>
-                      <van-tag type="primary" round size="medium" v-if="params.status == 2">货运中</van-tag>
-                      <van-tag type="primary" round size="medium" v-if="params.status == 3" class="li-status-completed">已完成</van-tag>
-                </span>
-            </li>
-            <li>
-                <span>发货时间：</span>
-                <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate)
-                                            }}</span>
-            </li>
-            <li>
-                <span>操作人：</span>
-                <span>{{ params.createUserName }}</span>
-            </li>
-             <li>
-                <span>操作时间：</span>
-                <span v-if="params.createDate">{{ formatTimestamp(params.createDate) }}</span>
-            </li>
-            <li class="li-item-both">
-                <div class="li-item-left">
-                    <span style="width: 150px;">退货环节:</span>
-                    <span style="color:red;" v-if="params.backNode==2">收货不通过</span>
-                    <span v-else>收货通过</span>
-                </div>
-                <div class="li-item-right">
-                    <span>退货时间:</span>
-                    <span>{{ formattedCreateDate(params.backDate) }}</span>
-                </div>
-            </li>
-        </ul> -->
         <div class="tabs">
             <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
                 @change="tabsChange" title-inactive-color="#2e2e2e">
