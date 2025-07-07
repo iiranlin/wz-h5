@@ -1,22 +1,18 @@
 <template>
     <div class="default-container" ref="container">
-         <ul class="list-ul" style="margin: 10px;">
+         <ul class="list-ul" style="margin: 10px;position: relative;">
             <li>
                 <span>发货单号：</span>
                 <span>{{ params.shipmentBatchNumber }}</span>
             </li>
-
-            <li>
-                <span>货运状态：</span>
-                <span v-if="params.status == 1">未发货</span>
-                <span v-if="params.status == 2">货运中</span>
-                <span v-if="params.status == 3">已完成</span>
+             <li>
+                <!-- <span>状态：</span> -->
+                <span class="li-status" style="position: absolute;top: 10px;right:10px;">
+                     <van-tag type="primary" round size="medium" v-if="params.status == 1">未发货</van-tag>
+                      <van-tag type="primary" round size="medium" v-if="params.status == 2">货运中</van-tag>
+                      <van-tag type="primary" round size="medium" v-if="params.status == 3" class="li-status-completed">已完成</van-tag>
+                </span>
             </li>
-
-
-             <!-- <van-tag type="primary" round size="medium" v-if="item.status == 1">未发货</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="item.status == 2">货运中</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="item.status == 3" class="li-status-completed">已完成</van-tag> -->
             <li>
                 <span>发货时间：</span>
                 <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate)
@@ -73,7 +69,7 @@
                                         <span style="min-width: 210px;">发货单附件:</span>
                                         <span style="color:#1989fa;">
                                             <template>
-                                                 <span style="color:#1989fa;" v-if="params.fileByList" @click="imgClick(params.fileByList.fhd[0].fileName,params.fileByList.fhd[0].filePath)">{{ params.fileByList.fhd[0].fileName }}</span>
+                                                 <span style="color:#1989fa;" v-if="params.fileByList && params.fileByList.fhd && params.fileByList.fhd.length > 0" @click="imgClick(params.fileByList.fhd[0].fileName,params.fileByList.fhd[0].filePath)">{{ params.fileByList.fhd[0].fileName }}</span>
                                             </template>
                                         </span>
                                     </li>
@@ -193,22 +189,12 @@
                                     </li>
                                      <li>
                                         <span style="min-width: 200px;">合格证附件:</span>
-                                        <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.hgz[0].fileName,item.fileByList.hgz[0].filePath)">{{ item.fileByList.hgz[0].fileName }}</span>
+                                        <span style="color:#1989fa;" v-if="item.fileByList && item.fileByList.hgz && item.fileByList.hgz.length > 0" @click="imgClick(item.fileByList.hgz[0].fileName,item.fileByList.hgz[0].filePath)">{{ item.fileByList.hgz[0].fileName }}</span>
                                     </li>
                                      <li>
                                         <span style="min-width: 250px;">厂检报告附件:</span>
-                                        <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.cjbg[0].fileName,item.fileByList.cjbg[0].filePath)">{{ item.fileByList.cjbg[0].fileName }}</span>
+                                        <span style="color:#1989fa;"  v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0" @click="imgClick(item.fileByList.cjbg[0].fileName,item.fileByList.cjbg[0].filePath)">{{ item.fileByList.cjbg[0].fileName }}</span>
                                     </li>
-                                    <!-- <li class="li-item-both">
-                                        <div class="li-item-left">
-                                            <span style="min-width: 200px;"> 合格证附件:</span>
-                                            <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.hgz[0].fileName,item.fileByList.hgz[0].filePath)">{{ item.fileByList.hgz[0].fileName }}</span>
-                                        </div>
-                                        <div class="li-item-right">
-                                            <span  style="width: 250px;padding-right: 20px;">厂检报告附件:</span>
-                                            <span style="color:#1989fa;" v-if="item.fileByList" @click="imgClick(item.fileByList.cjbg[0].fileName,item.fileByList.cjbg[0].filePath)">{{ item.fileByList.cjbg[0].fileName }}</span>
-                                        </div>
-                                    </li> -->
                                 </ul>
                             </div>
                         </van-list>

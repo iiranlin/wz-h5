@@ -1,10 +1,8 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-      <van-search v-model="params.planName" show-action shape="round" background="#eef6ff" placeholder="请输入需求名称">
-        <template #action>
-          <div @click="onSearch">搜索</div>
-        </template>
+     <van-search v-model="params.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
+        >
       </van-search>
       <!-- <van-search 
                 v-model="formData.keywords" 
@@ -50,7 +48,7 @@
                         <template>
                           <div v-for="(item1, index1) in item.fileList" :key="index1">
                             <div v-for="(item2, index2) in item1.fileList" :key="index2">
-                              <a href="javascript:;" @click="imgClick(item2)" style="color:#0689ff;">{{ item2.fileName
+                              <a href="javascript:;" @click.stop="imgClick(item2)" style="color:#0689ff;">{{ item2.fileName
                                 }}</a>
                             </div>
                           </div>

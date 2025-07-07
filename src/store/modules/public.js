@@ -1,6 +1,7 @@
 const state = {
   materiaList: null,
-  sendGoods:{}
+  sendGoods:{},
+  historyList: sessionStorage.getItem('historyList') || []
 };
 
 const mutations = {
@@ -9,6 +10,10 @@ const mutations = {
   },
   SET_GOODS_LIST:(state,goodsList)=>{
     state.sendGoods = goodsList
+  },
+  SET_HISTORY_LIST:(state, historyList)=>{
+    sessionStorage.setItem('historyList', historyList)
+    state.historyList = historyList
   }
 };
 
@@ -18,6 +23,9 @@ const actions = {
   },
   setGoodsList({commit},data){
     commit('SET_GOODS_LIST', data)
+  },
+  setHistoryList({commit}, data){
+    commit('SET_HISTORY_LIST', data)
   }
 };
 

@@ -59,7 +59,7 @@
         <van-row class="th-rows" v-for="item in detailObj.materialTrackMessageDTOS" :key="item.id">
           <van-col>{{ item.createUserName }}</van-col>
           <van-col>{{ item.positionInformation }}</van-col>
-          <van-col>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{s}') }}</van-col>
+          <van-col>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</van-col>
         </van-row>
       </div>
     </template>

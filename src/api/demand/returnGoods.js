@@ -17,7 +17,7 @@ export function returnGoodsDetails(id) {
   })
 }
 
-//查看需求信息 /materialCirculationTableRest/detailWlgz/FH202506260007
+//查看需求信息
 export function lookGoodsDetails(id) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detail/${id}`,

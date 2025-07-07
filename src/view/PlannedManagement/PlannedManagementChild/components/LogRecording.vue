@@ -9,7 +9,7 @@
               <span class="font-weight">{{ item.logName }}</span>
             </div>
             <div class="li-item-right">
-              <span class="font-weight">{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{s}') }}</span>
+              <span class="font-weight">{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
             </div>
           </li>
           <li>

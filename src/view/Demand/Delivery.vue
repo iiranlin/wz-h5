@@ -1,15 +1,15 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-        <van-search v-model="params.planName" show-action shape="round" background="#eef6ff"
+        <!-- <van-search v-model="params.planName" show-action shape="round" background="#eef6ff"
                 placeholder="请输入需求名称">
                 <template #action>
                     <div @click="onSearch">搜索</div>
                 </template>
-            </van-search>
-      <!-- <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" background="#eef6ff" readonly
-        @click="handeSearchClick()">
-      </van-search> -->
+            </van-search> -->
+      <van-search v-model="params.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
+        >
+      </van-search>
     </div>
     <div class="tabs">
       <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
@@ -55,7 +55,7 @@
                   </li>
                   <li>
                     <span style="width: 200px;">发货单附件:</span>
-                    <span style="color:#1989fa;" v-if="item.fileByList && item.fileByList.fhd && item.fileByList.fhd.length > 0"  @click="imgClick(item.fileByList.fhd[0].fileName,item.fileByList.fhd[0].filePath)">{{ item.fileByList.fhd[0].fileName }}</span>
+                    <span style="color:#1989fa;" v-if="item.fileByList && item.fileByList.fhd && item.fileByList.fhd.length > 0"  @click.stop="imgClick(item.fileByList.fhd[0].fileName,item.fileByList.fhd[0].filePath)">{{ item.fileByList.fhd[0].fileName }}</span>
                   </li>
                   <li class="li-status">
                     <van-tag type="primary" round size="medium" v-if="item.status == 1">未发货</van-tag>
@@ -129,6 +129,7 @@ import { Toast } from 'vant';
 import { Step, Steps } from 'vant';
 import FilePreview from "@/components/FilePreview.vue";
 import {snedGoodsList,snedGoodsSure,deleteGoods,addFreightLocations,addList} from '@/api/demand/sendGoods'
+
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Toast);
@@ -255,6 +256,8 @@ export default {
           snedGoodsSure(params).then((res)=>{
             if(res.code==0){
               Toast.success(res.data);
+              this.params.pageNum = 1
+              this.allRefreshLoading = true
               this.getList()
             }
           })
@@ -353,7 +356,7 @@ export default {
     },
     //文件修改
     handleUpload(id){
-       this.$router.push({ path: '/sendDetails',query:{id:id} })
+       this.$router.push({ path: '/Modifyfile',query:{id:id} })
     },
     //删除
     handleDelClick(id) {

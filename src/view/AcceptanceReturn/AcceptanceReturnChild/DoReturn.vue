@@ -15,6 +15,14 @@
           <span>{{dataList.deptName}}</span>
         </li>
         <li>
+          <span>退货单号：</span>
+          <span>{{dataList.backNumber}}</span>
+        </li>
+        <li>
+          <span>收货单号：</span>
+          <span>{{dataList.takeNumber}}</span>
+        </li>
+        <li>
           <span>退货环节：</span>
           <span>{{dataList.backNode=='2'?"收货不通过":"报检不通过"}}</span>
         </li>
