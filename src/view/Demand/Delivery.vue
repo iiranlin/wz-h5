@@ -375,9 +375,11 @@ export default {
             if(res.code==0){
               Toast.success(res.message);
               // 手动过滤本地数据（假设 params.id 是删除项的 ID）
-             this.listBySendData = this.listBySendData.filter(
-                item => !params.ids.includes(item.id) // 适用于批量删除
-              );
+            //  this.listBySendData = this.listBySendData.filter(
+            //     item => !params.ids.includes(item.id) // 适用于批量删除
+            //   );
+              Toast.success('删除成功');
+              this.allRefreshLoading = true
               this.params.pageNum=1
               this.getList();
              

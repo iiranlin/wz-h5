@@ -108,22 +108,25 @@
           </div> -->
         </li>
 
-        <li class="li-item-overlength">
+        <!-- <li class="li-item-overlength">
             <span>合格证附件：</span>
             <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'hgz')"
               :key="imgItem.filePath">{{ imgItem.fileName }}</span>
-        </li>
-        <li class="li-item-overlength">
+        </li> -->
+        <file-download-view class="outbound-field-uploader" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+        <!-- <li class="li-item-overlength">
          <span>厂检报告附件：</span>
             <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'cjbg')"
               :key="imgItem.filePath">{{ imgItem.fileName }}</span>
-        </li>
+        </li> -->
+        <file-download-view class="outbound-field-uploader" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
 
-        <li>
+        <!-- <li>
           <span>退货附件：</span>
          <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'thfj_sh')"
               :key="imgItem.filePath">{{ imgItem.fileName }}</span>
-        </li>
+        </li> -->
+        <file-download-view class="outbound-field-uploader" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
 
         <li>
           <span>备注：</span>
@@ -135,17 +138,19 @@
     <div class="detail-title">初验信息</div>
     <div class="box-container">
       <ul class="detail-ul">
-        <li>
+        <!-- <li>
           <span>自检单：</span>
           <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(dataList.fileByList, 'zjd')"
               :key="imgItem.filePath">{{ imgItem.fileName }}</span>
-        </li>
+        </li> -->
+         <file-download-view class="outbound-field-uploader" title="自检单：" :fileList="filterList(dataList.fileByList, 'zjd') || []"/>
+         <file-download-view class="outbound-field-uploader" title="其他资料：" :fileList="filterList(dataList.fileByList, 'qtzl') || []"/>
 
-        <li>
+        <!-- <li>
           <span>其他资料：</span>
          <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(dataList.fileByList, 'qtzl')"
               :key="imgItem.filePath">{{ imgItem.fileName }}</span>
-        </li>
+        </li> -->
       </ul>
     </div>
 
@@ -157,11 +162,12 @@ import {parseTime} from '@/utils'
 import indexMixin from '@/view/mixins'
 import {detailByBack} from '@/api/prodmgr-inv/AcceptanceReturn'
 import FilePreview from "@/components/FilePreview.vue";
+import FileDownloadView from "@/components/FileDownloadView.vue";
 
 export default {
   name: 'DoReturn',
   mixins: [indexMixin],
-  components: { FilePreview },
+  components: { FilePreview ,FileDownloadView},
   data() {
     return {
       id:'',
@@ -295,6 +301,7 @@ export default {
   .detail-ul {
 
     li {
+      width: 100%;
       & :nth-child(2) {
         width: calc(100% - 40px);
         overflow: inherit;
@@ -322,4 +329,12 @@ export default {
   height: 30px;
 }
 
+.outbound-field-uploader{
+  ::v-deep li{
+    display: block;
+  }
+  ::v-deep .file-info{
+    width: auto !important;
+  }
+}
 </style>
