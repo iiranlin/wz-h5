@@ -211,7 +211,7 @@ import indexMixin from '@/view/mixins'
 import { detailByStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { materialStoreTableRestSubmit } from '@/api/prodmgr-inv/materialStoreTableRest'
 import FilePreview from "@/components/FilePreview.vue";
-import { minioUpload } from '@/api/blcd-base/minio'
+// import { minioUpload } from '@/api/blcd-base/minio'
 import activitiAssignee from '@/components/activitiAssignee'
 import FileUploadView from "@/components/FileUploadView.vue"
 import FileDownloadView from "@/components/FileDownloadView.vue"
@@ -302,40 +302,40 @@ export default {
       return true;
     },
     //校验附件上传
-    afterReadTransfer(file, item, name) {
-      let formData = new FormData();
-      formData.append("file", file.file);
-      formData.append("businessType", "01");
-      formData.append("key", file.file.name);
+    // afterReadTransfer(file, item, name) {
+    //   let formData = new FormData();
+    //   formData.append("file", file.file);
+    //   formData.append("businessType", "01");
+    //   formData.append("key", file.file.name);
 
-      file.status = 'uploading';
-      file.message = '上传中...';
-      const fileNameArr = item[name].map(val => val.fileName)
-      if (fileNameArr.includes(file.file.name)) {
-        this.$notify({
-          type: 'warning',
-          message: "请不要上传重复的附件"
-        });
-        return
-      }
+    //   file.status = 'uploading';
+    //   file.message = '上传中...';
+    //   const fileNameArr = item[name].map(val => val.fileName)
+    //   if (fileNameArr.includes(file.file.name)) {
+    //     this.$notify({
+    //       type: 'warning',
+    //       message: "请不要上传重复的附件"
+    //     });
+    //     return
+    //   }
 
-      minioUpload(formData).then(({ data }) => {
-        this.$notify({
-          type: 'success',
-          message: "上传成功"
-        });
-        let file = {
-          fileName: data.fileName,
-          filePath: data.filePath,
-        }
-        item[name].push(file);
-      }).catch((err) => {
-        this.$notify({
-          type: 'warning',
-          message: "上传失败"
-        });
-      })
-    },
+    //   minioUpload(formData).then(({ data }) => {
+    //     this.$notify({
+    //       type: 'success',
+    //       message: "上传成功"
+    //     });
+    //     let file = {
+    //       fileName: data.fileName,
+    //       filePath: data.filePath,
+    //     }
+    //     item[name].push(file);
+    //   }).catch((err) => {
+    //     this.$notify({
+    //       type: 'warning',
+    //       message: "上传失败"
+    //     });
+    //   })
+    // },
     putChange(item, index) {
       //入库不能超过收货，最终算出退货
       if (Number(item.storeTotal) > Number(item.putTotal)) {
@@ -356,13 +356,13 @@ export default {
       }
     },
     //附件删除
-    handleFileDelete(item, name, index) {
-      if (name === 'fileList01') {
-        this.formData.fileList01.splice(index, 1)
-      } else {
-        item[name] = []
-      }
-    },
+    // handleFileDelete(item, name, index) {
+    //   if (name === 'fileList01') {
+    //     this.formData.fileList01.splice(index, 1)
+    //   } else {
+    //     item[name] = []
+    //   }
+    // },
     onCheck(tableData) {
       const errors = [];
       tableData.forEach((row, index) => {
@@ -377,10 +377,6 @@ export default {
           type: 'html',
           message: errors.join("<br/>")
         })
-        // this.$notify({
-        //   type: 'warning',
-        //   message: errors.join("<br/> <br/>")
-        // });
         return false;
       }
       return true;

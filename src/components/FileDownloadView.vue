@@ -9,7 +9,7 @@
                     <div class="file-info">
                         <img :src="checkFileImage(item.fileName)"/>
                         <span @click="previewClick(item)">{{item.fileName}}</span>
-                        <img class="file-delete" src="/static/icon_file_download.png" @click="handleFileDwonLoad(index)"/>
+                        <img class="file-delete" src="/static/icon_file_download.png" @click="handleFileDwonLoad(item)"/>
                     </div>
                 </li>
             </ul>
@@ -20,7 +20,8 @@
 </template>
 <script>
 import {minioDownload} from '@/api/blcd-base/minio'
-import FilePreview from "@/components/FilePreview.vue";
+import FilePreview from "@/components/FilePreview.vue"
+import {download} from '@/utils'
 
 export default {
     components: {FilePreview},
@@ -61,9 +62,11 @@ export default {
                 return '/static/file-txt.png'
             }
         },
-        //附件删除
-        handleFileDwonLoad(index){
-            
+        //附件下载
+        handleFileDwonLoad({fileName, filePath}){
+          minioDownload({ fileName, filePath }).then((data) => {
+            download(data, fileName)
+          })
         },
         //预览点击
         previewClick(item){
