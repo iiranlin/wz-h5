@@ -2,42 +2,49 @@
   <div class="submit-store-view">
     <van-form @submit="onSubmit" label-align="left" label-width="180px">
       <div class="submit-store-view-mian">
-        <div class="box-container" style="margin-top: 20px;">
-          <div>
-            <ul class="detail-ul">
-              <li v-if="formData.storeNumber">
-                <span>入库单号：</span>
-                <span>{{ formData.storeNumber }}</span>
-              </li>
-              <li>
-                <span>需求名称：</span>
-                <span>{{ formData.planName }}</span>
-              </li>
-              <li>
-                <span>需求项目：</span>
-                <span>{{ formData.sectionName }}</span>
-              </li>
-              <li>
-                <span>需求组织：</span>
-                <span>{{ formData.deptName }}</span>
-              </li>
-              <li v-if="formData.storeDate">
-                <span>入库时间：</span>
-                <span>{{ formData.storeDate ? parseTime(formData.storeDate, '{y}-{m}-{d} {h}:{i}') : '' }}</span>
-              </li>
-              <li v-if="formData.storeOperator">
-                <span>操作人：</span>
-                <span>{{ formData.storeOperator }}</span>
-              </li>
-              <li class="li-status">
-                <template v-for="row in statusArr">
-                  <van-tag :class="{ 'li-status-completed': ['2', '3'].includes(row.value) }"
-                    :type="['6'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
-                    v-if="formData.storeStatus == row.value">{{ row.text }}</van-tag>
-                </template>
-              </li>
-            </ul>
+        <div class="detail-base-info">
+          <div class="detail-title-content">
+            <img src="/static/icon-xqjh.png">
+            <span>入库单号：</span>
+            <span>{{formData.storeNumber}}</span>
+            <div class="detail-title-status">
+              <img :src="checkAuditStatus(formData.storeStatus)" />
+              <span>{{ checkStatusText(formData.storeStatus) }}</span>
+            </div>
           </div>
+          <ul class="detail-ul">
+            <li v-if="formData.storeNumber">
+              <span>入库单号：</span>
+              <span>{{ formData.storeNumber }}</span>
+            </li>
+            <li>
+              <span>需求名称：</span>
+              <span>{{ formData.planName }}</span>
+            </li>
+            <li>
+              <span>需求项目：</span>
+              <span>{{ formData.sectionName }}</span>
+            </li>
+            <li>
+              <span>需求组织：</span>
+              <span>{{ formData.deptName }}</span>
+            </li>
+            <li v-if="formData.storeDate">
+              <span>入库时间：</span>
+              <span>{{ formData.storeDate ? parseTime(formData.storeDate, '{y}-{m}-{d} {h}:{i}') : '' }}</span>
+            </li>
+            <li v-if="formData.storeOperator">
+              <span>操作人：</span>
+              <span>{{ formData.storeOperator }}</span>
+            </li>
+            <!-- <li class="li-status">
+              <template v-for="row in statusArr">
+                <van-tag :class="{ 'li-status-completed': ['2', '3'].includes(row.value) }"
+                  :type="['6'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
+                  v-if="formData.storeStatus == row.value">{{ row.text }}</van-tag>
+              </template>
+            </li> -->
+          </ul>
         </div>
         <!-- <div class="select-materials-search">
           <p class="select-materials-search-p font-weight">收货明细（共{{ tableData.length }}项）
@@ -46,8 +53,12 @@
         <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff" title-inactive-color="#2e2e2e">
           <van-tab :title="`收货明细（共${ tableData.length }项）`" name="0" key="0">
             <div class="box-container" v-for="(item, index) in tableData" :key="index">
-              <div>
-                <ul class="detail-ul">
+              <div class="div-child">
+                <div class="detail-list-title-content">
+                    <span>物资名称：</span>
+                    <span>{{item.materialName}}</span>
+                </div>
+                <ul class="detail-list-ul">
                   <li>
                     <span>物资名称：</span>
                     <span>{{ item.materialName }}</span>
@@ -56,30 +67,26 @@
                     <span>规格型号：</span>
                     <span>{{ item.specModel }}</span>
                   </li>
-                  <li class="li-item-both">
-                    <div class="li-item-left">
-                      <span>计量单位：</span>
-                      <span>{{ item.unit }}</span>
-                    </div>
-                    <div class="li-item-right">
-                      <span>需求数量：</span>
-                      <span>{{ item.planAmount }}</span>
-                    </div>
+                  <li>
+                    <span>计量单位：</span>
+                    <span>{{ item.unit }}</span>
+                  </li>
+                  <li>
+                    <span>需求数量：</span>
+                    <span>{{ item.planAmount }}</span>
                   </li>
                   <li class="li-item-overlength">
                     <span>本次收货数量：</span>
                     <span>{{ item.putTotal }}</span>
                   </li>
-                  <li class="li-item-both">
-                    <div class="li-item">
-                      <span>生产日期：</span>
-                      <span>{{ item.manufactureDate ? parseTime(item.manufactureDate, '{y}-{m}-{d}') : '' }}</span>
-                    </div>
-                    <div class="li-item">
-                      <span>有效截止日期：</span>
-                      <span class="li-span-red">{{ item.expirationDate ? parseTime(item.expirationDate, '{y}-{m}-{d}') : ''
-                        }}</span>
-                    </div>
+                  <li class="li-item-overlength">
+                    <span>生产日期：</span>
+                    <span>{{ item.manufactureDate ? parseTime(item.manufactureDate, '{y}-{m}-{d}') : '' }}</span>
+                  </li>
+                  <li class="li-item-overlength">
+                    <span>有效截止日期：</span>
+                    <span class="li-span-red">{{ item.expirationDate ? parseTime(item.expirationDate, '{y}-{m}-{d}') : ''
+                      }}</span>
                   </li>
                   <li>
                     <span>包装方式：</span>
@@ -114,13 +121,11 @@
                     <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'hgz')"
                       :key="val.filePath">{{ val.fileName }}</span>
                   </li> -->
-                  <file-download-view class="outbound-field-uploader" title="合格证附件" :fileList="filterList(item.fileByList, 'hgz') || []"/>
                   <!-- <li class="li-item-overlength">
                     <span>厂检报告附件：</span>
                     <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'cjbg')"
                       :key="val.filePath">{{ val.fileName }}</span>
                   </li> -->
-                  <file-download-view class="outbound-field-uploader" title="厂检报告附件" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
                   <template v-if="queryType === 'submit'">
                     <van-field v-model="item.storeTotal" type="number" name="入库数量" label="入库数量" placeholder="请输入入库数量"
                       @blur="putChange(item, index)" input-align="right" required :rules="rules.storeTotal" />
@@ -128,19 +133,15 @@
                       @blur="changeRefund(item, index)" input-align="right" required :rules="rules.refundZjTotal" />
                   </template>
                   <template v-else>
-                    <li class="li-item-both">
-                      <div class="li-item-left">
-                        <span class="font-weight">入库数量：</span>
-                        <span class="font-weight">{{ item.storeTotal }}</span>
-                      </div>
-                      <div class="li-item-right">
-                        <span class="font-weight">退货数量：</span>
-                        <span class="font-weight">{{ item.refundZjTotal }}</span>
-                      </div>
+                    <li>
+                      <span class="font-weight">入库数量：</span>
+                      <span class="font-weight">{{ item.storeTotal }}</span>
+                    </li>
+                    <li>
+                      <span class="font-weight">退货数量：</span>
+                      <span class="font-weight">{{ item.refundZjTotal }}</span>
                     </li>
                   </template>
-                  <file-upload-view class="outbound-field-uploader" v-if="queryType === 'submit'" title="退货附件" :fileList="item.fileList03 || []" businessType="01"/>
-                  <file-download-view class="outbound-field-uploader" v-else title="退货附件" :fileList="item.fileList03 || []"/>
                   <!-- <van-field name="uploader" label="退货附件：" class="outbound-field-uploader" required
                     v-if="queryType != 'view'">
                     <template #input>
@@ -160,11 +161,15 @@
                     <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'thfj_im')"
                       :key="val.filePath">{{ val.fileName }}</span>
                   </li> -->
-                  <li class="li-item-overlength">
+                  <li class="li-item-remark">
                     <span>备注：</span>
-                    <span>{{ item.remark }}</span>
+                    <div class="remark-detail">{{item.remark || '未填写'}}</div>
                   </li>
                 </ul>
+                <file-download-view class="outbound-field-uploader" title="合格证附件" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                <file-download-view class="outbound-field-uploader" title="厂检报告附件" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                <file-upload-view class="outbound-field-uploader" v-if="queryType === 'submit'" title="退货附件" :fileList="item.fileList03 || []" businessType="01"/>
+                <file-download-view class="outbound-field-uploader" v-else title="退货附件" :fileList="item.fileList03 || []"/>
               </div>
             </div>
           </van-tab>
@@ -258,6 +263,24 @@ export default {
     this.detailByStore(id, storeStatus)
   },
   methods: {
+    checkStatusText(status) {
+      let name = ''
+      this.statusArr.forEach(item => {
+        if (item.value === status) {
+          name = item.text
+        }
+      })
+      return name
+    },
+    checkAuditStatus(status) {
+      if (status == '6') {
+        return '/static/icon-reject.png'
+      } else if (['2', '4'].includes(status)) {
+        return '/static/icon-return.png'
+      } else {
+        return '/static/icon-success.png'
+      }
+    },
     detailByStore(id, storeStatus) {
       const url = storeStatus == "5" || storeStatus == "6" ? detailStoreBack : detailByStore
       let toast = this.$toast.loading({
@@ -445,138 +468,36 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.submit-store-view {
-  width: 100%;
-  height: 100%;
-
-  .box-container-uploader{
-    ::v-deep .van-cell__title{
-      width: 190px !important;
-    }
-  }
-
-  .submit-store-view-mian {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 50px;
-  }
-
-  .select-materials-search {
-    display: flex;
-    justify-content: space-between;
-
-    .select-materials-search-p {
-      font-size: 14px;
-      line-height: 30px;
-      padding: 0 10px;
-    }
-  }
-
-  .li-item-both {
-    .li-item {
-      flex: 1;
-      width: auto !important;
-    }
-  }
-
-  .van-cell {
-    padding-left: 12px;
-    padding-right: 0;
-  }
-
-  ::v-deep .van-field__label {
-    color: #272b31;
-  }
-
-  .default-button-container {
-    .button-info {
-      min-width: 150px;
-    }
-  }
-
-  .van-cell--required::before {
-    left: 4px;
-  }
-
-  // ::v-deep .outbound-field-uploader {
-  //   &:before {
-  //     top: 16px;
-  //     left: 4px;
-  //   }
-
-  //   .van-field__label {
-  //     line-height: 35px;
-  //   }
-  // }
-
-  .van-field__control--custom {
-    .outbound-uploader {
-      min-width: 80px;
-      height: 25px;
-    }
-  }
-
-  ::v-deep .outbound-field-text {
-    padding-left: 0;
-  }
-
-  ::v-deep .van-field__body {
-    float: right;
-  }
-
-  .div-child {
-    margin-top: 5px;
-    padding-top: 5px;
-    border-top: 1px solid #f3f5f7;
-  }
-
-  .li-span-click {
-    word-wrap: break-word;
-  }
-
-  // .outbound-uploader-delete {
-  //   width: 80px !important;
-  //   height: 25px;
-  //   transform: translateY(5px);
-
-  //   span {
-  //     color: #fff;
-  //   }
-
-  //   .van-button__content {
-  //     width: auto;
-  //   }
-  // }
-
-  // .detail-ul-uploader-li {
-  //   display: block;
-  //   line-height: 30px;
-
-  //   .outbound-uploader-delete {
-  //     float: right;
-  //     transform: translateY(0px);
-  //   }
-  // }
-
-  .li-status {
+.submit-store-view-mian {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
+}
+.detail-title-content{
+  position: relative;
+  .detail-title-status {
     position: absolute;
-    right: 15px;
-    top: 15px;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
     span {
-      font-size: 12px;
-      width: inherit !important;
-      padding: 2px 6px;
-      line-height: 16px;
-    }
-
-    & :nth-child(1) {
-      min-width: initial;
-    }
-
-    & :nth-child(2) {
-      width: initial;
+      margin-left: 3px;
+      color: #134daa;
+      font-size: 11px;
     }
   }
+
+}
+.box-container{
+  padding: 0;
 }
 .outbound-field-uploader{
   ::v-deep li{
@@ -584,6 +505,9 @@ export default {
   }
   ::v-deep .file-info{
     width: auto !important;
+    img{
+      min-width: auto !important;
+    }
   }
 }
 </style>

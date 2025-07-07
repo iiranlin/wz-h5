@@ -124,9 +124,10 @@ export default {
   flex-direction: column;
 
   .detail-ul {
+    padding: 4px;
     li {
       .li-span-width {
-        width: auto !important;
+       min-width: 100px !important;
       }
     }
   }

@@ -1,17 +1,12 @@
 <template>
-  <!-- <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> -->
   <div>
     <div class="box-container" v-for="(item, index) in list" :key="index">
       <div>
+        <div class="detail-list-title-content">
+          <span>{{ item.logName }}</span>
+          <span class="li-item-right">{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
+        </div>
         <ul class="detail-ul">
-          <li class="li-item-both">
-            <div class="li-item-left">
-              <span class="font-weight">{{ item.logName }}</span>
-            </div>
-            <div class="li-item-right">
-              <span class="font-weight">{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
-            </div>
-          </li>
           <li>
             <span>事件组织：</span>
             <span>{{ item.deptName }}</span>
@@ -29,7 +24,6 @@
     </div>
     <van-empty v-if="list.length === 0" description="暂无数据" />
   </div>
-  <!-- </van-list> -->
 </template>
 <script>
 import { materialOperateLogGetList } from '@/api/prodmgr-inv/materialOperateLog'
@@ -47,20 +41,20 @@ export default {
   },
   activated() {
   },
-  mounted () {
+  mounted() {
     const businessId = this.$route.query.id
     businessId && this.materialOperateLogGetList(businessId)
   },
   methods: {
-    materialOperateLogGetList (businessId) {
+    materialOperateLogGetList(businessId) {
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
         forbidClick: true
       });
-      materialOperateLogGetList({businessId}).then(({data}) => {
+      materialOperateLogGetList({ businessId }).then(({ data }) => {
         this.list = data || []
-      }).finally( (err) => {
+      }).finally((err) => {
         toast.clear()
       })
     }
@@ -83,18 +77,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.detail-ul{
-  li{
-    span{
-      width: auto !important;
-    }
-    div{
-      flex: 1;
-      width: auto !important;
-      &:nth-child(3){
-        flex: 1.5;
-      }
-    }
+.box-container {
+  padding: 0px;
+
+  .li-item-right {
+    float: right;
   }
 }
 </style>

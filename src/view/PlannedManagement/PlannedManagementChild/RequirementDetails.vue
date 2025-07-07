@@ -1,14 +1,18 @@
 <template>
   <div class="default-container">
     <div class="detail-base-info">
+      <div>
         <div class="detail-title-content">
-            <img src="/static/icon-xqjh.png">
-            <span>需求编号：</span>
-            <span>{{detail.planNumber}}</span>
+          <img src="/static/icon-xqjh.png">
+          <span>需求编号：</span>
+          <span>{{ detail.planNumber }}</span>
+          <div class="detail-title-status">
+            <img :src="checkAuditStatus(detail.planStatus)" />
+            <span>{{ checkStatusText(detail.planStatus) }}</span>
+          </div>
         </div>
-        <div>
-            <ul class="detail-ul">
-                  <li>
+        <ul class="detail-ul">
+          <li>
             <span>需求名称：</span>
             <span>{{ detail.planName }}</span>
           </li>
@@ -28,18 +32,10 @@
             <span>提报时间：</span>
             <span>{{ parseTime(detail.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
           </li>
-          <!-- <li class="li-status">
-            <template v-for="row in statusArr">
-              <van-tag :class="{ 'li-status-completed': row.value == '9' }"
-                :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
-                v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
-            </template>
-            </li> -->
-            </ul>
-        </div>
+        </ul>
+      </div>
     </div>
-    <van-tabs :class="{'details-van-tabs': ['1', '4', '0', '5', '10'].includes(detail.planStatus)}" sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
-      title-inactive-color="#2e2e2e">
+    <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff" title-inactive-color="#2e2e2e">
       <van-tab title="物资明细">
         <material-details :list="detail.details"></material-details>
       </van-tab>
@@ -48,8 +44,7 @@
       </van-tab>
     </van-tabs>
     <div class="default-button-container" v-if="['1', '4', '0', '5', '10'].includes(detail.planStatus)">
-      <van-button class="button-info" round type="info"
-        @click="handleExamineClick(detail)">提交审核</van-button>
+      <van-button class="button-info" round type="info" @click="handleExamineClick(detail)">提交审核</van-button>
     </div>
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
   </div>
@@ -117,105 +112,49 @@ export default {
         this.$router.push({ name: 'PlannedManagementList' })
       })
     },
+    checkStatusText(status) {
+      let name = ''
+      this.statusArr.forEach(item => {
+        if (item.value === status) {
+          name = item.text
+        }
+      })
+      return name
+    },
+    checkAuditStatus(status) {
+      if (status == '0') {
+        return '/static/icon-reject.png'
+      } else if (['5', '10'].includes(status)) {
+        return '/static/icon-return.png'
+      } else {
+        return '/static/icon-success.png'
+      }
+    },
   },
 }
 </script>
 <style lang="less" scoped>
-.requirement-details {
-  display: flex;
-  flex-direction: column;
+.detail-title-content{
+  position: relative;
+  .detail-title-status {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
 
-  .select-materials-sticky {
-    ::v-deep .van-sticky {
-      background: #f8f8f8;
+    img {
+      width: 16px;
+      height: 16px;
     }
-  }
 
-  .requirement-details-contract {
-    margin-top: 10px;
-    box-sizing: border-box;
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-bottom: 10px;
-    background: #ffffff;
-    border-radius: 7px;
-    box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
-    position: relative;
-    padding: 10px;
-
-    .li-status {
-      position: absolute;
-      right: 15px;
-      top: 12px;
-
-      span {
-        font-size: 12px;
-        width: inherit !important;
-        padding: 2px 6px;
-        line-height: 16px;
-      }
-
-      .van-tag--primary {
-        color: #028bff;
-        background: #edf4ff;
-      }
-
-      .van-tag--danger {
-        color: #f83738;
-        background: #ffe2e2;
-      }
-
-      .li-status-completed {
-        color: #6f6f6f;
-        background: #ededed;
-      }
-    }
-  }
-  .details-van-tabs{
-    margin-bottom: 50px;
-  }
-}
-
-::v-deep .van-tabs__wrap {
-  // position: fixed;
-  // z-index: 1;
-  width: 100%;
-}
-
-.detail-ul {
-  li {
     span {
-      &:nth-child(1) {
-        width: 80px;
-      }
+      margin-left: 3px;
+      color: #134daa;
+      font-size: 11px;
     }
   }
-}
 
-.li-item-both {
-  justify-content: space-between;
-}
-
-.li-item-left {
-  width: auto !important;
-}
-
-.li-item-left-num {
-  span:nth-child(1) {
-    min-width: 100px;
-  }
-}
-
-.li-item-right {
-  width: auto !important;
-
-  span:nth-child(1) {
-    width: auto;
-    text-align: right;
-  }
-
-  span:nth-child(2) {
-    width: auto;
-  }
 }
 </style>

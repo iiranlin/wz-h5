@@ -1,17 +1,12 @@
 <template>
-  <!-- <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> -->
   <div>
     <div class="box-container" v-for="(item, index) in list" :key="index">
       <div>
+        <div class="detail-list-title-content">
+            <span>物资名称：</span>
+            <span>{{item.materialName}}</span>
+        </div>
         <ul class="detail-list-ul">
-          <!-- <li class="li-item-overlength">
-            <span class="font-weight">供应商名称：</span>
-            <span class="font-weight">{{ item.sellerName }}</span>
-          </li> -->
-          <li>
-            <span class="font-weight">物资名称：</span>
-            <span class="font-weight">{{ item.materialName }}</span>
-          </li>
           <li>
             <span>供应商：</span>
             <span>{{ item.sellerName }}</span>
@@ -75,7 +70,6 @@
     </div>
     <van-empty v-if="list.length === 0" description="暂无数据" />
   </div>
-  <!-- </van-list> -->
 </template>
 <script>
 export default {
@@ -107,7 +101,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .box-container {
-    padding: 0px;
+  padding: 0px;
 }
 .li-item-both {
   justify-content: space-between;

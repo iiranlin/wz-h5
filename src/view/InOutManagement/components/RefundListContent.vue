@@ -10,11 +10,11 @@
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
         <div v-for="(item, index) in dataList" :key="index" class="box-container" @click="handleWaitItemClick(item)">
+           <div class="list-title-content">
+            <span>退货单号：</span>
+            <span class="font-weight" style="color:#134daa;">{{item.backQualNumber}}</span>
+          </div>
           <ul class="list-ul">
-            <li>
-              <span>退货单号：</span>
-              <span>{{ item.backQualNumber }}</span>
-            </li>
             <li>
               <span>收货单号：</span>
               <span @click.stop="detailsClick(item)" class="li-span-click">{{ item.takeNumber }}</span>
@@ -23,15 +23,13 @@
               <span class="li-item-span-auto">供应需求名称：</span>
               <span>{{ item.planName }}</span>
             </li>
-            <li class="li-item-both">
-              <div class="li-item-left">
-                <span>需求组织：</span>
-                <span>{{ item.deptName }}</span>
-              </div>
-              <div class="li-item-right">
-                <span class="li-item-span-auto">供应商：</span>
-                <span>{{ item.sellerName }}</span>
-              </div>
+            <li>
+              <span>需求组织：</span>
+              <span>{{ item.deptName }}</span>
+            </li>
+            <li>
+              <span>供应商：</span>
+              <span>{{ item.sellerName }}</span>
             </li>
             <li>
               <span>退货时间：</span>

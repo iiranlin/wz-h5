@@ -1,45 +1,45 @@
 <template>
   <div class="supply-overview">
-    <div class="box-container" style="margin-top: 20px;">
-      <div>
-        <ul class="detail-ul">
-          <li>
-            <span>需求编号：</span>
-            <span>{{ detailGyMx.planNumber }}</span>
-          </li>
-          <li>
-            <span>需求名称：</span>
-            <span>{{ detailGyMx.planName }}</span>
-          </li>
-          <li>
-            <span>需求项目：</span>
-            <span>{{ detailGyMx.sectionName }}</span>
-          </li>
-          <li>
-            <span>需求组织：</span>
-            <span>{{ detailGyMx.deptName }}</span>
-          </li>
-          <li>
-            <span>提报人：</span>
-            <span>{{ detailGyMx.createUserName }}</span>
-          </li>
-          <li>
-            <span>提报时间：</span>
-            <span>{{ parseTime(detailGyMx.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
-          </li>
-        </ul>
+    <div class="detail-base-info">
+      <div class="detail-title-content">
+        <img src="/static/icon-xqjh.png">
+        <span>需求编号：</span>
+        <span>{{detailGyMx.planNumber}}</span>
       </div>
+      <ul class="detail-ul">
+        <li>
+          <span>需求名称：</span>
+          <span>{{ detailGyMx.planName }}</span>
+        </li>
+        <li>
+          <span>需求项目：</span>
+          <span>{{ detailGyMx.sectionName }}</span>
+        </li>
+        <li>
+          <span>需求组织：</span>
+          <span>{{ detailGyMx.deptName }}</span>
+        </li>
+        <li>
+          <span>提报人：</span>
+          <span>{{ detailGyMx.createUserName }}</span>
+        </li>
+        <li>
+          <span>提报时间：</span>
+          <span>{{ parseTime(detailGyMx.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
+        </li>
+      </ul>
     </div>
-    <div class="select-materials-search">
-      <p class="select-materials-search-p font-weight">供应信息</p>
+    <div class="detail-floor-content">
+      <img src="/static/icon-return.png"/>
+      <span>供应信息</span>
     </div>
     <div class="box-container" v-for="(item, index) in detailGyMx.demandPlanDetailsGyDTOList" :key="index">
       <div>
-        <ul class="detail-ul detail-ul-mian">
-          <li>
-            <span class="font-weight">供应商：</span>
-            <span class="font-weight">{{ item.sellerName }}</span>
-          </li>
+        <div class="detail-list-title-content">
+          <span>供应商：</span>
+          <span>{{item.sellerName}}</span>
+        </div>
+        <ul class="detail-list-ul detail-ul-mian">
           <li>
             <span class="font-weight">物资名称：</span>
             <span class="font-weight">{{ item.materialName }}</span>
@@ -48,25 +48,21 @@
             <span>规格型号：</span>
             <span>{{ item.specModel }}</span>
           </li>
-          <li class="li-item-both">
-            <div class="li-item-left">
-              <span>计量单位：</span>
-              <span>{{ item.unit }}</span>
-            </div>
-            <div class="li-item-right">
-              <span>合同数量：</span>
-              <span>{{ item.amount }}</span>
-            </div>
+          <li>
+            <span>计量单位：</span>
+            <span>{{ item.unit }}</span>
           </li>
-          <li class="li-item-both li-item-both-long">
-            <div class="li-item-left">
-              <span>累计计划量(含本次)：</span>
-              <span>{{ item.cumulativeAmount }}</span>
-            </div>
-            <div class="li-item-right">
-              <span>本次计划数量：</span>
-              <span>{{ item.planAmount }}</span>
-            </div>
+          <li>
+            <span>合同数量：</span>
+            <span>{{ item.amount }}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>累计计划量(含本次)：</span>
+            <span>{{ item.cumulativeAmount }}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>本次计划数量：</span>
+            <span>{{ item.planAmount }}</span>
           </li>
           <li class="li-item-both li-item-both-red">
             <div class="li-item-left li-item-left-num">
@@ -125,7 +121,18 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.box-container{
+  padding: 0;
+}
 .supply-overview{
+  .li-item-left{
+    flex: 1;
+    min-width: auto !important;
+  }
+  .li-item-right{
+    flex: 1;
+    width: auto !important;
+  }
   .select-materials-search{
     display: flex;
     justify-content: space-between;

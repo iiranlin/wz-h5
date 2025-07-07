@@ -2,14 +2,17 @@
   <div class="in-out-management-list">
     <van-sticky>
       <div class="list-search-container">
-        <van-search v-model="formData.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
+        <van-search v-model="formData.planName" placeholder="输入关键字搜索" left-icon="none" shape="round"
           @search="handeSearch()">
+          <template slot='right-icon'>
+            <van-icon name="search" @click="handeSearch()" />
+          </template>
         </van-search>
         <!-- <van-dropdown-menu active-color="#028bff">
           <van-dropdown-item v-model="formData.storeStatus" :options="statusArr" @change="statusChange" />
         </van-dropdown-menu> -->
       </div>
-      <van-tabs sticky v-model="formData.storeStatus" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
+      <van-tabs sticky v-model="formData.storeStatus" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" @change="tabsChange">
         <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value">
         </van-tab>
@@ -19,11 +22,15 @@
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad">
 
         <div v-for="(item, index) in dataList" :key="index" class="box-container">
+          <div class="list-title-content">
+            <span>入库单号：</span>
+            <span class="font-weight" style="color:#134daa;">{{ item.storeNumber }}</span>
+            <div class="li-title-status">
+              <img :src="checkAuditStatus(item.storeStatus)" />
+              <span>{{ checkStatusText(item.storeStatus) }}</span>
+            </div>
+          </div>
           <ul class="list-ul" @click="detailsClick('1', item)">
-            <li>
-              <span class="font-weight">入库单号：</span>
-              <span class="font-weight">{{ item.storeNumber }}</span>
-            </li>
             <li>
               <span>收货单号：</span>
               <span @click.stop="detailsClick('2', item)" class="li-span-click">{{ item.takeNumber }}</span>
@@ -48,13 +55,13 @@
               <span>入库时间：</span>
               <span>{{ item.storeDate ? parseTime(item.storeDate, '{y}-{m}-{d} {h}:{i}') : '' }}</span>
             </li>
-            <li class="li-status">
+            <!-- <li class="li-status">
               <template v-for="row in statusArr">
                 <van-tag :class="{ 'li-status-completed': ['2', '3'].includes(row.value) }"
                   :type="['6'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
                   v-if="item.storeStatus == row.value">{{ row.text }}</van-tag>
               </template>
-            </li>
+            </li> -->
             <!-- <li class="li-status">
               <template v-for="items in statusArr">
                 <van-tag plain round size="medium" :key="items.value" v-if="item.storeStatus == items.value">{{ items.text }}</van-tag>
@@ -62,9 +69,12 @@
             </li> -->
           </ul>
           <div class="list-ul-button">
-            <van-button class="button-info" plain round type="info" @click="handleProcessClick(item)" v-if="item.storeStatus != '1'">查看流程</van-button>
-            <van-button class="button-info" plain round type="info" @click="withdrawClick(item)" v-if="item.storeStatus == '5'">撤回</van-button>
-            <van-button class="button-info" round type="info" @click="submitStore(item)" v-if="item.storeStatus == '1' || item.storeStatus == '6'">入库</van-button>
+            <van-button class="button-info" plain round type="info" @click="handleProcessClick(item)"
+              v-if="item.storeStatus != '1'">查看流程</van-button>
+            <van-button class="button-info" plain round type="info" @click="withdrawClick(item)"
+              v-if="item.storeStatus == '5'">撤回</van-button>
+            <van-button class="button-info" round type="info" @click="submitStore(item)"
+              v-if="item.storeStatus == '1' || item.storeStatus == '6'">入库</van-button>
           </div>
         </div>
       </van-list>
@@ -106,13 +116,31 @@ export default {
   activated() {
   },
   methods: {
+    checkStatusText(status) {
+      let name = ''
+      this.statusArr.forEach(item => {
+        if (item.value === status) {
+          name = item.text
+        }
+      })
+      return name
+    },
+    checkAuditStatus(status) {
+      if (status == '6') {
+        return '/static/icon-reject.png'
+      } else if (['2', '4'].includes(status)) {
+        return '/static/icon-return.png'
+      } else {
+        return '/static/icon-success.png'
+      }
+    },
     handeSearch() {
       this.onRefresh()
     },
     // statusChange() {
     //   this.onRefresh()
     // },
-    tabsChange () {
+    tabsChange() {
       this.onRefresh()
     },
     //列表刷新
@@ -165,22 +193,22 @@ export default {
         message: '确认要撤回吗？',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
-      }).then( () => {
-        return recall({ businessId: item.id,businessType:'RK' });
+      }).then(() => {
+        return recall({ businessId: item.id, businessType: 'RK' });
       }).then(() => {
         this.$toast('撤回成功');
       })
     },
     //查看流程点击
     handleProcessClick(item) {
-      this.$router.push({name: "MyProcess", params: { businessId: item.id }})
+      this.$router.push({ name: "MyProcess", params: { businessId: item.id } })
     },
     detailsClick(key, item) {
       const objKey = {
         '1': () => {
-          if(item.storeNumber){
+          if (item.storeNumber) {
             this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
-          }else{
+          } else {
             this.$toast('入库完成才能查看详情');
           }
         },
@@ -195,10 +223,11 @@ export default {
 </script>
 <style lang="less" scoped>
 .in-out-management-list {
-  ::v-deep .van-tabs__wrap{
+  ::v-deep .van-tabs__wrap {
     margin-bottom: 10px !important;
     height: 44px !important;
   }
+
   ::v-deep .van-sticky--fixed {
     top: 69px !important;
   }
@@ -228,19 +257,6 @@ export default {
         font-size: 12px;
       }
 
-    }
-  }
-
-  .van-search {
-
-    .van-search__content {
-      border-radius: 50px;
-      background: #fff;
-    }
-
-    .van-cell {
-      border-radius: 50px;
-      background: #fff;
     }
   }
 

@@ -3,9 +3,9 @@
     <van-sticky class="planned-management-search-bj">
       <div class="planned-management-search">
         <van-search v-model="searchValue" placeholder="请输入需求名称" left-icon="none" shape="round" :show-action="showAction"
-        @search="onSearch">
+          @search="onSearch">
           <template slot='right-icon'>
-            <van-icon name="search" @click="statusChange()"/>
+            <van-icon name="search" @click="statusChange()" />
           </template>
         </van-search>
         <!-- <van-dropdown-menu active-color="#028bff">
@@ -13,7 +13,7 @@
         </van-dropdown-menu>
         <van-button round @click="resetClick">重置</van-button> -->
       </div>
-      <van-tabs v-model="statusValue" title-active-color="#0571ff"
+      <van-tabs v-model="statusValue" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" @change="statusChange">
         <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value">
         </van-tab>
@@ -26,10 +26,10 @@
           <div v-for="(item, index) in list" :key="index" class="box-container">
             <div class="list-title-content">
               <span>需求编号：</span>
-              <span class="font-weight" style="color:#134daa;">{{item.planNumber}}</span>
+              <span class="font-weight" style="color:#134daa;">{{ item.planNumber }}</span>
               <div class="li-title-status">
-                <img :src="checkAuditStatus(item.planStatus)"/>
-                <span>{{checkStatusText(item.planStatus)}}</span>
+                <img :src="checkAuditStatus(item.planStatus)" />
+                <span>{{ checkStatusText(item.planStatus) }}</span>
               </div>
             </div>
             <ul class="list-ul" @click="handleWaitItemClick(item)">
@@ -124,7 +124,7 @@ export default {
       businessCode: { '1': 'FBYLXQ', '2': 'FBYLJH', '3': 'YLXQ', '4': 'YLJH' }
     }
   },
-  mounted () {
+  mounted() {
   },
   methods: {
     onSearch() {
@@ -164,9 +164,9 @@ export default {
         ...this.listQuery
       }
       let toast = this.$toast.loading({
-          duration: 0,
-          message: "正在加载...",
-          forbidClick: true
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
       });
       materialDemandPlanRestList(params).then(({ data }) => {
         this.list.push(...(data.list || []))
@@ -211,11 +211,18 @@ export default {
     },
     //去审核点击
     handleExamineClick(item) {
-      this.$refs.activitiAssignee.init(this.businessCode[item.planType], item)
+      this.$dialog.confirm({
+        title: '标题',
+        message: '确认要提交审核吗？',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.$refs.activitiAssignee.init(this.businessCode[item.planType], item)
+      })
     },
     //选择审核人回调
-    optionsSuccess(assignee, {id, planType}) {
-      materialDemandPlanRestSubmit({ids: [id], planType: planType, assignee}).then( () => {
+    optionsSuccess(assignee, { id, planType }) {
+      materialDemandPlanRestSubmit({ ids: [id], planType: planType, assignee }).then(() => {
         this.$toast('提交审核成功')
         this.getList()
       })
@@ -247,17 +254,23 @@ export default {
     withdrawClick(item) {
       this.handleWithdraw({ businessId: item.id, businessType: item.planType == 1 ? 'FBYLXQ' : 'YLXQ' })
     },
-    checkStatusText(status){
+    checkStatusText(status) {
       let name = ''
       this.statusArr.forEach(item => {
-        if(item.value === status){
+        if (item.value === status) {
           name = item.text
         }
       })
       return name
     },
-    checkAuditStatus(){
-      return '/static/icon-success.png'
+    checkAuditStatus(status) {
+      if (status == '0') {
+        return '/static/icon-reject.png'
+      } else if (['5', '10'].includes(status)) {
+        return '/static/icon-return.png'
+      } else {
+        return '/static/icon-success.png'
+      }
     },
   }
 }

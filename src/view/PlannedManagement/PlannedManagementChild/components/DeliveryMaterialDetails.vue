@@ -113,8 +113,10 @@ export default {
 .box-container {
   box-shadow: none;
   border: 1px solid #e9e9e9;
+  padding: 0;
 
   .detail-ul {
+    padding: 4px;
     li {
       span {
         width: auto !important;

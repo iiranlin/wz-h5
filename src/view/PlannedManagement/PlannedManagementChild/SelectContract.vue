@@ -1,10 +1,17 @@
 <template>
   <div class="select-Contract">
     <van-sticky class="select-Contract-search">
-      <van-search v-model="searchValue" placeholder="请输入合同名称" background="#f8f8f8" :show-action="showAction"
-        @search="onSearch" />
-      <p class="select-Contract-p">请选择合同</p>
+      <van-search v-model="searchValue" placeholder="请输入合同名称" left-icon="none" shape="round" :show-action="showAction"
+        @search="onSearch">
+        <template slot='right-icon'>
+          <van-icon name="search" @click="onSearch" />
+        </template>
+      </van-search>
     </van-sticky>
+    <div class="detail-floor-content">
+      <img src="/static/icon-return.png"/>
+      <span>请选择合同</span>
+    </div>
     <div class="select-Contract-list">
       <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error" error-text="请求失败，点击重新加载" @load="onLoad">
@@ -123,24 +130,7 @@ export default {
 .select-Contract {
   display: flex;
   flex-direction: column;
-
-  .select-Contract-search {
-    width: 100%;
-    background: #f8f8f8;
-  }
-
-  .van-search {
-    .van-search__content {
-      border-radius: 50px;
-      background: #fff;
-    }
-
-    .van-cell {
-      border-radius: 50px;
-      background: #fff;
-    }
-  }
-
+  
   .select-Contract-list{
     height: 100%;
   }

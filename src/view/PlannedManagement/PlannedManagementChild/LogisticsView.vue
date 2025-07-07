@@ -1,34 +1,33 @@
 <template>
   <div class="logistics-view">
-    <div class="box-container" style="margin-top: 20px;" ref="boxContainer">
-      <div>
-        <ul class="detail-ul">
-          <li>
-            <span>需求编号：</span>
-            <span>{{ detailData.planNumber }}</span>
-          </li>
-          <li>
-            <span>需求名称：</span>
-            <span>{{ detailData.planName }}</span>
-          </li>
-          <li>
-            <span>需求项目：</span>
-            <span>{{ detailData.sectionName }}</span>
-          </li>
-          <li>
-            <span>需求组织：</span>
-            <span>{{ detailData.deptName }}</span>
-          </li>
-          <li>
-            <span>提报人：</span>
-            <span>{{ detailData.createUserName }}</span>
-          </li>
-          <li>
-            <span>提报时间：</span>
-            <span>{{ parseTime(detailData.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
-          </li>
-        </ul>
+    <div class="detail-base-info">
+      <div class="detail-title-content">
+        <img src="/static/icon-xqjh.png">
+        <span>需求编号：</span>
+        <span>{{ detailData.planNumber }}</span>
       </div>
+      <ul class="detail-list-ul">
+        <li>
+          <span>需求名称：</span>
+          <span>{{ detailData.planName }}</span>
+        </li>
+        <li>
+          <span>需求项目：</span>
+          <span>{{ detailData.sectionName }}</span>
+        </li>
+        <li>
+          <span>需求组织：</span>
+          <span>{{ detailData.deptName }}</span>
+        </li>
+        <li>
+          <span>提报人：</span>
+          <span>{{ detailData.createUserName }}</span>
+        </li>
+        <li>
+          <span>提报时间：</span>
+          <span>{{ parseTime(detailData.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
+        </li>
+      </ul>
     </div>
     <div class="select-materials-search">
       <p class="select-materials-search-p font-weight">物流信息</p>
