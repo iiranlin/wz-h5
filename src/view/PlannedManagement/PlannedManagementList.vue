@@ -1,12 +1,19 @@
 <template>
   <div class="planned-management">
-    <van-sticky class="planned-management-search">
-      <van-search v-model="searchValue" placeholder="请输入需求名称" background="#eef6ff" :show-action="showAction"
+    <van-sticky>
+      <div class="planned-management-search">
+        <van-search v-model="searchValue" placeholder="请输入需求名称" background="#eef6ff" :show-action="showAction"
         @search="onSearch" />
-      <van-dropdown-menu active-color="#028bff">
-        <van-dropdown-item v-model="statusValue" :options="statusArr" @change="statusChange" />
-      </van-dropdown-menu>
-      <van-button round @click="resetClick">重置</van-button>
+        <!-- <van-dropdown-menu active-color="#028bff">
+          <van-dropdown-item v-model="statusValue" :options="statusArr" @change="statusChange" />
+        </van-dropdown-menu>
+        <van-button round @click="resetClick">重置</van-button> -->
+      </div>
+      <van-tabs sticky v-model="statusValue" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
+        title-inactive-color="#2e2e2e" @change="statusChange">
+        <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value">
+        </van-tab>
+      </van-tabs>
     </van-sticky>
     <div class="planned-management-list">
       <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">

@@ -39,132 +39,142 @@
             </ul>
           </div>
         </div>
-        <div class="select-materials-search">
+        <!-- <div class="select-materials-search">
           <p class="select-materials-search-p font-weight">收货明细（共{{ tableData.length }}项）
           </p>
-        </div>
-        <div class="box-container" v-for="(item, index) in tableData" :key="index">
-          <div>
-            <ul class="detail-ul">
-              <li>
-                <span>物资名称：</span>
-                <span>{{ item.materialName }}</span>
-              </li>
-              <li>
-                <span>规格型号：</span>
-                <span>{{ item.specModel }}</span>
-              </li>
-              <li class="li-item-both">
-                <div class="li-item-left">
-                  <span>计量单位：</span>
-                  <span>{{ item.unit }}</span>
-                </div>
-                <div class="li-item-right">
-                  <span>需求数量：</span>
-                  <span>{{ item.planAmount }}</span>
-                </div>
-              </li>
-              <li class="li-item-overlength">
-                <span>本次收货数量：</span>
-                <span>{{ item.putTotal }}</span>
-              </li>
-              <li class="li-item-both">
-                <div class="li-item">
-                  <span>生产日期：</span>
-                  <span>{{ item.manufactureDate ? parseTime(item.manufactureDate, '{y}-{m}-{d}') : '' }}</span>
-                </div>
-                <div class="li-item">
-                  <span>有效截止日期：</span>
-                  <span class="li-span-red">{{ item.expirationDate ? parseTime(item.expirationDate, '{y}-{m}-{d}') : ''
-                    }}</span>
-                </div>
-              </li>
-              <li>
-                <span>包装方式：</span>
-                <span>{{ item.packagingFm }}</span>
-              </li>
-              <li>
-                <span>使用地点：</span>
-                <span>{{ item.addr }}</span>
-              </li>
-              <li>
-                <span>收货地址：</span>
-                <span>{{ item.field2 }}</span>
-              </li>
-              <li class="li-item-overlength">
-                <span>收货人及联系方式：</span>
-                <span>{{ item.receiver }}</span>
-              </li>
-              <li>
-                <span>供应时间：</span>
-                <span>{{ item.supplyDate ? parseTime(item.supplyDate, '{y}-{m}-{d}') : '' }}</span>
-              </li>
-              <li>
-                <span>投资方：</span>
-                <span>{{ item.field0 }}</span>
-              </li>
-              <li>
-                <span>投资比例：</span>
-                <span>{{ item.field1 }}</span>
-              </li>
-              <!-- <li class="li-item-overlength">
-                <span>合格证附件：</span>
-                <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'hgz')"
-                  :key="val.filePath">{{ val.fileName }}</span>
-              </li> -->
-              <file-download-view class="outbound-field-uploader" title="合格证附件" :fileList="filterList(item.fileByList, 'hgz') || []"/>
-              <!-- <li class="li-item-overlength">
-                <span>厂检报告附件：</span>
-                <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'cjbg')"
-                  :key="val.filePath">{{ val.fileName }}</span>
-              </li> -->
-              <file-download-view class="outbound-field-uploader" title="厂检报告附件" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
-              <template v-if="queryType === 'submit'">
-                <van-field v-model="item.storeTotal" type="number" name="入库数量" label="入库数量" placeholder="请输入入库数量"
-                  @blur="putChange(item, index)" input-align="right" required :rules="rules.storeTotal" />
-                <van-field v-model="item.refundZjTotal" type="number" name="退货数量" label="退货数量" placeholder="请输入退货数量"
-                  @blur="changeRefund(item, index)" input-align="right" required :rules="rules.refundZjTotal" />
-              </template>
-              <template v-else>
-                <li class="li-item-both">
-                  <div class="li-item-left">
-                    <span class="font-weight">入库数量：</span>
-                    <span class="font-weight">{{ item.storeTotal }}</span>
-                  </div>
-                  <div class="li-item-right">
-                    <span class="font-weight">退货数量：</span>
-                    <span class="font-weight">{{ item.refundZjTotal }}</span>
-                  </div>
-                </li>
-              </template>
-              <file-upload-view class="outbound-field-uploader" v-if="queryType === 'submit'" title="退货附件" :fileList="item.fileList03 || []" businessType="01"/>
-              <file-download-view class="outbound-field-uploader" v-else title="退货附件" :fileList="item.fileList03 || []"/>
-              <!-- <van-field name="uploader" label="退货附件：" class="outbound-field-uploader" required
-                v-if="queryType != 'view'">
-                <template #input>
-                  <van-uploader v-if="item.fileList03 && item.fileList03.length == 0" :preview-imag='false'
-                    :after-read="(file) => afterReadTransfer(file, item, 'fileList03')" :before-read="beforeRead"
-                    accept="">
-                    <van-button round type="info" class="outbound-uploader" native-type="button">上传</van-button>
-                  </van-uploader>
-                  <van-button round type="danger" class="outbound-uploader-delete" v-else native-type="button"
-                    @click="handleFileDelete(item, 'fileList03')">删除</van-button>
-                </template>
-              </van-field> -->
-              <!-- <span class="li-span-click" v-if="item.fileList03 && item.fileList03.length > 0 && queryType != 'view'"
-                @click="imgClick(item.fileList03[0])">{{ item.fileList03[0].fileName }}</span> -->
-              <!-- <li v-if="queryType === 'view'">
-                <span>退货附件：</span>
-                <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'thfj_im')"
-                  :key="val.filePath">{{ val.fileName }}</span>
-              </li> -->
-              <li class="li-item-overlength">
-                <span>备注：</span>
-                <span>{{ item.remark }}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        </div> -->
+        <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff" title-inactive-color="#2e2e2e">
+          <van-tab :title="`收货明细（共${ tableData.length }项）`" name="0" key="0">
+            <div class="box-container" v-for="(item, index) in tableData" :key="index">
+              <div>
+                <ul class="detail-ul">
+                  <li>
+                    <span>物资名称：</span>
+                    <span>{{ item.materialName }}</span>
+                  </li>
+                  <li>
+                    <span>规格型号：</span>
+                    <span>{{ item.specModel }}</span>
+                  </li>
+                  <li class="li-item-both">
+                    <div class="li-item-left">
+                      <span>计量单位：</span>
+                      <span>{{ item.unit }}</span>
+                    </div>
+                    <div class="li-item-right">
+                      <span>需求数量：</span>
+                      <span>{{ item.planAmount }}</span>
+                    </div>
+                  </li>
+                  <li class="li-item-overlength">
+                    <span>本次收货数量：</span>
+                    <span>{{ item.putTotal }}</span>
+                  </li>
+                  <li class="li-item-both">
+                    <div class="li-item">
+                      <span>生产日期：</span>
+                      <span>{{ item.manufactureDate ? parseTime(item.manufactureDate, '{y}-{m}-{d}') : '' }}</span>
+                    </div>
+                    <div class="li-item">
+                      <span>有效截止日期：</span>
+                      <span class="li-span-red">{{ item.expirationDate ? parseTime(item.expirationDate, '{y}-{m}-{d}') : ''
+                        }}</span>
+                    </div>
+                  </li>
+                  <li>
+                    <span>包装方式：</span>
+                    <span>{{ item.packagingFm }}</span>
+                  </li>
+                  <li>
+                    <span>使用地点：</span>
+                    <span>{{ item.addr }}</span>
+                  </li>
+                  <li>
+                    <span>收货地址：</span>
+                    <span>{{ item.field2 }}</span>
+                  </li>
+                  <li class="li-item-overlength">
+                    <span>收货人及联系方式：</span>
+                    <span>{{ item.receiver }}</span>
+                  </li>
+                  <li>
+                    <span>供应时间：</span>
+                    <span>{{ item.supplyDate ? parseTime(item.supplyDate, '{y}-{m}-{d}') : '' }}</span>
+                  </li>
+                  <li>
+                    <span>投资方：</span>
+                    <span>{{ item.field0 }}</span>
+                  </li>
+                  <li>
+                    <span>投资比例：</span>
+                    <span>{{ item.field1 }}</span>
+                  </li>
+                  <!-- <li class="li-item-overlength">
+                    <span>合格证附件：</span>
+                    <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'hgz')"
+                      :key="val.filePath">{{ val.fileName }}</span>
+                  </li> -->
+                  <file-download-view class="outbound-field-uploader" title="合格证附件" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                  <!-- <li class="li-item-overlength">
+                    <span>厂检报告附件：</span>
+                    <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'cjbg')"
+                      :key="val.filePath">{{ val.fileName }}</span>
+                  </li> -->
+                  <file-download-view class="outbound-field-uploader" title="厂检报告附件" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                  <template v-if="queryType === 'submit'">
+                    <van-field v-model="item.storeTotal" type="number" name="入库数量" label="入库数量" placeholder="请输入入库数量"
+                      @blur="putChange(item, index)" input-align="right" required :rules="rules.storeTotal" />
+                    <van-field v-model="item.refundZjTotal" type="number" name="退货数量" label="退货数量" placeholder="请输入退货数量"
+                      @blur="changeRefund(item, index)" input-align="right" required :rules="rules.refundZjTotal" />
+                  </template>
+                  <template v-else>
+                    <li class="li-item-both">
+                      <div class="li-item-left">
+                        <span class="font-weight">入库数量：</span>
+                        <span class="font-weight">{{ item.storeTotal }}</span>
+                      </div>
+                      <div class="li-item-right">
+                        <span class="font-weight">退货数量：</span>
+                        <span class="font-weight">{{ item.refundZjTotal }}</span>
+                      </div>
+                    </li>
+                  </template>
+                  <file-upload-view class="outbound-field-uploader" v-if="queryType === 'submit'" title="退货附件" :fileList="item.fileList03 || []" businessType="01"/>
+                  <file-download-view class="outbound-field-uploader" v-else title="退货附件" :fileList="item.fileList03 || []"/>
+                  <!-- <van-field name="uploader" label="退货附件：" class="outbound-field-uploader" required
+                    v-if="queryType != 'view'">
+                    <template #input>
+                      <van-uploader v-if="item.fileList03 && item.fileList03.length == 0" :preview-imag='false'
+                        :after-read="(file) => afterReadTransfer(file, item, 'fileList03')" :before-read="beforeRead"
+                        accept="">
+                        <van-button round type="info" class="outbound-uploader" native-type="button">上传</van-button>
+                      </van-uploader>
+                      <van-button round type="danger" class="outbound-uploader-delete" v-else native-type="button"
+                        @click="handleFileDelete(item, 'fileList03')">删除</van-button>
+                    </template>
+                  </van-field> -->
+                  <!-- <span class="li-span-click" v-if="item.fileList03 && item.fileList03.length > 0 && queryType != 'view'"
+                    @click="imgClick(item.fileList03[0])">{{ item.fileList03[0].fileName }}</span> -->
+                  <!-- <li v-if="queryType === 'view'">
+                    <span>退货附件：</span>
+                    <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'thfj_im')"
+                      :key="val.filePath">{{ val.fileName }}</span>
+                  </li> -->
+                  <li class="li-item-overlength">
+                    <span>备注：</span>
+                    <span>{{ item.remark }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </van-tab>
+          <van-tab title="报检信息" name="1" key="1">
+            <div class="box-container">
+              <file-upload-view :maxCount="5" v-if="queryType === 'submit'" title="报检材料上传（支持多个）" :fileList="formData.fileList01 || []" businessType="01"/>
+              <file-download-view v-else title="报检材料上传（支持多个）" :fileList="formData.fileList01 || []"/>
+            </div>
+          </van-tab>
+        </van-tabs>
         <!-- <div class="select-materials-search">
           <p class="select-materials-search-p font-weight">报检信息</p>
         </div>
@@ -188,14 +198,6 @@
             </ul>
           </div>
         </div> -->
-        <div class="box-container">
-          <div class="detail-title-info">
-            <img src="/static/icon-file.png"/>
-            <span class="info-title">报检信息</span>
-          </div>
-          <file-upload-view :maxCount="5" v-if="queryType === 'submit'" title="报检材料上传（支持多个）" :fileList="formData.fileList01 || []" businessType="01"/>
-          <file-download-view v-else title="报检材料上传（支持多个）" :fileList="formData.fileList01 || []"/>
-        </div>
       </div>
       <div class="default-button-container" v-if="queryType === 'submit'">
         <van-button class="button-info" round type="info" native-type="submit">提交入库审核</van-button>
@@ -243,6 +245,7 @@ export default {
         { value: "5", text: "审核中" },
         { value: "6", text: "已驳回" }
       ],
+      menuActiveIndex: '0'
     }
   },
   activated() {

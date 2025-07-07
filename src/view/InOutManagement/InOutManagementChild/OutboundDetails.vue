@@ -67,15 +67,15 @@
             </li>
             <li>
               <span>生产日期：</span>
-              <span>{{parseTime(item.manufactureDate,'{y}-{m}-{d}')}}</span>
+              <span>{{item.manufactureDate && parseTime(item.manufactureDate,'{y}-{m}-{d}')}}</span>
             </li>
             <li class="li-item-overlength">
               <span>有效截止日期：</span>
-              <span>{{parseTime(item.expirationDate,'{y}-{m}-{d}')}}</span>
+              <span>{{item.expirationDate && parseTime(item.expirationDate,'{y}-{m}-{d}')}}</span>
             </li>
             <li class="li-item-overlength">
               <span>本次出库数量：</span>
-              <span>{{item.outTotal}}</span>
+              <span class="li-span-click">{{item.outTotal}}</span>
             </li>
             <li>
               <span>备注：</span>
