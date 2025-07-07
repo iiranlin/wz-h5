@@ -3,7 +3,7 @@
         <div class="file-download-title">
             <span class="title">{{title}}</span>
         </div>
-        <div>
+        <div class="file-download-content">
             <ul>
                 <li v-for="(item,index) in fileList" :key="index">
                     <div class="file-info">
@@ -20,7 +20,7 @@
 </template>
 <script>
 import {minioDownload} from '@/api/blcd-base/minio'
-import FilePreview from "@/components/FilePreview.vue"
+import FilePreview from "@/components/FilePreview.vue";
 import {download} from '@/utils'
 
 export default {
@@ -84,7 +84,7 @@ export default {
     padding-left: 25px;
 
     .title {
-        font-size: 14px;
+        font-size: 13px;
         color: #1c1c1c;
         font-weight: 600;
     }
@@ -99,13 +99,18 @@ export default {
         top: 18px;
     }
 }
+.file-download-content {
+    box-sizing: border-box;
+    padding-bottom: 5px;
+}
 .file-info {
     box-sizing: border-box;
     min-height: 50px;
     background: #f6f6f6;
     border-radius: 3px;
-    margin-left: 25px;
     display: flex;
+    margin-left: 25px;
+    margin-right: 16px;
     align-items: center;
     position: relative;
     margin-bottom: 10px;
@@ -125,7 +130,7 @@ export default {
         margin-right: 35px;
         word-break: break-all;
     }
-    .file-delete {
+    .file-download {
         width: 32px;
         height: 32px;
         position: absolute;

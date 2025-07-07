@@ -3,7 +3,7 @@
         <div class="file-upload-title">
             <span class="title">{{title}}</span>
         </div>
-        <div>
+        <div class="file-upload-content">
             <ul>
                 <li v-for="(item,index) in fileList" :key="index">
                     <div class="file-info">
@@ -150,7 +150,7 @@ export default {
     padding-left: 25px;
 
     .title {
-        font-size: 14px;
+        font-size: 13px;
         color: #1c1c1c;
         font-weight: 600;
     }
@@ -165,13 +165,18 @@ export default {
         top: 18px;
     }
 }
+.file-upload-content {
+    box-sizing: border-box;
+    padding-bottom: 5px;
+}
 .file-info {
     box-sizing: border-box;
     min-height: 50px;
     background: #f6f6f6;
     border-radius: 3px;
-    margin-left: 25px;
     display: flex;
+    margin-left: 25px;
+    margin-right: 16px;
     align-items: center;
     position: relative;
     margin-bottom: 10px;
@@ -200,7 +205,8 @@ export default {
 }
 .file-add {
     text-align: center;
-    margin: 20px 45px 10px 45px;
+    margin: 0px 45px 0px 45px;
+    padding-bottom: 20px;
 
     ::v-deep .van-uploader {
         width: 100%;
