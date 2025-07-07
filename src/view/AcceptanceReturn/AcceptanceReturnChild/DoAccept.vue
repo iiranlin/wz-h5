@@ -95,15 +95,20 @@
           <span>投资比例：</span>
           <span>{{ item.field1 }}</span>
         </li>
-        <li class="li-item-overlength">
+        <li class="li-item-overlength ">
           <span>合格证附件：</span>
-          <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'hgz')"
+          <div class="files-list">
+              <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'hgz')"
           :key="imgItem.filePath">{{ imgItem.fileName }}</span>
+          </div>
+        
         </li>
         <li class="li-item-overlength">
           <span>厂检报告附件：</span>
+          <div class="files-list">
            <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'cjbg')"
               :key="imgItem.filePath">{{ imgItem.fileName }}</span>
+          </div>
         </li>
         <li>
             <span>备注：</span>
@@ -136,8 +141,7 @@
                 </van-uploader>
               </template>  
             </van-field> -->
-              <file-upload-view  title="退货附件" :fileList="fileList" businessType="01"/>
-
+              <file-upload-view  title="退货附件" :fileList="getFile(item.id)" businessType="01"/>
             <!-- <van-field v-model="item.remark" label="备注" placeholder="请输入备注" required clearable :label-width="240"
                        input-align="right"/> -->
           </van-cell-group>
@@ -145,6 +149,7 @@
         <template v-else>
           <li>
             <span>退货附件：</span>
+            
             <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'thfj_sh')"
               :key="imgItem.filePath">{{ imgItem.fileName }}</span>
           </li>
@@ -170,21 +175,26 @@
             />
             <van-calendar v-model="showDatePicker" @confirm="onDateConfirm"/>
 
-            <van-field required name="uploader" label="自检单：">
+            <!-- <van-field required name="uploader" label="自检单：">
               <template #input>
                 <van-uploader>
                   <van-button round type="info" class="outbound-uploader">上传</van-button>
                 </van-uploader>
               </template>
-            </van-field>
+            </van-field> -->
+               <file-upload-view  title="自检单：" :fileList="fileZjdList" businessType="01"/>
+               <van-field name="uploader" label="其他资料：">
+              
+               </van-field>
+                <file-upload-view   :fileList="fileQtzlList" businessType="01"/>
 
-            <van-field name="uploader" label="其他资料：">
+            <!-- <van-field name="uploader" label="其他资料：">
               <template #input>
                 <van-uploader>
                   <van-button round type="info" class="outbound-uploader">上传</van-button>
                 </van-uploader>
               </template>
-            </van-field>
+            </van-field> -->
           </van-cell-group>
         </template>
         <template v-else>
@@ -238,7 +248,10 @@ export default {
       showDatePicker: false, // 控制日期选择器显示
       id:"",
       dataList:[],
-      fileList:[],
+      fileTHList:[],
+      fileZjdList:[],
+      fileQtzlList:[],
+      currentTime: new Date() // 获取当前时间
     }
   },
   filters: {
@@ -281,6 +294,7 @@ export default {
             if(this.isView==false){
               this.dataList.materialCirculationDetailsTableDTOS.forEach(el => {
                   el.putTotal = el.sendTotal
+                  this.fileTHList.push({id:el.id,value:[]})
               })  
             }
           }
@@ -309,11 +323,63 @@ export default {
       }
     },
     onDateConfirm(val) {
+      this.currentTime = val
       this.dataList.takeDate = parseTime(val, '{y}-{m}-{d}')
       this.showDatePicker = false
     },
     addClick() {
-      let params= this.dataList
+
+      let status= false
+      this.dataList.materialCirculationDetailsTableDTOS.some((item,index)=>{
+        if(item.refundTotal){
+          if(!this.fileTHList[index].value.length){
+            this.$toast('收货明细第'+(index+1)+'条，有退货数量，请上传退货附件');
+            status =true
+          }
+        }
+      })
+      if(status){
+        return
+      }
+      this.fileTHList.forEach(item=>{
+        if(item.value.length){
+          let byList=this.dataList.materialCirculationDetailsTableDTOS.find(el=>el.id == item.id).fileByList
+          let fileObj={
+            thfj_sh:item.value
+          }
+          let newObj=Object.assign({}, JSON.parse(byList),fileObj)
+          this.dataList.materialCirculationDetailsTableDTOS.find(el=>el.id == item.id).fileByList =  JSON.stringify(newObj)
+        }
+      })
+      if(this.fileZjdList.length){
+        let fileObj={
+          zjd:this.fileZjdList
+        }
+        let newObj =Object.assign({}, JSON.parse(this.dataList.fileByList),fileObj) 
+        this.dataList.fileByList = JSON.stringify(newObj)
+      }
+
+      if(this.fileQtzlList.length){
+        let fileObj={
+          qtzl:this.fileQtzlList
+        }
+        let newObj =Object.assign({}, JSON.parse(this.dataList.fileByList),fileObj) 
+        this.dataList.fileByList = JSON.stringify(newObj)
+      }
+
+      let params= {
+        createUserName:this.dataList.createUserName,
+        deptName:this.dataList.deptName,
+        fileByList:this.dataList.fileByList,
+        id:this.dataList.id,
+        materialCirculationDetailsTableParamList:this.dataList.materialCirculationDetailsTableDTOS,
+        planName:this.dataList.planName,
+        sectionName:this.dataList.sectionName,
+        sellerName:this.dataList.sellerName,
+        shippingDate:this.formatByDate(this.dataList.shippingDate),
+        takeDate:new Date(this.currentTime.getTime() + this.currentTime.getTimezoneOffset() * 60000).toISOString()
+
+      }
 
       if(!params.takeDate){
         this.$toast('请选择收货时间'); 
@@ -323,6 +389,7 @@ export default {
          this.$toast('请上传自检单'); 
          return
       }
+      console.log(params,"params")
       saveTake(params).then((res)=>{
         if(res.success){
           this.$toast('保存成功')
@@ -331,11 +398,25 @@ export default {
       })
       
     },
+    formatByDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }else{
+        return ""
+      }  
+    },
     onClickBack() {
       this.$router.push({path: '/AcceptanceReturn'})
     },
     imgClick({ fileName, filePath }) {
       this.$refs.filePreview.init(fileName, filePath)
+    },
+    getFile(id){
+      return  this.fileTHList.find(item=>item.id == id).value
     }
   },
   mounted() {
@@ -402,6 +483,16 @@ export default {
     }
     .img-text {
       color: #0689ff;
+    }
+    .files-list{
+      width: calc(100% - 2rem) !important;
+      span{
+        width: 100%;
+        display: block;
+        overflow: inherit;
+        text-overflow: inherit;
+        white-space: inherit;
+      }
     }
   }
 }

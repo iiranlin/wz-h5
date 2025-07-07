@@ -22,16 +22,18 @@
                 <span>使用地点：</span>
                 <span>{{ params.addr }}</span>
             </li>
-            <li class="li-item-both">
-                <div class="li-item-left">
-                    <span style="width: 150px;">退货环节:</span>
+            <li>
+               <span>退货环节：</span>
                     <span style="color:red;" v-if="params.backNode==2">收货不通过</span>
-                    <span v-else>收货通过</span>
-                </div>
-                <div class="li-item-right">
+                    <span style="color:red;" v-else>收货通过</span>
+                <!-- <div class="li-item-right">
                     <span>退货时间:</span>
-                    <span>{{ formattedCreateDate(params.backDate) }}</span>
-                </div>
+                    <span></span>
+                </div> -->
+            </li>
+              <li>
+                <span>退货时间：</span>
+                <span>{{ formattedCreateDate(params.backDate) }}</span>
             </li>
         </ul>
         <div class="title">
