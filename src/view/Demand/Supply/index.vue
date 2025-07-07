@@ -118,10 +118,11 @@
 <script>
 import Vue from 'vue';
 import { Form } from 'vant';
-import { Field } from 'vant';
+import { Field,Toast } from 'vant';
 import { supplyDetails } from '@/api/demand/demandManagement'
 Vue.use(Form);
 Vue.use(Field);
+Vue.use(Toast);
 export default {
     name: 'MyProcess',
 
@@ -149,8 +150,13 @@ export default {
             let params = {
                 id: this.id
             }
+            Toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+            });
             supplyDetails(params).then((res) => {
                 if (res.code == 0) {
+                    Toast.clear()
                     this.allRefreshLoading = false
                     this.finished = false
                     this.result = res.data

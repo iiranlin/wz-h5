@@ -66,7 +66,7 @@
               placeholder="投资方" disabled input-align="right" />
             <van-field v-model="goodsData[index].field1" name="投资比例" required label="投资比例" disabled placeholder="投资比例"
               input-align="right" />
-            <van-field name="uploader" v-model="goodsData[index].certificateFileName" label="合格证附件" disabled
+            <van-field name="uploader" v-model="goodsData[index].fileList01" label="合格证附件" disabled
               :rules="[{ required: true, message: '请上传合格证附件' }]" required>
              <template #button>
                         <van-uploader :preview-imag='false' :after-read="(file) => passReadUpload(file, index)" :disabled="fileDisabled" :before-read="beforeRead"
@@ -80,7 +80,7 @@
                   :after-read="(file) => passReadUpload(file, index)" :before-read="beforeRead" />
               </template> -->
             </van-field>
-            <van-field name="uploader" v-model="goodsData[index].factoryFileName" label="厂检报告附件" disabled
+            <van-field name="uploader" v-model="goodsData[index].fileList02" label="厂检报告附件" disabled
               :rules="[{ required: true, message: '请上传厂检报告附件' }]" required>
 
               <template #button>
@@ -129,6 +129,7 @@ import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/a
 import { modifySendGoods } from '@/api/demand/sendGoods'
 import { minioUpload } from '@/api/blcd-base/minio'
 import { Notify } from 'vant';
+import Return from '../Return.vue';
 Vue.use(Notify)
 Vue.use(DatetimePicker);
 Vue.use(Toast);
@@ -179,6 +180,8 @@ export default {
         // 回显图片
         certificateFileName: this.showHgz(item.fileByList),
         factoryFileName: this.showCjbg(item.fileByList),
+        fileList01:this.fileList01(item.fileByList),
+        fileList02:this.fileList02(item.fileByList),
       }))
     }
     
@@ -187,8 +190,8 @@ export default {
   methods: {
     // 用于编辑回显
     showHgz(data) {
+      console.log(data,'1345')
       let imgUrl = JSON.parse(data)
-
       let img = imgUrl.hgz[0].fileName
       return img
     },
@@ -197,6 +200,18 @@ export default {
       let imgUrl = JSON.parse(data)
 
       let img = imgUrl.cjbg[0].fileName
+      return img
+    },
+    fileList01(data){
+      let imgUrl = JSON.parse(data)
+
+      let img = [{name:imgUrl.hgz[0].fileName,url:imgUrl.hgz[0].filePath}]
+      return img
+    },
+    fileList01(data){
+      let imgUrl = JSON.parse(data)
+
+      let img = [{name:imgUrl.cjbg[0].fileName,url:imgUrl.cjbg[0].filePath}]
       return img
     },
     onSubmit(values) {
@@ -268,8 +283,8 @@ export default {
             message: "上传成功"
           });
           this.goodsData[index].fileList01 = [{
-            name: res.data.filePath,
-            url: res.data.fileName // 注意Vant通常使用url而不是path
+            name: res.data.fileName,
+            url: res.data.filePath // 注意Vant通常使用url而不是path
           }];
           this.$set(this.goodsData[index], 'certificateFileName', res.data.fileName); // 显示文件名
           // this.params.fileName = res.data.fileName
@@ -295,8 +310,8 @@ export default {
             message: "上传成功"
           });
           this.goodsData[index].fileList02 = [{
-            name: res.data.filePath,
-            url: res.data.fileName // 注意Vant通常使用url而不是path
+            name: res.data.fileName,
+            url: res.data.filePath // 注意Vant通常使用url而不是path
           }];
           this.$set(this.goodsData[index], 'factoryFileName', res.data.fileName); // 显示文件名
           
@@ -321,14 +336,16 @@ export default {
         Toast('没有可提交的内容');
         return;
       }
-
+      console.log(this.goodsData,'日胶')
       // 先校验所有数据
       const isValid = this.goodsData.every((item) => {
         return (
           item.supplyDate &&
           item.createDate &&
-          item.ssendTotal &&
-          item.unit &&
+          item.factoryFileName &&
+          item.certificateFileName &&
+          item.sendTotal &&
+          item.packagingFm &&
           item.addr &&
           item.field2 &&
           item.fileList01 &&

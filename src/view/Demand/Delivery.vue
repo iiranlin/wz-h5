@@ -25,18 +25,14 @@
                     <span class="font-weight">{{ item.shipmentBatchNumber }}</span>
                   </li>
                   <li>
-                    <span>需求编号:</span>
-                    <span style="color:#1989fa;" @click.stop="requirementDetails(item.planId)">{{ item.planNumber }}</span>
-                  </li>
-                  <li>
                     <span>供应需求：</span>
                     <span class="text">{{ item.planName }}</span>
                   </li>
-                  <li>
-                    <span>物流单号：</span>
-                    <span style="color:#1989fa;" v-if="item.oddNumbers" @click.stop="handleLookClick(item.planId,item.shipmentBatchNumber,item.oddNumbers)">{{ item.oddNumbers }}</span>
-                    <span v-else>其他</span>
+                   <li>
+                    <span>需求编号:</span>
+                    <span style="color:#1989fa;" @click.stop="requirementDetails(item.planId)">{{ item.planNumber }}</span>
                   </li>
+                 
                   <li>
                     <span>需求项目: </span>
                     <span>{{ item.sectionName }}</span>
@@ -44,6 +40,11 @@
                    <li>
                     <span>发货时间: </span>
                     <span>{{ formattedCreateDate(item.shippingDate) }}</span>
+                  </li>
+                   <li>
+                    <span>物流单号：</span>
+                    <span style="color:#1989fa;" v-if="item.oddNumbers" @click.stop="handleLookClick(item.planId,item.shipmentBatchNumber,item.oddNumbers)">{{ item.oddNumbers }}</span>
+                    <span v-else>其他</span>
                   </li>
                    <li>
                     <span>操作人: </span>
@@ -64,7 +65,7 @@
                   </li>
                 </ul>
                 <div class="list-ul-button" v-if="item.status !=3">
-                    <van-button class="button-info" round type="info" @click.stop="handleSendGoodsClick(item.id,item.status)"
+                    <van-button class="button-info" round type="info" @click.stop="handleSendGoodsClick(item.id)"
                     v-if="item.status == 1">确认发货</van-button>
                      <van-button class="button-info" plain round type="info" @click.stop="handleEditClick(item.id,'edit')"
                     v-if="item.status == 1" >编辑</van-button>
@@ -241,18 +242,19 @@ export default {
       this.allRefreshLoading = true
       this.getList()
     },
-    //发货
-    handleSendGoodsClick(id,status) {
+    //确定已经发货
+    handleSendGoodsClick(id) {
       Dialog.confirm({
         title: '',
-        message: '确定已经发货！',
+        message: '确定已经发货？',
         confirmButtonColor:'#1989fa'
       })
         .then(() => {
           let params = {
             id:id,
-            status:status
+            status:2
           }
+          console.log(params,'1112')
           snedGoodsSure(params).then((res)=>{
             if(res.code==0){
               Toast.success(res.data);
