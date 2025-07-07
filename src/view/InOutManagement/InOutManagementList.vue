@@ -1,7 +1,7 @@
 <template>
   <div class="in-out-management">
     <div class="tabs">
-      <van-tabs sticky v-model="activeIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
+      <van-tabs sticky v-model="activeIndex" color="#0571ff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" class="in-out-management-tab">
         <van-tab title="入库列表">
           <div slot="title">

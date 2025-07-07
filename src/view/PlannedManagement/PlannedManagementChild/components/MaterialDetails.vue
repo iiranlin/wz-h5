@@ -3,7 +3,7 @@
   <div>
     <div class="box-container" v-for="(item, index) in list" :key="index">
       <div>
-        <ul class="detail-ul">
+        <ul class="detail-list-ul">
           <!-- <li class="li-item-overlength">
             <span class="font-weight">供应商名称：</span>
             <span class="font-weight">{{ item.sellerName }}</span>
@@ -66,9 +66,9 @@
             <span>投资比例：</span>
             <span>{{ item.field1 }}</span>
           </li>
-          <li>
+          <li class="li-item-remark"> 
             <span>备注：</span>
-            <span>{{ item.remark }}</span>
+            <div class="remark-detail">{{item.remark || '未填写'}}</div>
           </li>
         </ul>
       </div>
@@ -106,6 +106,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.box-container {
+    padding: 0px;
+}
 .li-item-both {
   justify-content: space-between;
 }

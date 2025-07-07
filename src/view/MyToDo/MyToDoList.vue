@@ -5,8 +5,11 @@
                 v-model="formData.keywords" 
                 placeholder="输入关键字搜索" 
                 shape="round" 
-                background="#eef6ff"
+                left-icon="none"
                 @search="handeSearch()">
+                <template slot='right-icon'>
+                    <van-icon name="search" @click="handeSearch()"/>
+                </template>
             </van-search>
         </van-sticky>
         <div class="tabs">
@@ -14,7 +17,7 @@
                 sticky
                 v-model="menuActiveIndex" 
                 color="#0571ff"
-                background="#eef6ff"
+                background="#ffffff"
                 title-active-color="#0571ff"
                 title-inactive-color="#2e2e2e">
                 <van-tab title="待审核">
@@ -26,11 +29,11 @@
                             @load="getWaitList">
 
                             <div v-for="(item,index) in waitOrderList" :key="index" class="box-container" @click.stop="handleWaitItemClick(item)">
+                                <div class="list-title-content">
+                                    <span>{{checkTitle(item)}}</span>
+                                    <span class="font-weight" style="color:#134daa;">{{item.businessCode}}</span>
+                                </div>
                                 <ul class="list-ul">
-                                    <li>
-                                        <span class="font-weight">业务编码：</span>
-                                        <span class="font-weight">{{item.businessCode}}</span>
-                                    </li>
                                     <li>
                                         <span>业务类型：</span>
                                         <span>{{item.businessType | orderTypeFilter(dict.flowBusinessType)}}</span>
@@ -64,11 +67,11 @@
                             @load="getWaitHandleList">
 
                             <div v-for="(item,index) in waitHandleList" :key="index" class="box-container" @click.stop="handleWaitHandleItemClick(item)">
+                                <div class="list-title-content">
+                                    <span>{{checkTitle(item)}}</span>
+                                    <span class="font-weight" style="color:#134daa;">{{item.businessCode}}</span>
+                                </div>
                                 <ul class="list-ul">
-                                    <li>
-                                        <span class="font-weight">业务编码：</span>
-                                        <span class="font-weight">{{item.businessCode}}</span>
-                                    </li>
                                     <li>
                                         <span>业务类型：</span>
                                         <span>{{item.businessType | orderTypeFilter(dict.flowBusinessType)}}</span>
@@ -102,11 +105,15 @@
                             @load="getHistoryList">
 
                             <div v-for="(item,index) in historyOrderList" :key="index" class="box-container" @click.stop="handleHistoryItemClick(item)">
+                                <div class="list-title-content">
+                                    <span>{{checkTitle(item)}}</span>
+                                    <span class="font-weight" style="color:#134daa;">{{item.businessCode}}</span>
+                                    <div class="li-title-status">
+                                        <img :src="checkAuditStatus(item.auditStatus)"/>
+                                        <span>{{item.auditStatus | orderTypeFilter(dict.flowTaskStatus)}}</span>
+                                    </div>
+                                </div>
                                 <ul class="list-ul">
-                                    <li>
-                                        <span class="font-weight">业务编码：</span>
-                                        <span class="font-weight">{{item.businessCode}}</span>
-                                    </li>
                                     <li>
                                         <span>业务类型：</span>
                                         <span>{{item.businessType | orderTypeFilter(dict.flowBusinessType)}}</span>
@@ -130,9 +137,6 @@
                                     <li>
                                         <span>审核意见：</span>
                                         <span>{{item.message}}</span>
-                                    </li>
-                                    <li class="li-status">
-                                        <van-tag :type="checkAuditStatus(item.auditStatus)" round size="medium">{{item.auditStatus | orderTypeFilter(dict.flowTaskStatus)}}</van-tag>
                                     </li>
                                 </ul>
                             </div>
@@ -304,12 +308,20 @@ export default {
                 toast.clear();
             });
         },
+        //判断标题
+        checkTitle(item){
+            if(item.businessType == 'YLXQ' || item.businessType == 'FBYLXQ'){
+                return '需求编号：'
+            }else if(item.businessType == 'RK'){
+                return '入库单号：'
+            }
+        },
         //已审核状态图标判断
         checkAuditStatus(auditStatus){
             if(auditStatus == '2'){
-                return 'primary'
+                return '/static/icon-success.png'
             }else if(auditStatus == '3'){
-                return 'danger'
+                return '/static/icon-reject.png'
             }
         },
         //待审核列表条目点击
@@ -406,23 +418,5 @@ export default {
       top: 54px !important;
     }
   }
-}
-
-.van-search {
-
-  .van-search__content {
-    border-radius: 50px;
-    background: #fff;
-  }
-
-  .van-cell {
-    border-radius: 50px;
-    background: #fff;
-  }
-}
- .li-item-overlength {
-    & :nth-child(1){
-        margin-right: 10px;
-    }
 }
 </style>

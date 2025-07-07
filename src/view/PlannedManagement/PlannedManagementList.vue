@@ -1,15 +1,19 @@
 <template>
   <div class="planned-management">
-    <van-sticky>
+    <van-sticky class="planned-management-search-bj">
       <div class="planned-management-search">
-        <van-search v-model="searchValue" placeholder="请输入需求名称" background="#eef6ff" :show-action="showAction"
-        @search="onSearch" />
+        <van-search v-model="searchValue" placeholder="请输入需求名称" left-icon="none" shape="round" :show-action="showAction"
+        @search="onSearch">
+          <template slot='right-icon'>
+            <van-icon name="search" @click="statusChange()"/>
+          </template>
+        </van-search>
         <!-- <van-dropdown-menu active-color="#028bff">
           <van-dropdown-item v-model="statusValue" :options="statusArr" @change="statusChange" />
         </van-dropdown-menu>
         <van-button round @click="resetClick">重置</van-button> -->
       </div>
-      <van-tabs sticky v-model="statusValue" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
+      <van-tabs v-model="statusValue" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" @change="statusChange">
         <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value">
         </van-tab>
@@ -20,11 +24,15 @@
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error"
           error-text="请求失败，点击重新加载" @load="onLoad">
           <div v-for="(item, index) in list" :key="index" class="box-container">
+            <div class="list-title-content">
+              <span>需求编号：</span>
+              <span class="font-weight" style="color:#134daa;">{{item.planNumber}}</span>
+              <div class="li-title-status">
+                <img :src="checkAuditStatus(item.planStatus)"/>
+                <span>{{checkStatusText(item.planStatus)}}</span>
+              </div>
+            </div>
             <ul class="list-ul" @click="handleWaitItemClick(item)">
-              <li>
-                <span class="font-weight">需求编号：</span>
-                <span class="font-weight">{{ item.planNumber }}</span>
-              </li>
               <li>
                 <span>需求名称：</span>
                 <span>{{ item.planName }}</span>
@@ -44,13 +52,6 @@
               <li>
                 <span>提报时间：</span>
                 <span>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
-              </li>
-              <li class="li-status">
-                <template v-for="row in statusArr">
-                  <van-tag :class="{ 'li-status-completed': row.value == '9' }"
-                    :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
-                    v-if="item.planStatus == row.value">{{ row.text }}</van-tag>
-                </template>
               </li>
             </ul>
             <div class="list-ul-button">
@@ -245,7 +246,19 @@ export default {
     },
     withdrawClick(item) {
       this.handleWithdraw({ businessId: item.id, businessType: item.planType == 1 ? 'FBYLXQ' : 'YLXQ' })
-    }
+    },
+    checkStatusText(status){
+      let name = ''
+      this.statusArr.forEach(item => {
+        if(item.value === status){
+          name = item.text
+        }
+      })
+      return name
+    },
+    checkAuditStatus(){
+      return '/static/icon-success.png'
+    },
   }
 }
 </script>
@@ -280,19 +293,19 @@ export default {
     }
   }
 
-  .van-search {
-    flex: 1;
+  // .van-search {
+  //   flex: 1;
 
-    .van-search__content {
-      border-radius: 50px;
-      background: #fff;
-    }
+  //   .van-search__content {
+  //     border-radius: 50px;
+  //     background: #fff;
+  //   }
 
-    .van-cell {
-      border-radius: 50px;
-      background: #fff;
-    }
-  }
+  //   .van-cell {
+  //     border-radius: 50px;
+  //     background: #fff;
+  //   }
+  // }
 
   .planned-management-list {
     height: 100%;

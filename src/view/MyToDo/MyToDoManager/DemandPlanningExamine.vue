@@ -1,12 +1,13 @@
 <template>
     <div :class="['default-container',type == '0'?'detail-button-container':'']">
-        <div class="box-container">
+        <div class="detail-base-info">
+            <div class="detail-title-content">
+                <img src="/static/icon-xqjh.png">
+                <span>需求名称：</span>
+                <span>{{detailInfo.planName}}</span>
+            </div>
             <div>
                 <ul class="detail-ul">
-                    <li>
-                        <span>需求名称：</span>
-                        <span>{{detailInfo.planName}}</span>
-                    </li>
                     <li>
                         <span>标段名称:</span>
                         <span>{{detailInfo.sectionName}}</span>
@@ -30,71 +31,68 @@
             sticky
             v-model="menuActiveIndex" 
             color="#0571ff"
-            background="#eef6ff"
             title-active-color="#0571ff"
             title-inactive-color="#2e2e2e">
             <van-tab title="物资明细">
                 <div class="box-container" v-for="(item,index) in detailList" :key="index">
-                    <div>
-                        <ul class="detail-ul">
-                            <li>
-                                <span>供应商：</span>
-                                <span>{{item.sellerName}}</span>
-                            </li>
-                            <li>
-                                <span>物资名称：</span>
-                                <span>{{item.materialName}}</span>
-                            </li>
-                            <li>
-                                <span>规格型号：</span>
-                                <span>{{item.specModel}}</span>
-                            </li>
-                            <li>
-                                <span>计量单位：</span>
-                                <span>{{item.unit}}</span>
-                            </li>
-                            <li>
-                                <span>合同数量：</span>
-                                <span>{{item.amount}}</span>
-                            </li>
-                            <li class="li-item-overlength">
-                                <span>累计计划量（含本次）：</span>
-                                <span>{{item.cumulativeAmount}}</span>
-                            </li>
-                            <li class="li-item-overlength">
-                                <span>本次计划量：</span>
-                                <span>{{item.planAmount}}</span>
-                            </li>
-                            <li>
-                                <span>供应时间：</span>
-                                <span>{{parseTime(item.supplyDate,'{y}-{m}-{d}')}}</span>
-                            </li>
-                            <li>
-                                <span>使用地点：</span>
-                                <span>{{item.addr}}</span>
-                            </li>
-                            <li>
-                                <span>收货地址：</span>
-                                <span>{{item.field2}}</span>
-                            </li>
-                            <li class="li-item-overlength">
-                                <span>收货人及联系方式：</span>
-                                <span>{{item.receiver}}</span>
-                            </li>
-                            <li>
-                                <span>投资方：</span>
-                                <span>{{item.field0}}</span>
-                            </li>
-                            <li>
-                                <span>投资比例：</span>
-                                <span>{{item.field1}}</span>
-                            </li>
-                            <li>
-                                <span>备注：</span>
-                                <span>{{item.remark}}</span>
-                            </li>
-                        </ul>
+                    <div class="detail-list-title-content">
+                        <span>物资名称：</span>
+                        <span>{{item.materialName}}</span>
                     </div>
+                    <ul class="detail-list-ul">
+                        <li>
+                            <span>供应商：</span>
+                            <span>{{item.sellerName}}</span>
+                        </li>
+                        <li>
+                            <span>规格型号：</span>
+                            <span>{{item.specModel}}</span>
+                        </li>
+                        <li>
+                            <span>计量单位：</span>
+                            <span>{{item.unit}}</span>
+                        </li>
+                        <li>
+                            <span>合同数量：</span>
+                            <span>{{item.amount}}</span>
+                        </li>
+                        <li class="li-item-overlength">
+                            <span>累计计划量（含本次）：</span>
+                            <span>{{item.cumulativeAmount}}</span>
+                        </li>
+                        <li class="li-item-overlength">
+                            <span>本次计划量：</span>
+                            <span>{{item.planAmount}}</span>
+                        </li>
+                        <li>
+                            <span>供应时间：</span>
+                            <span>{{parseTime(item.supplyDate,'{y}-{m}-{d}')}}</span>
+                        </li>
+                        <li>
+                            <span>使用地点：</span>
+                            <span>{{item.addr}}</span>
+                        </li>
+                        <li>
+                            <span>收货地址：</span>
+                            <span>{{item.field2}}</span>
+                        </li>
+                        <li class="li-item-overlength">
+                            <span>收货人及联系方式：</span>
+                            <span>{{item.receiver}}</span>
+                        </li>
+                        <li>
+                            <span>投资方：</span>
+                            <span>{{item.field0}}</span>
+                        </li>
+                        <li>
+                            <span>投资比例：</span>
+                            <span>{{item.field1}}</span>
+                        </li>
+                        <li class="li-item-remark"> 
+                            <span>备注：</span>
+                            <div class="remark-detail">{{item.remark || '未填写'}}</div>
+                        </li>
+                    </ul>
                 </div>
             </van-tab>
             <van-tab title="查看流程">
@@ -105,10 +103,10 @@
                     @load="getProcessList">
 
                     <div v-for="(item,index) in processList" :key="index" class="box-container">
-                        <ul class="list-ul">
+                        <ul class="detail-list-ul">
                             <li>
-                                <span class="font-weight">节点：</span>
-                                <span class="font-weight">{{item.actName}}</span>
+                                <span>节点：</span>
+                                <span>{{item.actName}}</span>
                             </li>
                             <li>
                                 <span>单位：</span>
@@ -389,8 +387,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.box-container {
+    padding: 0px;
+}
 .default-container {
-    padding-top: 10px;
     overflow-y: hidden;
     display: flex;
     flex-direction: column;
@@ -399,6 +399,9 @@ export default {
     overflow-y: hidden;
     display: flex;
     flex-direction: column;
+}
+.detail-base-info {
+    border-bottom: 1px solid #e3e3e3;
 }
 ::v-deep .van-tabs {
     flex: 1;

@@ -1,42 +1,43 @@
 <template>
-  <div class="requirement-details">
-    <!-- <van-sticky class="select-materials-sticky"> -->
-    <div class="requirement-details-contract">
-      <ul class="detail-ul">
-        <li>
-          <span>需求编号：</span>
-          <span>{{ detail.planNumber }}</span>
-        </li>
-        <li>
-          <span>需求名称：</span>
-          <span>{{ detail.planName }}</span>
-        </li>
-        <li>
-          <span>需求项目：</span>
-          <span>{{ detail.sectionName }}</span>
-        </li>
-        <li>
-          <span>需求组织：</span>
-          <span>{{ detail.deptName }}</span>
-        </li>
-        <li>
-          <span>提报人：</span>
-          <span>{{ detail.createUserName }}</span>
-        </li>
-        <li>
-          <span>提报时间：</span>
-          <span>{{ parseTime(detail.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
-        </li>
-        <li class="li-status">
-          <template v-for="row in statusArr">
-            <van-tag :class="{ 'li-status-completed': row.value == '9' }"
-              :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
-              v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
-          </template>
-        </li>
-      </ul>
+  <div class="default-container">
+    <div class="detail-base-info">
+        <div class="detail-title-content">
+            <img src="/static/icon-xqjh.png">
+            <span>需求编号：</span>
+            <span>{{detail.planNumber}}</span>
+        </div>
+        <div>
+            <ul class="detail-ul">
+                  <li>
+            <span>需求名称：</span>
+            <span>{{ detail.planName }}</span>
+          </li>
+          <li>
+            <span>需求项目：</span>
+            <span>{{ detail.sectionName }}</span>
+          </li>
+          <li>
+            <span>需求组织：</span>
+            <span>{{ detail.deptName }}</span>
+          </li>
+          <li>
+            <span>提报人：</span>
+            <span>{{ detail.createUserName }}</span>
+          </li>
+          <li>
+            <span>提报时间：</span>
+            <span>{{ parseTime(detail.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
+          </li>
+          <!-- <li class="li-status">
+            <template v-for="row in statusArr">
+              <van-tag :class="{ 'li-status-completed': row.value == '9' }"
+                :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
+                v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
+            </template>
+            </li> -->
+            </ul>
+        </div>
     </div>
-    <!-- </van-sticky> -->
     <van-tabs :class="{'details-van-tabs': ['1', '4', '0', '5', '10'].includes(detail.planStatus)}" sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
       title-inactive-color="#2e2e2e">
       <van-tab title="物资明细">

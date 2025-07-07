@@ -1,146 +1,153 @@
 <template>
-  <div class="outbound">
-    <div class="outbound-mian">
-      <van-form @submit="outboundClick" label-align="left" label-width="180px">
-        <div class="box-container" style="margin-top: 20px;">
-          <div>
-            <ul class="detail-ul">
+  <div class="detail-button-container">
+    <div class="detail-base-info">
+      <div class="detail-title-content">
+        <img src="/static/icon-xqjh.png">
+        <span>需求名称：</span>
+        <span>{{detailInfo.planName}}</span>
+      </div>
+      <div>
+        <ul class="detail-ul">
+          <li>
+            <span>需求项目：</span>
+            <span>{{detailInfo.sectionName}}</span>
+          </li>
+          <li>
+            <span>需求组织：</span>
+            <span>{{detailInfo.deptName}}</span>
+          </li>
+          <template v-if="queryType === 'submit'">
+            <van-field v-model="formData.receiveDeptName" name="领用单位" label="领用单位：" placeholder="请输入领用单位" required clearable
+              input-align="right"/>
+            <van-field v-model="formData.pickUserName" name="领料人" label="领料人：" placeholder="请输入领料人" required clearable
+              input-align="right"/>
+            <van-field v-model="formData.pickDate" 
+              label="领料日期："
+              required
+              input-align="right"
+              readonly 
+              clickable 
+              name="领料日期" 
+              placeholder="请选择领料日期" 
+              @click="showsTimePop=true" />
+            <van-field v-model="formData.useLocation" name="使用地点" label="使用地点：" placeholder="请输入使用地点" required clearable
+              input-align="right"/>
+            <van-field v-model="formData.issueUserName" name="发料人" label="发料人：" placeholder="请输入发料人" required clearable
+              input-align="right"/>
+          </template>
+          <template v-else>
+            <li>
+              <span>领用单位：</span>
+              <span>{{formData.receiveDeptName}}</span>
+            </li>
+            <li>
+              <span>领料人：</span>
+              <span>{{formData.pickUserName}}</span>
+            </li>
+            <li>
+              <span>领料日期：</span>
+              <span>{{formData.pickDate}}</span>
+            </li>
+            <li>
+              <span>使用地点：</span>
+              <span>{{formData.useLocation}}</span>
+            </li>
+            <li>
+              <span>发料人：</span>
+              <span>{{formData.issueUserName}}</span>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </div>
+    <div class="detail-floor-content">
+      <img src="/static/icon-file.png"/>
+      <span>附件</span>
+    </div>
+    <div class="box-container">
+      <file-upload-view v-if="queryType === 'submit'" title="领料单" :fileList="fileList" businessType="01"/>
+      <file-download-view v-else title="领料单" :fileList="fileList"/>
+    </div>
+    <div class="detail-floor-content">
+      <img src="/static/icon-return.png"/>
+      <span>物资明细（共{{detailList.length}}项）</span>
+      <van-search ref="getheight"
+          v-model="searchValue" 
+          placeholder="输入规格型号" 
+          shape="round" 
+          left-icon="none"
+          background="#f2f4f8"
+          @search="onSearch()">
+          <template slot='right-icon'>
+              <van-icon name="search" @click="onSearch()"/>
+          </template>
+      </van-search>
+    </div>
+    <div v-for="(item,index) in filteredList" :key="index">
+      <div class="box-container" v-if="checkParent(item)">
+        <div class="div-parent">
+          <ul class="detail-list-ul">
+            <li>
+              <span>供应商：</span>
+              <span>{{item.sellerName}}</span>
+            </li>
+            <li>
+              <span class="font-weight">物资名称：</span>
+              <span class="font-weight">{{item.materialName}}</span>
+            </li>
+            <li>
+              <span>规格型号：</span>
+              <span>{{item.specModel}}</span>
+            </li>
+            <li>
+              <span>计量单位：</span>
+              <span>{{item.unit}}</span>
+            </li>
+            <li>
+              <span>需求数量：</span>
+              <span>{{item.planAmount}}</span>
+            </li>
+            <li class="li-item-overlength">
+              <span>当前库存数量：</span>
+              <span>{{item.stockStatus}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="div-child" v-for="(childItem,childIndex) in item.childList" :key="childIndex">
+          <ul class="detail-list-ul" v-if="checkChild(childItem)">
+            <li>
+              <span>入库单号：</span>
+              <span>{{childItem.storeNumber}}</span>
+            </li>
+            <li class="li-item-overlength">
+              <span>当前库存数量：</span>
+              <span>{{childItem.remainingStock}}</span>
+            </li>
+            <li>
+              <span>生产日期：</span>
+              <span>{{parseTime(childItem.manufactureDate,'{y}-{m}-{d}')}}</span>
+            </li>
+            <li class="li-item-overlength">
+              <span>有效期截至日期：</span>
+              <span>{{parseTime(childItem.expirationDate,'{y}-{m}-{d}')}}</span>
+            </li>
+            <template v-if="queryType === 'submit'">
+              <van-field class="outbound-field-text" v-model="childItem.outTotal" name="出库数量" label="出库数量：" placeholder="请输入出库数量" input-align="right" label-width="252px" required/>
+              <van-field class="outbound-field-text" v-model="childItem.remark" name="备注" label="备注：" placeholder="请输入备注" input-align="right" label-width="110px"/>
+            </template>
+            <template v-if="queryType === 'save'">
               <li>
-                <span>需求名称：</span>
-                <span>{{detailInfo.planName}}</span>
+                <span>出库数量：</span>
+                <span>{{childItem.outTotal}}</span>
               </li>
               <li>
-                <span>需求项目：</span>
-                <span>{{detailInfo.sectionName}}</span>
+                <span>备注：</span>
+                <span>{{childItem.remark}}</span>
               </li>
-              <li>
-                <span>需求组织：</span>
-                <span>{{detailInfo.deptName}}</span>
-              </li>
-              <template v-if="queryType === 'submit'">
-                <van-field v-model="formData.receiveDeptName" name="领用单位" label="领用单位：" placeholder="请输入领用单位" required clearable
-                  input-align="right"/>
-                <van-field v-model="formData.pickUserName" name="领料人" label="领料人：" placeholder="请输入领料人" required clearable
-                  input-align="right"/>
-                <van-field v-model="formData.pickDate" 
-                  label="领料日期："
-                  required
-                  input-align="right"
-                  readonly 
-                  clickable 
-                  name="领料日期" 
-                  placeholder="请选择领料日期" 
-                  @click="showsTimePop=true" />
-                <van-field v-model="formData.useLocation" name="使用地点" label="使用地点：" placeholder="请输入使用地点" required clearable
-                  input-align="right"/>
-                <van-field v-model="formData.issueUserName" name="发料人" label="发料人：" placeholder="请输入发料人" required clearable
-                  input-align="right"/>
-              </template>
-              <template v-else>
-                <li>
-                  <span>领用单位：</span>
-                  <span>{{formData.receiveDeptName}}</span>
-                </li>
-                <li>
-                  <span>领料人：</span>
-                  <span>{{formData.pickUserName}}</span>
-                </li>
-                <li>
-                  <span>领料日期：</span>
-                  <span>{{formData.pickDate}}</span>
-                </li>
-                <li>
-                  <span>使用地点：</span>
-                  <span>{{formData.useLocation}}</span>
-                </li>
-                <li>
-                  <span>发料人：</span>
-                  <span>{{formData.issueUserName}}</span>
-                </li>
-              </template>
-            </ul>
-          </div>
+            </template>
+          </ul>
         </div>
-        <div class="box-container">
-          <div class="detail-title-info">
-            <img src="/static/icon-file.png"/>
-            <span class="info-title">附件</span>
-          </div>
-          <file-upload-view v-if="queryType === 'submit'" title="领料单" :fileList="fileList" businessType="01"/>
-          <file-download-view v-else title="领料单" :fileList="fileList"/>
-        </div>
-        <div class="select-materials-search">
-          <p class="select-materials-search-p font-weight">物资明细（共{{detailList.length}}项）</p>
-          <van-search v-model="searchValue" placeholder="输入规格型号" background="center" @search="onSearch" />
-        </div>
-        <div v-for="(item,index) in filteredList" :key="index">
-          <div class="box-container" v-if="checkParent(item)">
-            <div class="div-parent">
-              <ul class="detail-ul">
-                <li>
-                  <span>供应商：</span>
-                  <span>{{item.sellerName}}</span>
-                </li>
-                <li>
-                  <span class="font-weight">物资名称：</span>
-                  <span class="font-weight">{{item.materialName}}</span>
-                </li>
-                <li>
-                  <span>规格型号：</span>
-                  <span>{{item.specModel}}</span>
-                </li>
-                <li>
-                  <span>计量单位：</span>
-                  <span>{{item.unit}}</span>
-                </li>
-                <li>
-                  <span>需求数量：</span>
-                  <span>{{item.planAmount}}</span>
-                </li>
-                <li class="li-item-overlength">
-                  <span>当前库存数量：</span>
-                  <span>{{item.stockStatus}}</span>
-                </li>
-              </ul>
-            </div>
-            <div class="div-child" v-for="(childItem,childIndex) in item.childList" :key="childIndex">
-              <ul class="detail-ul" v-if="checkChild(childItem)">
-                <li>
-                  <span>入库单号：</span>
-                  <span>{{childItem.storeNumber}}</span>
-                </li>
-                <li class="li-item-overlength">
-                  <span>当前库存数量：</span>
-                  <span>{{childItem.remainingStock}}</span>
-                </li>
-                <li>
-                  <span>生产日期：</span>
-                  <span>{{parseTime(childItem.manufactureDate,'{y}-{m}-{d}')}}</span>
-                </li>
-                <li class="li-item-overlength">
-                  <span>有效期截至日期：</span>
-                  <span>{{parseTime(childItem.expirationDate,'{y}-{m}-{d}')}}</span>
-                </li>
-                <template v-if="queryType === 'submit'">
-                  <van-field class="outbound-field-text" v-model="childItem.outTotal" name="出库数量" label="出库数量：" placeholder="请输入出库数量" input-align="right" label-width="252px" />
-                  <van-field class="outbound-field-text" v-model="childItem.remark" name="备注" label="备注：" placeholder="请输入备注" input-align="right" label-width="110px"/>
-                </template>
-                <template v-if="queryType === 'save'">
-                  <li>
-                    <span>出库数量：</span>
-                    <span>{{childItem.outTotal}}</span>
-                  </li>
-                  <li>
-                    <span>备注：</span>
-                    <span>{{childItem.remark}}</span>
-                  </li>
-                </template>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <van-empty v-if="filteredList.length == 0" description="暂无数据" />
-      </van-form>
+      </div>
     </div>
     <div class="default-button-container">
       <van-button class="button-info" round type="info" @click="previewClick('save')" v-if="queryType === 'submit'">预览</van-button>
@@ -454,95 +461,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.outbound {
-  width: 100%;
-  height: 100%;
-
-  .outbound-mian {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 50px;
-  }
-
-  .select-materials-search {
-    display: flex;
-    justify-content: space-between;
-
-    .select-materials-search-p {
-      font-size: 14px;
-      line-height: 30px;
-      padding: 0 10px;
-    }
-  }
-  .van-search {
-    padding-top: 0;
-    width: 165px;
-
-    .van-search__content {
-      border-radius: 50px;
-      background: #fff;
-    }
-
-    .van-cell {
-      border-radius: 50px;
-      background: #fff;
-      padding-left: 0px;
-    }
-  }
-
-  .li-item-both {
-    .li-item {
-      flex: 1;
-      width: auto !important;
-    }
-  }
-  ::v-deep .van-field__label {
-    color: #272b31;
-  }
-  .default-button-container {
-    .button-info {
-      min-width: 150px;
-    }
-  }
-  .van-cell {
-    padding-left: 12px;
-    padding-right: 0;
-  }
-  .van-cell--required::before{
-    left: 4px;
-  }
-  ::v-deep .outbound-field-uploader{
-    &:before{
-      top: 16px;
-    }
-    .van-field__label{
-      line-height: 35px;
-    }
-  }
-  .van-field__control--custom{
-    .outbound-uploader{
-      min-width: 80px;
-      height: 25px;
-    }
-  }
-  ::v-deep .outbound-field-text{
-    padding-left: 0;
-  }
-  ::v-deep .van-field__body {
-    float: right;
-  }
-  .div-child {
-    margin-top: 5px;
-    padding-top: 5px;
-    border-top: 1px solid #f3f5f7;
-  }
-  .li-span-click {
-    word-wrap: break-word;
-  }
-  .outbound-uploader-delete {
-    min-width: 80px;
-    height: 25px;
-    transform: translateY(5px);
-  }
+.box-container {
+  padding: 0px;
 }
 </style>
