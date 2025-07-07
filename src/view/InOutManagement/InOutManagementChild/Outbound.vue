@@ -412,7 +412,7 @@ export default {
         lld: this.fileList,
       }
       let params = {
-        materialSupplierOutDetailParams: this.detailList,
+        materialSupplierOutDetailParams: this.initSubmitList(),
         fileByList: JSON.stringify(fileObj),
         fileList: this.fileList,
         id: this.id,
@@ -422,6 +422,7 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
+      console.log(Object.assign({}, this.formData,params))
       materialSupplierOutRestSaveOut(Object.assign({}, this.formData,params)).then(({ message }) => {
         this.$notify({
             type: 'success',
@@ -434,6 +435,20 @@ export default {
         toast.clear();
       });
    
+    },
+    initSubmitList(){
+      this.submitList = [];
+
+      this.detailList.forEach((item) => {
+        if(item.childList && item.childList.length > 0){
+          item.childList.forEach((childItem) => {
+            if(childItem.outTotal != '0' && !!childItem.outTotal){
+              this.submitList.push(childItem);
+            }
+          })
+        }
+      })
+      return this.submitList;
     },
   }
 }

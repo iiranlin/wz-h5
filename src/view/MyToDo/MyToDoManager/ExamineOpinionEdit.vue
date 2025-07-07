@@ -29,6 +29,14 @@ export default {
     },
     created () {
         this.type = this.$route.params.type;
+        
+        if(this.type == 'reject'){
+            this.opinion = '不通过'
+        }else if(this.type == 'editAdopt'){
+            this.opinion = '通过'
+        }else if(this.type == 'adopt'){
+            this.opinion = '通过'
+        }
     },
     methods: {
         //取消
