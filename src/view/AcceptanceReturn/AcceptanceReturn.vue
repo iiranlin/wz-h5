@@ -1,24 +1,35 @@
 <template>
-  <div class="acceptance-return">
-    <div class="tab-img">
+  <div class="acceptance-return in-out-management">
+    <!-- <div class="tab-img">
       <div>
         <img src="@/assets/img/acceptImg.png" alt="" @click="changeTab(0)">
       </div>
       <div>
         <img src="@/assets/img/returnImg.png" alt="" @click="changeTab(1)">
       </div>
-    </div>
-    <van-tabs
+    </div> -->
+
+     <van-tabs sticky v-model="activeIndex" color="#0571ff" title-active-color="#0571ff"
+        title-inactive-color="#2e2e2e" class="in-out-management-tab">
+    <!-- <van-tabs
       class="switch-tab"
       v-model="menuActiveIndex"
       color="#0571ff"
       background="#eef6ff"
       title-active-color="#0571ff"
-      title-inactive-color="#2e2e2e">
+      title-inactive-color="#2e2e2e"> -->
       <van-tab title="收货管理">
+        <div slot="title">
+            <img src="@/assets/img/acceptImg.png">
+            <span class="in-out-management-tab-span">收货管理</span>
+          </div>
         <acceptance/>
       </van-tab>
       <van-tab title="退货管理">
+          <div slot="title">
+            <img src="@/assets/img/returnImg.png">
+            <span class="in-out-management-tab-span">退货管理</span>
+          </div>
         <return/>
       </van-tab>
     </van-tabs>
@@ -85,4 +96,32 @@ export default {
     }
   }
 }
+.in-out-management {
+  height: 100%;
+  overflow-y: auto;
+  .in-out-management-tab{
+    ::v-deep .van-tabs__wrap{
+      margin-bottom: 0px;
+      height: 70px;
+    }
+    .in-out-management-tab-span{
+      padding: 5px 0;
+    }
+    // padding-top: 5px;
+    // line-height: 28px;
+  }
+  .van-tab__text{
+    div{
+      display: flex;
+      flex-direction: column;
+      align-items: anchor-center;
+      img{
+        width: 24px;
+        height: 24px;
+        margin-top: 8px;
+      }
+    }
+  }
+}
+
 </style>
