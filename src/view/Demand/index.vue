@@ -1,8 +1,7 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-     <van-search v-model="params.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
-        >
+      <van-search v-model="params.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff">
       </van-search>
       <!-- <van-search 
                 v-model="formData.keywords" 
@@ -20,12 +19,53 @@
           <div v-if="total != 0">
             <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
               <van-list v-model="loading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad">
-                <div v-for="(item, index) in listGhsData" :key="index" class="box-container" @click="handleSupplyClick(item.id)">
+                <div v-for="(item, index) in listGhsData" :key="index" class="box-container"
+                  @click="handleSupplyClick(item.id)">
+                  <div class="van-cells">
+                    <span class="title">需求编号:</span>
+                    <div class="conent">
+                      <span class="text">{{ item.planNumber }}</span>
+                      <span>
+                        <div class="li-status">
+                          <van-tag type="primary" round size="success" v-if="item.status == 4"><i class="font_family
+                    icon-icon-selected-16
+                    "></i>供应中</van-tag>
+                        <van-tag type="primary" round size="medium" v-if="item.status == 2"><i class="font_family
+                    icon-icon-selected-16
+                    "></i>未确认</van-tag>
+                        <van-tag type="primary" round size="medium" v-if="item.status == 3"><i class="font_family
+                    icon-icon-date-20
+                    "></i>已确认</van-tag>
+                        <van-tag type="primary" round size="medium" v-if="item.status == 6"
+                          class="li-status-completed"><i class="font_family
+                    icon-icon-selected-16
+                    "></i>已完成</van-tag>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- <van-cell title="需求编号:">
+                    <div class="li-status">
+                      <van-tag type="primary" round size="success" v-if="item.status == 4"><i class="font_family
+                    icon-icon-selected-16
+                    "></i>供应中</van-tag>
+                     <van-tag type="primary" round size="medium" v-if="item.status == 2"><i class="font_family
+                    icon-icon-selected-16
+                    "></i>未确认</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="item.status == 3"><i class="font_family
+                    icon-icon-date-20
+                    "></i>已确认</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="item.status == 6"
+                        class="li-status-completed"><i class="font_family
+                    icon-icon-selected-16
+                    "></i>已完成</van-tag>
+                    </div>
+                  </van-cell> -->
                   <ul class="list-ul">
-                    <li>
+                    <!-- <li>
                       <span class="font-weight">需求编号:</span>
                       <span class="font-weight">{{ item.planNumber }}</span>
-                    </li>
+                    </li> -->
                     <li>
                       <span>需求名称：</span>
                       <span class="text">{{ item.planName }}</span>
@@ -48,20 +88,25 @@
                         <template>
                           <div v-for="(item1, index1) in item.fileList" :key="index1">
                             <div v-for="(item2, index2) in item1.fileList" :key="index2">
-                              <a href="javascript:;" @click.stop="imgClick(item2)" style="color:#0689ff;">{{ item2.fileName
-                                }}</a>
+                              <a href="javascript:;" @click.stop="imgClick(item2)" style="color:#0689ff;">{{
+                                item2.fileName
+                              }}<van-icon name="arrow" class="arrow" color="#cccccc" size="0.3rem" /></a>
                             </div>
                           </div>
                         </template>
                       </span>
                     </li>
-                    <li class="li-status">
+                    <!-- <li class="li-status">
                       <van-tag type="primary" round size="medium" v-if="item.status == 2">未确认</van-tag>
-                      <van-tag type="primary" round size="medium" v-if="item.status == 3">已确认</van-tag>
-                      <van-tag type="primary" round size="success" v-if="item.status == 4">供应中</van-tag>
+                      <van-tag type="primary" round size="medium" v-if="item.status == 3"><i class="font_family
+                icon-icon-selected-16
+                "></i>已确认</van-tag>
+                      <van-tag type="primary" round size="success" v-if="item.status == 4"><i class="font_family
+                    icon-icon-selected-16
+                    "></i>供应中</van-tag>
                       <van-tag type="primary" round size="medium" v-if="item.status == 6"
                         class="li-status-completed">已完成</van-tag>
-                    </li>
+                    </li> -->
                   </ul>
                   <div class="list-ul-button">
                     <van-button class="button-info" plain round type="info" @click.stop="handleSupplyClick(item.id)"
@@ -237,18 +282,53 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.van-cells {
+  padding: 0.3rem 0 !important;
+  display: flex;
+
+  .title {
+    min-width: 1.75rem;
+  }
+
+  .conent {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .text {
+      color: rgb(19, 77, 170);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+  }
+}
+
+/deep/ .arrow {
+  min-width: 0.2rem !important;
+}
+
 .li-status {
+  i {
+    min-width: 0.3rem;
+  }
+
   .van-tag--primary {
+    min-width: 0.5rem;
     color: #028bff;
     background: #edf4ff;
   }
 
   .van-tag--danger {
+    min-width: 0.5rem;
     color: #f83738;
     background: #ffe2e2;
   }
 
   .li-status-completed {
+    min-width: 0.5rem;
     color: #6f6f6f;
     background: #ededed;
   }

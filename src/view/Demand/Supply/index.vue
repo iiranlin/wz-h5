@@ -1,54 +1,45 @@
 <template>
-    <div class="default-container" ref="container" :style="{ paddingBottom: result.status === 6 ? '0' : '140px' }">
-        <ul class="list-ul" style="margin: 10px;position: relative;">
-            <li class="li-item-both">
-                <div class="li-item-left">
-                    <span style="width: 300px;">供应需求名称:</span>
-                    <span>{{ result.planName }}</span>
-                </div>
-                <div class="li-item-right">
-                    <span></span>
-                    <!-- <span>{{ item.amount }}</span> -->
-                </div>
-            </li>
-            <!-- <li>
-                <span>供应需求名称:</span>
+    <div class="default-container" ref="container" :style="{ paddingBottom: result.status === 6 ? '0' : '1.3rem' }">
+         <div class="detail-base-info">
+            <div class="detail-title-content">
+                <img src="/static/icon-xqjh.png">
+                <span>供应需求名称：</span>
                 <span>{{ result.planName }}</span>
-            </li> -->
-
-            <li>
-                <span>需求项目：</span>
-                <span>{{ result.sectionName }}</span>
-            </li>
-            <li>
-                <span>需求组织：</span>
-                <span>{{ result.deptName }}</span>
-            </li>
-            <li>
-                <span>提报人：</span>
-                <span>{{ result.createUserName }}</span>
-            </li>
-            <li>
-                <span>提报时间：</span>
-                <span>{{ formattedCreateDate(result.createDate) }}</span>
-            </li>
-            <li>
-                <!-- <span>状态：</span> -->
-                <span class="li-status" style="position: absolute;top: 10px;right:10px;">
-                    <van-tag type="primary" round size="medium" v-if="result.status == 2">未确认</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="result.status == 3">已确认</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="result.status == 4">供应中</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="result.status == 6"
-                        class="li-status-completed">已完成</van-tag>
-                </span>
-            </li>
-        </ul>
+            </div>
+            <div>
+                <ul class="detail-ul">
+                    <li>
+                        <span>发货时间：</span>
+                        <span>{{ formattedCreateDate(result.shippingDate) }}</span>
+                    </li>
+                    <li>
+                        <span>需求项目：</span>
+                        <span>{{  result.sectionName }}</span>
+                    </li>
+                    <li>
+                        <span>需求组织：</span>
+                        <span>{{ result.deptName }}</span>
+                    </li>
+                    <li>
+                        <span>提报人：</span>
+                        <span>{{ result.createUserName }}</span>
+                    </li>
+                    <!-- <li class="li-status">
+            <template v-for="row in statusArr">
+              <van-tag :class="{ 'li-status-completed': row.value == '9' }"
+                :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
+                v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
+            </template>
+</li> -->
+                </ul>
+            </div>
+        </div>
         <div class="title">
             <span>供应信息</span>
         </div>
         <van-list>
             <ul class="list-ul" v-for="(item, index) in result.demandPlanDetailsGyDTOList" :key="index"
-                style="margin: 10px;">
+                style="margin: 0.2rem;">
                 <li>
                     <span class="font-weight">物资名称:</span>
                     <span class="font-weight">{{ item.materialName }}</span>
@@ -57,51 +48,41 @@
                     <span>规格型号：</span>
                     <span>{{ item.specModel }}</span>
                 </li>
-                <li class="li-item-both">
-                    <div class="li-item-left">
-                        <span>计量单位:</span>
-                        <span>{{ item.unit }}</span>
-                    </div>
-                    <div class="li-item-right">
-                        <span>合同数量:</span>
-                        <span>{{ item.amount }}</span>
-                    </div>
+                <li>
+                   <span>计量单位:</span>
+                    <span>{{ item.unit }}</span>
                 </li>
-                <li class="li-item-both">
-                    <div class="li-item-left">
-                        <span>累计计划量(含本次):</span>
-                        <span>{{ item.cumulativeAmount }}</span>
-                    </div>
-                    <div class="li-item-right">
-                        <span>本次计划数量:</span>
-                        <span>{{ item.planAmount }}</span>
-                    </div>
+                <li>
+                    <span>合同数量:</span>
+                    <span>{{ item.amount }}</span>
                 </li>
-                <li class="li-item-both">
-                    <div class="li-item-left">
-                        <span>已发货:</span>
-                        <span>{{ item.sendTotal }}</span>
-                    </div>
-                    <div class="li-item-right">
-                        <span>已验收:</span>
-                        <span>{{ item.putTotal }}</span>
-                    </div>
+                 <li>
+                    <span>累计计划量(含本次):</span>
+                    <span>{{ item.cumulativeAmount }}</span>
                 </li>
-                <li class="li-item-both">
-                    <div class="li-item-left">
-                        <span>已入库:</span>
-                        <span>{{ item.storeTotal }}</span>
-                    </div>
-                    <div class="li-item-right">
-                        <span>已退回:</span>
-                        <span>{{ item.refundAllTotle }}</span>
-                    </div>
+                 <li>
+                    <span>本次计划数量:</span>
+                    <span>{{ item.planAmount }}</span>
                 </li>
-                <li class="li-item-both">
-                    <div class="li-item-right" style="color:red;">
-                        <span>剩余待发货:</span>
-                        <span>{{ item.ssendTotal }}</span>
-                    </div>
+                <li>
+                    <span>已发货:</span>
+                    <span>{{ item.sendTotal }}</span>
+                </li>
+                <li>
+                    <span>已验收:</span>
+                    <span>{{ item.putTotal }}</span>
+                </li>
+                 <li>
+                    <span>已入库:</span>
+                    <span>{{ item.storeTotal }}</span>
+                </li>
+                 <li>
+                    <span>已退回:</span>
+                    <span>{{ item.refundAllTotle }}</span>
+                </li>
+                <li>
+                      <span style="color:red;">剩余待发货:</span>
+                        <span style="color:red;">{{ item.ssendTotal }}</span>
                 </li>
             </ul>
         </van-list>
@@ -213,7 +194,7 @@ export default {
 }
 
 li :nth-child(1) {
-    min-width: 60px
+    min-width: 0.5rem;
 }
 
 li :nth-child(2) {
@@ -231,6 +212,7 @@ li :nth-child(2) {
     // margin: 0 10px;
     border-radius: 15px;
     padding: 10px;
+   
 }
 
 .title {

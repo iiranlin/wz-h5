@@ -1,25 +1,44 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-       <!-- <van-search v-model="params.shipmentBatchNumber" show-action shape="round" background="#eef6ff"
+      <!-- <van-search v-model="params.shipmentBatchNumber" show-action shape="round" background="#eef6ff"
                 placeholder="请输入发货单号">
                 <template #action>
                     <div @click="onSearch">搜索</div>
                 </template>
-            </van-search> -->
-            <van-search v-model="params.shipmentBatchNumber" placeholder="输入关键字搜索" shape="round" background="#eef6ff"
-            >
-          </van-search>
+</van-search> -->
+      <van-search v-model="params.shipmentBatchNumber" placeholder="输入关键字搜索" shape="round" background="#eef6ff">
+      </van-search>
     </div>
-    <div class="tabs" v-if="returnList.length>0">
+    <div class="tabs" v-if="returnList.length > 0">
       <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-        <van-list v-model="loading" :finished="finished " finished-text="没有更多了..." @load="onLoad" :offset="10" :immediate-check="false">
-          <div v-for="(item, index) in returnList" :key="index" class="box-container" @click="handleDetailsItemClick(item.id)">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad" :offset="10"
+          :immediate-check="false">
+          <div v-for="(item, index) in returnList" :key="index" class="box-container"
+            @click="handleDetailsItemClick(item.id)">
+            <div class="van-cells">
+              <span class="title">退货单号:</span>
+              <div class="conent">
+                <span class="text">{{ item.backNumber }}</span>
+                <span>
+                  <div class="li-status">
+                    <van-tag type="primary" round size="success" v-if="item.backNode == 2"><i class="font_family
+                    icon-icon-selected-16
+                    "></i>收货不通过</van-tag>
+                    <van-tag type="primary" round size="medium" v-else><i class="font_family
+                    icon-icon-selected-16
+                    "></i>收货通过</van-tag>
+                  </div>
+
+                </span>
+              </div>
+            </div>
             <ul class="list-ul">
-              <li>
+
+              <!-- <li>
                 <span class="font-weight">退货单号:</span>
                 <span class="font-weight" style="color:#1989fa;">{{ item.backNumber }}</span>
-              </li>
+              </li> -->
               <li>
                 <span>需求编号：</span>
                 <span class="text" style="color:#1989fa;">{{ item.planNumber }}</span>
@@ -38,12 +57,12 @@
               </li>
               <li>
                 <span>退货时间:</span>
-                <span v-if="item.backDate !=''">{{ formattedCreateDate(item.backDate)}}</span>
+                <span v-if="item.backDate != ''">{{ formattedCreateDate(item.backDate) }}</span>
               </li>
-              <li class="li-status">
+              <!-- <li class="li-status">
                 <van-tag type="primary" round size="medium" v-if="item.backNode==2">收货不通过</van-tag>
                 <van-tag type="primary" round size="medium" v-else>收货通过</van-tag>
-              </li>
+              </li> -->
             </ul>
           </div>
         </van-list>
@@ -58,7 +77,7 @@
 <script>
 import Vue from 'vue';
 import keepPages from '@/view/mixins/keepPages'
-import {returnGoodsList} from '@/api/demand/returnGoods'
+import { returnGoodsList } from '@/api/demand/returnGoods'
 import { getUserInfo } from '@/utils/user-info'
 import { Toast } from 'vant';
 Vue.use(Toast);
@@ -73,56 +92,56 @@ export default {
       formData: {
         keywords: '',
       },
-      allRefreshLoading:false,
-      finished :false,
-      loading:false,
-      params:{
-        sellerId:"",
-        pageNum:1,
-        pageSize:10,
-        isAsc:"",
-        orderByColumn:"",
-        shipmentBatchNumber:""
+      allRefreshLoading: false,
+      finished: false,
+      loading: false,
+      params: {
+        sellerId: "",
+        pageNum: 1,
+        pageSize: 10,
+        isAsc: "",
+        orderByColumn: "",
+        shipmentBatchNumber: ""
       },
-      returnList:[],
-      total:0
+      returnList: [],
+      total: 0
     };
   },
   created() {
     this.getList();
   },
   methods: {
-    getList(){
+    getList() {
       Toast.loading({
         message: '加载中...',
         forbidClick: true,
       });
       let params = {
-        sellerId:this.userInfo.id,
-        pageNum:this.params.pageNum,
-        pageSize:this.params.pageSize,
-        isAsc:this.params.isAsc,
-        orderByColumn:this.params.orderByColumn,
-        shipmentBatchNumber:this.params.shipmentBatchNumber,
+        sellerId: this.userInfo.id,
+        pageNum: this.params.pageNum,
+        pageSize: this.params.pageSize,
+        isAsc: this.params.isAsc,
+        orderByColumn: this.params.orderByColumn,
+        shipmentBatchNumber: this.params.shipmentBatchNumber,
       }
-      returnGoodsList(params).then((res)=>{
-        if(res.code==0){
-            Toast.clear()
-            this.total = res.data.total
-            if (this.allRefreshLoading) {
-              this.returnList = [];
-              this.allRefreshLoading = false;
-            }
-            if(res.data.list.length<1){
-              this.returnList = res.data.list
-            }else{
-             
-              this.returnList = this.returnList.concat(res.data.list)
-            }
-            if(this.returnList.length>=res.data.total){
-              this.finished = true
-            }
-            this.loading = false
+      returnGoodsList(params).then((res) => {
+        if (res.code == 0) {
+          Toast.clear()
+          this.total = res.data.total
+          if (this.allRefreshLoading) {
+            this.returnList = [];
+            this.allRefreshLoading = false;
+          }
+          if (res.data.list.length < 1) {
+            this.returnList = res.data.list
+          } else {
+
+            this.returnList = this.returnList.concat(res.data.list)
+          }
+          if (this.returnList.length >= res.data.total) {
+            this.finished = true
+          }
+          this.loading = false
 
 
           //    if (this.allRefreshLoading) {
@@ -151,7 +170,7 @@ export default {
         }
       })
     },
-      formattedCreateDate(timestamp) {
+    formattedCreateDate(timestamp) {
       const date = new Date(timestamp);
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
@@ -160,7 +179,7 @@ export default {
     },
     //全部列表条目点击
     handleDetailsItemClick(id) {
-      this.$router.push({ path: '/returnDetails',query:{id:id} })
+      this.$router.push({ path: '/returnDetails', query: { id: id } })
     },
     //全部列表刷新
     allRefresh() {
@@ -169,11 +188,11 @@ export default {
       this.allRefreshLoading = true
       this.getList();
     },
-    onLoad(){
+    onLoad() {
       this.params.pageNum++;
       this.getList()
     },
-    onSearch(){
+    onSearch() {
       this.params.pageNum = 1
       this.getList();
     }
@@ -183,6 +202,34 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.van-cells {
+  padding: 0.3rem 0 !important;
+  display: flex;
+
+  .title {
+    min-width: 1.75rem;
+  }
+
+  .conent {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .text {
+      color: rgb(19, 77, 170);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+  }
+}
+
+/deep/ .arrow {
+  min-width: 0.2rem !important;
+}
+
 ::v-deep .van-tabs__content {
   height: calc(100vh - 162px);
   overflow-y: scroll;
@@ -219,5 +266,22 @@ export default {
 .button-info {
   width: 85px;
   font-size: 12px;
+}
+
+.li-status {
+  .van-tag--primary {
+    color: #028bff;
+    background: #edf4ff;
+  }
+
+  .van-tag--danger {
+    color: #f83738;
+    background: #ffe2e2;
+  }
+
+  .li-status-completed {
+    color: #6f6f6f;
+    background: #ededed;
+  }
 }
 </style>
