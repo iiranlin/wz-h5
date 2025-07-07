@@ -254,7 +254,6 @@ export default {
             id:id,
             status:2
           }
-          console.log(params,'1112')
           snedGoodsSure(params).then((res)=>{
             if(res.code==0){
               Toast.success(res.data);

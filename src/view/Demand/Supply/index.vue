@@ -2,14 +2,14 @@
     <div class="default-container" ref="container" :style="{ paddingBottom: result.status === 6 ? '0' : '140px' }">
         <ul class="list-ul" style="margin: 10px;position: relative;">
             <li class="li-item-both">
-              <div class="li-item-left">
-                <span style="width: 300px;">供应需求名称:</span>
-                <span>{{ result.planName }}</span>
-              </div>
-              <div class="li-item-right">
-                <span></span>
-                <!-- <span>{{ item.amount }}</span> -->
-              </div>
+                <div class="li-item-left">
+                    <span style="width: 300px;">供应需求名称:</span>
+                    <span>{{ result.planName }}</span>
+                </div>
+                <div class="li-item-right">
+                    <span></span>
+                    <!-- <span>{{ item.amount }}</span> -->
+                </div>
             </li>
             <!-- <li>
                 <span>供应需求名称:</span>
@@ -35,10 +35,10 @@
             <li>
                 <!-- <span>状态：</span> -->
                 <span class="li-status" style="position: absolute;top: 10px;right:10px;">
-                     <van-tag type="primary" round size="medium" v-if="result.status == 2">未确认</van-tag>
-                      <van-tag type="primary" round size="medium" v-if="result.status == 3">已确认</van-tag>
-                      <van-tag type="primary" round size="medium" v-if="result.status == 4">供应中</van-tag>
-                      <van-tag type="primary" round size="medium" v-if="result.status == 6"
+                    <van-tag type="primary" round size="medium" v-if="result.status == 2">未确认</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="result.status == 3">已确认</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="result.status == 4">供应中</van-tag>
+                    <van-tag type="primary" round size="medium" v-if="result.status == 6"
                         class="li-status-completed">已完成</van-tag>
                 </span>
             </li>
@@ -118,7 +118,7 @@
 <script>
 import Vue from 'vue';
 import { Form } from 'vant';
-import { Field,Toast } from 'vant';
+import { Field, Toast } from 'vant';
 import { supplyDetails } from '@/api/demand/demandManagement'
 Vue.use(Form);
 Vue.use(Field);
@@ -208,7 +208,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
 .default-container {
     padding-top: 10px;
 }

@@ -342,7 +342,6 @@ export default {
             //需求信息
             lookGoodsDetails(this.wuLiuId).then((res) => {
                 if (res.code == 0) {
-                    console.log(res.data,'1123')
                     this.params = res.data
                     // this.params.fileByList = JSON.parse(res.data.fileByList)
                     // this.params.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item)=>({
@@ -354,7 +353,6 @@ export default {
             //物流信息
             shippingOrderNumber(this.wuLiuNumber).then((res) => {
                 if (res.code == 0) {
-                    console.log(res.data,'123444')
                     this.logistics = res.data
                     this.logistics.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item)=>({
                         ...item,
@@ -370,7 +368,6 @@ export default {
             //有单号就显示位置列表
             addList(params).then((res) => {
                 if (res.code == 0) {
-                    console.log(res.data,'yaoyuan')
                     this.cargoList = res.data.list
                 }
             })

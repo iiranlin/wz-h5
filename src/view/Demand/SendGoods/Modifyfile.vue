@@ -323,7 +323,6 @@ export default {
                     this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
                     this.params.createDate = this.formatTimestamp(res.data.createDate)
                     //  let file = JSON.parse(res.data.fileByList)
-                    // console.log(res.data.fileByList,'111')
                     this.fileList.push({fileName:res.data.fileByList.fhd[0].fileName,filePath:res.data.fileByList.fhd[0].filePath})
                     this.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item) => ({
                         ...item,
@@ -421,7 +420,6 @@ export default {
                         shipmentBatchNumber:this.params.shipmentBatchNumber,
                         materialCirculationDetailsTableParamList: this.params.materialCirculationDetailsTableDTOS
                     }
-                    console.log(params)
                       modifySendGoods(params).then((res) => {
                     if (res.code == 0) {
                         Toast.success(res.data);
