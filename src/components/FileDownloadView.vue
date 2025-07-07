@@ -9,7 +9,7 @@
                     <div class="file-info">
                         <img :src="checkFileImage(item.fileName)"/>
                         <span @click="previewClick(item)">{{item.fileName}}</span>
-                        <img class="file-delete" src="/static/icon_file_download.png" @click="handleFileDwonLoad(item)"/>
+                        <img class="file-download" src="/static/icon_file_download.png" @click="handleFileDwonLoad(item)"/>
                     </div>
                 </li>
             </ul>
