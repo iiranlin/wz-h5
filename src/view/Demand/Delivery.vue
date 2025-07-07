@@ -378,6 +378,7 @@ export default {
             //  this.listBySendData = this.listBySendData.filter(
             //     item => !params.ids.includes(item.id) // 适用于批量删除
             //   );
+              Toast.success('删除成功');
               this.allRefreshLoading = true
               this.params.pageNum=1
               this.getList();
