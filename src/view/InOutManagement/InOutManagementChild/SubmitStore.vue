@@ -107,16 +107,18 @@
                 <span>投资比例：</span>
                 <span>{{ item.field1 }}</span>
               </li>
-              <li class="li-item-overlength">
+              <!-- <li class="li-item-overlength">
                 <span>合格证附件：</span>
                 <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'hgz')"
                   :key="val.filePath">{{ val.fileName }}</span>
-              </li>
-              <li class="li-item-overlength">
+              </li> -->
+              <file-download-view class="outbound-field-uploader" title="合格证附件" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+              <!-- <li class="li-item-overlength">
                 <span>厂检报告附件：</span>
                 <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'cjbg')"
                   :key="val.filePath">{{ val.fileName }}</span>
-              </li>
+              </li> -->
+              <file-download-view class="outbound-field-uploader" title="厂检报告附件" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
               <template v-if="queryType === 'submit'">
                 <van-field v-model="item.storeTotal" type="number" name="入库数量" label="入库数量" placeholder="请输入入库数量"
                   @blur="putChange(item, index)" input-align="right" required :rules="rules.storeTotal" />
@@ -135,8 +137,9 @@
                   </div>
                 </li>
               </template>
-
-              <van-field name="uploader" label="退货附件：" class="outbound-field-uploader" required
+              <file-upload-view class="outbound-field-uploader" v-if="queryType === 'submit'" title="退货附件" :fileList="item.fileList03 || []" businessType="01"/>
+              <file-download-view class="outbound-field-uploader" v-else title="退货附件" :fileList="item.fileList03 || []"/>
+              <!-- <van-field name="uploader" label="退货附件：" class="outbound-field-uploader" required
                 v-if="queryType != 'view'">
                 <template #input>
                   <van-uploader v-if="item.fileList03 && item.fileList03.length == 0" :preview-imag='false'
@@ -147,14 +150,14 @@
                   <van-button round type="danger" class="outbound-uploader-delete" v-else native-type="button"
                     @click="handleFileDelete(item, 'fileList03')">删除</van-button>
                 </template>
-              </van-field>
-              <span class="li-span-click" v-if="item.fileList03 && item.fileList03.length > 0 && queryType != 'view'"
-                @click="imgClick(item.fileList03[0])">{{ item.fileList03[0].fileName }}</span>
-              <li v-if="queryType === 'view'">
+              </van-field> -->
+              <!-- <span class="li-span-click" v-if="item.fileList03 && item.fileList03.length > 0 && queryType != 'view'"
+                @click="imgClick(item.fileList03[0])">{{ item.fileList03[0].fileName }}</span> -->
+              <!-- <li v-if="queryType === 'view'">
                 <span>退货附件：</span>
                 <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'thfj_im')"
                   :key="val.filePath">{{ val.fileName }}</span>
-              </li>
+              </li> -->
               <li class="li-item-overlength">
                 <span>备注：</span>
                 <span>{{ item.remark }}</span>
@@ -162,7 +165,7 @@
             </ul>
           </div>
         </div>
-        <div class="select-materials-search">
+        <!-- <div class="select-materials-search">
           <p class="select-materials-search-p font-weight">报检信息</p>
         </div>
         <div class="box-container">
@@ -184,6 +187,14 @@
               </li>
             </ul>
           </div>
+        </div> -->
+        <div class="box-container">
+          <div class="detail-title-info">
+            <img src="/static/icon-file.png"/>
+            <span class="info-title">报检信息</span>
+          </div>
+          <file-upload-view :maxCount="5" v-if="queryType === 'submit'" title="报检材料上传（支持多个）" :fileList="formData.fileList01 || []" businessType="01"/>
+          <file-download-view v-else title="报检材料上传（支持多个）" :fileList="formData.fileList01 || []"/>
         </div>
       </div>
       <div class="default-button-container" v-if="queryType === 'submit'">
@@ -202,10 +213,12 @@ import { materialStoreTableRestSubmit } from '@/api/prodmgr-inv/materialStoreTab
 import FilePreview from "@/components/FilePreview.vue";
 import { minioUpload } from '@/api/blcd-base/minio'
 import activitiAssignee from '@/components/activitiAssignee'
+import FileUploadView from "@/components/FileUploadView.vue"
+import FileDownloadView from "@/components/FileDownloadView.vue"
 export default {
   name: 'SubmitStore',
   mixins: [indexMixin],
-  components: { FilePreview, activitiAssignee },
+  components: { FilePreview, activitiAssignee, FileUploadView, FileDownloadView },
   data() {
     return {
       queryType: '',
@@ -350,7 +363,33 @@ export default {
         item[name] = []
       }
     },
+    onCheck(tableData) {
+      const errors = [];
+      tableData.forEach((row, index) => {
+        const rowNum = index + 1;
+        if (Number(row.refundZjTotal) > 0 && row.fileList03.length == 0) {
+          errors.push(`第${rowNum}行，有退货数量，请上传退货附件 `);
+        }
+      });
+
+      if (errors.length > 0) {
+        this.$toast({
+          type: 'html',
+          message: errors.join("<br/>")
+        })
+        // this.$notify({
+        //   type: 'warning',
+        //   message: errors.join("<br/> <br/>")
+        // });
+        return false;
+      }
+      return true;
+    },
     onSubmit() {
+      const isValid = this.onCheck(this.tableData);
+      if (!isValid) {
+        return;
+      }
       for (let i in this.tableData) {
         let fileByList = this.tableData[i].fileByList
           ? JSON.parse(this.tableData[i].fileByList)
@@ -358,12 +397,6 @@ export default {
         //退货附件
         if (this.tableData[i].fileList03.length > 0) {
           this.$set(fileByList, "thfj_im", this.tableData[i].fileList03);
-        } else {
-          this.$notify({
-            type: 'warning',
-            message: "请上传退货附件"
-          });
-          return
         }
         this.tableData[i].fileByList = JSON.stringify(fileByList);
       }
@@ -391,7 +424,7 @@ export default {
 
       this.$dialog.confirm({
         title: '标题',
-        message: '是否确认提交审核?',
+        message: '是否确认提交入库审核?',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
@@ -466,16 +499,16 @@ export default {
     left: 4px;
   }
 
-  ::v-deep .outbound-field-uploader {
-    &:before {
-      top: 16px;
-      left: 4px;
-    }
+  // ::v-deep .outbound-field-uploader {
+  //   &:before {
+  //     top: 16px;
+  //     left: 4px;
+  //   }
 
-    .van-field__label {
-      line-height: 35px;
-    }
-  }
+  //   .van-field__label {
+  //     line-height: 35px;
+  //   }
+  // }
 
   .van-field__control--custom {
     .outbound-uploader {
@@ -502,29 +535,29 @@ export default {
     word-wrap: break-word;
   }
 
-  .outbound-uploader-delete {
-    width: 80px !important;
-    height: 25px;
-    transform: translateY(5px);
+  // .outbound-uploader-delete {
+  //   width: 80px !important;
+  //   height: 25px;
+  //   transform: translateY(5px);
 
-    span {
-      color: #fff;
-    }
+  //   span {
+  //     color: #fff;
+  //   }
 
-    .van-button__content {
-      width: auto;
-    }
-  }
+  //   .van-button__content {
+  //     width: auto;
+  //   }
+  // }
 
-  .detail-ul-uploader-li {
-    display: block;
-    line-height: 30px;
+  // .detail-ul-uploader-li {
+  //   display: block;
+  //   line-height: 30px;
 
-    .outbound-uploader-delete {
-      float: right;
-      transform: translateY(0px);
-    }
-  }
+  //   .outbound-uploader-delete {
+  //     float: right;
+  //     transform: translateY(0px);
+  //   }
+  // }
 
   .li-status {
     position: absolute;
@@ -544,6 +577,14 @@ export default {
     & :nth-child(2) {
       width: initial;
     }
+  }
+}
+.outbound-field-uploader{
+  ::v-deep li{
+    display: block;
+  }
+  ::v-deep .file-info{
+    width: auto !important;
   }
 }
 </style>
