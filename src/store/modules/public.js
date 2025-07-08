@@ -1,6 +1,6 @@
 const state = {
   materiaList: null,
-  interfaceMateriaList: null,
+  interfaceMateriaList: JSON.parse(sessionStorage.getItem('interfaceMateriaList')) || [],
   sendGoods:{},
   historyList: JSON.parse(sessionStorage.getItem('historyList')) || {}
 };
@@ -14,17 +14,22 @@ const mutations = {
   },
   SET_HISTORY_LIST:(state, historyList)=>{
     let object = JSON.parse(sessionStorage.getItem('historyList'))
-    for (const key in object) {
-      if (Object.hasOwnProperty.call(object, key) && object[key].length <= 4) {
-        object[key].push(...(historyList[key] || []))
-        object[key] = Array.from(new Set(object[key]))
+    if(object){
+      for (const key in object) {
+        console.log(object)
+        if (Object.hasOwnProperty.call(object, key) && object[key].length <= 4) {
+          object[key].push(...(historyList[key] || []))
+          object[key] = Array.from(new Set(object[key]))
+        }
       }
+    }else{
+      object = historyList
     }
     sessionStorage.setItem('historyList', JSON.stringify(object))
     state.historyList = object
   },
   SET_INTERFACE_MATERIA_LIST:(state, interfaceMateriaList)=>{
-    sessionStorage.setItem('interfaceMateriaList', interfaceMateriaList)
+    sessionStorage.setItem('interfaceMateriaList', JSON.stringify(interfaceMateriaList))
     state.interfaceMateriaList = interfaceMateriaList
   }
 };

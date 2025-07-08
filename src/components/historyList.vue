@@ -31,8 +31,8 @@ export default {
       const historyList = this.$store.state.public.historyList || {}
       this.historyList = historyList[name] || []
       this.showPopover = true
-      this.divStyle.left = `${$event.clientX / 100 - 2}rem`
-      this.divStyle.top = `${$event.clientY / 100 + 0.3}rem`
+      this.divStyle.left = `${$event.clientX - 200}px`
+      this.divStyle.top = `${$event.clientY + 30}px`
     },
     onSelect(item) {
       this.$emit('historyClick', item, this.names, this.indexs)
