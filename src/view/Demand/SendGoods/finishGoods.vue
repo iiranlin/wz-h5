@@ -36,40 +36,6 @@
             </ul>
         </div>
     </div>
-        <!-- <div>
-          <ul class="list-ul">
-            <li class="li-item-both">
-              <div class="li-item-left" style="width: 70%;flex:none;">
-                <span class="font-weight">物资名称：</span>
-                <span class="font-weight">{{ item.materialName }}</span>
-              </div>
-              <div class="li-item-right">
-                <span></span>
-                <span style="text-align: right;color: red;" @click="delgoods(index)">删除</span>
-              </div>
-            </li>
-            <li>
-              <span>规格型号：</span>
-              <span>{{ item.specModel }}</span>
-            </li>
-            <li class="li-item-both">
-              <div class="li-item-left">
-                <span>计量单位:</span>
-                <span>{{ item.unit }}</span>
-              </div>
-              <div class="li-item-right">
-                <span>本次计划数量：</span>
-                <span style="padding-left: 30px;">{{ item.planAmount }}</span>
-              </div>
-            </li>
-            <li class="li-item-both">
-              <div class="li-item-right" style="color:red;">
-                <span style="width: 500px;">本次需求未发货数量:</span>
-                <span>{{ item.ssendTotal }}</span>
-              </div>
-            </li>
-          </ul>
-        </div> -->
         <van-divider />
         <div class="list-ul" style="margin-top: 26px;padding: 10px;">
           <van-form ref="form">
@@ -182,8 +148,6 @@ export default {
         ...item,
         planDetailId: item.id,
         // 回显图片
-        // certificateFileName: this.showHgz(item.fileByList),
-        // factoryFileName: this.showCjbg(item.fileByList),
         fileList01: this.fileLists(item.fileByList),
         fileList02: this.fileListss(item.fileByList),
       }))

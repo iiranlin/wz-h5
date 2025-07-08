@@ -1,5 +1,5 @@
 <template>
-    <div class="default-container" ref="container">
+    <div class="default-container" ref="container" :style="{ paddingBottom: params.status === 1 ? '0' : '1.3rem' }">
         <div class="detail-base-info">
             <div class="detail-title-content">
                 <img src="/static/icon-xqjh.png">
@@ -21,25 +21,9 @@
                         <span>{{ formatTimestamp(params.createDate) }}</span>
                     </li>
                     <li>
-                        <span>退货时间：</span>
-                        <span>{{ params.createUserName }}</span>
-                    </li>
-                    <li>
                         <span>提报时间：</span>
                         <span>{{ formattedCreateDate(params.backDate) }}</span>
                     </li>
-                    <li>
-                        <span>退货环节：</span>
-                        <span style="color:red;" v-if="params.backNode == 2">收货不通过</span>
-                        <span v-else>收货通过</span>
-                    </li>
-                    <!-- <li class="li-status">
-            <template v-for="row in statusArr">
-              <van-tag :class="{ 'li-status-completed': row.value == '9' }"
-                :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
-                v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
-            </template>
-</li> -->
                 </ul>
             </div>
         </div>
@@ -49,7 +33,7 @@
                 <van-tab title="发货基本信息" name="发货基本信息">
                     <van-list>
                         <div class="box-container">
-                            <ul class="detail-list-ul">
+                            <ul class="list-ul">
                                 <li>
                                         <span class="font-weight dot-before" style="min-width: 2.5rem;">供应需求名称:</span>
                                         <span class="font-weight">{{ params.planName }}</span>
@@ -75,15 +59,7 @@
                                     <span>{{ params.shippingAddress }}</span>
                                 </li>
                                 <li>
-                                    <span style="min-width: 210px;">发货单附件:</span>
-                                    <span style="color:#1989fa;">
-                                        <template>
-                                            <span style="color:#1989fa;"
-                                                v-if="params.fileByList && params.fileByList.fhd && params.fileByList.fhd.length > 0"
-                                                @click="imgClick(params.fileByList.fhd[0].fileName, params.fileByList.fhd[0].filePath)">{{
-                                                params.fileByList.fhd[0].fileName }}</span>
-                                        </template>
-                                    </span>
+                                    <file-download-view class="outbound-field-uploader" style="width: 100%;" title="发货单：" :fileList="filterList(params.fileByList, 'fhd') || []"/>
                                 </li>
                                 <li>
                                     <span>发货时间:</span>
@@ -129,8 +105,8 @@
                         v-if="params.materialCirculationDetailsTableDTOS && params.materialCirculationDetailsTableDTOS.length > 0">
                         <van-list>
                             <div class="box-container"
-                               >
-                                <ul class="detail-list-ul"  v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
+                               v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
+                                <ul class="list-ul"  >
                                     <!-- <li>
                                         <span class="font-weight" style="width: 250px;">需求组织名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
@@ -192,8 +168,17 @@
                                         <span>投资比例:</span>
                                         <span>{{ item.field1 }}</span>
                                     </li>
-                                   
                                     <li>
+                                        <span>备注:</span>
+                                        <span>{{ item.remark }}</span>
+                                    </li>
+                                     <template>
+                                 
+                                    <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                                    <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                                
+                                    </template>
+                                    <!-- <li>
                                         <span>合格证附件:</span>
                                         <span style="color:#1989fa;"
                                             v-if="item.fileByList && item.fileByList.hgz && item.fileByList.hgz.length > 0"
@@ -206,11 +191,7 @@
                                             v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0"
                                             @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
                                             item.fileByList.cjbg[0].fileName }}</span>
-                                    </li>
-                                     <li class="li-item-remark"> 
-                                        <span>备注：</span>
-                                        <div class="remark-detail">{{item.remark || '未填写'}}</div>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </div>
                         </van-list>
@@ -221,17 +202,26 @@
                 </van-tab>
             </van-tabs>
         </div>
+        <div class="default-button-container" v-if="params.status == 1">
+            <van-button size="mini" type="info" round class="button-info"
+                @click="handleSendGoodsClick(params.id)">确认发货</van-button>
+        </div>
         <file-preview ref="filePreview"></file-preview>
     </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
-import { detailBySend } from '@/api/demand/sendGoods'
+import { detailBySend,snedGoodsSure } from '@/api/demand/sendGoods'
 import FilePreview from "@/components/FilePreview.vue";
+import FileDownloadView from "@/components/FileDownloadView.vue";
+import indexMixin from '@/view/mixins'
+import Vue from 'vue';
+import { Dialog } from 'vant';
+Vue.use(Dialog);
 export default {
     name: 'MyToDoList',
-    mixins: [keepPages],
-    components: { FilePreview },
+    mixins: [keepPages,indexMixin],
+    components: { FilePreview,FileDownloadView},
     data() {
         return {
             menuActiveIndex: 0,
@@ -275,10 +265,10 @@ export default {
             detailBySend(this.id).then((res) => {
                 if (res.code == 0) {
                     this.params = res.data
-                    this.params.fileByList = JSON.parse(res.data.fileByList)
+
                     this.params.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item) => ({
                         ...item,
-                        fileByList: JSON.parse(item.fileByList)
+                        // fileByList: JSON.parse(item.fileByList)
                     }))
                 }
             })
@@ -305,6 +295,35 @@ export default {
 
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         },
+           //确定已经发货
+    handleSendGoodsClick(id) {
+      Dialog.confirm({
+        title: '',
+        message: '确定已经发货？',
+        confirmButtonColor: '#1989fa'
+      })
+        .then(() => {
+          let params = {
+            id: id,
+            status: 2
+          }
+          snedGoodsSure(params).then((res) => {
+            if (res.code == 0) {
+              Toast.success(res.data);
+              this.$router.push({path:'/Information'})
+            //   window.history.back()
+            //   this.params.pageNum = 1
+            //   this.allRefreshLoading = true
+            //   this.getList()
+            }
+          })
+          // on confirm
+        })
+        .catch(() => {
+          // on cancel
+        });
+      // this.$router.push({path:'/sendGoods'})
+    },
     },
 };
 </script>

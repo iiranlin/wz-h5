@@ -11,7 +11,7 @@
         <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false"> 
           <ul class="list-ul">
              <li>
-              <span class="font-weight">物资名称：</span>
+              <span class="font-weight dot-before">物资名称：</span>
               <span class="font-weight">{{ item.materialName }}</span>
             </li>
             <li style="color: red;">
@@ -356,5 +356,15 @@ export default {
     margin: 0 5px;
     color: rgb(8, 49, 234);
     font-weight: 600;
+}
+.dot-before::before {
+    content: "•";
+    /* 圆点符号 */
+    color: #1890ff;
+    /* 蓝色（可自定义） */
+    margin-right: 5px;
+    /* 与文字的间距 */
+    font-size: 1.2em;
+    /* 可选：调整圆点大小 */
 }
 </style>

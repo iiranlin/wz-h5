@@ -203,18 +203,20 @@
                                         <span>{{ item.remark }}</span>
                                     </li>
                                     <li>
-                                        <span>合格证附件:</span>
+                                        <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                                        <!-- <span>合格证附件:</span>
                                         <span style="color:#1989fa;"
                                             v-if="item.fileByList && item.fileByList.hgz && item.fileByList.hgz.length > 0"
                                             @click="imgClick(item.fileByList.hgz[0].fileName, item.fileByList.hgz[0].filePath)">{{
-                                                item.fileByList.hgz[0].fileName }}</span>
+                                                item.fileByList.hgz[0].fileName }}</span> -->
                                     </li>
                                     <li>
-                                        <span style="min-width: 3rem;">厂检报告附件:</span>
+                                        <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                                        <!-- <span style="min-width: 3rem;">厂检报告附件:</span>
                                         <span style="color:#1989fa;"
                                             v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0"
                                             @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
-                                                item.fileByList.cjbg[0].fileName }}</span>
+                                                item.fileByList.cjbg[0].fileName }}</span> -->
                                     </li>
                                 </ul>
 
@@ -227,81 +229,6 @@
                 </van-tab>
             </van-tabs>
         </div>
-        <!-- <div class="title">
-            <span>物流信息</span>
-        </div>
-        <div class="sidebar" style="margin: 10px;">
-            <div class="content">
-
-                <ul class="list-ul">
-                    <li>
-                        <span>发货单号：</span>
-                        <span>{{ logistics.shipmentBatchNumber }}</span>
-                    </li>
-                    <li>
-                        <span>物流单号：</span>
-                        <span class="text">{{ logistics.oddNumbers }}</span>
-                    </li>
-                    <li>
-                        <span>发货时间：</span>
-                        <span v-if="logistics.shippingDate">{{ formattedCreateDate(logistics.shippingDate) }}</span>
-                    </li>
-                    <li>
-                        <span>发货地址：</span>
-                        <span>{{ logistics.shippingAddress }}</span>
-                    </li>
-                    <li>
-                        <span>预计到达时间为：</span>
-                        <span v-if="logistics.arrivalDate">{{ formattedCreateDate(logistics.arrivalDate) }}</span>
-                    </li>
-                    <li>
-                        <span>车牌号：</span>
-                        <span>{{ logistics.carNumber }}</span>
-                    </li>
-                    <li>
-                        <span>联系人：</span>
-                        <span>{{ logistics.contacts }}</span>
-                    </li>
-                    <li>
-                        <span>联系电话：</span>
-                        <span>{{ logistics.contactsPhone }}</span>
-                    </li>
-                </ul>
-                <div v-if="logistics.oddNumbers">
-                    <van-list @load="onLoad">
-                        <ul class="list-ul" v-for="(item, index) in logistics.materialTrackMessageDTOS" :key="index"
-                            style="margin: 20px 15px 0 15px;">
-                            <li>
-                                <span class="font-weight">操作人:</span>
-                                <span class="font-weight">{{ item.createUserName }}</span>
-                            </li>
-                            <li>
-                                <span>货运位置: </span>
-                                <span>{{ item.positionInformation }}</span>
-                            </li>
-                            <li>
-                                <span>填写时间: </span>
-                                <span>{{ formattedCreateDate(item.createDate) }}</span>
-                            </li>
-                        </ul>
-                    </van-list>
-                </div>
-                <div v-else>
-                    <div class="Logistics-Information-dt">
-                        <wuliu :courierNumber="logistics.oddNumbers" @expressDataFun="cargoList" />
-                    </div>
-                    <van-steps direction="vertical" active-color="#0086ff" :active="0">
-                        <van-step v-for="(item, index) in cargoList" :key="index">
-                            <div>
-                                <p>{{ item.positionInformation }}</p>
-                                <p class="Logistics-Information-text">{{ item.createUserName }}</p>
-                            </div>
-                            <div class="Logistics-Information-text">{{ formattedCreateDate(item.createDate) }}</div>
-                        </van-step>
-                    </van-steps>
-                </div>
-            </div>
-        </div> -->
         <file-preview ref="filePreview"></file-preview>
     </div>
 </template>
@@ -314,6 +241,8 @@ import { lookGoodsDetails, shippingOrderNumber } from '@/api/demand/returnGoods'
 import { addList } from '@/api/demand/sendGoods'
 import wuliu from '@/components/wuliu'
 import FilePreview from "@/components/FilePreview.vue";
+import FileDownloadView from "@/components/FileDownloadView.vue";
+import indexMixin from '@/view/mixins'
 Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Tab);
@@ -322,7 +251,8 @@ Vue.use(Sidebar);
 Vue.use(SidebarItem);
 export default {
     name: 'MyProcess',
-    components: { wuliu, FilePreview },
+     mixins: [indexMixin],
+    components: { wuliu, FilePreview,FileDownloadView },
     data() {
         return {
             menuActiveIndex: 0,
@@ -374,7 +304,7 @@ export default {
                     this.logistics = res.data
                     this.logistics.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item) => ({
                         ...item,
-                        fileByList: JSON.parse(item.fileByList)
+                        // fileByList: JSON.parse(item.fileByList)
                     }))
                 }
             })

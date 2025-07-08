@@ -321,19 +321,19 @@ export default {
   .van-tag--primary {
     min-width: 0.5rem;
     color: #028bff;
-    background: #edf4ff;
+    // background: #edf4ff;
   }
 
   .van-tag--danger {
     min-width: 0.5rem;
     color: #f83738;
-    background: #ffe2e2;
+    // background: #ffe2e2;
   }
 
   .li-status-completed {
     min-width: 0.5rem;
     color: #6f6f6f;
-    background: #ededed;
+    // background: #ededed;
   }
 }
 
@@ -341,7 +341,9 @@ export default {
   height: calc(100vh - 162px);
   overflow-y: scroll;
 }
-
+/deep/ .van-tag--primary{
+  background: #ffffff;
+}
 .van-search {
 
   .van-search__content {

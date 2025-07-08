@@ -483,7 +483,9 @@ export default {
     }
   }
 }
-
+/deep/ .van-tag--primary{
+  background: #ffffff;
+}
 /deep/ .arrow {
   min-width: 0.2rem !important;
 }
@@ -512,24 +514,25 @@ export default {
 }
 
 .li-status {
+  background-color: #ffffff !important;
   .van-tag--primary {
     color: #028bff;
-    background: #edf4ff;
+    // background: #edf4ff;
   }
 
   .van-tag--danger {
     color: #f83738;
-    background: #ffe2e2;
+    // background: #ffe2e2;
   }
 
   .li-status-completed {
     color: #6f6f6f;
-    background: #ededed;
+    // background: #ededed;
   }
 }
 
 ::v-deep .van-dialog__confirm {
-  color: #1989fa;
+  // color: #1989fa;
 }
 
 ::v-deep .van-tabs__content {

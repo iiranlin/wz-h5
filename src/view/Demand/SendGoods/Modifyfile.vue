@@ -222,18 +222,20 @@
                                     </li>
                                    
                                     <li>
-                                        <span>合格证附件:</span>
+                                        <file-download-view class="outbound-field-uploader" title="合格证附件:" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                                        <!-- <span>合格证附件:</span>
                                         <span style="color:#1989fa;"
                                             v-if="item.fileByList && item.fileByList.hgz && item.fileByList.hgz.length > 0"
                                             @click="imgClick(item.fileByList.hgz[0].fileName, item.fileByList.hgz[0].filePath)">{{
-                                            item.fileByList.hgz[0].fileName }}</span>
+                                            item.fileByList.hgz[0].fileName }}</span> -->
                                     </li>
                                     <li>
-                                        <span style="min-width: 3rem;">厂检报告附件:</span>
+                                        <file-download-view class="outbound-field-uploader" title="厂检报告附件:" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                                        <!-- <span style="min-width: 3rem;">厂检报告附件:</span>
                                         <span style="color:#1989fa;"
                                             v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0"
                                             @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
-                                            item.fileByList.cjbg[0].fileName }}</span>
+                                            item.fileByList.cjbg[0].fileName }}</span> -->
                                     </li>
                                      <li>
                                         <span>备注:</span>
@@ -264,14 +266,16 @@ import { minioUpload } from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
 import { modifySendGoods } from '@/api/demand/sendGoods'
 import FileUploadView from "@/components/FileUploadViewType.vue";
+import indexMixin from '@/view/mixins'
+import FileDownloadView from "@/components/FileDownloadView.vue";
 import Vue from 'vue';
 import { Uploader } from 'vant';
 import { Toast } from 'vant';
 Vue.use(Uploader,Toast);
 export default {
     name: 'MyToDoList',
-    mixins: [keepPages],
-    components: { FilePreview,FileUploadView },
+    mixins: [keepPages,indexMixin],
+    components: { FilePreview,FileUploadView,FileDownloadView },
     data() {
         return {
             menuActiveIndex: 0,
@@ -330,7 +334,7 @@ export default {
                         createDate:this.formatTimestamp(item.createDate),
                         supplyDate:this.formattedCreateDate(item.supplyDate),
                         updateDate:this.formattedCreateDate(item.updateDate),
-                        fileByList: JSON.parse(item.fileByList)
+                        // fileByList: JSON.parse(item.fileByList)
                     }))
                 }
             })

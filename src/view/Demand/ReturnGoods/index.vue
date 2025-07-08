@@ -1,47 +1,49 @@
 <template>
     <div class="default-container" ref="container">
-        <ul class="list-ul" style="margin: 10px;">
-            <li>
+        <div class="detail-base-info">
+            <div class="detail-title-content">
+                <img src="/static/icon-xqjh.png">
                 <span>供应需求：</span>
                 <span>{{ params.planName }}</span>
-            </li>
-
-            <li>
-                <span>需求项目：</span>
-                <span>{{ params.sectionName }}</span>
-            </li>
-            <li>
-                <span>需求组织：</span>
-                <span>{{ params.deptName }}</span>
-            </li>
-            <li>
-                <span>发货单号：</span>
-                <span>{{ params.shipmentBatchNumber }}</span>
-            </li>
-             <li>
-                <span>使用地点：</span>
-                <span>{{ params.addr }}</span>
-            </li>
-            <li>
-               <span>退货环节：</span>
-                    <span style="color:red;" v-if="params.backNode==2">收货不通过</span>
-                    <span style="color:red;" v-else>收货通过</span>
-                <!-- <div class="li-item-right">
-                    <span>退货时间:</span>
-                    <span></span>
-                </div> -->
-            </li>
-              <li>
-                <span>退货时间：</span>
-                <span>{{ formattedCreateDate(params.backDate) }}</span>
-            </li>
-        </ul>
-        <div class="title">
-            <span>退货明细</span>
+            </div>
+            <div>
+                <ul class="list-ul" style="margin: 10px;">
+                    <li>
+                        <span>需求项目：</span>
+                        <span>{{ params.sectionName }}</span>
+                    </li>
+                    <li>
+                        <span>需求组织：</span>
+                        <span>{{ params.deptName }}</span>
+                    </li>
+                    <li>
+                        <span>发货单号：</span>
+                        <span>{{ params.shipmentBatchNumber }}</span>
+                    </li>
+                    <li>
+                        <span>使用地点：</span>
+                        <span>{{ params.addr }}</span>
+                    </li>
+                    <li>
+                        <span>退货环节：</span>
+                        <span style="color:red;" v-if="params.backNode == 2">收货不通过</span>
+                        <span style="color:red;" v-else>收货通过</span>
+                    </li>
+                    <li>
+                        <span>退货时间：</span>
+                        <span>{{ formattedCreateDate(params.backDate) }}</span>
+                    </li>
+                </ul>
+            </div>
         </div>
+
+        <div class="detail-title">退货明细</div>
         <van-list>
-            <ul class="list-ul" v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index" style="margin: 20px 15px 0 15px;">
-                <li class="li-item-both">
+            <div class="box-container">
+                <ul class="detail-list-ul" v-for="(item, index) in params.materialCirculationDetailsTableDTOS"
+                    :key="index">
+
+                    <!-- <li class="li-item-both">
                     <div class="li-item-left">
                          <span class="font-weight">物资名称:</span>
                        <span class="font-weight">{{ item.materialName }}</span>
@@ -50,66 +52,55 @@
                         <span>退货数量:</span>
                         <span>{{ item.refundTotal }}</span>
                     </div>
-                </li>
-                <!-- <li>
-                    <span class="font-weight">物资名称:</span>
-                    <span class="font-weight">{{ item.materialName }}</span>
                 </li> -->
-                <li>
-                    <span>标段项目: </span>
-                    <span>南京枢纽(江北地区)和南通地区工程2025年5月甲供物资需求计划表-04</span>
-                </li>
-                <li class="li-item-both">
-                    <div class="li-item-left">
-                        <span>规格型号:</span>
-                        <span>{{ item.specModel }}</span>
-                    </div>
-                    <div class="li-item-right">
-                        <span>计量单位:</span>
-                        <span>{{ item.unit }}</span>
-                    </div>
-                </li>
-                <li class="li-item-both">
-                    <div class="li-item-left">
-                        <span>发货数量:</span>
-                        <span>{{ item.sendTotal }}</span>
-                    </div>
-                    <!-- <div class="li-item-right" style="color: rgb(224,70,70);">
+                    <li class="save-materials-li">
+                        <span class="font-weight dot-before">物资名称:</span>
+                        <span class="font-weight">{{ item.materialName }}</span>
+                    </li>
+                    <li style="color: rgb(224,70,70);">
                         <span>退货数量:</span>
                         <span>{{ item.refundTotal }}</span>
-                    </div> -->
-                </li>
-                <li>
-                    <span>退货附件:</span>
-                    <span style="color:#1989fa;">
-                         <template>
-                        <div v-for="(item1,index1) in item.fileList" :key="index1">
-                          <div v-for="(item2,index2) in item1.fileList" :key="index2"> 
-                            <a href="javascript:;" @click="imgClick(item2.fileName,item2.filePath)">{{ item2.fileName }}</a>
-                          </div>
-                        </div>
-                      </template>
-                    </span>
-                </li>
-            </ul>
-
-
+                    </li>
+                    <li>
+                        <span>规格型号: </span>
+                        <span>{{ item.specModel }}</span>
+                    </li>
+                    <li>
+                        <span>计量单位: </span>
+                        <span>{{ item.unit }}</span>
+                    </li>
+                    <li>
+                        <span>发货数量:</span>
+                        <span>{{ item.sendTotal }}</span>
+                    </li>
+                    <li>
+                        <!-- <file-download-view class="outbound-field-uploader" title="退货附件：" :fileList="item.fileByList, 'zjd' || []"/> -->
+                         <file-download-view class="outbound-field-uploader" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
+                        <!-- <span>退货附件:</span>
+                        <span style="color:#1989fa;">
+                            <template>
+                                <div v-for="(item1, index1) in item.fileList" :key="index1">
+                                    <div v-for="(item2, index2) in item1.fileList" :key="index2">
+                                        <a href="javascript:;" @click="imgClick(item2.fileName, item2.filePath)">{{
+                                            item2.fileName }}</a>
+                                    </div>
+                                </div>
+                            </template>
+                        </span> -->
+                    </li>
+                </ul>
+            </div>
         </van-list>
-        <div class="title">
-            <span>初验信息</span>
-        </div>
+        <div class="detail-title">初验信息</div>
         <div class="tabs">
             <van-list>
                 <div class="box-container">
-                    <ul class="list-ul">
-                        <li>
-                            <span>自检单:</span>
-                            <span style="color:#1989fa;" v-if="params.fileByList && params.fileByList.zjd && params.fileByList.zjd.length > 0" @click="imgClick(params.fileByList.zjd[0].fileName,params.fileByList.zjd[0].filePath)">{{ params.fileByList.zjd[0].fileName }}</span>
-                        </li>
-                        <li>
-                            <span>其他资料:</span>
-                            <span style="color:#1989fa;" v-if="params.fileByList && params.fileByList.qtzl && params.fileByList.qtzl.length > 0" @click="imgClick(params.fileByList.qtzl[0].fileName,params.fileByList.qtzl[0].filePath)">{{ params.fileByList.qtzl[0].fileName }}</span>
-                        </li>
+                    <ul class="detail-ul">
+                        
+                        <template>
+                        <file-download-view class="outbound-field-uploader" title="自检单：" :fileList="filterList(params.fileByList, 'zjd') || []"/>
+                        <file-download-view class="outbound-field-uploader" title="其他资料：" :fileList="filterList(params.fileByList, 'qtzl') || []"/>
+                        </template>
                     </ul>
                 </div>
             </van-list>
@@ -122,14 +113,18 @@ import Vue from 'vue';
 import { Form } from 'vant';
 import { Field } from 'vant';
 import { Toast } from 'vant';
-import {returnGoodsDetails} from '@/api/demand/returnGoods'
+import { returnGoodsDetails } from '@/api/demand/returnGoods'
+import indexMixin from '@/view/mixins'
 import FilePreview from "@/components/FilePreview.vue";
+import FileUploadView from "@/components/FileUploadView.vue";
+import FileDownloadView from "@/components/FileDownloadView.vue";
 Vue.use(Toast);
 Vue.use(Form);
 Vue.use(Field);
 export default {
     name: 'MyProcess',
-    components: { FilePreview },
+      mixins: [indexMixin],
+    components: { FilePreview, FileDownloadView,FileUploadView },
     data() {
         return {
             username: '',
@@ -141,50 +136,55 @@ export default {
             finished: false,
             result: [],
             list: [],
-            orderId:'',
-            params:{}
+            orderId: '',
+            params: {},
+            fileTHList:[],
         };
     },
     created() {
         this.orderId = this.$route.query.id
         this.getGoodsOrderDetails();
     },
-    methods: { 
+    methods: {
         // 时间戳转换成日期格式
-         formattedCreateDate(timestamp) {
-             if (!timestamp) return ''; // 处理空值
+        formattedCreateDate(timestamp) {
+            if (!timestamp) return ''; // 处理空值
             const date = new Date(timestamp);
             const year = date.getFullYear();
             const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
             const day = date.getDate().toString().padStart(2, '0'); // 日期加0
             return `${year}-${month}-${day}`;
-            },
-        getGoodsOrderDetails(){
-             Toast.loading({
+        },
+        getGoodsOrderDetails() {
+            Toast.loading({
                 message: '加载中...',
                 forbidClick: true,
             });
-            returnGoodsDetails(this.orderId).then((res)=>{
-                if(res.code==0){
+            returnGoodsDetails(this.orderId).then((res) => {
+                if (res.code == 0) {
                     Toast.clear()
                     this.params = {
                         ...res.data, // 展开原有属性
-                        fileByList: JSON.parse(res.data.fileByList) // 单独解析 fileByList
+                        fileByList: res.data.fileByList
                     };
                 }
-               
+
             })
         },
         onSubmit(values) {
-           
+
         },
-         imgClick(fileName,filePath) {
+        imgClick(fileName, filePath) {
             this.$refs.filePreview.init(fileName, filePath)
-            },
+        },
     },
 };
 </script>
 <style lang="less" scoped>
+.detail-title {
+  font-weight: bold;
+  margin: 0.2rem;
+}
 .default-container {
     padding-top: 10px;
 }
@@ -213,5 +213,16 @@ li :nth-child(2) {
 .title {
     margin: 10px;
     font-size: 14px;
+}
+
+.dot-before::before {
+    content: "•";
+    /* 圆点符号 */
+    color: #1890ff;
+    /* 蓝色（可自定义） */
+    margin-right: 5px;
+    /* 与文字的间距 */
+    font-size: 1.2em;
+    /* 可选：调整圆点大小 */
 }
 </style>
