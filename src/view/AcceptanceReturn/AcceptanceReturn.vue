@@ -20,14 +20,14 @@
       title-inactive-color="#2e2e2e"> -->
       <van-tab title="收货管理">
         <div slot="title">
-            <img src="@/assets/img/acceptImg.png">
+            <img src="@/assets/img/SHGL.png">
             <span class="in-out-management-tab-span">收货管理</span>
           </div>
         <acceptance/>
       </van-tab>
       <van-tab title="退货管理">
           <div slot="title">
-            <img src="@/assets/img/returnImg.png">
+            <img src="@/assets/img/THGL.png">
             <span class="in-out-management-tab-span">退货管理</span>
           </div>
         <return/>

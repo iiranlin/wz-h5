@@ -35,26 +35,26 @@ export default {
 			constructionUnit:[
 				{
 					title: '我的待办',
-					activeIcon: '/static/我的待办A.png',
-					normalIcon: '/static/我的待办B.png',
+					activeIcon: '/static/WDDB_A.png',
+					normalIcon: '/static/WDDB_B.png',
 					link: '/MyToDoList'
 				},
 				{
 					title: '计划管理',
-					activeIcon: '/static/计划管理A.png',
-					normalIcon: '/static/计划管理B.png',
+					activeIcon: '/static/JGGL_A.png',
+					normalIcon: '/static/JGGL_B.png',
 					link: '/PlannedManagementList'
 				},
 				{
 					title: '验收管理',
-					activeIcon: '/static/验收管理A.png',
-					normalIcon: '/static/验收管理B.png',
+					activeIcon: '/static/YSGL_A.png',
+					normalIcon: '/static/YSGL_B.png',
 					link: '/AcceptanceReturn'
 				},
 				{
 					title: '出入库管理',
-					activeIcon: '/static/出入库管理A.png',
-					normalIcon: '/static/出入库管理B.png',
+					activeIcon: '/static/CRKGL_A.png',
+					normalIcon: '/static/CRKGL_B.png',
 					link: '/InOutManagementList'
 				},
 			],

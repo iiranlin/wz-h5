@@ -5,28 +5,28 @@
         title-inactive-color="#2e2e2e" class="in-out-management-tab">
         <van-tab title="入库列表">
           <div slot="title">
-            <img src="@/assets/img/入库列表.png">
+            <img src="@/assets/img/RKLB.png">
             <span class="in-out-management-tab-span">入库列表</span>
           </div>
           <in-list-content></in-list-content>
         </van-tab>
         <van-tab title="需求库存">
           <div slot="title">
-            <img src="@/assets/img/库存列表.png">
+            <img src="@/assets/img/KCLB.png">
             <span class="in-out-management-tab-span">需求库存</span>
           </div>
           <inventory-list-content></inventory-list-content>
         </van-tab>
         <van-tab title="退货列表">
           <div slot="title">
-            <img src="@/assets/img/退货列表.png">
+            <img src="@/assets/img/THLB.png">
             <span class="in-out-management-tab-span">退货列表</span>
           </div>
           <refund-list-content></refund-list-content>
         </van-tab>
         <van-tab title="出库列表">
           <div slot="title">
-            <img src="@/assets/img/出库列表.png">
+            <img src="@/assets/img/CKLB.png">
             <span class="in-out-management-tab-span">出库列表</span>
           </div>
           <out-list-content></out-list-content>
