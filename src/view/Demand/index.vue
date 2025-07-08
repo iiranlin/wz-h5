@@ -1,7 +1,7 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-      <van-search v-model="params.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff">
+      <van-search v-model="params.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff" @search="onSearch">
       </van-search>
       <!-- <van-search 
                 v-model="formData.keywords" 
@@ -243,6 +243,7 @@ export default {
     },
     //搜索
     onSearch() {
+      this.allRefreshLoading = true
       this.params.pageNum = 1;
       this.getList()
     },
@@ -284,7 +285,9 @@ export default {
 <style lang="less" scoped>
 .van-cells {
   padding: 0.3rem 0 !important;
-  display: flex;
+   display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f5f5f5;
 
   .title {
     min-width: 1.75rem;

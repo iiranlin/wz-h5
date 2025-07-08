@@ -220,10 +220,7 @@
                                         <span>投资比例:</span>
                                         <span>{{ item.field1 }}</span>
                                     </li>
-                                    <li>
-                                        <span>备注:</span>
-                                        <span>{{ item.remark }}</span>
-                                    </li>
+                                   
                                     <li>
                                         <span>合格证附件:</span>
                                         <span style="color:#1989fa;"
@@ -237,6 +234,10 @@
                                             v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0"
                                             @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
                                             item.fileByList.cjbg[0].fileName }}</span>
+                                    </li>
+                                     <li>
+                                        <span>备注:</span>
+                                        <span>{{ item.remark }}</span>
                                     </li>
                                 </ul>
                             </div>
