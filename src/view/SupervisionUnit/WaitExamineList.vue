@@ -6,8 +6,11 @@
                     v-model="formData.keywords" 
                     placeholder="输入关键字搜索" 
                     shape="round" 
-                    background="#eef6ff"
+                    left-icon="none"
                     @search="handeSearch()">
+                    <template slot='right-icon'>
+                        <van-icon name="search" @click="handeSearch()"/>
+                    </template>
                 </van-search>
             </div>
         </van-sticky>
@@ -20,17 +23,17 @@
                     @load="getList">
 
                     <div v-for="(item,index) in dataList" :key="index" class="box-container" @click.stop="handleItemClick(item)">
+                        <div class="list-title-content">
+                            <span>业务编码：</span>
+                            <span class="font-weight" style="color:#134daa;">{{item.businessCode}}</span>
+                        </div>
                         <ul class="list-ul">
-                            <li>
-                                <span class="font-weight">业务编码：</span>
-                                <span class="font-weight">{{item.businessCode}}</span>
-                            </li>
                             <li>
                                 <span>业务类型：</span>
                                 <span>{{item.businessType | orderTypeFilter(dict.flowBusinessType)}}</span>
                             </li>
                             <li>
-                                <span>所属部门：</span>
+                                <span>需求组织：</span>
                                 <span>{{item.startDeptName}}</span>
                             </li>
                             <li>
@@ -125,7 +128,7 @@ export default {
                 name: "DemandPlanningExamine",
                 params: { 
                     obj: JSON.stringify(item),
-                    type: '1',
+                    type: '0',
                 },
             });
         },
@@ -157,18 +160,5 @@ export default {
 <style lang="less" scoped>
 .list-search-container {
     margin-bottom: 10px;
-}
-
-.van-search {
-
-  .van-search__content {
-    border-radius: 50px;
-    background: #fff;
-  }
-
-  .van-cell {
-    border-radius: 50px;
-    background: #fff;
-  }
 }
 </style>
