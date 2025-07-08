@@ -20,8 +20,9 @@ export default {
     }
   },
   mounted() {
-    document.body.addEventListener('click', this.handleBodyClick);
-    document.addEventListener('touchmove', this.handleBodyClick);
+    document.body.addEventListener('click', this.handleBodyClick)
+    document.addEventListener('touchmove', this.handleBodyClick)
+    document.addEventListener('wheel', this.handleBodyClick)
   },
   methods: {
     init($event, name, index) {
@@ -30,8 +31,8 @@ export default {
       const historyList = this.$store.state.public.historyList || {}
       this.historyList = historyList[name] || []
       this.showPopover = true
-      this.divStyle.left = `${$event.clientX / 100 - 2}rem`;
-      this.divStyle.top = `${$event.clientY / 100 + 0.3}rem`;
+      this.divStyle.left = `${$event.clientX / 100 - 2}rem`
+      this.divStyle.top = `${$event.clientY / 100 + 0.3}rem`
     },
     onSelect(item) {
       this.$emit('historyClick', item, this.names, this.indexs)
@@ -43,6 +44,7 @@ export default {
     beforeDestroy() {
       document.body.removeEventListener('click', this.handleBodyClick)
       document.body.removeEventListener('touchmove', this.handleBodyClick)
+      document.body.removeEventListener('wheel', this.handleBodyClick)
     },
   },
 }
