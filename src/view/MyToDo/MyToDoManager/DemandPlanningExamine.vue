@@ -13,7 +13,7 @@
                         <span>{{detailInfo.sectionName}}</span>
                     </li>
                     <li>
-                        <span>填报组织：</span>
+                        <span>需求组织：</span>
                         <span>{{detailInfo.deptName}}</span>
                     </li>
                     <li>
@@ -399,6 +399,9 @@ export default {
     overflow-y: hidden;
     display: flex;
     flex-direction: column;
+}
+.button-info {
+    width: 106px !important;
 }
 .detail-base-info {
     border-bottom: 1px solid #e3e3e3;

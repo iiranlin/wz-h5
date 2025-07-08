@@ -200,6 +200,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.box-container{
+    padding: 0px !important;
+}
+.detail-list-ul{
+    margin: 0 !important;
+}
 .default-container {
     padding-top: 10px;
 }
