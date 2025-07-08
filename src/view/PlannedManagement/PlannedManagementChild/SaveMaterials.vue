@@ -58,15 +58,15 @@
             <van-popup v-model="item.showDatePicker" position="bottom" round>
               <van-datetime-picker type="date" v-model="item.minDate" @confirm="onDateConfirm(item, index)" @cancel="hideDatePicker(item, index)" />
             </van-popup>
-            <van-field required v-model="item.addr" label="使用地点" placeholder="请输入使用地点" :label-width="240" :rules="rules.addr" @click="fieldClick(index, '使用地点')"
+            <van-field required v-model="item.addr" label="使用地点" placeholder="请输入使用地点" :label-width="240" :rules="rules.addr" @click.stop="fieldClick($event, 'addr', index)"
               input-align="right" />
-            <van-field required v-model="item.field2" label="收货地址" placeholder="请输入收货地址" :label-width="240" :rules="rules.field2" @click="fieldClick(index, '收货地址')"
+            <van-field required v-model="item.field2" label="收货地址" placeholder="请输入收货地址" :label-width="240" :rules="rules.field2" @click.stop="fieldClick($event, 'field2', index)"
               input-align="right" />
             <van-field required v-model="item.receiver" label="收货人联系方式" placeholder="请输入收货人联系方式" :label-width="260" :rules="rules.receiver"
               input-align="right" />
-            <van-field required v-model="item.field0" label="投资方" placeholder="请输入投资方" :label-width="240" :rules="rules.field0"
+            <van-field required v-model="item.field0" label="投资方" placeholder="请输入投资方" :label-width="240" :rules="rules.field0" @click.stop="fieldClick($event, 'field0', index)"
               input-align="right" />
-            <van-field required v-model="item.field1" label="投资比例" placeholder="请输入投资比例" :label-width="240" :rules="rules.field1"
+            <van-field required v-model="item.field1" label="投资比例" placeholder="请输入投资比例" :label-width="240" :rules="rules.field1" @click.stop="fieldClick($event, 'field1', index)"
               input-align="right" />
             <van-field v-model="item.remark" label="备注" placeholder="请输入备注" :label-width="240" input-align="right" />
           </van-cell-group>
@@ -79,13 +79,13 @@
         <van-button class="button-info" round type="info" native-type="button" @click="returnClick">上一步</van-button>
         <van-button class="button-info" round type="info" native-type="submit">保存</van-button>
       </div>
+      <history-list ref="historyList" @historyClick="historyClick"></history-list>
     </van-form>
-    <!-- <history-list ref="historyList" :label="labelName" @historyClick="historyClick"></history-list> -->
   </div>
 </template>
 <script>
-// import historyList from '@/components/historyList'
 import keepPages from '@/view/mixins/keepPages'
+import historyList from '@/components/historyList'
 import { parseTime } from '@/utils/index'
 import { getSectionProject } from '@/api/prodmgr-inv/materialSectionProject'
 import { materialDemandPlanRestSaveModify, materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
@@ -94,7 +94,7 @@ import dayjs from 'dayjs'
 export default {
   name: 'SaveMaterials',
   mixins: [keepPages],
-  // components: { historyList },
+  components: { historyList },
   data() {
     return {
       userInfo: getUserInfo(),
@@ -123,19 +123,16 @@ export default {
           { required: true, message: '请输入投资比例' },
         ],
       },
-      temporarilyList: [],
       materiaList: [],
       sectionInfo: {},
       contractId: null,
       queryType: '',
       queryId: '',
-      historyIndex: 0,
-      labelName: ''
     }
   },
   activated() {
     const data = this.$store.state.public.materiaList || []
-    const finallyData = data.map( (item) => Object.assign({}, item, {minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
+    const finallyData = data.map( (item) => Object.assign({}, item, {supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'), minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
     const materiaList = this.materiaList.concat(finallyData)
     let obj = {}
     this.materiaList = materiaList.reduce((cur, next) => {
@@ -150,7 +147,7 @@ export default {
   methods: {
     init () {
       const data = this.$store.state.public.materiaList || []
-      const finallyData = data.map( (item) => Object.assign({}, item, {minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
+      const finallyData = data.map( (item) => Object.assign({}, item, {supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'), minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
       const {id = null, contractId = null, type = ''} = this.$route.query
       this.queryId = id
       this.contractId = contractId
@@ -216,11 +213,12 @@ export default {
         contractId: this.contractId,
         detailsModifyParams: this.materiaList.map(item => ({...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
       }
-      // const addrList = this.materiaList.map(item =>  item.addr)
-      // const field2List = this.materiaList.map(item =>  item.field2)
-      // const historyList = addrList.concat(field2List)
+      let obj = {addr: [], field2: [], field2: []}
+      obj.addr = this.materiaList.map(item =>  item.addr)
+      obj.field2 = this.materiaList.map(item =>  item.field2)
+      
       materialDemandPlanRestSaveModify(data, type).then(({message}) => {
-        // this.$store.dispatch('public/setHistoryList', historyList)
+        this.$store.dispatch('public/setHistoryList', obj)
         this.$toast(message)
         this.$router.push({ path: '/PlannedManagementList' })
       })
@@ -277,14 +275,12 @@ export default {
       }
       return true
     },
-    fieldClick (index, name) {
-      // this.historyIndex = index
-      // this.labelName = name
-      // this.$refs.historyList.init()
+    fieldClick ($event, name, index) {
+      this.$refs.historyList.init($event, name, index)
     },
-    historyClick (value) {
-      this.$set(this.materiaList, this.historyIndex, Object.assign({}, this.materiaList[this.historyIndex], {field2: value}))
-    },
+    historyClick(data, name, index){
+      this.$set(this.materiaList, index, Object.assign({}, this.materiaList[index], {[name]: data}))
+    }
   }
 }
 </script>

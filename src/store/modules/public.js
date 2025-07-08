@@ -2,7 +2,7 @@ const state = {
   materiaList: null,
   interfaceMateriaList: null,
   sendGoods:{},
-  historyList: sessionStorage.getItem('historyList') || []
+  historyList: JSON.parse(sessionStorage.getItem('historyList')) || {}
 };
 
 const mutations = {
@@ -13,7 +13,7 @@ const mutations = {
     state.sendGoods = goodsList
   },
   SET_HISTORY_LIST:(state, historyList)=>{
-    sessionStorage.setItem('historyList', historyList)
+    sessionStorage.setItem('historyList', JSON.stringify(historyList))
     state.historyList = historyList
   },
   SET_INTERFACE_MATERIA_LIST:(state, interfaceMateriaList)=>{

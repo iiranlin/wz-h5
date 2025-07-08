@@ -41,9 +41,13 @@
     <div class="select-materials-list">
       <div class="van-list">
         <van-checkbox-group v-model="materiaId" v-if="filteredList.length">
-          <van-checkbox shape="square" :name="item.uniqueNumber" v-for="item in filteredList" :key="item.uniqueNumber"
+          <van-checkbox shape="square" :name="item.uniqueNumber" v-for="(item, index) in filteredList" :key="item.uniqueNumber"
             :disabled="item.amount === item.cumulativeAmount">
             <ul class="list-ul">
+              <li>
+                <span class="font-weight">序号：</span>
+                <span class="font-weight">{{ index+1 }}</span>
+              </li>
               <li>
                 <span class="font-weight">物资名称：</span>
                 <span class="font-weight">{{ item.materialName }}</span>
