@@ -44,22 +44,12 @@
         <van-list>
             <div class="box-container" v-for="(item, index) in params.materialCirculationDetailsTableDTOS"
                     :key="index">
-                <ul class="list-ul" >
-
-                    <!-- <li class="li-item-both">
-                    <div class="li-item-left">
-                         <span class="font-weight">物资名称:</span>
-                       <span class="font-weight">{{ item.materialName }}</span>
-                    </div>
-                    <div class="li-item-right" style="color: rgb(224,70,70);">
-                        <span>退货数量:</span>
-                        <span>{{ item.refundTotal }}</span>
-                    </div>
-                </li> -->
-                    <li class="save-materials-li" style="display: flex;justify-content:flex-start;">
-                        <span class="font-weight dot-before">物资名称：</span>
+                     <div class="detail-list-title-content">
+                        <span class="font-weight">物资名称：</span>
                         <span class="font-weight">{{ item.materialName }}</span>
-                    </li>
+                    </div>
+                <ul class="list-ul" >
+                   
                     <li style="color: rgb(224,70,70);">
                         <span>退货数量:</span>
                         <span>{{ item.refundTotal }}</span>
@@ -76,21 +66,7 @@
                         <span>发货数量:</span>
                         <span>{{ item.sendTotal }}</span>
                     </li>
-                   
-                        <!-- <file-download-view class="outbound-field-uploader" title="退货附件：" :fileList="item.fileByList, 'zjd' || []"/> -->
                          <file-download-view class="outbound-field-uploader"  style="width: 100%;" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
-                        <!-- <span>退货附件:</span>
-                        <span style="color:#1989fa;">
-                            <template>
-                                <div v-for="(item1, index1) in item.fileList" :key="index1">
-                                    <div v-for="(item2, index2) in item1.fileList" :key="index2">
-                                        <a href="javascript:;" @click="imgClick(item2.fileName, item2.filePath)">{{
-                                            item2.fileName }}</a>
-                                    </div>
-                                </div>
-                            </template>
-                        </span> -->
-                   
                 </ul>
             </div>
         </van-list>

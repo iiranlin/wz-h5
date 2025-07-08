@@ -17,31 +17,14 @@
           <div class="detail-base-info">
                 <div v-for="(item, index) in returnList" :key="index" class="box-container"
             @click="handleDetailsItemClick(item.id)">
-            <div class="detail-title-content">
-                    <span style="font-size: 0.3rem;">退货单号：</span>
-                    <span style="font-size: 0.3rem;color: rgb(19, 77, 170);">{{ item.backNumber }}</span>
-                    <div class="detail-title-status">
+            <div class="list-title-content">
+                    <span>退货单号：</span>
+                    <span class="font-weight" style="color:#134daa;">{{ item.backNumber }}</span>
+                    <div class="li-title-status">
                       <img :src="checkAuditStatus(item.backNode)" />
                       <span>{{ checkStatusText(item.backNode) }}</span>
                     </div>
                   </div>
-            <!-- <div class="van-cells">
-              <span class="title">退货单号:</span>
-              <div class="conent">
-                <span class="text">{{ item.backNumber }}</span>
-                <span>
-                  <div class="li-status">
-                    <van-tag type="primary" round size="success" v-if="item.backNode == 2"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>收货不通过</van-tag>
-                    <van-tag type="primary" round size="medium" v-else><i class="font_family
-                    icon-icon-selected-16
-                    "></i>收货通过</van-tag>
-                  </div>
-
-                </span>
-              </div>
-            </div> -->
             <ul class="list-ul">
 
               <!-- <li>

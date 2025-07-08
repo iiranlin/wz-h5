@@ -237,9 +237,9 @@
                                             @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
                                             item.fileByList.cjbg[0].fileName }}</span> -->
                                     
-                                     <li>
-                                        <span>备注:</span>
-                                        <span>{{ item.remark }}</span>
+                                     <li class="li-item-remark">
+                                    <span>备注：</span>
+                                    <div class="remark-detail">{{item.remark || '未填写'}}</div>
                                     </li>
                                 </ul>
                             </div>

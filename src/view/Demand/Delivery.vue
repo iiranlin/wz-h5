@@ -21,10 +21,10 @@
                 <div class="detail-base-info">
                    <div v-for="(item, index) in listBySendData" :key="index" class="box-container"
                   @click="handleCarGoClick(item.id)">
-                   <div class="detail-title-content">
-                    <span style="font-size: 0.3rem;">发货单号：</span>
-                    <span style="font-size: 0.3rem;color: rgb(19, 77, 170);">{{ item.shipmentBatchNumber }}</span>
-                    <div class="detail-title-status">
+                   <div class="list-title-content">
+                    <span>发货单号：</span>
+                    <span class="font-weight" style="color:#134daa;">{{ item.shipmentBatchNumber }}</span>
+                    <div class="li-title-status">
                       <img :src="checkAuditStatus(item.status)" />
                       <span>{{ checkStatusText(item.status) }}</span>
                     </div>

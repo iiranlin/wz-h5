@@ -33,11 +33,16 @@
                 <van-tab title="发货基本信息" name="发货基本信息">
                     <van-list>
                         <div class="box-container">
+                            <div class="detail-list-title-content">
+                                    <span class="font-weight">供应需求名称：</span>
+                                    <span class="font-weight" >{{ params.planName }}</span>
+                                </div>
                             <ul class="list-ul">
-                                <li>
+                                 
+                                <!-- <li>
                                         <span class="font-weight dot-before" style="min-width: 2.5rem;">供应需求名称:</span>
                                         <span class="font-weight" style="text-align: left;">{{ params.planName }}</span>
-                                    </li>
+                                    </li> -->
                                 <!-- <li>
                                     <span style="width: 250px;">供应需求名称:</span>
                                     <span>{{ params.planName }}</span>
@@ -105,15 +110,11 @@
                         <van-list>
                             <div class="box-container"
                                v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
+                               <div class="detail-list-title-content">
+                                    <span class="font-weight">物资名称：</span>
+                                    <span class="font-weight">{{ item.materialName }}</span>
+                                </div>
                                 <ul class="detail-list-ul"  >
-                                    <!-- <li>
-                                        <span class="font-weight" style="width: 250px;">需求组织名称:</span>
-                                        <span class="font-weight">{{ item.materialName }}</span>
-                                    </li> -->
-                                    <li class="save-materials-li">
-                                        <span class="font-weight dot-before">物资名称:</span>
-                                        <span class="font-weight" style="text-align: left;">{{ item.materialName }}</span>
-                                    </li>
                                     <li>
                                         <span>规格型号:</span>
                                         <span>{{ item.specModel }}</span>
@@ -167,9 +168,9 @@
                                         <span>投资比例:</span>
                                         <span>{{ item.field1 }}</span>
                                     </li>
-                                    <li>
-                                        <span>备注:</span>
-                                        <span>{{ item.remark }}</span>
+                                    <li class="li-item-remark">
+                                    <span>备注：</span>
+                                    <div class="remark-detail">{{item.remark || '未填写'}}</div>
                                     </li>
                                  
                                     <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>

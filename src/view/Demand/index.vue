@@ -22,54 +22,22 @@
                 <div class="detail-base-info">
                   <div v-for="(item, index) in listGhsData" :key="index" class="box-container"
                   @click="handleSupplyClick(item.id)">
-                   <div class="detail-title-content">
+                  <div class="list-title-content">
+                    <span>需求编号：</span>
+                    <span class="font-weight" style="color:#134daa;">{{ item.planNumber }}</span>
+                    <div class="li-title-status">
+                      <img :src="checkAuditStatus(item.status)" />
+                      <span>{{ checkStatusText(item.status) }}</span>
+                    </div>
+                  </div>
+                   <!-- <div class="detail-title-content">
                     <span style="font-size: 0.3rem;">需求编号：</span>
                     <span style="font-size: 0.3rem;color: rgb(19, 77, 170);">{{ item.planNumber }}</span>
                     <div class="detail-title-status">
                       <img :src="checkAuditStatus(item.status)" />
                       <span>{{ checkStatusText(item.status) }}</span>
                     </div>
-                  </div>
-                  <!-- <div class="van-cells">
-                    <span class="title">需求编号:</span>
-                    <div class="conent">
-                      <span class="text">{{ item.planNumber }}</span>
-                      <span>
-                        <div class="li-status">
-                          <van-tag type="primary" round size="success" v-if="item.status == 4"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>供应中</van-tag>
-                        <van-tag type="primary" round size="medium" v-if="item.status == 2"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>未确认</van-tag>
-                        <van-tag type="primary" round size="medium" v-if="item.status == 3"><i class="font_family
-                    icon-icon-date-20
-                    "></i>已确认</van-tag>
-                        <van-tag type="primary" round size="medium" v-if="item.status == 6"
-                          class="li-status-completed"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>已完成</van-tag>
-                        </div>
-                      </span>
-                    </div>
                   </div> -->
-                  <!-- <van-cell title="需求编号:">
-                    <div class="li-status">
-                      <van-tag type="primary" round size="success" v-if="item.status == 4"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>供应中</van-tag>
-                     <van-tag type="primary" round size="medium" v-if="item.status == 2"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>未确认</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="item.status == 3"><i class="font_family
-                    icon-icon-date-20
-                    "></i>已确认</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="item.status == 6"
-                        class="li-status-completed"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>已完成</van-tag>
-                    </div>
-                  </van-cell> -->
                   <ul class="list-ul">
                     <!-- <li>
                       <span class="font-weight">需求编号:</span>

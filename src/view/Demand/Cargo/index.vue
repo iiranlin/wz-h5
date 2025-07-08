@@ -45,10 +45,14 @@
                     <van-list>
                         <div class="box-container">
                             <ul class="detail-list-ul">
-                                <li style="display: flex;justify-content:flex-start;">
+                                 <div class="detail-list-title-content">
+                                    <span class="font-weight">发货单号：</span>
+                                    <span class="font-weight">{{ logistics.shipmentBatchNumber }}</span>
+                                </div>
+                                <!-- <li style="display: flex;justify-content:flex-start;">
                                     <span class="font-weight dot-before">发货单号：</span>
                                     <span class="font-weight">{{ logistics.shipmentBatchNumber }}</span>
-                                </li>
+                                </li> -->
                                 <li>
                                     <span>物流单号：</span>
                                     <span class="text">{{ logistics.oddNumbers }}</span>
@@ -137,14 +141,10 @@
                             <div class="box-container">
                                 <ul class="detail-list-ul"
                                     v-for="(item, index) in logistics.materialCirculationDetailsTableDTOS" :key="index">
-                                    <!-- <li>
-                                        <span class="font-weight" style="width: 250px;">需求组织名称:</span>
+                                     <div class="detail-list-title-content">
+                                        <span class="font-weight">物资名称：</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
-                                    </li> -->
-                                    <li class="save-materials-li" style="display: flex;justify-content:flex-start;">
-                                        <span class="font-weight dot-before">物资名称:</span>
-                                        <span class="font-weight">{{ item.materialName }}</span>
-                                    </li>
+                                    </div>
                                     <li>
                                         <span>规格型号:</span>
                                         <span>{{ item.specModel }}</span>
@@ -198,9 +198,9 @@
                                         <span>投资比例:</span>
                                         <span>{{ item.field1 }}</span>
                                     </li>
-                                    <li>
-                                        <span>备注:</span>
-                                        <span>{{ item.remark }}</span>
+                                   <li class="li-item-remark">
+                                    <span>备注：</span>
+                                    <div class="remark-detail">{{item.remark || '未填写'}}</div>
                                     </li>
                                     <li>
                                         <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>

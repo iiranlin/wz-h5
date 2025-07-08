@@ -43,10 +43,14 @@
         <van-list>
             <ul class="detail-list-ul" v-for="(item, index) in result.demandPlanDetailsGyDTOList" :key="index"
                 style="margin: 0.2rem;background: #fff;border-radius: 16px;">
-                <li class="save-materials-li" style="display: flex;justify-content:flex-start;">
+                <div class="detail-list-title-content">
+                        <span class="font-weight">物资名称：</span>
+                        <span class="font-weight">{{ item.materialName }}</span>
+                    </div>
+                <!-- <li class="save-materials-li" style="display: flex;justify-content:flex-start;">
                     <span class="font-weight dot-before">物资名称：</span>
                     <span class="font-weight">{{ item.materialName }}</span>
-                </li>
+                </li> -->
                 <li>
                     <span>规格型号：</span>
                     <span>{{ item.specModel }}</span>

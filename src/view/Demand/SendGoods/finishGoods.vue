@@ -148,6 +148,7 @@ export default {
         ...item,
         planDetailId: item.id,
         // 回显图片
+
         fileList01: this.fileLists(item.fileByList),
         fileList02: this.fileListss(item.fileByList),
       }))
