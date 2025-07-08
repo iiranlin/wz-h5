@@ -68,7 +68,7 @@
                                     <span>{{ logistics.shippingAddress }}</span>
                                 </li>
                                 <li>
-                                    <span>预计到达时间为：</span>
+                                    <span>预计到达时间：</span>
                                     <span v-if="logistics.arrivalDate">{{ formattedCreateDate(logistics.arrivalDate)
                                         }}</span>
                                 </li>

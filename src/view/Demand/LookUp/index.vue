@@ -49,7 +49,7 @@
                                 <span>XxxxxxXXXXXXXXXX</span>
                             </li>
                             <li>
-                                <span style="width: 280px;">预计到达时间为:</span>
+                                <span style="width: 280px;">预计到达时间:</span>
                                 <span>2025年05月03日</span>
                             </li>
                             <li>

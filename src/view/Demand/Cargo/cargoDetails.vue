@@ -2,10 +2,19 @@
     <div class="default-container" ref="container" :style="{ paddingBottom: params.status === 1 ? '0' : '1.3rem' }">
         <div class="detail-base-info">
             <div class="detail-title-content">
+            <img src="/static/icon-xqjh.png">
+            <span>发货单号：</span>
+                <span>{{ params.shipmentBatchNumber }}</span>
+            <div class="detail-title-status">
+              <img :src="checkAuditStatus(params.status)" />
+              <span>{{ checkStatusText(params.status) }}</span>
+            </div>
+          </div>
+            <!-- <div class="detail-title-content">
                 <img src="/static/icon-xqjh.png">
                 <span>发货单号：</span>
                 <span>{{ params.shipmentBatchNumber }}</span>
-            </div>
+            </div> -->
             <div>
                 <ul class="detail-ul">
                     <li>
@@ -19,10 +28,6 @@
                     <li>
                         <span>操作时间：</span>
                         <span>{{ formatTimestamp(params.createDate) }}</span>
-                    </li>
-                    <li>
-                        <span>提报时间：</span>
-                        <span>{{ formattedCreateDate(params.backDate) }}</span>
                     </li>
                 </ul>
             </div>
@@ -86,21 +91,8 @@
                                     <span>联系电话:</span>
                                     <span>{{ params.contactsPhone }}</span>
                                 </li>
-                                <li>
-                                    <span>发货时间: </span>
-                                    <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate)
-                                        }}</span>
-                                </li>
-                                <li>
-                                    <span>操作人: </span>
-                                    <span>{{ params.createUserName }}</span>
-                                </li>
-                                <li>
-                                    <span>操作时间: </span>
-                                    <span v-if="params.createDate">{{ formatTimestamp(params.createDate) }}</span>
-                                </li>
-                                 <file-download-view class="outbound-field-uploader" style="width: 100%;" title="发货单：" :fileList="filterList(params.fileByList, 'fhd') || []"/>
                             </ul>
+                            <file-download-view class="outbound-field-uploader" style="width: 100%;" title="发货单：" :fileList="filterList(params.fileByList, 'fhd') || []"/>
                         </div>
                     </van-list>
                 </van-tab>
@@ -128,7 +120,7 @@
                                         <span>{{ item.sendTotal }}</span>
                                     </li>
                                     <li>
-                                        <span style="min-width: 3rem;">本次计划数量:</span>
+                                        <span style="min-width: 4rem;">本次计划数量:</span>
                                         <span>{{ item.planAmount }}</span>
                                     </li>
                                     <li>
@@ -141,7 +133,7 @@
                                                 }}</span>
                                     </li>
                                     <li>
-                                        <span style="min-width: 3rem;">有效期截止日期:</span>
+                                        <span style="min-width: 4rem;">有效期截止日期:</span>
                                         <span>{{formattedCreateDate(item.updateDate) }}</span>
                                     </li>
                                     <li>
@@ -173,8 +165,7 @@
                                     <div class="remark-detail">{{item.remark || '未填写'}}</div>
                                     </li>
                                  
-                                    <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
-                                    <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                                   
                                 
                                     <!-- <li>
                                         <span>合格证附件:</span>
@@ -191,6 +182,8 @@
                                             item.fileByList.cjbg[0].fileName }}</span>
                                     </li> -->
                                 </ul>
+                                 <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                                    <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
                             </div>
                         </van-list>
                     </div>
@@ -214,8 +207,9 @@ import FilePreview from "@/components/FilePreview.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import indexMixin from '@/view/mixins'
 import Vue from 'vue';
-import { Dialog } from 'vant';
+import { Dialog,Toast } from 'vant';
 Vue.use(Dialog);
+Vue.use(Toast);
 export default {
     name: 'MyToDoList',
     mixins: [keepPages,indexMixin],
@@ -242,7 +236,13 @@ export default {
             allLoading: false,
             allFinished: false,
             allRefreshLoading: false,
-            allRefresh: false
+            allRefresh: false,
+             statusArr: [
+        { text: '全部', value: '' },
+        { text: '未发货', value: '1' },
+        { text: '货运中', value: '2' },
+        { text: '已完成', value: '3' }
+      ],
         };
     },
     created() {
@@ -322,10 +322,52 @@ export default {
         });
       // this.$router.push({path:'/sendGoods'})
     },
+      checkAuditStatus(status) {
+      if (status == '0') {
+        return '/static/icon-reject.png'
+      } else if (['5', '10'].includes(status)) {
+        return '/static/icon-return.png'
+      } else {
+        return '/static/icon-success.png'
+      }
+    },
+        checkStatusText(status) {
+      let name = ''
+      this.statusArr.forEach(item => {
+        if (item.value === status) {
+          name = item.text
+        }
+      })
+      return name
+    },
     },
 };
 </script>
 <style lang="less" scoped>
+.detail-title-content{
+
+  position: relative;
+  .detail-title-status {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    span {
+      
+      color: #134daa;
+      font-size: 11px;
+    }
+  }
+
+}
 .box-container{
     padding: 0px !important;
 }
