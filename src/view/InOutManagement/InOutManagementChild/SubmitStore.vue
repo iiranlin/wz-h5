@@ -245,6 +245,8 @@ export default {
         return '/static/icon-reject.png'
       } else if (['2', '4'].includes(status)) {
         return '/static/icon-return.png'
+      } else if (['1'].includes(status)) {
+        return '/static/icon-xqjh.png'
       } else {
         return '/static/icon-success.png'
       }

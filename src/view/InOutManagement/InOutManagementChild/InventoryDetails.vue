@@ -5,6 +5,10 @@
         <img src="/static/icon-xqjh.png">
         <span>需求编号：</span>
         <span>{{detailInfo.planNumber}}</span>
+        <div class="detail-title-status">
+          <img :src="checkAuditStatus(detailInfo.status)" />
+          <span>{{ detailInfo.status == '5'?'已完成':'未完成' }}</span>
+        </div>
       </div>
       <div>
         <ul class="detail-ul">
@@ -19,10 +23,6 @@
           <li>
             <span>需求组织：</span>
             <span>{{detailInfo.deptName}}</span>
-          </li>
-          <li>
-            <span>需求状态：</span>
-            <span>{{detailInfo.status == '5'?'已完成':'未完成'}}</span>
           </li>
         </ul>
       </div>
@@ -65,6 +65,9 @@
         </li>
       </ul>
     </div>
+    <div class="default-button-container" v-if="relatedCount == '1'">
+      <van-button class="button-info" round type="info" @click="outboundClick(detailInfo)">出库</van-button>
+    </div>
   </div>
 </template>
 <script>
@@ -78,10 +81,12 @@ export default {
       id: '',
       detailInfo:{},
       detailList:[],
+      relatedCount: ''
     }
   },
   created() {
     this.id = this.$route.query.id
+    this.relatedCount = this.$route.query.relatedCount
 
     this.getDetail();
   },
@@ -107,14 +112,46 @@ export default {
         toast.clear();
       });
     },
+    outboundClick (item) {
+      this.$router.push({ name: 'Outbound', query: {type: 'submit',id: item.id} })
+    },
+    checkAuditStatus(status){
+      if(status == '5'){
+        return '/static/icon-success.png'
+      }else
+        return '/static/icon-reject.png'
+    },
   }
 }
 </script>
 <style lang="less" scoped>
 .default-container {
-  padding-bottom: 20px;
+  padding-bottom: 60px;
 }
 .box-container {
   padding: 0px;
+}
+.detail-title-content{
+  position: relative;
+  .detail-title-status {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    span {
+      margin-left: 3px;
+      color: #134daa;
+      font-size: 11px;
+    }
+  }
+
 }
 </style>

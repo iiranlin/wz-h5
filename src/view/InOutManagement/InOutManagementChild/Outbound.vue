@@ -125,11 +125,11 @@
             </li>
             <li>
               <span>生产日期：</span>
-              <span>{{parseTime(childItem.manufactureDate,'{y}-{m}-{d}')}}</span>
+              <span>{{childItem.manufactureDate && parseTime(childItem.manufactureDate,'{y}-{m}-{d}')}}</span>
             </li>
             <li class="li-item-overlength">
               <span>有效期截至日期：</span>
-              <span>{{parseTime(childItem.expirationDate,'{y}-{m}-{d}')}}</span>
+              <span>{{childItem.expirationDate && parseTime(childItem.expirationDate,'{y}-{m}-{d}')}}</span>
             </li>
             <template v-if="queryType === 'submit'">
               <van-field class="outbound-field-text" v-model="childItem.outTotal" name="出库数量" label="出库数量：" placeholder="请输入出库数量" input-align="right" label-width="252px" required/>

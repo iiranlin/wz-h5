@@ -52,7 +52,7 @@
             </li>
             <li>
               <span>提报时间：</span>
-              <span>{{parseTime(item.createDate,'{y}-{m}-{d} {h}:{i}')}}</span>
+              <span>{{item.createDate && parseTime(item.createDate,'{y}-{m}-{d} {h}:{i}')}}</span>
             </li>
           </ul>
           <div class="list-ul-button" v-if="item.relatedCount == '1'">
@@ -136,7 +136,7 @@ export default {
       this.$router.push({ name: 'Outbound', query: {type: 'submit',id: item.id} })
     },
     detailsClick (item) {
-      this.$router.push({ name: 'InventoryDetails',query: {id: item.id} })
+      this.$router.push({ name: 'InventoryDetails',query: {id: item.id, relatedCount: item.relatedCount} })
     },
     handeSearch(){
       this.allRefresh();
