@@ -29,8 +29,9 @@
         </li>
       </ul>
     </div>
-    <div class="select-materials-search">
-      <p class="select-materials-search-p font-weight">物流信息</p>
+    <div class="detail-floor-content">
+      <img src="/static/icon-return.png"/>
+      <span>物流信息</span>
     </div>
     <div class="logistics-information" v-if="tabList.length">
       <van-sidebar v-model="activeKey" @change="activeKeyChange">

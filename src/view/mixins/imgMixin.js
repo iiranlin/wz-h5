@@ -1,11 +1,9 @@
-import dt from '@/assets/img/img.png'
-
 export default {
   data() {
     return {
       showPopup: false,
       showImg: false,
-      images: [dt],
+      images: [],
       startPosition: 0
     }
   },

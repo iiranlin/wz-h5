@@ -11,35 +11,29 @@
             <span>供应商：</span>
             <span>{{ item.sellerName }}</span>
           </li>
-          <li class="li-item-both">
-            <div class="li-item-left">
-              <span>规格型号：</span>
-              <span>{{ item.specModel }}</span>
-            </div>
-            <div class="li-item-right">
-              <span>计量单位：</span>
-              <span>{{ item.unit }}</span>
-            </div>
+          <li>
+            <span>规格型号：</span>
+            <span>{{ item.specModel }}</span>
           </li>
-          <li class="li-item-both">
-            <div class="li-item-left">
-              <span>合同数量：</span>
-              <span class="li-span-click">{{ item.amount }}</span>
-            </div>
-            <div class="li-item-right">
-              <span>累计计划量(含本次)：</span>
-              <span class="li-span-click">{{ item.cumulativeAmount }}</span>
-            </div>
+          <li>
+            <span>计量单位：</span>
+            <span>{{ item.unit }}</span>
           </li>
-          <li class="li-item-both">
-            <div class="li-item-left li-item-left-num">
-              <span>本次计划数量：</span>
-              <span class="li-span-click">{{ item.planAmount }}</span>
-            </div>
-            <div class="li-item-right">
-              <span>供应时间：</span>
-              <span>{{ parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
-            </div>
+          <li>
+            <span>合同数量：</span>
+            <span>{{ item.amount }}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>累计计划量(含本次)：</span>
+            <span>{{ item.cumulativeAmount }}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>本次计划数量：</span>
+            <span>{{ item.planAmount }}</span>
+          </li>
+          <li>
+            <span>供应时间：</span>
+            <span>{{ item.supplyDate && parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
           </li>
           <li>
             <span>使用地点：</span>

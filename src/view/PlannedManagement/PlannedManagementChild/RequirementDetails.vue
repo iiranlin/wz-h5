@@ -134,11 +134,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.van-tabs{
+  padding-bottom: 62px;
+}
 .detail-title-content{
   position: relative;
   .detail-title-status {
     position: absolute;
-    right: 0;
+    right: 10px;
     top: 0;
     display: flex;
     align-items: center;
