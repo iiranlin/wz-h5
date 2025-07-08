@@ -36,7 +36,7 @@
                             <ul class="list-ul">
                                 <li>
                                         <span class="font-weight dot-before" style="min-width: 2.5rem;">供应需求名称:</span>
-                                        <span class="font-weight">{{ params.planName }}</span>
+                                        <span class="font-weight" style="text-align: left;">{{ params.planName }}</span>
                                     </li>
                                 <!-- <li>
                                     <span style="width: 250px;">供应需求名称:</span>
@@ -105,14 +105,14 @@
                         <van-list>
                             <div class="box-container"
                                v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
-                                <ul class="list-ul"  >
+                                <ul class="detail-list-ul"  >
                                     <!-- <li>
                                         <span class="font-weight" style="width: 250px;">需求组织名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
                                     </li> -->
                                     <li class="save-materials-li">
                                         <span class="font-weight dot-before">物资名称:</span>
-                                        <span class="font-weight">{{ item.materialName }}</span>
+                                        <span class="font-weight" style="text-align: left;">{{ item.materialName }}</span>
                                     </li>
                                     <li>
                                         <span>规格型号:</span>
