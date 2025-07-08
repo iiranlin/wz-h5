@@ -19,9 +19,19 @@
           <div v-if="total != 0">
             <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
               <van-list v-model="loading" :finished="allFinished" finished-text="没有更多了..." @load="onLoad">
-                <div v-for="(item, index) in listGhsData" :key="index" class="box-container"
+                <div class="detail-base-info">
+                  <div v-for="(item, index) in listGhsData" :key="index" class="box-container"
                   @click="handleSupplyClick(item.id)">
-                  <div class="van-cells">
+                   <div class="detail-title-content">
+                    <img src="/static/icon-xqjh.png">
+                    <span>需求编号：</span>
+                    <span>{{ item.planNumber }}</span>
+                    <div class="detail-title-status">
+                      <img :src="checkAuditStatus(item.status)" />
+                      <span>{{ checkStatusText(item.status) }}</span>
+                    </div>
+                  </div>
+                  <!-- <div class="van-cells">
                     <span class="title">需求编号:</span>
                     <div class="conent">
                       <span class="text">{{ item.planNumber }}</span>
@@ -43,7 +53,7 @@
                         </div>
                       </span>
                     </div>
-                  </div>
+                  </div> -->
                   <!-- <van-cell title="需求编号:">
                     <div class="li-status">
                       <van-tag type="primary" round size="success" v-if="item.status == 4"><i class="font_family
@@ -90,7 +100,7 @@
                             <div v-for="(item2, index2) in item1.fileList" :key="index2">
                               <a href="javascript:;" @click.stop="imgClick(item2)" style="color:#0689ff;">{{
                                 item2.fileName
-                              }}<van-icon name="arrow" class="arrow" color="#cccccc" size="0.3rem" /></a>
+                              }}</a>
                             </div>
                           </div>
                         </template>
@@ -119,6 +129,8 @@
                       @click.stop="handleConfirmClick(item.id)">确认需求</van-button>
                   </div>
                 </div>
+                </div>
+                
               </van-list>
             </van-pull-refresh>
           </div>
@@ -190,7 +202,21 @@ export default {
       listGhsData: [],
       filePath: "",
       fileName: '',
-      total: 0
+      total: 0,
+       statusArr: [
+        { text: '全部', value: '' },
+        { text: '已驳回', value: '0' },
+        { text: '未提交', value: '1' },
+        { text: '未确认', value: '2' },
+        { text: '已确认', value: '3' },
+        { text: '供货中', value: '4' },
+        { text: '已撤回', value: '5' },
+        { text: '已完成', value: '6' },
+        { text: '收货完成', value: '7' },
+        { text: '已入库', value: '8' },
+        { text: '已完成', value: '9' },
+        { text: '已退回', value: '10' },
+      ],
     };
   },
   created() {
@@ -278,11 +304,52 @@ export default {
     },
     imgClick({ fileName, filePath }) {
       this.$refs.filePreview.init(fileName, filePath)
-    }
+    },
+    checkAuditStatus(status) {
+      if (status == '0') {
+        return '/static/icon-reject.png'
+      } else if (['5', '10'].includes(status)) {
+        return '/static/icon-return.png'
+      } else {
+        return '/static/icon-success.png'
+      }
+    },
+        checkStatusText(status) {
+      let name = ''
+      this.statusArr.forEach(item => {
+        if (item.value === status) {
+          name = item.text
+        }
+      })
+      return name
+    },
   },
 };
 </script>
 <style lang="less" scoped>
+.detail-title-content{
+  position: relative;
+  .detail-title-status {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    span {
+      margin-left: 3px;
+      color: #134daa;
+      font-size: 11px;
+    }
+  }
+
+}
 .van-cells {
   padding: 0.3rem 0 !important;
    display: flex;

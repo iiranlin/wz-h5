@@ -23,8 +23,8 @@
             </li>
              <li>
                 <span>退货环节：</span>
-                 <span style="color:red;" v-if="params.backNode == 2">收货不通过</span>
-                    <span v-else>收货通过</span>
+                <span style="color:red;" v-if="params.issueType == 2">质检不通过</span>
+                        <span style="color:red;" v-else>收货不通过</span>
             </li>
              <li>
                 <span>退货时间：</span>
@@ -158,7 +158,7 @@
                         <van-list>
                             <div class="box-container"
                                 >
-                                <ul class="detail-list-ul" v-for="(item, index) in materialCirculationDetailsTableDTOS" :key="index">
+                                <ul class="list-ul" v-for="(item, index) in materialCirculationDetailsTableDTOS" :key="index">
                                     <!-- <li>
                                         <span class="font-weight" style="width: 250px;">需求组织名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
@@ -221,22 +221,22 @@
                                         <span>{{ item.field1 }}</span>
                                     </li>
                                    
-                                    <li>
-                                        <file-download-view class="outbound-field-uploader" title="合格证附件:" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                                    
+                                        <file-download-view class="outbound-field-uploader" style="width: 100%;" title="合格证附件:" :fileList="filterList(item.fileByList, 'hgz') || []"/>
                                         <!-- <span>合格证附件:</span>
                                         <span style="color:#1989fa;"
                                             v-if="item.fileByList && item.fileByList.hgz && item.fileByList.hgz.length > 0"
                                             @click="imgClick(item.fileByList.hgz[0].fileName, item.fileByList.hgz[0].filePath)">{{
                                             item.fileByList.hgz[0].fileName }}</span> -->
-                                    </li>
-                                    <li>
-                                        <file-download-view class="outbound-field-uploader" title="厂检报告附件:" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                                    
+                                    
+                                        <file-download-view class="outbound-field-uploader" style="width: 100%;" title="厂检报告附件:" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
                                         <!-- <span style="min-width: 3rem;">厂检报告附件:</span>
                                         <span style="color:#1989fa;"
                                             v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0"
                                             @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
                                             item.fileByList.cjbg[0].fileName }}</span> -->
-                                    </li>
+                                    
                                      <li>
                                         <span>备注:</span>
                                         <span>{{ item.remark }}</span>

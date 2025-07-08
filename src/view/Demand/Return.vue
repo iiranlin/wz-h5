@@ -14,9 +14,19 @@
       <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad" :offset="10"
           :immediate-check="false">
-          <div v-for="(item, index) in returnList" :key="index" class="box-container"
+          <div class="detail-base-info">
+                <div v-for="(item, index) in returnList" :key="index" class="box-container"
             @click="handleDetailsItemClick(item.id)">
-            <div class="van-cells">
+            <div class="detail-title-content">
+                    <img src="/static/icon-xqjh.png">
+                    <span>需求编号：</span>
+                    <span>{{ item.backNumber }}</span>
+                    <div class="detail-title-status">
+                      <img :src="checkAuditStatus(item.issueType)" />
+                      <span>{{ checkStatusText(item.issueType) }}</span>
+                    </div>
+                  </div>
+            <!-- <div class="van-cells">
               <span class="title">退货单号:</span>
               <div class="conent">
                 <span class="text">{{ item.backNumber }}</span>
@@ -32,7 +42,7 @@
 
                 </span>
               </div>
-            </div>
+            </div> -->
             <ul class="list-ul">
 
               <!-- <li>
@@ -65,6 +75,8 @@
               </li> -->
             </ul>
           </div>
+          </div>
+      
         </van-list>
       </van-pull-refresh>
 
@@ -104,7 +116,12 @@ export default {
         shipmentBatchNumber: ""
       },
       returnList: [],
-      total: 0
+      total: 0,
+      statusArr: [
+        { text: '全部', value: '' },
+        { text: '质检不通过', value: '2' },
+        { text: '收货不通过', value: '1' }
+      ],
     };
   },
   created() {
@@ -171,36 +188,53 @@ export default {
       this.allRefreshLoading = true
       this.params.pageNum = 1
       this.getList();
-    }
+    },
+    checkAuditStatus(status) {
+      if (status == '0') {
+        return '/static/icon-reject.png'
+      } else if (['5', '10'].includes(status)) {
+        return '/static/icon-return.png'
+      } else {
+        return '/static/icon-success.png'
+      }
+    },
+        checkStatusText(status) {
+      let name = ''
+      this.statusArr.forEach(item => {
+        if (item.value === status) {
+          name = item.text
+        }
+      })
+      return name
+    },
     //待审核列表刷新
 
   },
 };
 </script>
 <style lang="less" scoped>
-.van-cells {
-  padding: 0.3rem 0 !important;
-   display: flex;
-  align-items: center;
-  border-bottom: 1px solid #f5f5f5;
-  .title {
-    min-width: 1.75rem;
-  }
-
-  .conent {
-    flex: 1;
+.detail-title-content{
+  position: relative;
+  .detail-title-status {
+    position: absolute;
+    right: 10px;
+    top: 0;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    height: 100%;
 
-    .text {
-      color: rgb(19, 77, 170);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    img {
+      width: 16px;
+      height: 16px;
     }
 
+    span {
+      margin-left: 3px;
+      color: #134daa;
+      font-size: 11px;
+    }
   }
+
 }
 /deep/ .van-tag--primary{
   background: #ffffff;

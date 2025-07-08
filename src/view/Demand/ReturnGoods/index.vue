@@ -26,8 +26,8 @@
                     </li>
                     <li>
                         <span>退货环节：</span>
-                        <span style="color:red;" v-if="params.backNode == 2">收货不通过</span>
-                        <span style="color:red;" v-else>收货通过</span>
+                        <span style="color:red;" v-if="params.issueType == 2">质检不通过</span>
+                        <span style="color:red;" v-else>收货不通过</span>
                     </li>
                     <li>
                         <span>退货时间：</span>
@@ -73,9 +73,9 @@
                         <span>发货数量:</span>
                         <span>{{ item.sendTotal }}</span>
                     </li>
-                    <li>
+                   
                         <!-- <file-download-view class="outbound-field-uploader" title="退货附件：" :fileList="item.fileByList, 'zjd' || []"/> -->
-                         <file-download-view class="outbound-field-uploader" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
+                         <file-download-view class="outbound-field-uploader"  style="width: 100%;" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
                         <!-- <span>退货附件:</span>
                         <span style="color:#1989fa;">
                             <template>
@@ -87,7 +87,7 @@
                                 </div>
                             </template>
                         </span> -->
-                    </li>
+                   
                 </ul>
             </div>
         </van-list>

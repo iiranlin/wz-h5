@@ -18,9 +18,19 @@
             <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
               <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad" :offset="10"
                 :immediate-check="false">
-                <div v-for="(item, index) in listBySendData" :key="index" class="box-container"
+                <div class="detail-base-info">
+                   <div v-for="(item, index) in listBySendData" :key="index" class="box-container"
                   @click="handleCarGoClick(item.id)">
-                  <div class="van-cells">
+                   <div class="detail-title-content">
+                    <img src="/static/icon-xqjh.png">
+                    <span>需求编号：</span>
+                    <span>{{ item.shipmentBatchNumber }}</span>
+                    <div class="detail-title-status">
+                      <img :src="checkAuditStatus(item.status)" />
+                      <span>{{ checkStatusText(item.status) }}</span>
+                    </div>
+                  </div>
+                  <!-- <div class="van-cells">
                     <span class="title">发货单号:</span>
                     <div class="conent">
                       <span class="text">{{ item.shipmentBatchNumber }}</span>
@@ -38,7 +48,7 @@
                         </div>
                       </span>
                     </div>
-                  </div>
+                  </div> -->
                   <!-- <van-cell title="供应需求：" :value="item.shipmentBatchNumber">
                     <div class="li-status">
                       <van-tag type="primary" round size="success" v-if="item.status == 4"><i class="font_family
@@ -99,8 +109,7 @@
                       <span style="color:#1989fa;"
                         v-if="item.fileByList && item.fileByList.fhd && item.fileByList.fhd.length > 0"
                         @click.stop="imgClick(item.fileByList.fhd[0].fileName, item.fileByList.fhd[0].filePath)">{{
-                          item.fileByList.fhd[0].fileName }}<van-icon name="arrow" class="arrow" color="#cccccc"
-                          size="0.3rem" /></span>
+                          item.fileByList.fhd[0].fileName }}</span>
                     </li>
                     <!-- <li class="li-status">
                     <van-tag type="primary" round size="medium" v-if="item.status == 1">未发货</van-tag>
@@ -129,6 +138,8 @@
                       v-if="item.oddNumbers == '' && item.status == 2">增加货运位置</van-button>
                   </div>
                 </div>
+                </div>
+               
               </van-list>
             </van-pull-refresh>
           </div>
@@ -241,7 +252,13 @@ export default {
       //货运列表
       cargoList: "",
       //发货单号
-      shipmentBatchNumber: ''
+      shipmentBatchNumber: '',
+       statusArr: [
+        { text: '全部', value: '' },
+        { text: '未发货', value: '1' },
+        { text: '货运中', value: '2' },
+        { text: '已完成', value: '3' }
+      ],
     };
   },
   created() {
@@ -455,41 +472,55 @@ export default {
     },
     imgClick(fileName, filePath) {
       this.$refs.filePreview.init(fileName, filePath)
-    }
+    },
+     checkAuditStatus(status) {
+      if (status == '0') {
+        return '/static/icon-reject.png'
+      } else if (['5', '10'].includes(status)) {
+        return '/static/icon-return.png'
+      } else {
+        return '/static/icon-success.png'
+      }
+    },
+        checkStatusText(status) {
+      let name = ''
+      this.statusArr.forEach(item => {
+        if (item.value === status) {
+          name = item.text
+        }
+      })
+      return name
+    },
   },
 };
 </script>
 <style lang="less" scoped>
-.van-cells {
-  padding: 0.3rem 0 !important;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #f5f5f5;
-  .title {
-    min-width: 1.75rem;
-  }
-
-  .conent {
-    flex: 1;
+.detail-title-content{
+  position: relative;
+  .detail-title-status {
+    position: absolute;
+    right: 10px;
+    top: 0;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    height: 100%;
 
-    .text {
-      color: rgb(19, 77, 170);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    span {
+      margin-left: 3px;
+      color: #134daa;
+      font-size: 11px;
     }
   }
-}
-/deep/ .van-tag--primary{
-  background: #ffffff;
-}
-/deep/ .arrow {
-  min-width: 0.2rem !important;
-}
 
+}
+/deep/.arrow{
+  width: 0.1rem !important;
+}
 .list-ul-button {
   display: flex;
   justify-content: flex-end;
