@@ -21,7 +21,11 @@
 <script>
 import {minioDownload} from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
-import {download} from '@/utils'
+
+function isAndroid() {
+  let userAgent = navigator.userAgent
+  return /Android|adr/gi.test(userAgent)
+}
 
 export default {
     components: {FilePreview},
@@ -64,9 +68,9 @@ export default {
         },
         //附件下载
         handleFileDwonLoad({fileName, filePath}){
-          minioDownload({ fileName, filePath }).then((data) => {
-            download(data, fileName)
-          })
+            if (isAndroid()) {
+                Android.fileDownLoad(fileName,filePath);
+            }
         },
         //预览点击
         previewClick(item){
