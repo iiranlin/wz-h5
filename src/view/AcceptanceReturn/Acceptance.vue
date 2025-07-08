@@ -262,7 +262,7 @@ export default {
     },
     checkAuditStatus(status){
       if(status == '1'){
-        return '/static/icon-reject.png'
+        return '/static/icon-xqjh.png'
       }else if(status == '2'){
         return '/static/icon-success.png'
       }else if(status == '3'){
