@@ -216,6 +216,8 @@ export default {
       let obj = {addr: [], field2: [], field2: []}
       obj.addr = this.materiaList.map(item =>  item.addr)
       obj.field2 = this.materiaList.map(item =>  item.field2)
+      obj.field0 = this.materiaList.map(item =>  item.field0)
+      obj.field1 = this.materiaList.map(item =>  item.field1)
       
       materialDemandPlanRestSaveModify(data, type).then(({message}) => {
         this.$store.dispatch('public/setHistoryList', obj)
