@@ -26,7 +26,7 @@
                     </li>
                     <li>
                         <span>退货环节：</span>
-                        <span style="color:red;" v-if="params.issueType == 2">质检不通过</span>
+                        <span style="color:red;" v-if="params.backNode == 2">质检不通过</span>
                         <span style="color:red;" v-else>收货不通过</span>
                     </li>
                     <li>
@@ -37,11 +37,14 @@
             </div>
         </div>
 
-        <div class="detail-title">退货明细</div>
+       <div class="detail-floor-content">
+      <img src="/static/icon-return.png"/>
+      <span>退货明细</span>
+    </div>
         <van-list>
-            <div class="box-container">
-                <ul class="detail-list-ul" v-for="(item, index) in params.materialCirculationDetailsTableDTOS"
+            <div class="box-container" v-for="(item, index) in params.materialCirculationDetailsTableDTOS"
                     :key="index">
+                <ul class="list-ul" >
 
                     <!-- <li class="li-item-both">
                     <div class="li-item-left">
@@ -91,7 +94,10 @@
                 </ul>
             </div>
         </van-list>
-        <div class="detail-title">初验信息</div>
+         <div class="detail-floor-content">
+      <img src="/static/icon-return.png"/>
+      <span>初验信息</span>
+    </div>
         <div class="tabs">
             <van-list>
                 <div class="box-container">

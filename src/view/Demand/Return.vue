@@ -18,12 +18,11 @@
                 <div v-for="(item, index) in returnList" :key="index" class="box-container"
             @click="handleDetailsItemClick(item.id)">
             <div class="detail-title-content">
-                    <img src="/static/icon-xqjh.png">
-                    <span>需求编号：</span>
-                    <span>{{ item.backNumber }}</span>
+                    <span style="font-size: 0.3rem;">退货单号：</span>
+                    <span style="font-size: 0.3rem;color: rgb(19, 77, 170);">{{ item.backNumber }}</span>
                     <div class="detail-title-status">
-                      <img :src="checkAuditStatus(item.issueType)" />
-                      <span>{{ checkStatusText(item.issueType) }}</span>
+                      <img :src="checkAuditStatus(item.backNode)" />
+                      <span>{{ checkStatusText(item.backNode) }}</span>
                     </div>
                   </div>
             <!-- <div class="van-cells">
@@ -214,7 +213,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .detail-title-content{
+  padding: 0;
   position: relative;
+  border-bottom: 0.025rem solid #e3e3e3;
   .detail-title-status {
     position: absolute;
     right: 10px;

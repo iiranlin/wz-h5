@@ -3,8 +3,8 @@
          <div class="detail-base-info">
             <div class="detail-title-content">
                 <img src="/static/icon-xqjh.png">
-                <span>供应需求名称：</span>
-                <span>{{ result.planName }}</span>
+                <span style="min-width: 03rem;">供应需求名称：</span>
+                <span class="text">{{ result.planName }}</span>
             </div>
             <div>
                 <ul class="detail-ul">
@@ -230,5 +230,10 @@ li :nth-child(2) {
   color: #1890ff;        /* 蓝色（可自定义） */
   margin-right: 5px;     /* 与文字的间距 */
   font-size: 1.2em;      /* 可选：调整圆点大小 */
+}
+.text{
+     white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 }
 </style>

@@ -23,9 +23,8 @@
                   <div v-for="(item, index) in listGhsData" :key="index" class="box-container"
                   @click="handleSupplyClick(item.id)">
                    <div class="detail-title-content">
-                    <img src="/static/icon-xqjh.png">
-                    <span>需求编号：</span>
-                    <span>{{ item.planNumber }}</span>
+                    <span style="font-size: 0.3rem;">需求编号：</span>
+                    <span style="font-size: 0.3rem;color: rgb(19, 77, 170);">{{ item.planNumber }}</span>
                     <div class="detail-title-status">
                       <img :src="checkAuditStatus(item.status)" />
                       <span>{{ checkStatusText(item.status) }}</span>
@@ -328,7 +327,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .detail-title-content{
+  padding: 0;
   position: relative;
+  border-bottom: 0.025rem solid #e3e3e3;
   .detail-title-status {
     position: absolute;
     right: 10px;

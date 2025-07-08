@@ -8,12 +8,18 @@
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <!--本次需求未发货数量为0不可选-->
-        <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false"> 
+        <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false">
+           <div class="detail-base-info">
+              <div class="detail-title-content">
+            <img src="/static/icon-xqjh.png">
+            <span>物资名称：</span>
+            <span>{{item.materialName}}</span>
+        </div>
           <ul class="list-ul">
-             <li>
+             <!-- <li>
               <span class="font-weight dot-before">物资名称：</span>
               <span class="font-weight">{{ item.materialName }}</span>
-            </li>
+            </li> -->
             <li style="color: red;">
               <span>本次需求未发货数量：</span>
               <span>{{ item.ssendTotal }}</span>
@@ -67,6 +73,8 @@
             <div class="remark-detail">{{item.remark || '未填写'}}</div>
           </li>
           </ul>
+           </div>
+           
         </van-checkbox>
       </van-checkbox-group>
     </van-list>

@@ -22,9 +22,8 @@
                    <div v-for="(item, index) in listBySendData" :key="index" class="box-container"
                   @click="handleCarGoClick(item.id)">
                    <div class="detail-title-content">
-                    <img src="/static/icon-xqjh.png">
-                    <span>需求编号：</span>
-                    <span>{{ item.shipmentBatchNumber }}</span>
+                    <span style="font-size: 0.3rem;">发货单号：</span>
+                    <span style="font-size: 0.3rem;color: rgb(19, 77, 170);">{{ item.shipmentBatchNumber }}</span>
                     <div class="detail-title-status">
                       <img :src="checkAuditStatus(item.status)" />
                       <span>{{ checkStatusText(item.status) }}</span>
@@ -496,6 +495,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .detail-title-content{
+  padding: 0;
+  border-bottom: 0.025rem solid #e3e3e3;
   position: relative;
   .detail-title-status {
     position: absolute;
@@ -511,7 +512,7 @@ export default {
     }
 
     span {
-      margin-left: 3px;
+      
       color: #134daa;
       font-size: 11px;
     }

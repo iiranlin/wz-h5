@@ -58,9 +58,7 @@
                                     <span>发货地址:</span>
                                     <span>{{ params.shippingAddress }}</span>
                                 </li>
-                                <li>
-                                    <file-download-view class="outbound-field-uploader" style="width: 100%;" title="发货单：" :fileList="filterList(params.fileByList, 'fhd') || []"/>
-                                </li>
+                               
                                 <li>
                                     <span>发货时间:</span>
                                     <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate)
@@ -96,6 +94,7 @@
                                     <span>操作时间: </span>
                                     <span v-if="params.createDate">{{ formatTimestamp(params.createDate) }}</span>
                                 </li>
+                                 <file-download-view class="outbound-field-uploader" style="width: 100%;" title="发货单：" :fileList="filterList(params.fileByList, 'fhd') || []"/>
                             </ul>
                         </div>
                     </van-list>
@@ -128,7 +127,7 @@
                                         <span>{{ item.sendTotal }}</span>
                                     </li>
                                     <li>
-                                        <span>本次计划数量:</span>
+                                        <span style="min-width: 3rem;">本次计划数量:</span>
                                         <span>{{ item.planAmount }}</span>
                                     </li>
                                     <li>
@@ -141,7 +140,7 @@
                                                 }}</span>
                                     </li>
                                     <li>
-                                        <span>有效期截止日期:</span>
+                                        <span style="min-width: 3rem;">有效期截止日期:</span>
                                         <span>{{formattedCreateDate(item.updateDate) }}</span>
                                     </li>
                                     <li>
@@ -157,7 +156,7 @@
                                         <span v-if="item.supplyDate">{{ formattedCreateDate(item.supplyDate) }}</span>
                                     </li>
                                     <li>
-                                        <span>收货人及联系方式:</span>
+                                        <span style="min-width: 3rem;">收货人及联系方式:</span>
                                         <span>{{ item.receiver }}</span>
                                     </li>
                                     <li>
@@ -172,12 +171,10 @@
                                         <span>备注:</span>
                                         <span>{{ item.remark }}</span>
                                     </li>
-                                     <template>
                                  
                                     <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
                                     <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
                                 
-                                    </template>
                                     <!-- <li>
                                         <span>合格证附件:</span>
                                         <span style="color:#1989fa;"
