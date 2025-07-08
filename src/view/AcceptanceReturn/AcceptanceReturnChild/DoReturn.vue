@@ -50,7 +50,7 @@
             <span>物资名称：</span>
             <span>{{item.materialName}}</span>
         </div>
-         <ul class="detail-list-ul">
+      <ul class="detail-list-ul">
         <li>
           <span style="color: #e4393c;">退货数量：</span>
           <span style="color: #e4393c;">{{item.refundTotal}}</span>

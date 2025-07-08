@@ -1,11 +1,13 @@
 <template>
-  <div class="save-materials">
-    <div class="save-materials-contract">
+  <div :class="[isView?'default-container':'default-container1']">
+    <div class="detail-base-info">
+      <div class="detail-title-content">
+        <img src="/static/icon-xqjh.png">
+        <span>供应需求名称：</span>
+        <span>{{dataList.planName}}</span>
+      </div>
+      <div >
       <ul class="detail-ul">
-        <li class="li-item-overlength">
-          <span class="font-weight">供应需求名称：</span>
-          <span class="font-weight">{{dataList.planName}}</span>
-        </li>
         <li>
           <span>需求项目：</span>
           <span>{{dataList.sectionName}}</span>
@@ -23,46 +25,40 @@
           <span>{{dataList.takeDate |formatDate }}</span>
         </li>
       </ul>
+      <file-download-view class="outbound-field-uploader" title="发货单附件" :fileList="filterList(dataList.fileByList, 'fhd') || []"/>
     </div>
-
+    </div>
     <!-- <div class="detail-title">发货单附件</div> -->
-    <div class="box-container">
-      <ul class="detail-ul">
-        <!-- <li @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(dataList.fileByList, 'fhd')"
-                  :key="imgItem.filePath">{{ imgItem.fileName }}</li> -->
-        <file-download-view class="outbound-field-uploader" title="发货单附件" :fileList="filterList(dataList.fileByList, 'fhd') || []"/>
-      </ul>
+    <div class="detail-floor-content">
+      <img src="/static/icon-return.png"/>
+      <span>收货明细</span>
     </div>
-    <div class="detail-title">收货明细</div>
     <div class="box-container" v-for="(item, index) in dataList.materialCirculationDetailsTableDTOS" :key="index">
-      <ul class="detail-ul">
-        <li class="save-materials-li">
-          <span class="font-weight">物资名称：</span>
-          <span class="font-weight">{{ item.materialName }}</span>
-        </li>
+       <div>
+         <div class="detail-list-title-content">
+            <span>物资名称：</span>
+            <span>{{item.materialName}}</span>
+        </div>
+      <ul class="detail-list-ul">
         <li>
           <span>规格型号：</span>
           <span>{{ item.specModel }}</span>
         </li>
-        <li class="li-item-both">
-          <div class="li-item-left">
-            <span>计量单位：</span>
-            <span>{{ item.unit }}</span>
-          </div>
-          <div class="li-item-right li-item-overlength">
-            <span>包装形式：</span>
-            <span>{{ item.packagingFm }}</span>
-          </div>
+          <li>
+          <span>计量单位：</span>
+          <span>{{ item.unit }}</span>
         </li>
-        <li class="li-item-both">
-          <div class="li-item-left">
-            <span>需求数量：</span>
-            <span>{{ item.planAmount }}</span>
-          </div>
-          <div class="li-item-right li-item-overlength">
-            <span>本次发货数量：</span>
-            <span>{{ item.sendTotal }}</span>
-          </div>
+        <li>
+          <span>包装形式：</span>
+          <span>{{ item.packagingFm }}</span>
+        </li>
+        <li>
+          <span>需求数量：</span>
+          <span>{{ item.planAmount }}</span>
+        </li>
+         <li class="li-item-overlength">
+          <span>本次发货数量：</span>
+          <span class="li-span-click">{{ item.sendTotal }}</span>
         </li>
         <li>
           <span>生产日期：</span>
@@ -96,16 +92,7 @@
           <span>投资比例：</span>
           <span>{{ item.field1 }}</span>
         </li>
-        <!-- <li class="li-item-overlength ">
-          <span>合格证附件：</span>
-          <div class="files-list">
-              <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'hgz')"
-          :key="imgItem.filePath">{{ imgItem.fileName }}</span>
-          </div>
-        
-        </li> -->
-        <file-download-view class="outbound-field-uploader" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
-        <file-download-view class="outbound-field-uploader" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+       
         <!-- <li class="li-item-overlength">
           <span>厂检报告附件：</span>
           <div class="files-list">
@@ -113,9 +100,9 @@
               :key="imgItem.filePath">{{ imgItem.fileName }}</span>
           </div>
         </li> -->
-        <li>
-            <span>备注：</span>
-            <span>{{ item.remark }}</span>
+        <li class="li-item-remark">
+          <span>备注：</span>
+          <div class="remark-detail">{{item.remark || '未填写'}}</div>
         </li>
         <template v-if="!isView">
           <van-cell-group>
@@ -135,7 +122,9 @@
             <span>{{ item.refundTotal }}</span>
           </li>
         </template>
-        <template v-if="!isView">
+       
+      </ul>
+       <template v-if="!isView">
           <van-cell-group>
             <!-- <van-field required name="uploader" label="退货附件：">
               <template #input>
@@ -150,21 +139,19 @@
           </van-cell-group>
         </template>
         <template v-else>
-          <!-- <li>
-            <span>退货附件：</span>
-            
-            <span @click="imgClick(imgItem)" class="img-text" v-for="imgItem in filterList(item.fileByList, 'thfj_sh')"
-              :key="imgItem.filePath">{{ imgItem.fileName }}</span>
-          </li> -->
           <file-download-view class="outbound-field-uploader" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
-        
         </template>
-      </ul>
+       <file-download-view class="outbound-field-uploader" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+        <file-download-view class="outbound-field-uploader" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+       </div>
     </div>
 
-    <div class="detail-title">初验信息</div>
+    <div class="detail-floor-content">
+      <img src="/static/icon-file.png"/>
+      <span>初验信息</span>
+    </div>
     <div class="box-container">
-      <ul class="detail-ul">
+
         <template v-if="!isView">
           <van-cell-group>
             <van-field
@@ -178,27 +165,8 @@
               @click="showDatePicker = true"
             />
             <van-calendar v-model="showDatePicker" @confirm="onDateConfirm"/>
-
-            <!-- <van-field required name="uploader" label="自检单：">
-              <template #input>
-                <van-uploader>
-                  <van-button round type="info" class="outbound-uploader">上传</van-button>
-                </van-uploader>
-              </template>
-            </van-field> -->
-               <file-upload-view  title="自检单：" :fileList="fileZjdList" businessType="01"/>
-               <!-- <van-field name="uploader" label="其他资料："> -->
-              
-               <!-- </van-field> -->
-                <file-upload-view title="其他资料："  :fileList="fileQtzlList" businessType="01"/>
-
-            <!-- <van-field name="uploader" label="其他资料：">
-              <template #input>
-                <van-uploader>
-                  <van-button round type="info" class="outbound-uploader">上传</van-button>
-                </van-uploader>
-              </template>
-            </van-field> -->
+              <file-upload-view  title="自检单：" :fileList="fileZjdList" businessType="01"/>
+              <file-upload-view title="其他资料："  :fileList="fileQtzlList" businessType="01"/>
           </van-cell-group>
         </template>
         <template v-else>
@@ -215,13 +183,13 @@
               :key="imgItem.filePath">{{ imgItem.fileName }}</span>
           </li> -->
         </template>
-      </ul>
     </div>
+
+
+    <file-preview ref="filePreview"></file-preview>
     <div class="default-button-container" v-if="!isView">
       <van-button class="button-info" round type="info" @click="addClick">确定收货</van-button>
     </div>
-
-    <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
 <script>
@@ -435,105 +403,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.save-materials {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 40px;
-
-  .save-materials-contract {
-    margin-top: 10px;
-    box-sizing: border-box;
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-bottom: 10px;
-    background: #ffffff;
-    border-radius: 7px;
-    box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
-    position: relative;
-    padding: 10px;
-
-    .li-status {
-      top: auto;
-      bottom: 12px;
-
-      span {
-        background-color: #edf2ff;
-        border: 1px solid #289fec;
-        color: #1d93ff;
-      }
-    }
-  }
-
-  .button-info {
-    position: fixed;
-    bottom: 10px;
-    min-width: 200px;
-    height: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .van-cell {
-    padding-left: 15px;
-    padding-right: 0;
-  }
-
-  //列表ul
-  .detail-ul {
-
-    li {
-      & :nth-child(2) {
-        width: calc(100% - 40px);
-        overflow: inherit;
-        text-overflow: inherit;
-        white-space: inherit;
-      }
-    }
-    .img-text {
-      color: #0689ff;
-    }
-    .files-list{
-      width: calc(100% - 2rem) !important;
-      span{
-        width: 100%;
-        display: block;
-        overflow: inherit;
-        text-overflow: inherit;
-        white-space: inherit;
-      }
-    }
-  }
+.default-container {
+  padding-bottom: 10px;
+}
+.default-container1 {
+  padding-bottom: 1.2rem;
+}
+.box-container {
+  padding: 0px;
 }
 
-.detail-title {
-  font-weight: bold;
-  margin: 0.2rem;
-}
-
-.upload-btn {
-  width: 100px;
-  height: 30px;
-}
-
-.flex-box {
-  position: relative;
-
-  .save-materials {
-    position: absolute;
-    top: 1.5rem;
-  }
-}
-
-.outbound-uploader {
-  min-width: 80px;
-  height: 25px;
-}
-.outbound-field-uploader{
-  ::v-deep li{
-    display: block;
-  }
-  ::v-deep .file-info{
-    width: auto !important;
-  }
-}
 </style>
