@@ -45,7 +45,7 @@
                     <van-list>
                         <div class="box-container">
                             <ul class="detail-list-ul">
-                                <li>
+                                <li style="display: flex;justify-content:flex-start;">
                                     <span class="font-weight dot-before">发货单号：</span>
                                     <span class="font-weight">{{ logistics.shipmentBatchNumber }}</span>
                                 </li>
@@ -141,7 +141,7 @@
                                         <span class="font-weight" style="width: 250px;">需求组织名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
                                     </li> -->
-                                    <li class="save-materials-li">
+                                    <li class="save-materials-li" style="display: flex;justify-content:flex-start;">
                                         <span class="font-weight dot-before">物资名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
                                     </li>

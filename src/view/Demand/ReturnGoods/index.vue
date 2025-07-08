@@ -56,8 +56,8 @@
                         <span>{{ item.refundTotal }}</span>
                     </div>
                 </li> -->
-                    <li class="save-materials-li">
-                        <span class="font-weight dot-before">物资名称:</span>
+                    <li class="save-materials-li" style="display: flex;justify-content:flex-start;">
+                        <span class="font-weight dot-before">物资名称：</span>
                         <span class="font-weight">{{ item.materialName }}</span>
                     </li>
                     <li style="color: rgb(224,70,70);">
