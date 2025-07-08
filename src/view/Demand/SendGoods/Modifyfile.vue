@@ -431,7 +431,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .box-container{
-    padding: 0px !important;
+    padding: 0 0.1rem 0.1rem 0rem;;
 }
 .detail-list-ul{
     margin: 0 !important;
