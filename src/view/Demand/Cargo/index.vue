@@ -102,7 +102,7 @@
                             </div>
                             <div v-else>
                                 <div class="Logistics-Information-dt">
-                                    <wuliu :courierNumber="logistics.oddNumbers" @expressDataFun="cargoList" />
+                                    <wuliu :courierNumber="logistics.oddNumbers" @expressDataFun="expressDataFun" />
                                 </div>
                                 <van-steps direction="vertical" active-color="#0086ff" :active="0">
                                     <van-step v-for="(item, index) in cargoList" :key="index">
@@ -209,6 +209,7 @@ import { Sidebar, SidebarItem } from 'vant';
 import { Tab, Tabs } from 'vant';
 import { Step, Steps } from 'vant';
 import { lookGoodsDetails, shippingOrderNumber } from '@/api/demand/returnGoods'
+import { listPcNumber } from '@/api/demand/demandManagement'
 import { addList } from '@/api/demand/sendGoods'
 import wuliu from '@/components/wuliu'
 import FilePreview from "@/components/FilePreview.vue";
@@ -246,13 +247,14 @@ export default {
                 pageName: 1,
                 pageSize: 10
 
-            }
+            },
+            shipmentBatchNumber:""
             // logisticsNumber:""
         };
     },
     created() {
         this.wuLiuId = this.$route.query.id
-        this.wuLiuNumber = this.$route.query.number
+        this.shipmentBatchNumber = this.$route.query.number
         //  this.logisticsNumber = this.$route.query.logisticsNumber //物流单号
         this.getDetails();
     },
@@ -262,6 +264,7 @@ export default {
             lookGoodsDetails(this.wuLiuId).then((res) => {
                 if (res.code == 0) {
                     this.params = res.data
+                    
                     // this.params.fileByList = JSON.parse(res.data.fileByList)
                     // this.params.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item)=>({
                     //     ...item,
@@ -269,20 +272,22 @@ export default {
                     // }))
                 }
             })
-            //物流信息
-            shippingOrderNumber(this.wuLiuNumber).then((res) => {
-                if (res.code == 0) {
-                    this.logistics = res.data
-                    this.logistics.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item) => ({
-                        ...item,
-                        // fileByList: JSON.parse(item.fileByList)
-                    }))
+             // 获取发货单号
+            listPcNumber(this.wuLiuId).then((res)=>{
+                if(res.code==0){
+                    console.log(res.data[0].shipmentBatchNumber)
+                    this.shipmentBatchNumber = JSON.stringify(res.data[0].shipmentBatchNumber)
+                    this.getOrderNumber(res.data[0].shipmentBatchNumber)
                 }
             })
+            let parNumber = {
+                shipmentBatchNumber:this.shipmentBatchNumber
+            }
+           
             let params = {
                 // pageName:this.listPageQuery.pageName,
                 // pageSize:this.listPageQuery.pageSize,
-                shipmentBatchNumber: this.wuLiuNumber
+                shipmentBatchNumber: this.shipmentBatchNumber
             }
             //有单号就显示位置列表
             addList(params).then((res) => {
@@ -290,6 +295,7 @@ export default {
                     this.cargoList = res.data.list
                 }
             })
+           
 
             //  detailBySend(this.wuLiuId).then((res) => {
             //     if (res.code == 0) {
@@ -304,6 +310,18 @@ export default {
         },
         onSubmit(values) {
 
+        },
+        getOrderNumber(parNumber){
+             //物流信息
+            shippingOrderNumber(parNumber).then((res) => {
+                if (res.code == 0) {
+                    this.logistics = res.data
+                    this.logistics.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item) => ({
+                        ...item,
+                        // fileByList: JSON.parse(item.fileByList)
+                    }))
+                }
+            })
         },
         onConfirm(date) {
             this.value = `${date.getMonth() + 1}/${date.getDate()}`;
@@ -357,6 +375,7 @@ export default {
             return `${year}-${month}-${day}`;
         },
         expressDataFun(expressData) {
+            //  console.log(expressData)
             this.expressData = expressData
         },
         imgClick(fileName, filePath) {
@@ -474,4 +493,12 @@ li :nth-child(2) {
     font-size: 1.2em;
     /* 可选：调整圆点大小 */
 }
+ .Logistics-Information-dt {
+    width: 100%;
+    height: 150px;
+
+    img {
+      width: 100%;
+    }
+  }
 </style>

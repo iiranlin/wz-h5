@@ -236,8 +236,7 @@ export default {
       this.$router.push({name: 'DoAcceptDetail', query: {id:item.id}})
     },
     viewLogistic(item){
-
-      this.$router.push({name: 'LogisticsView', query: {id:item.planId}})
+      this.$router.push({name: 'lookCargo', query: {id:item.planId,number:item.shipmentBatchNumber,logisticsNumber:item.oddNumbers}})
     },
     //去审核点击
     handleDoAccept(item) {

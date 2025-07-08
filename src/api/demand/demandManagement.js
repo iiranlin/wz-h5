@@ -61,11 +61,19 @@ export function demandSureSave(data) {
   })
 }
 
-//供应详情   
+//供应详情    /materialCirculationTableRest/listPc/1942490027067625474
 export function supplyDetails(params) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailGyMx`,
     method: 'get',
     params
+  })
+}
+
+//获取收货单号 
+export function listPcNumber(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/listPc/${id}`,
+    method: 'get'
   })
 }
