@@ -86,13 +86,16 @@
                 <van-tab title="发货基本信息" name="发货基本信息">
                     <van-list>
                         <div class="box-container">
-                            <ul class="list-ul">
-                                <li>
+                            <div class="detail-list-title-content">
+                                    <span class="font-weight">供应需求名称：</span>
+                                    <span class="font-weight">{{ params.planName }}</span>
+                                </div>
+                            <!-- <div>
                                     <span class="font-weight dot-before" style="min-width: 2.5rem;">供应需求名称:</span>
                                         <span class="font-weight">{{ params.planName }}</span>
-                                    <!-- <span style="width: 250px;">供应需求名称:</span>
-                                    <span>{{ params.planName }}</span> -->
-                                </li>
+                                </div> -->
+                            <ul class="detail-list-ul">
+                                
                                 <li>
                                     <span>需求项目：</span>
                                     <span class="text">{{ params.sectionName }}</span>
@@ -112,7 +115,7 @@
                                 <li>
 
                                 </li>
-                                 <file-upload-view title="发货单附件" :fileList="fileList" businessType="01"/>
+                                
                                 <li>
                                     <span>发货时间:</span>
                                     <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate)
@@ -148,7 +151,11 @@
                                     <span>操作时间: </span>
                                     <span v-if="params.createDate">{{ formatTimestamp(params.createDate) }}</span>
                                 </li>
+                                
                             </ul>
+                            <div style="padding: 0 20px;">
+                                 <file-upload-view style="padding-right: 0.5rem;margin-left: 0px;"  title="发货单附件" :fileList="fileList" businessType="01"/>
+                            </div>
                         </div>
                     </van-list>
                 </van-tab>
@@ -157,16 +164,17 @@
                         v-if="params.materialCirculationDetailsTableDTOS && params.materialCirculationDetailsTableDTOS.length > 0">
                         <van-list>
                             <div class="box-container"
-                                >
-                                <ul class="list-ul" v-for="(item, index) in materialCirculationDetailsTableDTOS" :key="index">
-                                    <!-- <li>
-                                        <span class="font-weight" style="width: 250px;">需求组织名称:</span>
-                                        <span class="font-weight">{{ item.materialName }}</span>
-                                    </li> -->
-                                   <li class="save-materials-li">
+                               v-for="(item, index) in materialCirculationDetailsTableDTOS" :key="index" >
+                                <div class="detail-list-title-content">
+                                    <span class="font-weight">物资名称：</span>
+                                    <span class="font-weight">{{ item.materialName }}</span>
+                                </div>
+                                <ul class="detail-list-ul" >
+                                   
+                                   <!-- <li class="save-materials-li">
                                         <span class="font-weight dot-before">物资名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
-                                    </li>
+                                    </li> -->
                                     <li>
                                         <span>规格型号:</span>
                                         <span>{{ item.specModel }}</span>
@@ -219,29 +227,14 @@
                                     <li>
                                         <span>投资比例:</span>
                                         <span>{{ item.field1 }}</span>
-                                    </li>
-                                   
-                                    
-                                        <file-download-view class="outbound-field-uploader" style="width: 100%;" title="合格证附件:" :fileList="filterList(item.fileByList, 'hgz') || []"/>
-                                        <!-- <span>合格证附件:</span>
-                                        <span style="color:#1989fa;"
-                                            v-if="item.fileByList && item.fileByList.hgz && item.fileByList.hgz.length > 0"
-                                            @click="imgClick(item.fileByList.hgz[0].fileName, item.fileByList.hgz[0].filePath)">{{
-                                            item.fileByList.hgz[0].fileName }}</span> -->
-                                    
-                                    
-                                        <file-download-view class="outbound-field-uploader" style="width: 100%;" title="厂检报告附件:" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
-                                        <!-- <span style="min-width: 3rem;">厂检报告附件:</span>
-                                        <span style="color:#1989fa;"
-                                            v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0"
-                                            @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
-                                            item.fileByList.cjbg[0].fileName }}</span> -->
-                                    
-                                     <li class="li-item-remark">
+                                    </li> 
+                                      <li class="li-item-remark">
                                     <span>备注：</span>
                                     <div class="remark-detail">{{item.remark || '未填写'}}</div>
                                     </li>
                                 </ul>
+                                  <file-download-view class="outbound-field-uploader" style="width: 100%;" title="合格证附件:" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                                        <file-download-view class="outbound-field-uploader" style="width: 100%;" title="厂检报告附件:" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
                             </div>
                         </van-list>
                     </div>

@@ -29,47 +29,7 @@
                       <span>{{ checkStatusText(item.status) }}</span>
                     </div>
                   </div>
-                  <!-- <div class="van-cells">
-                    <span class="title">发货单号:</span>
-                    <div class="conent">
-                      <span class="text">{{ item.shipmentBatchNumber }}</span>
-                      <span>
-                        <div class="li-status">
-                          <van-tag type="primary" round size="success" v-if="item.status == 1"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>未发货</van-tag>
-                          <van-tag type="primary" round size="medium" v-if="item.status == 2"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>货运中</van-tag>
-                          <van-tag type="primary" round size="medium" v-if="item.status == 3"><i class="font_family
-                    icon-icon-date-20
-                    "></i>已完成</van-tag>
-                        </div>
-                      </span>
-                    </div>
-                  </div> -->
-                  <!-- <van-cell title="供应需求：" :value="item.shipmentBatchNumber">
-                    <div class="li-status">
-                      <van-tag type="primary" round size="success" v-if="item.status == 4"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>供应中</van-tag>
-                     <van-tag type="primary" round size="medium" v-if="item.status == 2"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>未确认</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="item.status == 3"><i class="font_family
-                    icon-icon-date-20
-                    "></i>已确认</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="item.status == 6"
-                        class="li-status-completed"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>已完成</van-tag>
-                    </div>
-                  </van-cell> -->
                   <ul class="list-ul">
-                    <!-- <li>
-                    <span class="font-weight">发货单号:</span>
-                    <span class="font-weight">{{ item.shipmentBatchNumber }}</span>
-                  </li> -->
                     <li>
                       <span>供应需求：</span>
                       <span class="text">{{ item.planName }}</span>
@@ -110,11 +70,6 @@
                         @click.stop="imgClick(item.fileByList.fhd[0].fileName, item.fileByList.fhd[0].filePath)">{{
                           item.fileByList.fhd[0].fileName }}</span>
                     </li>
-                    <!-- <li class="li-status">
-                    <van-tag type="primary" round size="medium" v-if="item.status == 1">未发货</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="item.status == 2">货运中</van-tag>
-                    <van-tag type="primary" round size="medium" v-if="item.status == 3" class="li-status-completed">已完成</van-tag>
-                  </li> -->
                   </ul>
                   <div class="list-ul-button" v-if="item.status != 3">
                     <van-button class="button-info" round type="info" @click.stop="handleSendGoodsClick(item.id)"

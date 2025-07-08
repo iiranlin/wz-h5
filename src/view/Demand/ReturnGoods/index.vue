@@ -7,7 +7,7 @@
                 <span>{{ params.planName }}</span>
             </div>
             <div>
-                <ul class="list-ul" style="margin: 10px;">
+                <ul class="detail-list-ul">
                     <li>
                         <span>需求项目：</span>
                         <span>{{ params.sectionName }}</span>
@@ -48,7 +48,7 @@
                         <span class="font-weight">物资名称：</span>
                         <span class="font-weight">{{ item.materialName }}</span>
                     </div>
-                <ul class="list-ul" >
+                <ul class="detail-list-ul" >
                    
                     <li style="color: rgb(224,70,70);">
                         <span>退货数量:</span>
@@ -66,8 +66,9 @@
                         <span>发货数量:</span>
                         <span>{{ item.sendTotal }}</span>
                     </li>
-                         <file-download-view class="outbound-field-uploader"  style="width: 100%;" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
+                        
                 </ul>
+                 <file-download-view class="outbound-field-uploader"  style="width: 100%;" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
             </div>
         </van-list>
          <div class="detail-floor-content">
@@ -77,13 +78,8 @@
         <div class="tabs">
             <van-list>
                 <div class="box-container">
-                    <ul class="detail-ul">
-                        
-                        <template>
-                        <file-download-view class="outbound-field-uploader" title="自检单：" :fileList="filterList(params.fileByList, 'zjd') || []"/>
+                   <file-download-view class="outbound-field-uploader" title="自检单：" :fileList="filterList(params.fileByList, 'zjd') || []"/>
                         <file-download-view class="outbound-field-uploader" title="其他资料：" :fileList="filterList(params.fileByList, 'qtzl') || []"/>
-                        </template>
-                    </ul>
                 </div>
             </van-list>
         </div>

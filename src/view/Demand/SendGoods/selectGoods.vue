@@ -10,20 +10,13 @@
         <!--本次需求未发货数量为0不可选-->
         <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false">
            <div class="detail-base-info">
-              <div class="detail-title-content">
+                 <div class="detail-title-content">
             <img src="/static/icon-xqjh.png">
             <span>物资名称：</span>
             <span>{{item.materialName}}</span>
         </div>
           <ul class="list-ul">
-             <!-- <li>
-              <span class="font-weight dot-before">物资名称：</span>
-              <span class="font-weight">{{ item.materialName }}</span>
-            </li> -->
-            <li style="color: red;">
-              <span>本次需求未发货数量：</span>
-              <span>{{ item.ssendTotal }}</span>
-            </li>
+            
             <li>
               <span>规格型号：</span>
               <span>{{ item.specModel }}</span>
@@ -72,6 +65,10 @@
             <span>备注：</span>
             <div class="remark-detail">{{item.remark || '未填写'}}</div>
           </li>
+          <li style="color: red;">
+              <span>本次需求未发货数量：</span>
+              <span>{{ item.ssendTotal }}</span>
+            </li>
           </ul>
            </div>
            
@@ -93,11 +90,13 @@
 <script>
 import BackToTop from '@/components/BackToTop'
 import {demandChooseGoods,demandSnedGoodsUpload} from '@/api/demand/demandManagement'
+import keepPages from '@/view/mixins/keepPages'
 import Vue from 'vue';
 import { Toast } from 'vant';
 Vue.use(Toast);
 export default {
   name: 'SelectMaterials',
+   mixins: [keepPages],
   components: { BackToTop },
   data() {
     return {

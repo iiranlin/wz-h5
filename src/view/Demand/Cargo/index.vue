@@ -44,11 +44,12 @@
                 <van-tab title="物流信息" name="物流信息">
                     <van-list>
                         <div class="box-container">
-                            <ul class="detail-list-ul">
-                                 <div class="detail-list-title-content">
+                             <div class="detail-list-title-content">
                                     <span class="font-weight">发货单号：</span>
                                     <span class="font-weight">{{ logistics.shipmentBatchNumber }}</span>
                                 </div>
+                            <ul class="detail-list-ul">
+                                
                                 <!-- <li style="display: flex;justify-content:flex-start;">
                                     <span class="font-weight dot-before">发货单号：</span>
                                     <span class="font-weight">{{ logistics.shipmentBatchNumber }}</span>
@@ -98,23 +99,6 @@
                                         <van-col>{{ formattedCreateDate(item.createDate) }}</van-col>
                                     </van-row>
                                 </div>
-                                <!-- <van-list @load="onLoad">
-                        <ul class="list-ul" v-for="(item, index) in logistics.materialTrackMessageDTOS" :key="index"
-                            style="margin: 20px 15px 0 15px;">
-                            <li>
-                                <span class="font-weight">操作人:</span>
-                                <span class="font-weight">{{ item.createUserName }}</span>
-                            </li>
-                            <li>
-                                <span>货运位置: </span>
-                                <span>{{ item.positionInformation }}</span>
-                            </li>
-                            <li>
-                                <span>填写时间: </span>
-                                <span>{{ formattedCreateDate(item.createDate) }}</span>
-                            </li>
-                        </ul>
-                    </van-list> -->
                             </div>
                             <div v-else>
                                 <div class="Logistics-Information-dt">
@@ -138,13 +122,14 @@
                     <div
                         v-if="logistics.materialCirculationDetailsTableDTOS && logistics.materialCirculationDetailsTableDTOS.length > 0">
                         <van-list>
-                            <div class="box-container">
-                                <ul class="detail-list-ul"
-                                    v-for="(item, index) in logistics.materialCirculationDetailsTableDTOS" :key="index">
-                                     <div class="detail-list-title-content">
+                            <div class="box-container" v-for="(item, index) in logistics.materialCirculationDetailsTableDTOS" :key="index">
+                                 <div class="detail-list-title-content">
                                         <span class="font-weight">物资名称：</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
                                     </div>
+                                <ul class="detail-list-ul"
+                                    >
+                                    
                                     <li>
                                         <span>规格型号:</span>
                                         <span>{{ item.specModel }}</span>
@@ -202,24 +187,10 @@
                                     <span>备注：</span>
                                     <div class="remark-detail">{{item.remark || '未填写'}}</div>
                                     </li>
-                                    <li>
-                                        <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
-                                        <!-- <span>合格证附件:</span>
-                                        <span style="color:#1989fa;"
-                                            v-if="item.fileByList && item.fileByList.hgz && item.fileByList.hgz.length > 0"
-                                            @click="imgClick(item.fileByList.hgz[0].fileName, item.fileByList.hgz[0].filePath)">{{
-                                                item.fileByList.hgz[0].fileName }}</span> -->
-                                    </li>
-                                    <li>
-                                        <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
-                                        <!-- <span style="min-width: 3rem;">厂检报告附件:</span>
-                                        <span style="color:#1989fa;"
-                                            v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0"
-                                            @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
-                                                item.fileByList.cjbg[0].fileName }}</span> -->
-                                    </li>
+                                   
                                 </ul>
-
+                                 <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                                  <file-download-view class="outbound-field-uploader" style="width: 100% !important;" title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
                             </div>
                         </van-list>
                     </div>
