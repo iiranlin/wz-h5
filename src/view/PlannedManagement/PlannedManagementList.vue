@@ -196,6 +196,7 @@ export default {
       this.$router.push({ name: 'RequirementDetails', query: { id: item.id } })
     },
     addClick(item) {
+      this.$store.dispatch('public/setMateriaList', [])
       if (item) {
         this.$router.push({ name: 'SaveMaterials', query: { id: item.id, type: 'update' } })
         return

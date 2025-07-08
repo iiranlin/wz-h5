@@ -1,5 +1,6 @@
 const state = {
   materiaList: null,
+  interfaceMateriaList: null,
   sendGoods:{},
   historyList: sessionStorage.getItem('historyList') || []
 };
@@ -14,12 +15,19 @@ const mutations = {
   SET_HISTORY_LIST:(state, historyList)=>{
     sessionStorage.setItem('historyList', historyList)
     state.historyList = historyList
+  },
+  SET_INTERFACE_MATERIA_LIST:(state, interfaceMateriaList)=>{
+    sessionStorage.setItem('interfaceMateriaList', interfaceMateriaList)
+    state.interfaceMateriaList = interfaceMateriaList
   }
 };
 
 const actions = {
   setMateriaList({ commit }, data) {
     commit('SET_MATERIA_LIST', data)
+  },
+  setInterfaceMateriaList({ commit }, data) {
+    commit('SET_INTERFACE_MATERIA_LIST', data)
   },
   setGoodsList({commit},data){
     commit('SET_GOODS_LIST', data)

@@ -136,9 +136,20 @@ export default {
     getListBySectionId(contractId) {
       this.loading = true
       getListBySectionId({ contractId }).then(({ data }) => {
-        // this.list = data //.filter( (row) => Number(row.cumulativeAmount) < Number(row.amount)) || []
         this.materiaId = (this.$store.state.public.materiaList || []).map(item => item.uniqueNumber || item.allocationUniqueNumber)
         this.materiaList = this.$store.state.public.materiaList
+        let interfaceMateriaList = (this.$store.state.public.interfaceMateriaList || [])
+        
+        data = data.map( (item) => {
+          let Obj = item
+          interfaceMateriaList.map((val) => {
+            if(item.uniqueNumber == (val.uniqueNumber || val.allocationUniqueNumber)){
+              Obj = Object.assign({}, item, {cumulativeAmount: Number(item.cumulativeAmount) - Number(val.planAmount) || 0})
+            }
+          })
+          return Obj
+        })
+        
         const listDataA = data.filter(item => item.amount === item.cumulativeAmount)
         const listDataB = data.filter(item => !(item.amount === item.cumulativeAmount))
         this.list = listDataB.concat(listDataA)

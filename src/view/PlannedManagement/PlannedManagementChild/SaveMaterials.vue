@@ -176,12 +176,13 @@ export default {
         this.sectionInfo = {
           sectionName: data.sectionName,
           title: dayjs().format('YYYY年MM月') + '甲供物资计划申请表',
-          deptName: data.unitName
+          deptName: data.deptName
         }
         this.materiaList = data.details.map( (item) => {
           return Object.assign({}, item, {supplyDate: item.supplyDate && parseTime(item.supplyDate, '{y}-{m}-{d}'), minDate: item.supplyDate?new Date(item.supplyDate):this.minDate, showDatePicker: this.showDatePicker, backPlanAmount: item.planAmount || 0})
         })
         this.$store.dispatch('public/setMateriaList', this.materiaList)
+        this.$store.dispatch('public/setInterfaceMateriaList', this.materiaList)
       })
     },
     cumulativeAmount (item) {
