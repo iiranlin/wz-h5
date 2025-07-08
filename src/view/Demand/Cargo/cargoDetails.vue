@@ -37,7 +37,7 @@
                                     <span class="font-weight">供应需求名称：</span>
                                     <span class="font-weight" >{{ params.planName }}</span>
                                 </div>
-                            <ul class="list-ul">
+                            <ul class="detail-list-ul">
                                  
                                 <!-- <li>
                                         <span class="font-weight dot-before" style="min-width: 2.5rem;">供应需求名称:</span>
@@ -326,15 +326,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-// .box-container{
-//     width: 100%;
-//     height: calc(100vh - 60px);
-//     overflow: scroll;
-// }
-// ::v-deep .van-tabs__content {
-//     height: calc(100vh - 162px);
-//     overflow-y: scroll;
-// }
+.box-container{
+    padding: 0px !important;
+}
+.detail-list-ul{
+    margin: 0 !important;
+}
 
 .van-search {
 

@@ -159,6 +159,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.box-container{
+    padding: 0px !important;
+}
+.detail-list-ul{
+    margin: 0 !important;
+}
 .detail-title {
   font-weight: bold;
   margin: 0.2rem;
