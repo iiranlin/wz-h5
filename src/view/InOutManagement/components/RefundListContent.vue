@@ -12,7 +12,7 @@
         <div v-for="(item, index) in dataList" :key="index" class="box-container" @click="handleWaitItemClick(item)">
            <div class="list-title-content">
             <span>退货单号：</span>
-            <span class="font-weight" style="color:#134daa;">{{item.backQualNumber}}</span>
+            <span class="font-weight" style="color:#134daa;">{{item.backNode == '2'?item.backNumber:item.backQualNumber}}</span>
           </div>
           <ul class="list-ul">
             <li>
@@ -33,7 +33,7 @@
             </li>
             <li>
               <span>退货时间：</span>
-              <span>{{ item.backQualDate && parseTime(item.backQualDate, '{y}-{m}-{d} {h}:{i}') }}</span>
+              <span>{{  item.backNode == '2'?item.backDate && parseTime(item.backDate, '{y}-{m}-{d} {h}:{i}'):item.backQualDate && parseTime(item.backQualDate, '{y}-{m}-{d} {h}:{i}') }}</span>
             </li>
             <li>
               <span>操作人：</span>

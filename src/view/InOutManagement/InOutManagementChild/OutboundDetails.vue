@@ -46,13 +46,13 @@
     <div class="box-container" v-for="(item,index) in detailList" :key="index">
       <div>
         <div class="detail-list-title-content">
-            <span>供应商：</span>
-            <span>{{item.sellerName}}</span>
+            <span>物资名称：</span>
+            <span>{{item.materialName}}</span>
         </div>
         <ul class="detail-list-ul">
           <li>
-            <span>物资名称：</span>
-            <span>{{item.materialName}}</span>
+            <span>供应商：</span>
+            <span>{{item.sellerName}}</span>
           </li>
           <li>
             <span>规格型号：</span>
