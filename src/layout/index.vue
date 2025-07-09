@@ -62,20 +62,20 @@ export default {
 			supervisionUnit:[
 				{
 					title: '待审核',
-					activeIcon: '/static/icon_home_current.png',
-					normalIcon: '/static/icon_home.png',
+					activeIcon: '/static/DSH_A.png',
+					normalIcon: '/static/DSH_B.png',
 					link: '/WaitExamineList'
 				},
 				{
 					title: '待处理',
-					activeIcon: '/static/icon_home_current.png',
-					normalIcon: '/static/icon_home.png',
+					activeIcon: '/static/DCL_A.png',
+					normalIcon: '/static/DCL_B.png',
 					link: '/WaitHandleList'
 				},
 				{
 					title: '已审核',
-					activeIcon: '/static/icon_home_current.png',
-					normalIcon: '/static/icon_home.png',
+					activeIcon: '/static/YSH_A.png',
+					normalIcon: '/static/YSH_B.png',
 					link: '/OverExamineList'
 				},
 			],
@@ -83,20 +83,20 @@ export default {
 			supplier:[
 				{
 					title: '需求管理',
-					activeIcon: '/static/icon_home_current.png',
-					normalIcon: '/static/icon_home.png',
+					activeIcon: '/static/XQGL_A.png',
+					normalIcon: '/static/XQGL_B.png',
 					link: '/dashboard'
 				},
 				{
 					title: '发货管理',
-					activeIcon: '/static/icon_home_current.png',
-					normalIcon: '/static/icon_home.png',
+					activeIcon: '/static/FHGL_A.png',
+					normalIcon: '/static/FHGL_B.png',
 					link: '/Information'
 				},
 				{
 					title: '退货管理',
-					activeIcon: '/static/icon_home_current.png',
-					normalIcon: '/static/icon_home.png',
+					activeIcon: '/static/THGL_A.png',
+					normalIcon: '/static/THGL_B.png',
 					link: '/MyManager'
 				},
 			],
