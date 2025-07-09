@@ -264,12 +264,6 @@ export default {
             lookGoodsDetails(this.wuLiuId).then((res) => {
                 if (res.code == 0) {
                     this.params = res.data
-                    
-                    // this.params.fileByList = JSON.parse(res.data.fileByList)
-                    // this.params.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item)=>({
-                    //     ...item,
-                    //     fileByList:JSON.parse(item.fileByList) 
-                    // }))
                 }
             })
              // 获取发货单号
@@ -280,13 +274,9 @@ export default {
                     this.getOrderNumber(res.data[0].shipmentBatchNumber)
                 }
             })
-            let parNumber = {
-                shipmentBatchNumber:this.shipmentBatchNumber
-            }
-           
             let params = {
-                // pageName:this.listPageQuery.pageName,
-                // pageSize:this.listPageQuery.pageSize,
+                pageName:this.listPageQuery.pageName,
+                pageSize:this.listPageQuery.pageSize,
                 shipmentBatchNumber: this.shipmentBatchNumber
             }
             //有单号就显示位置列表

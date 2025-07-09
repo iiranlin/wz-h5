@@ -80,8 +80,10 @@
             已选物资<span class="number">{{ selectTotal }}</span>项
         </div>
         <div class="btns">
-          <van-button round type="info" @click="back" class="btn">上一步</van-button>
-          <van-button round type="info" @click="addClick(text)" class="btn">下一步</van-button>
+          <van-button round type="info" @click="editBack(text,goodsId)" class="btn" v-if="text=='edit'">上一步</van-button>
+          <van-button round type="info" @click="back" class="btn" v-else>上一步</van-button>
+          <van-button round type="info" @click="editClick(text,goodsId)" class="btn" v-if="text=='edit'">下一步</van-button>
+          <van-button round type="info" @click="addClick(text)" class="btn" v-else>下一步</van-button>
         </div>
     </div>
     <back-to-top className=".default-container"></back-to-top>
@@ -113,15 +115,18 @@ export default {
       selectArrayData:[],
      // 编辑时带过来的参数
       editData:{},
-      fileDisabled:false
+      fileDisabled:false,
+      text:""
     }
   },
   mounted() {
    this.goodsId = this.$route.query.id 
-  //  编辑时传过来的标识(应该存在缓存里的)
+  
     this.text = this.$route.query.text
     if(this.text=='edit'){
-        let arrdata = JSON.parse(this.$route.query.data)
+      //  因为是编辑参数从缓存里取
+    let arrdata = this.$store.state.public.goodsSelect
+      //   let arrdata = JSON.parse(this.$route.query.data)
        this.selectGoodsList = arrdata.map(item => {
             // 辅助函数：格式化日期为 YYYY-MM-DD
             const formatDate = (dateString) => {
@@ -207,6 +212,9 @@ export default {
     back() {
       history.back()
     },
+    editBack(text,id){
+      this.$router.push({path:'/sendGoods',query:{title:text,id:id}})
+    },
     selectClick () {
       this.$router.push({ name: 'SelectContract' })
     },
@@ -217,7 +225,13 @@ export default {
       }else{
         Toast.fail('请选择至少一项');
       }
-      
+    },
+    editClick(text,id){
+       if(this.selectArrayData.length>0){
+        this.$router.push({ path: '/finishGoods',query:{id:id,text:text} })
+      }else{
+        Toast.fail('请选择至少一项');
+      }
     },
     selectGoods(e){
       this.selectArrayData=e.flat()

@@ -324,7 +324,7 @@ export default {
     },
     //货运详情
     handleCarGoClick(id) {
-      this.$router.push({ path: '/cargoDetails', query: { id: id } })
+      this.$router.push({ path: '/cargoDetails', query: { id: id,btnEvent:false } })
     },
     //增加货运位置
     handleConfirmClick(number) {
