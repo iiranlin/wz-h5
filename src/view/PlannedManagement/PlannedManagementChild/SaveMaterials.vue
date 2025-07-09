@@ -131,8 +131,7 @@ export default {
     }
   },
   activated() {
-    const data = this.$store.state.public.materiaList || []
-    const finallyData = data.map( (item) => Object.assign({}, item, {supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'), minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
+    const finallyData = this.historyCache()
     const materiaList = this.materiaList.concat(finallyData)
     let obj = {}
     this.materiaList = materiaList.reduce((cur, next) => {
@@ -146,8 +145,7 @@ export default {
   },
   methods: {
     init () {
-      const data = this.$store.state.public.materiaList || []
-      const finallyData = data.map( (item) => Object.assign({}, item, {supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'), minDate: this.minDate, showDatePicker: this.showDatePicker, planAmount: item.amount - item.cumulativeAmount, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
+      const finallyData = this.historyCache()
       const {id = null, contractId = null, type = ''} = this.$route.query
       this.queryId = id
       this.contractId = contractId
@@ -158,6 +156,27 @@ export default {
       }else{
         this.materialDemandPlanRestDetail()
       }
+    },
+    historyCache () {
+      const data = this.$store.state.public.materiaList || []
+      const historyList = this.$store.state.public.historyList || {}
+      let obj = {addr: '', field2: '', field0: '', field1: ''}
+      if(historyList){
+        for (const key in obj) {
+          if(historyList[key]){
+            obj[key] = historyList[key][0]
+          }
+        }
+      }
+      const finallyData = data.map( (item) => Object.assign({}, item, {
+        supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
+        minDate: this.minDate,
+        showDatePicker: this.showDatePicker,
+        planAmount: item.amount - item.cumulativeAmount,
+        allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber,
+        ...obj
+      }))
+      return finallyData
     },
     async getSectionProject() {
       const res = await getSectionProject()
@@ -213,7 +232,7 @@ export default {
         contractId: this.contractId,
         detailsModifyParams: this.materiaList.map(item => ({...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}))
       }
-      let obj = {addr: [], field2: [], field2: []}
+      let obj = {addr: [], field2: [], field0: [], field1: []}
       obj.addr = this.materiaList.map(item =>  item.addr)
       obj.field2 = this.materiaList.map(item =>  item.field2)
       obj.field0 = this.materiaList.map(item =>  item.field0)
