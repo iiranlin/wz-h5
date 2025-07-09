@@ -40,92 +40,90 @@
     </div>
     </div>
   
-    <div class="detail-floor-content">
-      <img src="/static/icon-return.png"/>
-      <span>退货明细</span>
-    </div>
-    <div class="box-container" v-for="(item,index) in dataList.materialCirculationDetailsTableDTOS" :key="index">
-      <div>
-         <div class="detail-list-title-content">
-            <span>物资名称：</span>
-            <span>{{item.materialName}}</span>
+    <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
+          title-inactive-color="#2e2e2e">
+      <van-tab :title="`退货明细（共${dataList.materialCirculationDetailsTableDTOS.length}项）`" name="0" key="0">
+          <div class="box-container" v-for="(item,index) in dataList.materialCirculationDetailsTableDTOS" :key="index">
+            <div>
+              <div class="detail-list-title-content">
+                  <span>物资名称：</span>
+                  <span>{{item.materialName}}</span>
+              </div>
+            <ul class="detail-list-ul">
+              <li>
+                <span style="color: #e4393c;">退货数量：</span>
+                <span style="color: #e4393c;">{{item.refundTotal}}</span>
+              </li>
+              <li>
+                <span>规格型号：</span>
+                <span>{{item.specModel}}</span>
+              </li>
+              <li>
+                <span>计量单位：</span>
+                <span>{{item.unit}}</span>
+              </li>
+              <li>
+                <span>包装形式：</span>
+                <span>{{item.packagingFm}}</span>
+              </li>
+              <li>
+                <span>需求数量：</span>
+                <span>{{item.planAmount}}</span>
+              </li>
+              <li class="li-item-overlength">
+                <span>本次收货数量：</span>
+                <span class="li-span-click">{{item.putTotal}}</span>
+              </li>
+              <li>
+                <span>生产日期：</span>
+                <span>{{item.manufactureDate |formatToDate}}</span>
+              </li>
+              <li class="li-item-overlength">
+                <span>有效期截止日期：</span>
+                <span>{{item.expirationDate |formatToDate}}</span>
+              </li>
+              <li>
+                <span>使用地点：</span>
+                <span>{{ item.addr }}</span>
+              </li>
+              <li>
+                <span>收货地址：</span>
+                <span>{{item.field2}}</span>
+              </li>
+              <li>
+                <span>供应时间：</span>
+                <span>{{item.supplyDate |formatToDate}}</span>
+              </li>
+              <li class="li-item-overlength">
+                <span>收货人及联系方式：</span>
+                <span>{{item.receiver}}</span>
+              </li>
+              <li>
+                <span>投资方：</span>
+                <span>{{item.field0}}</span>
+              </li>
+              <li >
+                <span>投资比例：</span>
+                <span>{{item.field1}}</span>
+              </li>
+              <li class="li-item-remark">
+                <span>备注：</span>
+                <div class="remark-detail">{{item.remark || '未填写'}}</div>
+              </li>
+            </ul>
+              <file-download-view title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
+              <file-download-view  title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+              <file-download-view class="remark-detail" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
+            </div>
+          </div>
+      </van-tab>
+      <van-tab title="初验信息" name="1" key="1">
+         <div class="box-container">
+          <file-download-view title="自检单：" :fileList="filterList(dataList.fileByList, 'zjd') || []"/>
+          <file-download-view title="其他资料：" :fileList="filterList(dataList.fileByList, 'qtzl') || []"/>
         </div>
-      <ul class="detail-list-ul">
-        <li>
-          <span style="color: #e4393c;">退货数量：</span>
-          <span style="color: #e4393c;">{{item.refundTotal}}</span>
-        </li>
-        <li>
-          <span>规格型号：</span>
-          <span>{{item.specModel}}</span>
-        </li>
-         <li>
-          <span>计量单位：</span>
-          <span>{{item.unit}}</span>
-        </li>
-        <li>
-          <span>包装形式：</span>
-          <span>{{item.packagingFm}}</span>
-        </li>
-        <li>
-          <span>需求数量：</span>
-          <span>{{item.planAmount}}</span>
-        </li>
-        <li class="li-item-overlength">
-          <span>本次收货数量：</span>
-          <span class="li-span-click">{{item.putTotal}}</span>
-        </li>
-        <li>
-          <span>生产日期：</span>
-          <span>{{item.manufactureDate |formatToDate}}</span>
-        </li>
-        <li class="li-item-overlength">
-          <span>有效期截止日期：</span>
-          <span>{{item.expirationDate |formatToDate}}</span>
-        </li>
-        <li>
-          <span>使用地点：</span>
-          <span>{{ item.addr }}</span>
-        </li>
-        <li>
-          <span>收货地址：</span>
-          <span>{{item.field2}}</span>
-        </li>
-        <li>
-          <span>供应时间：</span>
-          <span>{{item.supplyDate |formatToDate}}</span>
-        </li>
-        <li class="li-item-overlength">
-          <span>收货人及联系方式：</span>
-          <span>{{item.receiver}}</span>
-        </li>
-        <li>
-          <span>投资方：</span>
-          <span>{{item.field0}}</span>
-        </li>
-        <li >
-          <span>投资比例：</span>
-          <span>{{item.field1}}</span>
-        </li>
-        <li class="li-item-remark">
-          <span>备注：</span>
-          <div class="remark-detail">{{item.remark || '未填写'}}</div>
-        </li>
-      </ul>
-        <file-download-view title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []"/>
-        <file-download-view  title="厂检报告附件：" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
-        <file-download-view class="remark-detail" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
-      </div>
-    </div>
-    <div class="detail-floor-content">
-      <img src="/static/icon-file.png"/>
-      <span>初验信息</span>
-    </div>
-    <div class="box-container">
-      <file-download-view title="自检单：" :fileList="filterList(dataList.fileByList, 'zjd') || []"/>
-      <file-download-view title="其他资料：" :fileList="filterList(dataList.fileByList, 'qtzl') || []"/>
-    </div>
-
+      </van-tab>
+    </van-tabs>
     <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
@@ -153,7 +151,8 @@ export default {
         num2: '',
         remark: ''
       },
-      showDatePicker: false // 控制日期选择器显示
+      showDatePicker: false, // 控制日期选择器显示
+      menuActiveIndex:'0'
     }
   },
   mounted() {
