@@ -51,7 +51,7 @@
               </div>
             <ul class="detail-list-ul">
               <li>
-                <span style="color: #e4393c;">退货数量：</span>
+                <span>退货数量：</span>
                 <span style="color: #e4393c;">{{item.refundTotal}}</span>
               </li>
               <li>
@@ -83,7 +83,7 @@
                 <span>{{item.expirationDate |formatToDate}}</span>
               </li>
               <li>
-                <span>使用地点：</span>
+                <span>交货地点：</span>
                 <span>{{ item.addr }}</span>
               </li>
               <li>

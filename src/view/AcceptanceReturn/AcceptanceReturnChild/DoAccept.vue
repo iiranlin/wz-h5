@@ -67,7 +67,7 @@
                       <span>{{ item.expirationDate }}</span>
                     </li>
                     <li>
-                      <span>使用地点：</span>
+                      <span>交货地点：</span>
                       <span>{{ item.addr }}</span>
                     </li>
                     <li>
@@ -109,7 +109,7 @@
                       </li>
                       <li>
                         <span>退货数量：</span>
-                        <span>{{ item.refundTotal }}</span>
+                        <span style="color: #e4393c;">{{ item.refundTotal }}</span>
                       </li>
                     </template>
                   
