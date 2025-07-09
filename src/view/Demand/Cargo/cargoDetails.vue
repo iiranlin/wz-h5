@@ -332,7 +332,7 @@ export default {
             // this.$router.push({path:'/sendGoods'})
         },
         handleDoAccept(){
-            his.$router.push({name: 'DoAccept',query: {id:this.id,tabs:true}})
+            this.$router.push({name: 'DoAccept',query: {id:this.id,tabs:true}})
         },
         checkAuditStatus(status) {
             if (status == '0') {
