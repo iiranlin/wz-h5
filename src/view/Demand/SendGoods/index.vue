@@ -2,60 +2,60 @@
     <div class="default-container" ref="container">
         <div class="submit-store-view-mian">
             <div class="detail-base-info">
-        <div class="detail-title-content">
-            <img src="/static/icon-xqjh.png">
-            <span>需求编号：</span>
-            <span>{{goodsMsg.planNumber}}</span>
+                <div class="detail-title-content">
+                    <img src="/static/icon-xqjh.png">
+                    <span>需求编号：</span>
+                    <span>{{ goodsMsg.planNumber }}</span>
+                </div>
+                <div>
+                    <ul class="detail-ul">
+                        <li>
+                            <span>需求项目：</span>
+                            <span>{{ goodsMsg.sectionName }}</span>
+                        </li>
+                        <li>
+                            <span>合同名称：</span>
+                            <span class="text">{{ goodsMsg.deptName }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="list-ul" style="margin-top: 26px;padding: 10px;">
+                <van-form :key="formKey" ref="form">
+                    <van-field v-model="params.oddNumbers" :disabled="fileDisabled" label="物流单号" placeholder="物流单号"
+                        input-align="right" />
+                    <van-field v-model="params.shippingAddress" :disabled="fileDisabled" required label="发货地址"
+                        placeholder="发货地址" input-align="right" :rules="[{ required: true, message: '请填写发货地址' }]" />
+                    <van-field readonly clickable name="calendar" :disabled="fileDisabled" required
+                        v-model="params.shippingDate" label="发货日期" input-align="right" :value="params.shippingDate"
+                        placeholder="点击选择日期" @click="showCalendar = true"
+                        :rules="[{ required: true, message: '请填写发货日期' }]" />
+                    <van-calendar v-model="showCalendar" @confirm="onConfirm" />
+                    <van-field readonly clickable name="calendar" :disabled="fileDisabled" required
+                        :value="params.arrivalDate" label="预计送到时间" input-align="right" placeholder="点击选择日期"
+                        @click="sendStop = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
+                    <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
+                    <van-field v-model="params.carNumber" label="车牌号" :disabled="fileDisabled" type="text"
+                        placeholder="车牌号" input-align="right" />
+                    <van-field v-model="params.contacts" required label="联系人" :disabled="fileDisabled" placeholder="联系人"
+                        input-align="right" :rules="[{ required: true, message: '请填写联系人' }]" />
+                    <van-field v-model="params.contactsPhone" required label="联系电话" :disabled="fileDisabled"
+                        placeholder="联系电话" input-align="right"
+                        :rules="[{ required: true, message: '请填写手机号' }, { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }]" />
+                </van-form>
+                <div style="padding-right: 0.3rem;">
+                    <file-upload-view title="发货单附件" :fileList="fileList" businessType="01" />
+                </div>
+                
+            </div>
+            <div class="default-button-container">
+                <van-button size="mini" type="primary" round class="button-info" @click="chooseGoods(goodsId, text)"
+                    v-if="this.text == 'add'">选择发货物资</van-button>
+                <!-- 编辑里的选择发货物资传的是planId -->
+                <van-button size="mini" type="primary" round class="button-info" @click="editGoods('edit')"
+                    v-if="text == 'edit'">选择发货物资</van-button>
+            </div>
         </div>
-        <div>
-            <ul class="detail-ul">
-          <li>
-            <span>需求项目：</span>
-            <span>{{ goodsMsg.sectionName }}</span>
-          </li>
-          <li>
-            <span>合同名称：</span>
-            <span class="text">{{ goodsMsg.deptName }}</span>
-          </li>
-            </ul>
-        </div>
-    </div>
-
-        <div class="list-ul" style="margin-top: 26px;padding: 10px;">
-            <van-form :key="formKey" ref="form">
-                <van-field v-model="params.oddNumbers" :disabled="fileDisabled" label="物流单号"
-                    placeholder="物流单号" input-align="right" />
-                <van-field v-model="params.shippingAddress" :disabled="fileDisabled" required label="发货地址"
-                    placeholder="发货地址" input-align="right" :rules="[{ required: true, message: '请填写发货地址' }]" />
-                <van-field readonly clickable name="calendar" :disabled="fileDisabled" required
-                    v-model="params.shippingDate" label="发货日期" input-align="right"  :value="params.shippingDate" placeholder="点击选择日期"
-                    @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" />
-                <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-                <van-field readonly clickable name="calendar" :disabled="fileDisabled" required
-                    :value="params.arrivalDate" label="预计送到时间" input-align="right" placeholder="点击选择日期"
-                    @click="sendStop = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
-                <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
-                <van-field v-model="params.carNumber" label="车牌号" :disabled="fileDisabled" type="text" placeholder="车牌号"
-                    input-align="right" />
-                <van-field v-model="params.contacts" required label="联系人" :disabled="fileDisabled" placeholder="联系人"
-                    input-align="right" :rules="[{ required: true, message: '请填写联系人' }]" />
-                <van-field v-model="params.contactsPhone" required label="联系电话" :disabled="fileDisabled"
-                    placeholder="联系电话" input-align="right"
-                    :rules="[{ required: true, message: '请填写手机号' }, { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }]" />
-            </van-form>
-             <file-upload-view title="发货单附件" :fileList="fileList" businessType="01"/>
-        </div>
-        <div class="default-button-container">
-            <van-button size="mini" type="primary" round class="button-info" @click="chooseGoods(goodsId, text)"
-                v-if="this.text == 'add'">选择发货物资</van-button>
-            <!-- 编辑里的选择发货物资传的是planId -->
-            <van-button size="mini" type="primary" round class="button-info"
-                @click="editGoods('edit')"
-                v-if="text == 'edit'">选择发货物资</van-button>
-          
-        </div>
-        </div>
-        
     </div>
 </template>
 <script>
@@ -63,7 +63,7 @@ import Vue from 'vue';
 import { Form } from 'vant';
 import { Field } from 'vant';
 import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/api/demand/demandManagement'
-import {minioUpload} from '@/api/blcd-base/minio'
+import { minioUpload } from '@/api/blcd-base/minio'
 import { detailBySendEdit } from '@/api/demand/sendGoods'
 import keepPages from '@/view/mixins/keepPages'
 import FileUploadView from "@/components/FileUploadViewType.vue";
@@ -77,7 +77,7 @@ Vue.use(Field);
 export default {
     name: 'SendGoods',
     mixins: [keepPages],
-    components:{FileUploadView},
+    components: { FileUploadView },
     data() {
         return {
             formKey: "",
@@ -113,38 +113,8 @@ export default {
         if (this.text == 'add') {
             this.getSendGoods()
         }
-       
-        this.params.shippingDate=this.todayTime()
-        // // 编辑
-        // if(this.text=='edit'){
-        //     this.params = JSON.parse(this.$route.query.data)
-        //     //发货日期格式化
-        //       if (this.params.shippingDate) {
-        //         const date = new Date(this.params.shippingDate);
-        //         const year = date.getFullYear();
-        //         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-        //         const day = date.getDate().toString().padStart(2, '0'); // 日期加0
-        //         this.params.shippingDate = `${year}-${month}-${day}`;
-        //     }
-        //     // 预计送达日期格式化
-        //      if (this.params.arrivalDate) {
-        //         const date = new Date(this.params.arrivalDate);
-        //         const year = date.getFullYear();
-        //         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-        //         const day = date.getDate().toString().padStart(2, '0'); // 日期加0
-        //         this.params.arrivalDate = `${year}-${month}-${day}`;
-        //     }
-        //     const {planNumber,sectionName,contractName}= JSON.parse(this.$route.query.data)
-        //     this.goodsMsg.planNumber=planNumber
-        //     this.goodsMsg.sectionName=sectionName
-        //     this.goodsMsg.contractName=contractName
-        //     // 回显图片
-        //     let file = JSON.parse(this.params.fileByList)
-        //     this.fileList.push({name:file.fhd[0].fileName,url:file.fhd[0].filePath})
-
-        // }else{
-
-        // }
+        // 默认当前时间
+        this.params.shippingDate = this.todayTime()
     },
 
     methods: {
@@ -167,23 +137,23 @@ export default {
                     this.goodsMsg.contractName = contractName
                     let file = JSON.parse(res.data.fileByList)
                     this.params = res.data
-                    this.fileList.push({fileName:file.fhd[0].fileName,filePath:file.fhd[0].filePath})
+                    this.fileList.push({ fileName: file.fhd[0].fileName, filePath: file.fhd[0].filePath })
                     this.fileByList = file.fhd[0].fileName
                     this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
                     this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
                 }
             })
         },
-        todayTime(){
+        todayTime() {
             const now = new Date();
- 
+
             const year = now.getFullYear();     // 年（如：2023）
-            const month =(now.getMonth() + 1).toString().padStart(2, '0'); // 月份加0  // 月（0-11，需要+1）
+            const month = (now.getMonth() + 1).toString().padStart(2, '0'); // 月份加0  // 月（0-11，需要+1）
             const date = now.getDate().toString().padStart(2, '0'); // 日期加0       // 日（1-31）
             const hours = now.getHours();       // 时（0-23）
             const minutes = now.getMinutes();   // 分（0-59）
             const seconds = now.getSeconds();   // 秒（0-59）
-            
+
             console.log(`${year}-${month}-${date} ${hours}:${minutes}:${seconds}`);
             return `${year}-${month}-${date}`
         },
@@ -228,7 +198,7 @@ export default {
                             fileList.push({ fileName: item.fileName, filePath: item.filePath })
                             fhd.push({ fileName: item.fileName, filePath: item.filePath });
                         })
-                    }else{
+                    } else {
                         Toast.fail('请上传的附件');
                         return
                     }
@@ -267,7 +237,7 @@ export default {
                             fileList.push({ fileName: item.fileName, filePath: item.filePath })
                             fhd.push({ fileName: item.fileName, filePath: item.filePath });
                         })
-                    }else{
+                    } else {
                         Toast.fail('请上传的附件');
                         return
                     }
@@ -342,8 +312,8 @@ export default {
             minioUpload(imgFile).then((res) => {
                 if (res.code == 0) {
                     this.$notify({
-                    type: 'success',
-                    message: "上传成功"
+                        type: 'success',
+                        message: "上传成功"
                     });
                     this.fileList = [{
                         name: res.data.fileName,
@@ -357,8 +327,8 @@ export default {
                 }
             }).catch((err) => {
                 this.$notify({
-                type: 'warning',
-                message: "上传失败"
+                    type: 'warning',
+                    message: "上传失败"
                 });
             })
         },
@@ -417,9 +387,10 @@ li :nth-child(2) {
     background-color: #1989fa;
     border: 1px solid #1989fa;
 }
-.text{
-     white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+
+.text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

@@ -388,6 +388,7 @@ export default {
 }
 
 .detail-list-ul {
+    // padding: 0.125rem 0.2rem 0.125rem 0.425rem;
     margin: 0 !important;
 }
 

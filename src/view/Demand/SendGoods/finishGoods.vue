@@ -3,84 +3,84 @@
     <div class="main">
       <div class="box" v-for="(item, index) in goodsData" :key="index">
         <div class="detail-base-info">
-        <div class="detail-title-content">
+          <div class="detail-title-content">
             <img src="/static/icon-xqjh.png">
             <span>物资名称：</span>
-            <span>{{item.materialName}}</span>
-        </div>
-        <div>
+            <span>{{ item.materialName }}</span>
+          </div>
+          <div>
             <ul class="detail-list-ul">
-          <li>
-            <span>规格型号：</span>
-            <span>{{ item.specModel }}</span>
-          </li>
-          <li>
-            <span>计量单位：</span>
-            <span>{{ item.unit }}</span>
-          </li>
-          <li>
-            <span style="min-width: 2rem;">次计划数量：</span>
-            <span>{{ item.planAmount }}</span>
-          </li>
-           <li style="color: red;">
-            <span style="min-width: 4rem;">本次需求未发货数量：</span>
-            <span>{{ item.ssendTotal }}</span>
-          </li>
-          <!-- <li class="li-status">
+              <li>
+                <span>规格型号：</span>
+                <span>{{ item.specModel }}</span>
+              </li>
+              <li>
+                <span>计量单位：</span>
+                <span>{{ item.unit }}</span>
+              </li>
+              <li>
+                <span style="min-width: 2rem;">次计划数量：</span>
+                <span>{{ item.planAmount }}</span>
+              </li>
+              <li style="color: red;">
+                <span style="min-width: 4rem;">本次需求未发货数量：</span>
+                <span>{{ item.ssendTotal }}</span>
+              </li>
+              <!-- <li class="li-status">
             <template v-for="row in statusArr">
               <van-tag :class="{ 'li-status-completed': row.value == '9' }"
                 :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
                 v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
             </template>
-            </li> -->
+</li> -->
             </ul>
+          </div>
         </div>
-    </div>
         <van-divider />
         <div class="detail-list-ul">
           <van-form ref="form">
-            <van-field v-model="goodsData[index].sendTotal" :disabled="fileDisabled" required label="发货数量"
-              placeholder="发货数量" input-align="right" />
-            <van-field v-model="goodsData[index].packagingFm" name="包装形式" :disabled="fileDisabled" required label="包装形式"
-              placeholder="请输入包装形式" input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].createDate" :disabled="fileDisabled" required
-              name="datetimePicker" :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
+            <van-field v-model="goodsData[index].sendTotal" required label="发货数量" placeholder="发货数量"
+              input-align="right" />
+            <van-field v-model="goodsData[index].packagingFm" @click.stop="fieldClick($event, 'packagingFm', index)" required label="包装形式" placeholder="请输入包装形式"
+              input-align="right" />
+            <van-field readonly clickable v-model="goodsData[index].createDate" required name="datetimePicker"
+              :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
               @click="showCalendars(item, index, 'show')" input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].updateDate" :disabled="fileDisabled"
-              name="datetimePicker" :value="goodsData[index].updateDate" label="有效截止日期" placeholder="有效截止日期"
+            <van-field readonly clickable v-model="goodsData[index].updateDate" name="datetimePicker"
+              :value="goodsData[index].updateDate" label="有效截止日期" placeholder="有效截止日期"
               @click="showCalendars(item, index, 'end')" input-align="right" />
-            <van-field v-model="goodsData[index].field2" label="收货地址" required :disabled="fileDisabled"
-              placeholder="收货地址" input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].supplyDate" :disabled="fileDisabled"
-              name="datetimePicker" required :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
+            <van-field v-model="goodsData[index].field2" label="收货地址" required placeholder="收货地址" input-align="right" />
+            <van-field readonly clickable v-model="goodsData[index].supplyDate" name="datetimePicker" required
+              :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
               @click="showCalendars(item, index, 'gong')" input-align="right" />
-            <van-field v-model="goodsData[index].receiver" name="收货人" :disabled="fileDisabled" required label="收货人和电话"
-              placeholder="收货人" input-align="right" />
+            <van-field v-model="goodsData[index].receiver" name="收货人" required label="收货人和电话" placeholder="收货人"
+              input-align="right" />
             <van-field v-model="goodsData[index].addr" label="使用地点" placeholder="使用地点" input-align="right" disabled />
             <van-field v-model="goodsData[index].field0" :name="goodsData[index].field0" label="投资方" required
               placeholder="投资方" disabled input-align="right" />
             <van-field v-model="goodsData[index].field1" name="投资比例" required label="投资比例" disabled placeholder="投资比例"
               input-align="right" />
-           
-            <van-field v-model="goodsData[index].remark" label="备注" :disabled="fileDisabled" placeholder="请输入备注"
-              input-align="right" />
+
+            <van-field v-model="goodsData[index].remark" label="备注" placeholder="请输入备注" input-align="right" />
           </van-form>
         </div>
-            <div style="padding-right: 1rem;">
-              <file-upload-view title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01" />
-            <file-upload-view title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01" />
-            </div>
+        <div style="padding-right: 1rem;">
+          <file-upload-view title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01" />
+          <file-upload-view title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01" />
+        </div>
       </div>
     </div>
 
     <div class="default-button-container">
-      <van-button class="button-info" round type="info" @click="editBack(text,params.id)" v-if="text=='edit'">上一步</van-button>
+      <van-button class="button-info" round type="info" @click="editBack(text, params.id)"
+        v-if="text == 'edit'">上一步</van-button>
       <van-button class="button-info" round type="info" @click="back" v-else>上一步</van-button>
       <van-button class="button-info" round type="info" @click="save">保存</van-button>
     </div>
     <!-- 生产日期 -->
     <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date="minDate" :max-date="maxDate" />
     <van-calendar v-model="showCalendar" @confirm="createConfirm" />
+    <history-list ref="historyList" @historyClick="historyClick"></history-list>
   </div>
 
 </template>
@@ -90,10 +90,10 @@ import Vue from 'vue';
 import { Divider } from 'vant';
 import { Toast } from 'vant';
 import { DatetimePicker } from 'vant';
-
+import historyList from '@/components/historyList'
 import _ from 'lodash'
 import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/api/demand/demandManagement'
-import { modifySendGoods,detailBySendEdit } from '@/api/demand/sendGoods'
+import { modifySendGoods, detailBySendEdit } from '@/api/demand/sendGoods'
 import { minioUpload } from '@/api/blcd-base/minio'
 import { Notify } from 'vant';
 import FileUploadView from "@/components/FileUploadViewType.vue";
@@ -104,7 +104,8 @@ Vue.use(Divider);
 export default {
   name: "finishGoods",
   components: {
-    FileUploadView
+    FileUploadView,
+    historyList
   },
   data() {
     const today = new Date();
@@ -131,7 +132,7 @@ export default {
       fileDisabled: false,
       fileList01: [],
       fileList02: [],
-      params:{}
+      params: {}
       // fileList1:[],
       // fileList2:[]
     };
@@ -145,60 +146,103 @@ export default {
         ...item,
         planDetailId: item.id,
         fileList01: [],
-        fileList02: []
+        fileList02: [],
+        sendTotal: item.ssendTotal
       }))
     }
     if (this.text == 'edit') {
-
       this.editDetails()
     }
 
 
   },
+  activated() {
+    const finallyData = this.historyCache({ packagingFm: ''}, 0)
+    const goodsData = this.goodsData.concat(finallyData)
+    let obj = {}
+    this.goodsData = goodsData.reduce((cur, next) => {
+      obj[next.uniqueNumber || next.allocationUniqueNumber] ? "" : obj[next.uniqueNumber || next.allocationUniqueNumber] = true && cur.push(next);
+      return cur;
+    }, [])
+    this.$store.dispatch('public/setMateriaList', this.goodsData)
+  },
   methods: {
-     // 编辑回显
-        editDetails() {
-            detailBySendEdit(this.goodsId).then((res) => {
-                if (res.code == 0) {
-                  this.params = res.data
-                  // 存到缓存里
-                    this.$store.dispatch('public/setGoodsSelect', res.data.materialCirculationDetailsTableDTOS)
-               
-                    this.goodsData = res.data.materialCirculationDetailsTableDTOS.map(item => {
-                      // 辅助函数：格式化日期为 YYYY-MM-DD
-                      const formatDate = (dateString) => {
-                        const date = new Date(dateString);
-                        const year = date.getFullYear();
-                        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-                        const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
-                        return `${year}-${month}-${day}`;
-                      };
-                    
-                      return {
-                        ...item,
-                        createDate: formatDate(item.createDate),
-                        supplyDate: formatDate(item.supplyDate),
-                        updateDate: formatDate(item.updateDate),
-                        planDetailId: item.id,
-                         fileList01: this.fileLists(item.fileByList),
-                          fileList02: this.fileListss(item.fileByList),
-                      };
-                    // ...item,
-                    // planDetailId: item.id,
-                    // // 回显图片
+     init() {
+      const finallyData = this.historyCache({ packagingFm: '' }, 0)
+      
+      this.goodsData.push(...finallyData)
+     
+    },
+        historyCache(obj, index, isDefault) {
+      const data = this.$store.state.public.materiaList || []
+      const historyList = this.$store.state.public.historyList || {}
+      if (historyList) {
+        for (const key in obj) {
+          if (historyList[key]) {
+            obj[key] = historyList[key][index] || ''
+          }
+        }
+      }
+      if (isDefault) {
+        return obj
+      }
+      const finallyData = data.map((item) => Object.assign({}, item, {
+        packagingFm:item.packagingFm
+      }))
+      return finallyData
+    },
+    fieldClick($event, name, index) {
+      this.$refs.historyList.init($event, name, index)
+    },
+     historyClick(data, name, index, historyIndex) {
+      let obj = { packagingFm: '' }
+      let finallyData = this.historyCache(obj, historyIndex, true)
+      for (var key in finallyData) {
+        if (finallyData[key] == '') {
+          delete finallyData[key]
+        }
+      }
+      this.$set(this.goodsData, index, Object.assign({}, this.goodsData[index], finallyData))
+    },
+    // 编辑回显
+    editDetails() {
+      detailBySendEdit(this.goodsId).then((res) => {
+        if (res.code == 0) {
+          this.params = res.data
+          // 存到缓存里
+          this.$store.dispatch('public/setGoodsSelect', res.data.materialCirculationDetailsTableDTOS)
+          if (res.data.materialCirculationDetailsTableDTOS && res.data.materialCirculationDetailsTableDTOS.length > 0) {
+            this.goodsData = res.data.materialCirculationDetailsTableDTOS.map(item => {
+              // 辅助函数：格式化日期为 YYYY-MM-DD
+              const formatDate = (dateString) => {
+                const date = new Date(dateString);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+                const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
+                return `${year}-${month}-${day}`;
+              };
 
-                    // fileList01: this.fileLists(item.fileByList),
-                    // fileList02: this.fileListss(item.fileByList),
-                  })
-                    // this.fileList.push({fileName:file.fhd[0].fileName,filePath:file.fhd[0].filePath})
-                    // this.fileByList = file.fhd[0].fileName
-                    // this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
-                    // this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
-
-
-                }
+              return {
+                ...item,
+                createDate: formatDate(item.createDate),
+                supplyDate: formatDate(item.supplyDate),
+                updateDate: formatDate(item.updateDate),
+                planDetailId: item.id,
+                sendTotal: item.ssendTotal,
+                fileList01: this.fileLists(item.fileByList),
+                fileList02: this.fileListss(item.fileByList),
+              };
             })
-        },
+          } else {
+            this.$notify({
+              type: 'warning',
+              message: "暂无可选物资"
+            });
+            window.history.back()
+          }
+        }
+      })
+    },
     // 用于编辑回显
     fileLists(data) {
       let imgUrl = JSON.parse(data)
@@ -263,14 +307,9 @@ export default {
         this.goodsData[this.isActive].updateDate = `${year}-${month}-${day}`
         this.showCalendar = false;
       }
-      // 
-      // 
-
     },
     passReadUpload(file, index) {
-
       let imgFile = new FormData();
-
       imgFile.append("businessType", '01');
       imgFile.append("key", file.file.name);
       imgFile.append("file", file.file);
@@ -284,9 +323,6 @@ export default {
             name: res.data.fileName,
             url: res.data.filePath // 注意Vant通常使用url而不是path
           }];
-          // this.$set(this.goodsData[index], 'certificateFileName', res.data.fileName); // 显示文件名
-          // this.params.fileName = res.data.fileName
-          // this.params.filePath = res.data.filePath
         }
       }).catch((err) => {
         this.$notify({
@@ -323,18 +359,18 @@ export default {
         });
       })
     },
-    back(){
+    back() {
       window.history.back();
     },
-    editBack(text,id){
+    editBack(text, id) {
       // 如果缓存里有数据就带变有可选地物资
       let dataList = this.$store.state.public.goodsSelect
-      if(dataList && dataList.length>0){
-         this.$router.push({path:'/selectGoods',query:{text:text,id:id}})
-      }else{
+      if (dataList && dataList.length > 0) {
+        this.$router.push({ path: '/selectGoods', query: { text: text, id: id } })
+      } else {
         Toast.fail('没有可选择的选项');
       }
-     
+
     },
     delgoods(index) {
       this.goodsData.splice(index)
@@ -380,57 +416,57 @@ export default {
         });
       });
       //保存
-      if(this.text=='add'){
-         let materialCirculationDetailsTableParamList = this.goodsData.map((item) => ({
-        ...item,
-        fileByList: JSON.stringify({ hgz, cjbg })
-      }))
-         // 如果网络请求只有这个字段的值materialCirculationDetailsTableParamList，那就是缓存里的值被刷新没了，从头开始走流程就可以了
+      if (this.text == 'add') {
+        let materialCirculationDetailsTableParamList = this.goodsData.map((item) => ({
+          ...item,
+          fileByList: JSON.stringify({ hgz, cjbg })
+        }))
+        // 如果网络请求只有这个字段的值materialCirculationDetailsTableParamList，那就是缓存里的值被刷新没了，从头开始走流程就可以了
         let params = {
           ...this.$store.state.public.sendGoods,
           materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
         }
-         demandSaveSendGoods(params).then((res) => {
+        demandSaveSendGoods(params).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);
             this.$router.push({ path: "/Information" })
           }
 
         })
-      }else{
-          let materialCirculationDetailsTableParamList = this.goodsData.map((item) => ({
+      } else {
+        let materialCirculationDetailsTableParamList = this.goodsData.map((item) => ({
           ...item,
           fileByList: JSON.stringify({ hgz, cjbg })
         }))
         // 判断缓存里有没有编辑好的基础信息
         let dataList = this.$store.state.public.editSendGoods
-        let params={}
-        if(dataList){
-           params = {
-          ...this.$store.state.public.editSendGoods,
-          materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
+        let params = {}
+        if (dataList) {
+          params = {
+            ...this.$store.state.public.editSendGoods,
+            materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
           }
-        }else{
-                params = {
-                shippingDate :this.params.shippingDate,
-                arrivalDate : this.params.arrivalDate,
-                carNumber: this.params.carNumber,
-                contacts: this.params.contacts,
-                contactsPhone: this.params.contactsPhone,
-                contractName: this.params.contractName,
-                fileByList:this.params.fileByList,
-                fileList:this.params.fileList,
-                id:this.params.id,
-                oddNumbers:this.params.oddNumbers,
-                planId:this.params.planId,
-                planName: this.params.planName,
-                sectionName: this.params.sectionName,
-                shipmentBatchNumber: this.params.shipmentBatchNumber,
-                shippingAddress: this.params.shippingAddress,
-                materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
-              }
+        } else {
+          params = {
+            shippingDate: this.params.shippingDate,
+            arrivalDate: this.params.arrivalDate,
+            carNumber: this.params.carNumber,
+            contacts: this.params.contacts,
+            contactsPhone: this.params.contactsPhone,
+            contractName: this.params.contractName,
+            fileByList: this.params.fileByList,
+            fileList: this.params.fileList,
+            id: this.params.id,
+            oddNumbers: this.params.oddNumbers,
+            planId: this.params.planId,
+            planName: this.params.planName,
+            sectionName: this.params.sectionName,
+            shipmentBatchNumber: this.params.shipmentBatchNumber,
+            shippingAddress: this.params.shippingAddress,
+            materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
+          }
         }
-   
+
         modifySendGoods(params).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);
@@ -451,12 +487,12 @@ export default {
       }
     },
     formattedCreateDate(timestamp) {
-            const date = new Date(timestamp);
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-            const day = date.getDate().toString().padStart(2, '0'); // 日期加0
-            return `${year}-${month}-${day}`;
-        },
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+      const day = date.getDate().toString().padStart(2, '0'); // 日期加0
+      return `${year}-${month}-${day}`;
+    },
     //附件上传前
     beforeRead(file) {
       const isLt10M = file.size / 1024 / 1024 < 10;
@@ -483,6 +519,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+/deep/.van-divider {
+  margin: 0.2rem 0 !important;
+}
+
 .finish {
   height: 100vh;
   width: 100%;
@@ -509,7 +549,10 @@ export default {
   }
 
 }
-
+.detail-list-ul {
+    padding: 0.125rem 0.3rem 0.125rem 0.525rem;
+    // margin: 0 !important;
+}
 .list_title {
   position: relative;
 }
