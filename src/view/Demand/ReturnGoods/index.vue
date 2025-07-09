@@ -52,7 +52,7 @@
                    
                     <li style="color: rgb(224,70,70);">
                         <span>退货数量:</span>
-                        <span>{{ item.refundTotal }}</span>
+                        <span style="color:red;">{{ item.refundTotal }}</span>
                     </li>
                     <li>
                         <span>规格型号: </span>
@@ -64,7 +64,7 @@
                     </li>
                     <li>
                         <span>发货数量:</span>
-                        <span>{{ item.sendTotal }}</span>
+                        <span class="li-span-click">{{ item.sendTotal }}</span>
                     </li>
                         
                 </ul>

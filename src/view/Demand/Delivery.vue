@@ -1,14 +1,14 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-      <!-- <van-search v-model="params.planName" show-action shape="round" background="#eef6ff"
-                placeholder="请输入需求名称">
-                <template #action>
-                    <div @click="onSearch">搜索</div>
-                </template>
-</van-search> -->
-      <van-search v-model="params.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff"  @search="onSearch">
-      </van-search>
+      <van-search v-model="params.planName" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
+          @search="onSearch">
+          <template slot='right-icon'>
+            <van-icon name="search" @click="statusChange()" />
+          </template>
+        </van-search>
+      <!-- <van-search v-model="params.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff"  @search="onSearch">
+      </van-search> -->
     </div>
     <div class="tabs">
       <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
@@ -423,6 +423,11 @@ export default {
       this.allRefreshLoading = true
       this.params.pageNum = 1
       this.getList()
+    },
+     statusChange() {
+      this.allRefreshLoading = true
+      this.params.pageNum = 1
+     this.getList()
     },
     imgClick(fileName, filePath) {
       this.$refs.filePreview.init(fileName, filePath)

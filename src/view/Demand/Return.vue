@@ -1,14 +1,14 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-      <!-- <van-search v-model="params.shipmentBatchNumber" show-action shape="round" background="#eef6ff"
-                placeholder="请输入发货单号">
-                <template #action>
-                    <div @click="onSearch">搜索</div>
-                </template>
-</van-search> -->
-      <van-search v-model="params.shipmentBatchNumber" placeholder="输入关键字搜索" shape="round" background="#eef6ff" @search="onSearch">
-      </van-search>
+    <van-search v-model="params.shipmentBatchNumber" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
+          @search="onSearch">
+          <template slot='right-icon'>
+            <van-icon name="search" @click="statusChange()" />
+          </template>
+        </van-search>
+      <!-- <van-search v-model="params.shipmentBatchNumber" placeholder="输入关键字搜索" shape="round" background="#eef6ff" @search="onSearch">
+      </van-search> -->
     </div>
     <div class="tabs" v-if="returnList.length > 0">
       <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
@@ -171,6 +171,11 @@ export default {
       this.params.pageNum = 1
       this.getList();
     },
+      statusChange() {
+      this.allRefreshLoading = true
+      this.params.pageNum = 1
+     this.getList()
+     },
      //供应详情
     handleSupplyClick(id) {
       this.$router.push({ path: '/supplyMsg', query: { id: id } })

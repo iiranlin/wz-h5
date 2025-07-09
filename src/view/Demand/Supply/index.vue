@@ -68,31 +68,31 @@
                 </li>
                 <li>
                     <span>合同数量:</span>
-                    <span>{{ item.amount }}</span>
+                    <span class="li-span-click">{{ item.amount }}</span>
                 </li>
                  <li>
                     <span style="min-width: 3.1rem;">累计计划量(含本次):</span>
-                    <span>{{ item.cumulativeAmount }}</span>
+                    <span class="li-span-click">{{ item.cumulativeAmount }}</span>
                 </li>
                  <li>
                     <span style="min-width: 3rem;">本次计划数量:</span>
-                    <span>{{ item.planAmount }}</span>
+                    <span class="li-span-click">{{ item.planAmount }}</span>
                 </li>
                 <li>
                     <span>已发货:</span>
-                    <span>{{ item.sendTotal }}</span>
+                    <span class="li-span-click">{{ item.sendTotal }}</span>
                 </li>
                 <li>
                     <span>已验收:</span>
-                    <span>{{ item.putTotal }}</span>
+                    <span class="li-span-click">{{ item.putTotal }}</span>
                 </li>
                  <li>
                     <span>已入库:</span>
-                    <span>{{ item.storeTotal }}</span>
+                    <span class="li-span-click">{{ item.storeTotal }}</span>
                 </li>
                  <li>
                     <span>已退回:</span>
-                    <span>{{ item.refundAllTotle }}</span>
+                    <span class="li-span-click">{{ item.refundAllTotle }}</span>
                 </li>
                 <li>
                       <span style="color:red;">剩余待发货:</span>
