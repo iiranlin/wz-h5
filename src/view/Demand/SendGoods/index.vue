@@ -24,8 +24,9 @@
                 <van-form :key="formKey" ref="form">
                     <van-field v-model="params.oddNumbers" :disabled="fileDisabled" label="物流单号" placeholder="物流单号"
                         input-align="right" />
-                    <van-field v-model="params.shippingAddress" :disabled="fileDisabled" required label="发货地址"
-                        placeholder="发货地址" input-align="right" :rules="[{ required: true, message: '请填写发货地址' }]" />
+                    <van-field v-model="params.shippingAddress" :disabled="fileDisabled"
+                        @click.stop="fieldClick($event, 'shippingAddress')" required label="发货地址" placeholder="发货地址"
+                        input-align="right" :rules="[{ required: true, message: '请填写发货地址' }]" />
                     <van-field readonly clickable name="calendar" :disabled="fileDisabled" required
                         v-model="params.shippingDate" label="发货日期" input-align="right" :value="params.shippingDate"
                         placeholder="点击选择日期" @click="showCalendar = true"
@@ -35,18 +36,20 @@
                         :value="params.arrivalDate" label="预计送到时间" input-align="right" placeholder="点击选择日期"
                         @click="sendStop = true" :rules="[{ required: true, message: '请填写预计送达时间' }]" />
                     <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
-                    <van-field v-model="params.carNumber" label="车牌号" :disabled="fileDisabled" type="text"
-                        placeholder="车牌号" input-align="right" />
-                    <van-field v-model="params.contacts" required label="联系人" :disabled="fileDisabled" placeholder="联系人"
+                    <van-field v-model="params.carNumber" label="车牌号" @click.stop="fieldClick($event, 'carNumber')"
+                        :disabled="fileDisabled" type="text" placeholder="车牌号" input-align="right" />
+                    <van-field v-model="params.contacts" required label="联系人"
+                        @click.stop="fieldClick($event, 'contacts')" :disabled="fileDisabled" placeholder="联系人"
                         input-align="right" :rules="[{ required: true, message: '请填写联系人' }]" />
-                    <van-field v-model="params.contactsPhone" required label="联系电话" :disabled="fileDisabled"
-                        placeholder="联系电话" input-align="right"
+                    <van-field v-model="params.contactsPhone" required label="联系电话"
+                        @click.stop="fieldClick($event, 'contactsPhone')" :disabled="fileDisabled" placeholder="联系电话"
+                        input-align="right"
                         :rules="[{ required: true, message: '请填写手机号' }, { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }]" />
                 </van-form>
                 <div style="padding-right: 0.3rem;">
                     <file-upload-view title="发货单附件" :fileList="fileList" businessType="01" />
                 </div>
-                
+
             </div>
             <div class="default-button-container">
                 <van-button size="mini" type="primary" round class="button-info" @click="chooseGoods(goodsId, text)"
@@ -56,6 +59,7 @@
                     v-if="text == 'edit'">选择发货物资</van-button>
             </div>
         </div>
+        <history-list ref="historyList" @historyClick="historyClick"></history-list>
     </div>
 </template>
 <script>
@@ -66,6 +70,7 @@ import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/a
 import { minioUpload } from '@/api/blcd-base/minio'
 import { detailBySendEdit } from '@/api/demand/sendGoods'
 import keepPages from '@/view/mixins/keepPages'
+import historyList from '@/components/historyList'
 import FileUploadView from "@/components/FileUploadViewType.vue";
 import { Toast } from 'vant';
 import { Notify } from 'vant';
@@ -77,7 +82,7 @@ Vue.use(Field);
 export default {
     name: 'SendGoods',
     mixins: [keepPages],
-    components: { FileUploadView },
+    components: { FileUploadView, historyList },
     data() {
         return {
             formKey: "",
@@ -118,6 +123,41 @@ export default {
     },
 
     methods: {
+        historyCache(obj, index, isDefault) {
+            const data = this.$store.state.public.materiaList || []
+            const historyList = this.$store.state.public.historyList || {}
+            if (historyList) {
+                for (const key in obj) {
+                    if (historyList[key]) {
+                        obj[key] = historyList[key][index] || ''
+                    }
+                }
+            }
+            if (isDefault) {
+                return obj
+            }
+            const finallyData = data.map((item) => Object.assign({}, item, {
+                shippingAddress: item.shippingAddress,
+                carNumber: this.carNumber,
+                contacts: this.contacts,
+                contactsPhone: contactsPhone,
+                ...obj
+            }))
+            return finallyData
+        },
+        historyClick(data, name, index, historyIndex) {
+            let obj = { shippingAddress: '', carNumber: '', contacts: '', contactsPhone: '' }
+            let finallyData = this.historyCache(obj, historyIndex, true)
+            for (var key in finallyData) {
+                if (finallyData[key] == '') {
+                    delete finallyData[key]
+                }
+            }
+            this.$set(this.params, Object.assign({}, this.params, finallyData))
+        },
+        fieldClick($event, name, index) {
+            this.$refs.historyList.init($event, name, index)
+        },
         getSendGoods() {
             demandSnedGoods(this.goodsId).then((res) => {
                 if (res.code == 0) {

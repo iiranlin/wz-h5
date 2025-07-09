@@ -81,7 +81,7 @@
             </li>
         </ul> -->
         <div class="tabs">
-            <van-tabs v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
+            <van-tabs sticky  v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
           title-inactive-color="#2e2e2e">
                 <van-tab title="发货基本信息" name="发货基本信息">
                     <van-list>
