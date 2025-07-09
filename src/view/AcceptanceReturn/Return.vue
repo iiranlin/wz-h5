@@ -263,14 +263,14 @@ export default {
       this.$router.push({name: 'DoReturn',query:{id:item.id}})
     },
     //待审核列表条目点击
-    handleWaitItemClick(item) {
-      // this.$router.push({
-      //     name: "ApprovalDetail",
-      //     params: {
-      //         id:item.id,
-      //     },
-      // });
-    },
+    // handleWaitItemClick(item) {
+    //   // this.$router.push({
+    //   //     name: "ApprovalDetail",
+    //   //     params: {
+    //   //         id:item.id,
+    //   //     },
+    //   // });
+    // },
     //查看流程点击
     handleProcessClick() {
       this.$router.push({

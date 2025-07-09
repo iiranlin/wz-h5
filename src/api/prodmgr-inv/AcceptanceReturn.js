@@ -18,7 +18,7 @@ export function defaultTake(id){
 
 export function saveTake(data){
     return request({
-    url: `${VUE_APP_PRODMGR_INV}//materialCirculationTableRest/saveTake`,
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/saveTake`,
     method: 'POST',
     data
   })
@@ -26,7 +26,7 @@ export function saveTake(data){
 
 export function listCyRetreat(params) {
   return request({
-    url: `${VUE_APP_PRODMGR_INV}//materialCirculationTableRest/listCyRetreat`,
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/listCyRetreat`,
     method: 'GET',
     params
   })
