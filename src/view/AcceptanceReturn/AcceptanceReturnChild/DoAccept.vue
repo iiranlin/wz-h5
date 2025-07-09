@@ -52,7 +52,7 @@
                     </li>
                     <li>
                       <span>需求数量：</span>
-                      <span>{{ item.planAmount }}</span>
+                      <span class="li-span-click">{{ item.planAmount }}</span>
                     </li>
                     <li class="li-item-overlength">
                       <span>本次发货数量：</span>
@@ -105,7 +105,7 @@
                     <template v-else>
                       <li>
                         <span>收货数量：</span>
-                        <span>{{ item.putTotal }}</span>
+                        <span class="li-span-click">{{ item.putTotal }}</span>
                       </li>
                       <li>
                         <span>退货数量：</span>
