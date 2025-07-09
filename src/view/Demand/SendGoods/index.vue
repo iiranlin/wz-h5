@@ -47,7 +47,7 @@
                         :rules="[{ required: true, message: '请填写手机号' }, { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }]" />
                 </van-form>
                 <div style="padding-right: 0.3rem;">
-                    <file-upload-view title="发货单附件" :fileList="fileList" businessType="01" />
+                    <file-upload-view class="outbound-field-uploader" title="发货单附件" :fileList="fileList" businessType="01" />
                 </div>
 
             </div>
@@ -397,6 +397,19 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.outbound-field-uploader {
+  ::v-deep li {
+    display: block;
+  }
+
+  ::v-deep .file-info {
+    width: auto !important;
+
+    img {
+      min-width: auto !important;
+    }
+  }
+}
 .default-container {
     padding-top: 10px;
     padding-bottom: 60px;
