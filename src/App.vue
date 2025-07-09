@@ -9,22 +9,31 @@
 export default {
   data() {
     return {
-      screenOrientation: 'portrait' // 默认竖屏
     };
   },
   mounted() {
-    this.handleResize()
-    window.addEventListener('resize', this.handleResize);
+    if(this.isTablet()){
+      this.handleResize()
+      window.addEventListener('resize', this.handleResize)
+    }
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('resize', this.handleResize)
   },
   methods: {
     handleResize() {
       if (window.innerWidth > window.innerHeight) {
-        this.screenOrientation = 'landscape'; // 横屏
         document.documentElement.style.fontSize = 50 + 'px'
+      }else{
+        document.documentElement.style.fontSize = 60 + 'px'
       }
+    },
+    isTablet() {
+      const userAgent = navigator.userAgent.toLowerCase()
+      const isMobileUA = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|windows phone|phone|webos/i.test(userAgent)
+      const isTabletUA = /ipad|tablet/i.test(userAgent)
+      const screenWidth = window.innerWidth;
+      return isTabletUA || (isMobileUA && screenWidth > 768)
     }
   }
 }

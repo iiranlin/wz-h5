@@ -74,11 +74,11 @@
                   </li>
                   <li>
                     <span>需求数量：</span>
-                    <span>{{ item.planAmount }}</span>
+                    <span class="li-span-click">{{ item.planAmount }}</span>
                   </li>
                   <li class="li-item-overlength">
                     <span>本次收货数量：</span>
-                    <span>{{ item.putTotal }}</span>
+                    <span class="li-span-click">{{ item.putTotal }}</span>
                   </li>
                   <li class="li-item-overlength">
                     <span>生产日期：</span>
@@ -136,12 +136,12 @@
                   </template>
                   <template v-else>
                     <li>
-                      <span class="font-weight">入库数量：</span>
-                      <span class="font-weight">{{ item.storeTotal }}</span>
+                      <span>入库数量：</span>
+                      <span class="li-span-click">{{ item.storeTotal }}</span>
                     </li>
                     <li>
-                      <span class="font-weight">退货数量：</span>
-                      <span class="font-weight">{{ item.refundZjTotal }}</span>
+                      <span>退货数量：</span>
+                      <span class="li-span-red">{{ item.refundZjTotal }}</span>
                     </li>
                   </template>
                   <li class="li-item-remark">

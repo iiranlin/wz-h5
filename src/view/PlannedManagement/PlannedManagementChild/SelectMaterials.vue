@@ -62,7 +62,7 @@
               </li>
               <li>
                 <span>合同数量：</span>
-                <span>{{ item.amount }}</span>
+                <span class="li-span-click">{{ item.amount }}</span>
               </li>
               <li>
                 <span style="color: red;">已累计计划数量：</span>

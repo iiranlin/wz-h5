@@ -40,12 +40,12 @@
               </div>
               <div class="li-item-right">
                 <span>合同数量：</span>
-                <span>{{ item.amount }}</span>
+                <span class="li-span-click">{{ item.amount }}</span>
               </div>
             </li>
             <li class="li-item-overlength">
               <span>累计计划量（含本次）：</span>
-              <span>
+              <span class="li-span-click">
                 {{ cumulativeAmount(item) }}
               </span>
             </li>

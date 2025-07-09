@@ -2,7 +2,7 @@
   <div class="planned-management">
     <van-sticky class="planned-management-search-bj">
       <div class="planned-management-search">
-        <van-search v-model="searchValue" placeholder="请输入需求名称" left-icon="none" shape="round" :show-action="showAction"
+        <van-search v-model="searchValue" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
           @search="onSearch">
           <template slot='right-icon'>
             <van-icon name="search" @click="statusChange()" />

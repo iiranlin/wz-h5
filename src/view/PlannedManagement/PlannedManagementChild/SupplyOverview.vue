@@ -54,34 +54,34 @@
           </li>
           <li>
             <span>合同数量：</span>
-            <span>{{ item.amount }}</span>
+            <span class="li-span-click">{{ item.amount }}</span>
           </li>
           <li class="li-item-overlength">
             <span>累计计划量(含本次)：</span>
-            <span>{{ item.cumulativeAmount }}</span>
+            <span class="li-span-click">{{ item.cumulativeAmount }}</span>
           </li>
           <li class="li-item-overlength">
             <span>本次计划数量：</span>
-            <span>{{ item.planAmount }}</span>
+            <span class="li-span-click">{{ item.planAmount }}</span>
           </li>
-          <li class="li-item-both li-item-both-red">
+          <li class="li-item-both">
             <div class="li-item-left li-item-left-num">
               <span>已发货：</span>
-              <span>{{ item.sendTotal }}</span>
+              <span class="li-span-click">{{ item.sendTotal }}</span>
             </div>
             <div class="li-item-right">
               <span>已验收：</span>
-              <span>{{ item.putTotal }}</span>
+              <span class="li-span-click">{{ item.putTotal }}</span>
             </div>
           </li>
-          <li class="li-item-both li-item-both-red">
+          <li class="li-item-both">
             <div class="li-item-left li-item-left-num">
               <span>已入库：</span>
-              <span>{{ item.storeTotal }}</span>
+              <span class="li-span-click">{{ item.storeTotal }}</span>
             </div>
             <div class="li-item-right">
               <span>已出库：</span>
-              <span>{{ item.outCkTotal }}</span>
+              <span class="li-span-click">{{ item.outCkTotal }}</span>
             </div>
           </li>
         </ul>
@@ -151,11 +151,6 @@ export default {
         span:nth-child(1){
           width: auto !important;
         }
-      }
-    }
-    .li-item-both-red{
-      span{
-        color: red !important;
       }
     }
   }

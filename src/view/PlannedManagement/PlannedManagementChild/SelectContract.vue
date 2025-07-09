@@ -1,7 +1,7 @@
 <template>
   <div class="select-Contract">
     <van-sticky class="select-Contract-search">
-      <van-search v-model="searchValue" placeholder="请输入合同名称" left-icon="none" shape="round" :show-action="showAction"
+      <van-search v-model="searchValue" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
         @search="onSearch">
         <template slot='right-icon'>
           <van-icon name="search" @click="onSearch" />
