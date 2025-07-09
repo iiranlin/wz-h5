@@ -241,7 +241,7 @@ export default {
     },
     // 发货
     viewDelivery(item){
-      this.$router.push({name: 'cargoDetails', query: {id:item.id}})
+      this.$router.push({name: 'cargoDetails', query: {id:item.id,btnEvent:true}})
     },
     //去审核点击
     handleDoAccept(item) {

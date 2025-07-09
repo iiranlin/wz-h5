@@ -1,5 +1,5 @@
 <template>
-  <div class="save-materials">
+  <div class="default-container">
     <do-accept isView/>
   </div>
 </template>

@@ -203,7 +203,7 @@ export default {
       },
       showDatePicker: false, // 控制日期选择器显示
       id:"",
-      tabs:true,
+      tabs:true,  
       dataList:[],
       fileTHList:[],
       fileZjdList:[],
