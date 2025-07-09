@@ -13,16 +13,17 @@ const mutations = {
     state.sendGoods = goodsList
   },
   SET_HISTORY_LIST:(state, historyList)=>{
-    let object = JSON.parse(localStorage.getItem('historyList'))
+    let object = JSON.parse(localStorage.getItem('historyList')) || historyList
     if(object){
       for (const key in object) {
-        if (Object.hasOwnProperty.call(object, key) && object[key].length <= 4) {
+        if (Object.hasOwnProperty.call(object, key)) {
           object[key].push(...(historyList[key] || []))
           object[key] = Array.from(new Set(object[key]))
+          if(object[key].length > 4){
+            object[key] = object[key].slice(-5)
+          }
         }
       }
-    }else{
-      object = historyList
     }
     localStorage.setItem('historyList', JSON.stringify(object))
     state.historyList = object
