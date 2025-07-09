@@ -81,8 +81,8 @@
             </li>
         </ul> -->
         <div class="tabs">
-            <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
-                @change="tabsChange" title-inactive-color="#2e2e2e">
+            <van-tabs v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
+          title-inactive-color="#2e2e2e">
                 <van-tab title="发货基本信息" name="发货基本信息">
                     <van-list>
                         <div class="box-container">
@@ -122,7 +122,7 @@
                                     }}</span>
                                 </li>
                                 <li>
-                                    <span style="min-width: 230px;">预计到达时间:</span>
+                                    <span style="min-width: 3rem;">预计到达时间:</span>
                                     <span v-if="params.arrivalDate">{{params.arrivalDate
                                     }}</span>
                                 </li>

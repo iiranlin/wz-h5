@@ -40,7 +40,7 @@
                 <span class="text" style="color:#1989fa;" @click.stop="handleCarGoClick(item.id)">{{ item.shipmentBatchNumber }}</span>
               </li>
               <li>
-                <span style="min-width: 3rem;">供应需求名称:</span>
+                <span style="min-width: 2.4rem;">供应需求名称:</span>
                 <span>{{ item.planName }}</span>
               </li>
               <li>

@@ -60,7 +60,7 @@
                       <span v-if="item.createDate">{{ formattedCreateDate(item.createDate) }}</span>
                     </li>
                     <li style="display: flex !important;;justify-content: flex-start;">
-                      <span style="min-width: 2rem;">需求计划表:</span>
+                      <span style="min-width: 2.1rem;">需求计划表:</span>
                       <span style="color:#0689ff;">
                         <template>
                           <div v-for="(item1, index1) in item.fileList" :key="index1">

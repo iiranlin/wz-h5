@@ -71,11 +71,11 @@
                     <span>{{ item.amount }}</span>
                 </li>
                  <li>
-                    <span>累计计划量(含本次):</span>
+                    <span style="min-width: 3.1rem;">累计计划量(含本次):</span>
                     <span>{{ item.cumulativeAmount }}</span>
                 </li>
                  <li>
-                    <span>本次计划数量:</span>
+                    <span style="min-width: 3rem;">本次计划数量:</span>
                     <span>{{ item.planAmount }}</span>
                 </li>
                 <li>
