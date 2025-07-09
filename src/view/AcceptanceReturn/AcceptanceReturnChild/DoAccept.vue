@@ -30,7 +30,7 @@
     </div>
      <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
           title-inactive-color="#2e2e2e">
-          <van-tab :title="`收货明细（共${dataList.materialCirculationDetailsTableDTOS.length}项）`" name="0" key="0">
+          <van-tab :title="`收货明细（共${dataList.materialCirculationDetailsTableDTOS?dataList.materialCirculationDetailsTableDTOS.length:0}项）`" name="0" key="0">
                 <div class="box-container" v-for="(item, index) in dataList.materialCirculationDetailsTableDTOS" :key="index">
                   <div>
                     <div class="detail-list-title-content">
@@ -347,7 +347,6 @@ export default {
          this.$toast('请上传自检单'); 
          return
       }
-      console.log(params,"params")
       saveTake(params).then((res)=>{
         if(res.success){
           this.$toast('保存成功')
