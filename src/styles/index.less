@@ -127,14 +127,13 @@ h1, h2, h3, h4, h5, h6, p, div, ul, dl, dd, dt {
         align-items: center;
         
         & :nth-child(1){
-            min-width: 70px
         }
         & :nth-child(2){
-            width: calc(100% - 70px);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             text-align: right;
+            flex: 1;
         }
     }
     .li-item-overlength {

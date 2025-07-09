@@ -114,7 +114,7 @@ export default {
     div{
       display: flex;
       flex-direction: column;
-      align-items: anchor-center;
+      align-items: center;
       img{
         width: 24px;
         height: 24px;
