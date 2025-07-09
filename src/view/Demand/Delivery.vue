@@ -11,8 +11,9 @@
       </van-search> -->
     </div>
     <div class="tabs">
-      <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
-        @change="tabsChange" title-inactive-color="#2e2e2e">
+      <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
+        title-inactive-color="#2e2e2e"
+        @change="tabsChange">
         <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.status">
           <div v-if="listBySendData.length > 0">
             <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
@@ -545,12 +546,10 @@ export default {
 
   .van-search__content {
     border-radius: 50px;
-    background: #fff;
   }
 
   .van-cell {
     border-radius: 50px;
-    background: #fff;
   }
 }
 

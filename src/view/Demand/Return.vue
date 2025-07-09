@@ -255,12 +255,10 @@ export default {
 
   .van-search__content {
     border-radius: 50px;
-    background: #fff;
   }
 
   .van-cell {
     border-radius: 50px;
-    background: #fff;
   }
 }
 

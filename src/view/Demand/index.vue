@@ -11,8 +11,9 @@
         </van-search>
     </div>
     <div class="tabs">
-      <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
-        @change="tabsChange" title-inactive-color="#2e2e2e">
+      <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
+        title-inactive-color="#2e2e2e"
+        @change="tabsChange">
         <van-tab v-for="item in tabList" :title="item.title" :key="item.id" :name="item.status">
           <div v-if="total != 0">
             <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
@@ -323,31 +324,7 @@ export default {
   }
 
 }
-.van-cells {
-  padding: 0.3rem 0 !important;
-   display: flex;
-  align-items: center;
-  border-bottom: 1px solid #f5f5f5;
 
-  .title {
-    min-width: 1.75rem;
-  }
-
-  .conent {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .text {
-      color: rgb(19, 77, 170);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-  }
-}
 
 /deep/ .arrow {
   min-width: 0.2rem !important;
@@ -361,7 +338,7 @@ export default {
   .van-tag--primary {
     min-width: 0.5rem;
     color: #028bff;
-    // background: #edf4ff;
+    background: #edf4ff;
   }
 
   .van-tag--danger {
@@ -388,12 +365,10 @@ export default {
 
   .van-search__content {
     border-radius: 50px;
-    background: #fff;
   }
 
   .van-cell {
     border-radius: 50px;
-    background: #fff;
   }
 }
 

@@ -1,9 +1,14 @@
 <template>
   <div class="select-materials">
     <div class="select-materials-search">
-     
-      <van-search v-model="value" placeholder="输入关键字搜索" background="center" :show-action="showAction"
-        @search="onSearch" @cancel="onCancel" @focus="onFocus" />
+     <van-search v-model="searchQuery" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
+          @search="onSearch">
+          <template slot='right-icon'>
+            <van-icon name="search" @click="statusChange()" />
+          </template>
+        </van-search>
+      <!-- <van-search v-model="searchQuery" placeholder="输入关键字搜索" background="center" :show-action="showAction"
+        @search="onSearch" @cancel="onCancel" @focus="onFocus" /> -->
     </div>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
@@ -27,15 +32,15 @@
             </li>
              <li>
               <span>合同数量：</span>
-              <span>{{ item.amount }}</span>
+              <span class="li-span-click">{{ item.amount }}</span>
             </li>
             <li>
               <span>累计计划量(含本次)：</span>
-              <span>{{ item.cumulativeAmount }}</span>
+              <span class="li-span-click">{{ item.cumulativeAmount }}</span>
             </li>
             <li>
               <span>本次计划数量：</span>
-              <span>{{ item.planAmount }}</span>
+              <span class="li-span-click">{{ item.planAmount }}</span>
             </li>
             <li>
               <span>供应时间:</span>
@@ -67,7 +72,7 @@
           </li>
           <li style="color: red;">
               <span>本次需求未发货数量：</span>
-              <span>{{ item.ssendTotal }}</span>
+              <span >{{ item.ssendTotal }}</span>
             </li>
           </ul>
            </div>
@@ -103,6 +108,7 @@ export default {
   data() {
     return {
       value: '',
+      searchQuery:'',
       showAction: false,
       loading: false,
       finished: false,
@@ -116,7 +122,8 @@ export default {
      // 编辑时带过来的参数
       editData:{},
       fileDisabled:false,
-      text:""
+      text:"",
+      filteredItems: []
     }
   },
   mounted() {
@@ -151,6 +158,7 @@ export default {
     }
     
   },
+  
   methods: {
     getSelectGoods(){
        Toast.loading({
@@ -193,6 +201,18 @@ export default {
     },
     onCancel() {
       // this.showAction = false;
+    },
+    statusChange(){
+      if (this.searchQuery.trim() === '') {
+        this.getSelectGoods()
+        return;
+      }
+      
+      const query = this.searchQuery.toLowerCase();
+      this.selectGoodsList = this.selectGoodsList.filter(item => 
+        item.materialName.toLowerCase().includes(query)
+      );
+      // this.getSelectGoods()
     },
     onLoad() {
       // 异步更新数据
@@ -290,12 +310,10 @@ export default {
     // width: 165px;
     .van-search__content {
       border-radius: 15px;
-      background: #fff;
     }
 
     .van-cell {
       border-radius: 15px;
-      background: #fff;
     }
   }
 
