@@ -86,6 +86,7 @@ export default {
       formData: {
         keywords: '',
       },
+      showAction: false,
       allRefreshLoading: false,
       finished: false,
       loading: false,

@@ -126,6 +126,7 @@ export default {
       formData: {
         keywords: '',
       },
+      showAction: false,
       //全部
       allOrderList: [],
       loading: false,

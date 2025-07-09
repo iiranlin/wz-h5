@@ -161,7 +161,7 @@ export default {
       formKey: 0,
       positionInformation: '',
       menuActiveIndex: 0,
-
+      showAction: false,
       formData: {
         keywords: '',
       },
