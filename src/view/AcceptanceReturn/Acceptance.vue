@@ -47,7 +47,7 @@
                 <ul class="list-ul" >
                   <li>
                     <span>发货单号：</span>
-                    <span>{{ item.shipmentBatchNumber }}</span>
+                    <span @click.stop="viewDelivery(item)" style="color: #0689ff">{{ item.shipmentBatchNumber }}</span>
                   </li>
                   <li>
                     <span>需求名称：</span>
@@ -225,26 +225,32 @@ export default {
       this.allRefreshLoading = false
       this.allFinished = true
     },
+
     //全部列表条目点击
     viewAcceptDetail(item) {
-      if(!item.takeNumber){
-        return
-      }
+      // if(!item.takeNumber){
+      //   return
+      // }
      this.$store.dispatch('updateActiveTab', {
         activeTab:this.menuActiveIndex
       })
-      this.$router.push({name: 'DoAcceptDetail', query: {id:item.id}})
+      this.$router.push({name: 'DoAcceptDetail', query: {id:item.id,tabs:item.takeNumber?true:false}})
     },
     viewLogistic(item){
       this.$router.push({name: 'lookCargo', query: {id:item.planId,number:item.shipmentBatchNumber,logisticsNumber:item.oddNumbers}})
+    },
+    // 发货
+    viewDelivery(item){
+      this.$router.push({name: 'cargoDetails', query: {id:item.id}})
     },
     //去审核点击
     handleDoAccept(item) {
       this.$store.dispatch('updateActiveTab', {
         activeTab:this.menuActiveIndex
       })
-      this.$router.push({name: 'DoAccept',query: {id:item.id}})
+      this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true}})
     },
+
     //搜索点击
     handeSearchClick() {
       this.allListQuery.pageNum = 1
