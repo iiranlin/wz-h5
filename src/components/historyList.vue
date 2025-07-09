@@ -1,56 +1,65 @@
 <template>
-  <van-popup v-model="historyShow" position="bottom">
-    <div class="detail-container">
-      <div class="box-container">
-        <div class="detail-title-info">
-          <span class="info-title">历史地址</span>
-        </div>
-        <van-field v-model="field" :label="label" :placeholder="`请输入${label}`" :label-width="240" input-align="right" />
-        <div v-for="(item, index) in historyList" :key="index" class="item-container" @click="historyClick(item)">
-          <span>{{ item }}</span>
-        </div>
-      </div>
-    </div>
-  </van-popup>
+  <div class="van-popover-history" v-if="showPopover && historyList.length" :style="divStyle">
+    <ul>
+      <li v-for="(item, index) in historyList" :key="index" @click.stop="onSelect(item, index)">{{ item }}</li>
+    </ul>
+  </div>
 </template>
 <script>
 export default {
-  props: [ 'label' ],
   data() {
     return {
-      field: '',
-      historyShow: false,
-      loading: false,
-      finished: true,
-      historyList: ['北京', '海淀'],
+      showPopover: false,
+      historyList: [],
+      divStyle: {
+        left: '0px',
+        top: '0px',
+      },
+      names: '',
+      indexs: 0
     }
   },
+  mounted() {
+    document.body.addEventListener('click', this.handleBodyClick)
+    document.addEventListener('touchmove', this.handleBodyClick)
+    document.addEventListener('wheel', this.handleBodyClick)
+  },
   methods: {
-    init () {
-      this.historyList = this.$store.state.public.historyList || []
-      this.historyShow = true
+    init($event, name, index) {
+      this.names = name
+      this.indexs = index
+      const historyList = this.$store.state.public.historyList || {}
+      this.historyList = historyList[name] || []
+      this.showPopover = true
+      this.divStyle.left = `${$event.clientX - 200}px`
+      this.divStyle.top = `${$event.clientY + 30}px`
     },
-    historyClick(item) {
-      this.$emit('historyClick', item)
-      this.historyShow = false
-    }
+    onSelect(item, historyIndex) {
+      this.$emit('historyClick', item, this.names, this.indexs, historyIndex)
+      this.showPopover = false
+    },
+    handleBodyClick() {
+      this.showPopover = false
+    },
+    beforeDestroy() {
+      document.body.removeEventListener('click', this.handleBodyClick)
+      document.body.removeEventListener('touchmove', this.handleBodyClick)
+      document.body.removeEventListener('wheel', this.handleBodyClick)
+    },
   },
 }
 </script>
 <style lang="less" scoped>
-.item-container {
-  width: 100%;
-  height: 58px;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex;
-  align-items: center;
-  position: relative;
-  background: #ffffff;
+.van-popover-history {
+  position: fixed;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
 
-  span {
-    font-size: 14px;
-    color: #2e2e2e;
-    margin-left: 10px;
+  li {
+    padding: 5px 10px;
+    border-bottom: 1px solid #ccc;
   }
 }
 </style>

@@ -169,6 +169,7 @@ import {minioUpload} from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import { getUserInfo } from '@/utils/user-info'
 
 export default {
   name: 'Outbound',
@@ -196,9 +197,9 @@ export default {
         deptName: '',     //需求组织
         receiveDeptName: '',  //领用单位
         pickUserName: '',   //领料人
-        pickDate: '',   //领料日期
+        pickDate: this.parseTime(new Date().getTime(),'{y}-{m}-{d}'),   //领料日期
         useLocation: '',   //使用地点
-        issueUserName: '',   //发料人
+        issueUserName: getUserInfo().nickName,   //发料人
       },
       fileList:[],
     }

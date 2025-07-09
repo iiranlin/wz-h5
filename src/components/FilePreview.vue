@@ -12,14 +12,14 @@
                 <pdf ref="pdf" :src="pdfUrl" :page="currentPage" :rotate="pageRotate" @num-pages="pageCount = $event"
                   @page-loaded="currentPage = $event" @loaded="loadPdfHandler"></pdf>
               </div>
-              <div class="button">
-                <button type="success" @click="prev()">上一页</button>
-                <button type="success" @click="next()">下一页</button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+      <div class="pdf-button-container" @click.self="handleClose">
+        <van-button native-type="button" type="success" @click="prev()">上一页</van-button>
+        <van-button native-type="button" type="success" @click="next()">下一页</van-button>
+      </div>
+    </div>
     </div>
     <div v-if="fileType == 'excel' && showType">
       <div class="pass_bullet_mark" @click.self="handleClose">
@@ -202,7 +202,7 @@ export default {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      overflow: hidden;
+      overflow-y: auto;
 
       // .close_btn {
       //   margin-top: 20px;
@@ -220,19 +220,20 @@ export default {
 .pdfContainer {
   width: 98%;
   height: 85%;
+}
+.pdf-button-container {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  align-items:center;
+  justify-content: center;
 
-  .button {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    button {
-      margin-right: 10px;
-    }
+  .van-button {
+    width: 80px;
+    height: 30px;
+    margin-right: 20px;
   }
 }
 
