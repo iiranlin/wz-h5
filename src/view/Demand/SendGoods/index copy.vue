@@ -1,7 +1,6 @@
 <template>
     <div class="default-container" ref="container">
-        <div class="submit-store-view-mian">
-            <div class="detail-base-info">
+        <div class="detail-base-info">
         <div class="detail-title-content">
             <img src="/static/icon-xqjh.png">
             <span>需求编号：</span>
@@ -28,7 +27,7 @@
                 <van-field v-model="params.shippingAddress" :disabled="fileDisabled" required label="发货地址"
                     placeholder="发货地址" input-align="right" :rules="[{ required: true, message: '请填写发货地址' }]" />
                 <van-field readonly clickable name="calendar" :disabled="fileDisabled" required
-                    v-model="params.shippingDate" label="发货日期" input-align="right"  :value="params.shippingDate" placeholder="点击选择日期"
+                    v-model="params.shippingDate" label="发货日期" input-align="right" placeholder="点击选择日期"
                     @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" />
                 <van-calendar v-model="showCalendar" @confirm="onConfirm" />
                 <van-field readonly clickable name="calendar" :disabled="fileDisabled" required
@@ -42,20 +41,18 @@
                 <van-field v-model="params.contactsPhone" required label="联系电话" :disabled="fileDisabled"
                     placeholder="联系电话" input-align="right"
                     :rules="[{ required: true, message: '请填写手机号' }, { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }]" />
+                <file-upload-view title="发货单附件" :fileList="fileList" businessType="01"/>
             </van-form>
-             <file-upload-view title="发货单附件" :fileList="fileList" businessType="01"/>
         </div>
         <div class="default-button-container">
             <van-button size="mini" type="primary" round class="button-info" @click="chooseGoods(goodsId, text)"
                 v-if="this.text == 'add'">选择发货物资</van-button>
             <!-- 编辑里的选择发货物资传的是planId -->
             <van-button size="mini" type="primary" round class="button-info"
-                @click="editGoods('edit')"
+                @click="editGoods(params.materialCirculationDetailsTableDTOS, 'edit')"
                 v-if="text == 'edit'">选择发货物资</van-button>
           
         </div>
-        </div>
-        
     </div>
 </template>
 <script>
@@ -114,7 +111,7 @@ export default {
             this.getSendGoods()
         }
        
-        this.params.shippingDate=this.todayTime()
+
         // // 编辑
         // if(this.text=='edit'){
         //     this.params = JSON.parse(this.$route.query.data)
@@ -171,21 +168,10 @@ export default {
                     this.fileByList = file.fhd[0].fileName
                     this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
                     this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
+
+
                 }
             })
-        },
-        todayTime(){
-            const now = new Date();
- 
-            const year = now.getFullYear();     // 年（如：2023）
-            const month =(now.getMonth() + 1).toString().padStart(2, '0'); // 月份加0  // 月（0-11，需要+1）
-            const date = now.getDate().toString().padStart(2, '0'); // 日期加0       // 日（1-31）
-            const hours = now.getHours();       // 时（0-23）
-            const minutes = now.getMinutes();   // 分（0-59）
-            const seconds = now.getSeconds();   // 秒（0-59）
-            
-            console.log(`${year}-${month}-${date} ${hours}:${minutes}:${seconds}`);
-            return `${year}-${month}-${date}`
         },
         formattedCreateDate(timestamp) {
             const date = new Date(timestamp);
@@ -256,7 +242,7 @@ export default {
                 })
         },
         // 编辑时选择的下一步传的参数
-        editGoods(text) {
+        editGoods(data, text) {
             this.$refs.form
                 .validate()
                 .then(() => {
@@ -292,10 +278,15 @@ export default {
                         id: this.params.id,
                         contractName: this.goodsMsg.contractName,
                     }
-                    // 编辑时如果到了这页面就把数据存到缓存里
-                    this.$store.dispatch('public/setEditSendGoods', params)
+                    // 存到缓存里
+                    this.$store.dispatch('public/setGoodsList', params)
                     //判断有没有可供选择的物资
-                    this.$router.push({ path: '/selectGoods', query: { text: text } })
+                    if (data.length && data.length > 0) {
+                        // 携带参数跳转到选择商品页
+                        this.$router.push({ path: '/selectGoods', query: { data: JSON.stringify(data), text: text } })
+                    } else {
+                        Toast('没有可供选择的物资');
+                    }
 
 
                 })

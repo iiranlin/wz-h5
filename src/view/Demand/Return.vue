@@ -32,15 +32,15 @@
                 <span class="font-weight" style="color:#1989fa;">{{ item.backNumber }}</span>
               </li> -->
               <li>
-                <span>需求编号：</span>
-                <span class="text" style="color:#1989fa;">{{ item.planNumber }}</span>
+                <span style="min-width: 3rem;">供应需求ID：</span>
+                <span class="text" style="color:#1989fa;" @click.stop="handleSupplyClick(item.planId)">{{ item.planNumber }}</span>
               </li>
               <li>
                 <span>发货单号:</span>
-                <span class="text" style="color:#1989fa;">{{ item.shipmentBatchNumber }}</span>
+                <span class="text" style="color:#1989fa;" @click.stop="handleCarGoClick(item.id)">{{ item.shipmentBatchNumber }}</span>
               </li>
               <li>
-                <span style="width: 250px;">供应需求名称:</span>
+                <span style="min-width: 2.4rem;">供应需求名称:</span>
                 <span>{{ item.planName }}</span>
               </li>
               <li>
@@ -170,6 +170,14 @@ export default {
       this.allRefreshLoading = true
       this.params.pageNum = 1
       this.getList();
+    },
+     //供应详情
+    handleSupplyClick(id) {
+      this.$router.push({ path: '/supplyMsg', query: { id: id } })
+    },
+     //货运详情
+    handleCarGoClick(id) {
+      this.$router.push({ path: '/cargoDetails', query: { id: id } })
     },
     checkAuditStatus(status) {
       if (status == '0') {

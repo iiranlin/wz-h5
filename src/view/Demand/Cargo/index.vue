@@ -39,8 +39,8 @@
             </div>
         </div>
         <div class="tabs">
-            <van-tabs v-model="menuActiveIndex" color="#0571ff" background="#eef6ff" title-active-color="#0571ff"
-                @change="tabsChange" title-inactive-color="#2e2e2e">
+            <van-tabs v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
+          title-inactive-color="#2e2e2e">
                 <van-tab title="物流信息" name="物流信息">
                     <van-list>
                         <div class="box-container">
@@ -264,12 +264,6 @@ export default {
             lookGoodsDetails(this.wuLiuId).then((res) => {
                 if (res.code == 0) {
                     this.params = res.data
-                    
-                    // this.params.fileByList = JSON.parse(res.data.fileByList)
-                    // this.params.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item)=>({
-                    //     ...item,
-                    //     fileByList:JSON.parse(item.fileByList) 
-                    // }))
                 }
             })
              // 获取发货单号
@@ -280,13 +274,9 @@ export default {
                     this.getOrderNumber(res.data[0].shipmentBatchNumber)
                 }
             })
-            let parNumber = {
-                shipmentBatchNumber:this.shipmentBatchNumber
-            }
-           
             let params = {
-                // pageName:this.listPageQuery.pageName,
-                // pageSize:this.listPageQuery.pageSize,
+                pageName:this.listPageQuery.pageName,
+                pageSize:this.listPageQuery.pageSize,
                 shipmentBatchNumber: this.shipmentBatchNumber
             }
             //有单号就显示位置列表

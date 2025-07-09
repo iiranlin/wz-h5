@@ -30,7 +30,7 @@
     </div>
      <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
           title-inactive-color="#2e2e2e">
-          <van-tab :title="`收货明细（共${dataList.materialCirculationDetailsTableDTOS.length}项）`" name="0" key="0">
+          <van-tab :title="`收货明细（共${dataList.materialCirculationDetailsTableDTOS?dataList.materialCirculationDetailsTableDTOS.length:0}项）`" name="0" key="0">
                 <div class="box-container" v-for="(item, index) in dataList.materialCirculationDetailsTableDTOS" :key="index">
                   <div>
                     <div class="detail-list-title-content">
@@ -52,7 +52,7 @@
                     </li>
                     <li>
                       <span>需求数量：</span>
-                      <span>{{ item.planAmount }}</span>
+                      <span class="li-span-click">{{ item.planAmount }}</span>
                     </li>
                     <li class="li-item-overlength">
                       <span>本次发货数量：</span>
@@ -67,7 +67,7 @@
                       <span>{{ item.expirationDate }}</span>
                     </li>
                     <li>
-                      <span>使用地点：</span>
+                      <span>交货地点：</span>
                       <span>{{ item.addr }}</span>
                     </li>
                     <li>
@@ -105,11 +105,11 @@
                     <template v-else>
                       <li>
                         <span>收货数量：</span>
-                        <span>{{ item.putTotal }}</span>
+                        <span class="li-span-click">{{ item.putTotal }}</span>
                       </li>
                       <li>
                         <span>退货数量：</span>
-                        <span>{{ item.refundTotal }}</span>
+                        <span style="color: #e4393c;">{{ item.refundTotal }}</span>
                       </li>
                     </template>
                   
@@ -203,7 +203,7 @@ export default {
       },
       showDatePicker: false, // 控制日期选择器显示
       id:"",
-      tabs:true,
+      tabs:true,  
       dataList:[],
       fileTHList:[],
       fileZjdList:[],
@@ -347,7 +347,6 @@ export default {
          this.$toast('请上传自检单'); 
          return
       }
-      console.log(params,"params")
       saveTake(params).then((res)=>{
         if(res.success){
           this.$toast('保存成功')

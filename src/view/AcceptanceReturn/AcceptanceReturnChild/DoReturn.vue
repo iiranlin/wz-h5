@@ -42,7 +42,7 @@
   
     <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
           title-inactive-color="#2e2e2e">
-      <van-tab :title="`退货明细（共${dataList.materialCirculationDetailsTableDTOS.length}项）`" name="0" key="0">
+      <van-tab :title="`退货明细（共${dataList.materialCirculationDetailsTableDTOS?dataList.materialCirculationDetailsTableDTOS.length:0}项）`" name="0" key="0">
           <div class="box-container" v-for="(item,index) in dataList.materialCirculationDetailsTableDTOS" :key="index">
             <div>
               <div class="detail-list-title-content">
@@ -51,7 +51,7 @@
               </div>
             <ul class="detail-list-ul">
               <li>
-                <span style="color: #e4393c;">退货数量：</span>
+                <span>退货数量：</span>
                 <span style="color: #e4393c;">{{item.refundTotal}}</span>
               </li>
               <li>
@@ -68,7 +68,7 @@
               </li>
               <li>
                 <span>需求数量：</span>
-                <span>{{item.planAmount}}</span>
+                <span class="li-span-click">{{item.planAmount}}</span>
               </li>
               <li class="li-item-overlength">
                 <span>本次收货数量：</span>
@@ -83,7 +83,7 @@
                 <span>{{item.expirationDate |formatToDate}}</span>
               </li>
               <li>
-                <span>使用地点：</span>
+                <span>交货地点：</span>
                 <span>{{ item.addr }}</span>
               </li>
               <li>

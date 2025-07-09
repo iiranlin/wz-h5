@@ -1,17 +1,22 @@
 <template>
     <div class="default-container" ref="container" :style="{ paddingBottom: result.status === 6 ? '0' : '1.3rem' }">
          <div class="detail-base-info">
-            <div class="detail-title-content">
+             <div class="detail-title-content">
+            <img src="/static/icon-xqjh.png">
+            <span style="font-size: 0.3rem;">供应需求名称：</span>
+                <span style="font-size: 0.3rem;overflow: hidden;">{{ result.planName }}</span>
+            <div class="detail-title-status">
+              <img :src="checkAuditStatus(result.status)" />
+              <span>{{ checkStatusText(result.status) }}</span>
+            </div>
+          </div>
+            <!-- <div class="detail-title-content">
                 <img src="/static/icon-xqjh.png">
                 <span style="min-width: 03rem;">供应需求名称：</span>
                 <span class="text">{{ result.planName }}</span>
-            </div>
+            </div> -->
             <div>
                 <ul class="detail-ul">
-                    <li>
-                        <span>发货时间：</span>
-                        <span>{{ formattedCreateDate(result.shippingDate) }}</span>
-                    </li>
                     <li>
                         <span>需求项目：</span>
                         <span>{{  result.sectionName }}</span>
@@ -66,11 +71,11 @@
                     <span>{{ item.amount }}</span>
                 </li>
                  <li>
-                    <span>累计计划量(含本次):</span>
+                    <span style="min-width: 3.1rem;">累计计划量(含本次):</span>
                     <span>{{ item.cumulativeAmount }}</span>
                 </li>
                  <li>
-                    <span>本次计划数量:</span>
+                    <span style="min-width: 3rem;">本次计划数量:</span>
                     <span>{{ item.planAmount }}</span>
                 </li>
                 <li>
@@ -130,7 +135,21 @@ export default {
             result: {},
             list: [],
             allRefreshLoading: false,
-            id: ''
+            id: '',
+            statusArr: [
+        { text: '全部', value: '' },
+        { text: '已驳回', value: '0' },
+        { text: '未提交', value: '1' },
+        { text: '未确认', value: '2' },
+        { text: '已确认', value: '3' },
+        { text: '供货中', value: '4' },
+        { text: '已撤回', value: '5' },
+        { text: '已完成', value: '6' },
+        { text: '收货完成', value: '7' },
+        { text: '已入库', value: '8' },
+        { text: '已完成', value: '9' },
+        { text: '已退回', value: '10' },
+      ],
         };
     },
     created() {
@@ -196,10 +215,52 @@ export default {
             const day = date.getDate().toString().padStart(2, '0'); // 日期加0
             return `${year}-${month}-${day}`;
         },
+            checkAuditStatus(status) {
+      if (status == '0') {
+        return '/static/icon-reject.png'
+      } else if (['5', '10'].includes(status)) {
+        return '/static/icon-return.png'
+      } else {
+        return '/static/icon-success.png'
+      }
+    },
+        checkStatusText(status) {
+      let name = ''
+      this.statusArr.forEach(item => {
+        if (item.value === status) {
+          name = item.text
+        }
+      })
+      return name
+    },
     },
 };
 </script>
 <style lang="less" scoped>
+.detail-title-content{
+
+  position: relative;
+  .detail-title-status {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    span {
+      
+      color: #134daa;
+      font-size: 11px;
+    }
+  }
+
+}
 .box-container{
     padding: 0px !important;
 }
