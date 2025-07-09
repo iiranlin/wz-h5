@@ -1,7 +1,7 @@
 <template>
   <div class="van-popover-history" v-if="showPopover && historyList.length" :style="divStyle">
     <ul>
-      <li v-for="(item, index) in historyList" :key="index" @click.stop="onSelect(item)">{{ item }}</li>
+      <li v-for="(item, index) in historyList" :key="index" @click.stop="onSelect(item, index)">{{ item }}</li>
     </ul>
   </div>
 </template>
@@ -34,8 +34,8 @@ export default {
       this.divStyle.left = `${$event.clientX - 200}px`
       this.divStyle.top = `${$event.clientY + 30}px`
     },
-    onSelect(item) {
-      this.$emit('historyClick', item, this.names, this.indexs)
+    onSelect(item, historyIndex) {
+      this.$emit('historyClick', item, this.names, this.indexs, historyIndex)
       this.showPopover = false
     },
     handleBodyClick() {

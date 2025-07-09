@@ -131,7 +131,7 @@ export default {
     }
   },
   activated() {
-    const finallyData = this.historyCache()
+    const finallyData = this.historyCache({addr: '', field0: '', field1: ''}, 0)
     const materiaList = this.materiaList.concat(finallyData)
     let obj = {}
     this.materiaList = materiaList.reduce((cur, next) => {
@@ -145,7 +145,7 @@ export default {
   },
   methods: {
     init () {
-      const finallyData = this.historyCache()
+      const finallyData = this.historyCache({addr: '', field0: '', field1: ''}, 0)
       const {id = null, contractId = null, type = ''} = this.$route.query
       this.queryId = id
       this.contractId = contractId
@@ -157,16 +157,18 @@ export default {
         this.materialDemandPlanRestDetail()
       }
     },
-    historyCache () {
+    historyCache (obj, index, isDefault) {
       const data = this.$store.state.public.materiaList || []
       const historyList = this.$store.state.public.historyList || {}
-      let obj = {addr: '', field2: '', field0: '', field1: ''}
       if(historyList){
         for (const key in obj) {
           if(historyList[key]){
-            obj[key] = historyList[key][0]
+            obj[key] = historyList[key][index]
           }
         }
+      }
+      if(isDefault){
+        return obj
       }
       const finallyData = data.map( (item) => Object.assign({}, item, {
         supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
@@ -174,6 +176,7 @@ export default {
         showDatePicker: this.showDatePicker,
         planAmount: item.amount - item.cumulativeAmount,
         allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber,
+        field2: item.field2 || item.deliveryLocation,
         ...obj
       }))
       return finallyData
@@ -299,8 +302,10 @@ export default {
     fieldClick ($event, name, index) {
       this.$refs.historyList.init($event, name, index)
     },
-    historyClick(data, name, index){
-      this.$set(this.materiaList, index, Object.assign({}, this.materiaList[index], {[name]: data}))
+    historyClick(data, name, index, historyIndex){
+      let obj = {addr: '', field2: '', field0: '', field1: ''}
+      const finallyData = this.historyCache(obj, historyIndex, true)
+      this.$set(this.materiaList, index, Object.assign({}, this.materiaList[index], finallyData))
     }
   }
 }
