@@ -126,8 +126,6 @@ h1, h2, h3, h4, h5, h6, p, div, ul, dl, dd, dt {
         justify-content: space-between;
         align-items: center;
         
-        & :nth-child(1){
-        }
         & :nth-child(2){
             overflow: hidden;
             text-overflow: ellipsis;
@@ -136,12 +134,12 @@ h1, h2, h3, h4, h5, h6, p, div, ul, dl, dd, dt {
             flex: 1;
         }
     }
-    .li-item-overlength {
-        & :nth-child(1){
-            min-width: initial;
-            white-space: nowrap;
-        }
-    }
+    // .li-item-overlength {
+    //     & :nth-child(1){
+    //         min-width: initial;
+    //         white-space: nowrap;
+    //     }
+    // }
 }
 //列表ul条目底部按钮
 .list-ul-button {
@@ -239,14 +237,15 @@ h1, h2, h3, h4, h5, h6, p, div, ul, dl, dd, dt {
         font-size: 13px;
         line-height: 26px;
 
-        & :nth-child(1){
-            min-width: 70px
-        }
+        // & :nth-child(1){
+        //     min-width: 70px
+        // }
         & :nth-child(2){
-            width: calc(100% - 70px);
+            // width: calc(100% - 70px);
             overflow: hidden;
             text-align: right;
             word-break: break-all;
+            flex: 1;
         }
     }
     .van-cell {
@@ -267,22 +266,23 @@ h1, h2, h3, h4, h5, h6, p, div, ul, dl, dd, dt {
         color: #151b3e;
         line-height: 26px;
 
-        & :nth-child(1){
-            min-width: 70px
-        }
+        // & :nth-child(1){
+        //     min-width: 70px
+        // }
         & :nth-child(2){
-            width: calc(100% - 70px);
+            // width: calc(100% - 70px);
             overflow: hidden;
             text-align: right;
             word-break: break-all;
+            flex: 1;
         }
     }
-    .li-item-overlength {
-        & :nth-child(1){
-            min-width: initial;
-            white-space: nowrap;
-        }
-    }
+    // .li-item-overlength {
+    //     & :nth-child(1){
+    //         min-width: initial;
+    //         white-space: nowrap;
+    //     }
+    // }
     .li-item-remark {
         display: flex;
         flex-direction: column;
