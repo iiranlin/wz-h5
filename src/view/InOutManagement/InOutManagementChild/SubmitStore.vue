@@ -172,6 +172,7 @@
     <!-- 附件预览 -->
     <file-preview ref="filePreview"></file-preview>
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
+    <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
 <script>
@@ -182,10 +183,11 @@ import FilePreview from "@/components/FilePreview.vue";
 import activitiAssignee from '@/components/activitiAssignee'
 import FileUploadView from "@/components/FileUploadView.vue"
 import FileDownloadView from "@/components/FileDownloadView.vue"
+import BackToTop from '@/components/BackToTop'
 export default {
   name: 'SubmitStore',
   mixins: [indexMixin],
-  components: { FilePreview, activitiAssignee, FileUploadView, FileDownloadView },
+  components: { FilePreview, activitiAssignee, FileUploadView, FileDownloadView, BackToTop },
   data() {
     return {
       queryType: '',

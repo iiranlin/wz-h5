@@ -231,10 +231,6 @@ export default {
     height: 44px !important;
   }
 
-  ::v-deep .van-sticky--fixed {
-    top: 69px !important;
-  }
-
   .list-search-container {
     width: 100%;
     top: 0;

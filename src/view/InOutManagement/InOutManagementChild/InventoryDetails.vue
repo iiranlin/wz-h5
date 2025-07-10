@@ -1,5 +1,5 @@
 <template>
-  <div class="default-container">
+  <div class="default-containerA">
     <div class="detail-base-info">
        <div class="detail-title-content">
         <img src="/static/icon-xqjh.png">
@@ -68,14 +68,16 @@
     <div class="default-button-container" v-if="relatedCount == '1'">
       <van-button class="button-info" round type="info" @click="outboundClick(detailInfo)">出库</van-button>
     </div>
+    <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
 <script>
 import {materialDemandPlanRestDetailGyMx} from '@/api/prodmgr-inv/materialDemandPlanRest'
+import BackToTop from '@/components/BackToTop'
 
 export default {
   name: 'InventoryDetails',
-  components: {},
+  components: {BackToTop},
   data() {
     return {
       id: '',
@@ -125,7 +127,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.default-container {
+.default-containerA {
   padding-bottom: 60px;
 }
 .box-container {

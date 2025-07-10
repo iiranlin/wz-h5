@@ -128,10 +128,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .in-out-management-list {
-
-  ::v-deep .van-sticky--fixed{
-    top: 69px !important;
-  }
   
   .list-search-container {
     width: 100%;

@@ -87,9 +87,11 @@
       </div>
       <history-list ref="historyList" @historyClick="historyClick"></history-list>
     </van-form>
+    <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
 <script>
+import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import historyList from '@/components/historyList'
 import { parseTime } from '@/utils/index'
@@ -100,7 +102,7 @@ import dayjs from 'dayjs'
 export default {
   name: 'SaveMaterials',
   mixins: [keepPages],
-  components: { historyList },
+  components: { historyList, BackToTop },
   data() {
     return {
       userInfo: getUserInfo(),
