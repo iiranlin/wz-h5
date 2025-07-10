@@ -163,20 +163,16 @@ export default {
     .th-row,
     .th-rows {
       display: flex;
-      justify-content: space-between;
       background: #f1f8ff;
       border-bottom: 1px solid #e9e9e9;
+      text-align: center;
 
       .van-col {
         line-height: 40px;
-        width: 90px;
-        padding: 0 10px;
+        padding: 0 2px;
         border-right: 1px solid #e9e9e9;
         font-size: 12px;
-
-        &:nth-child(1) {
-          width: 60px;
-        }
+        flex: 1;
       }
     }
 

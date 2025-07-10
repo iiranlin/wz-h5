@@ -73,7 +73,7 @@
                 <span>{{ item.receiver }}</span>
               </li>
               <li>
-                <span>使用地点：</span>
+                <span>交货地点：</span>
                 <span>{{ item.deliveryLocation }}</span>
               </li>
             </ul>
