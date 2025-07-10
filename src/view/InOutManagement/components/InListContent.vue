@@ -157,6 +157,7 @@ export default {
       this.listStore()
     },
     listStore() {
+      this.error = false
       if (this.refreshLoading) {
         this.dataList = []
         this.refreshLoading = false

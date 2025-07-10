@@ -84,6 +84,7 @@ export default {
       this.getBySectionProject()
     },
     getBySectionProject () {
+      this.error = false
       if (this.refreshLoading) {
         this.list = [];
         this.refreshLoading = false;

@@ -153,6 +153,7 @@ export default {
       this.materialDemandPlanRestList()
     },
     materialDemandPlanRestList() {
+      this.error = false
       if (this.refreshLoading) {
         this.list = [];
         this.refreshLoading = false;

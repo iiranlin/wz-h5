@@ -21,7 +21,11 @@
       <div class="box-container" v-for="(item, index) in materiaList" :key="item.id">
         <div class="div-child">
           <ul class="detail-list-ul">
-            <li class="save-materials-li">
+            <li>
+              <span class="font-weight">序号：</span>
+              <span class="font-weight">{{ index+1 }}</span>
+            </li>
+            <li>
               <span class="font-weight">物资名称：</span>
               <span class="font-weight">{{ item.materialName }}</span>
             </li>
