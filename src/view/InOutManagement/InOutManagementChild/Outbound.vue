@@ -159,6 +159,7 @@
     </van-calendar>
     <!-- 附件预览 -->
     <file-preview ref="filePreview"></file-preview>
+    <back-to-top className=".detail-button-container"></back-to-top>
   </div>
 </template>
 <script>
@@ -170,10 +171,11 @@ import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import { getUserInfo } from '@/utils/user-info'
+import BackToTop from '@/components/BackToTop'
 
 export default {
   name: 'Outbound',
-  components: {FilePreview,FileUploadView,FileDownloadView},
+  components: {FilePreview,FileUploadView,FileDownloadView,BackToTop},
 
   computed: {
     filteredList() {

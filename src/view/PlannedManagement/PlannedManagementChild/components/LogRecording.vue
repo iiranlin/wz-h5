@@ -6,7 +6,7 @@
           <span>{{ item.logName }}</span>
           <span class="li-item-right">{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
         </div>
-        <ul class="detail-ul">
+        <ul class="detail-list-ul">
           <li>
             <span>事件组织：</span>
             <span>{{ item.deptName }}</span>

@@ -160,10 +160,6 @@ export default {
     margin-bottom: 10px !important;
     height: 44px !important;
   }
-
-  ::v-deep .van-sticky--fixed{
-    top: 69px !important;
-  }
   
   .list-search-container {
     width: 100%;

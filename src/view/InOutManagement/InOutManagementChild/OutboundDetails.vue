@@ -1,5 +1,5 @@
 <template>
-  <div class="default-container">
+  <div class="default-containerA">
     <div class="detail-base-info">
       <div class="detail-title-content">
         <img src="/static/icon-xqjh.png">
@@ -90,16 +90,18 @@
     </div>
     <!-- 附件预览 -->
     <file-preview ref="filePreview"/>
+    <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
 <script>
 import {materialSupplierOutRestDetail} from '@/api/prodmgr-inv/materialDemandPlanRest'
 import FilePreview from "@/components/FilePreview.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import BackToTop from '@/components/BackToTop'
 
 export default {
   name: 'OutboundDetails',
-  components: {FilePreview,FileDownloadView},
+  components: {FilePreview,FileDownloadView,BackToTop},
 
   data() {
     return {
@@ -144,7 +146,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.default-container {
+.default-containerA {
   padding-bottom: 20px;
 }
 .box-container {

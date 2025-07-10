@@ -52,9 +52,11 @@
                 </van-list>
             </van-pull-refresh>
         </div>
+        <back-to-top className=".default-container"></back-to-top>
     </div>  
 </template>
 <script>
+import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfTodoList } from '@/api/myToDoList'
 import indexMixin from '@/view/mixins'
@@ -62,6 +64,7 @@ import indexMixin from '@/view/mixins'
 export default {
     name:'WaitExamineList',
     mixins: [keepPages,indexMixin],
+    components: {BackToTop},
     dicts: ['flowBusinessType'],
 
     data() {
