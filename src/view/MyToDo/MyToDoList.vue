@@ -145,9 +145,11 @@
                 </van-tab>
             </van-tabs>
         </div>
+        <back-to-top className=".my-to-do-list"></back-to-top>
     </div>  
 </template>
 <script>
+import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfTodoList,wfHandleList } from '@/api/myToDoList'
 import indexMixin from '@/view/mixins'
@@ -155,6 +157,7 @@ import indexMixin from '@/view/mixins'
 export default {
     name:'MyToDoList',
     mixins: [keepPages, indexMixin],
+    components: {BackToTop},
     dicts: ['flowBusinessType','flowTaskStatus'],
 
     beforeRouteEnter (to, from, next) {
