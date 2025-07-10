@@ -185,7 +185,7 @@ export default {
   methods: {
     //收获列表
     getList(){
-      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,planName:this.formData.keywords,takeStatus:this.menuActiveIndex?this.menuActiveIndex:''}
+      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,queryField:this.formData.keywords,takeStatus:this.menuActiveIndex?this.menuActiveIndex:''}
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
@@ -193,6 +193,7 @@ export default {
       });
       listTake(params).then((res) => {
         if(res.success){
+          console.log(res.data.list)
           this.listLoading = false //加载结束
             if (this.allRefreshLoading) {
               this.dataList = [];

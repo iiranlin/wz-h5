@@ -162,7 +162,7 @@ export default {
   methods: {
       //收获列表
     getAllList(val){
-      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,planName:this.formData.keywords,takeStatus:val?val:''}
+      let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,queryField:this.formData.keywords,takeStatus:val?val:''}
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",

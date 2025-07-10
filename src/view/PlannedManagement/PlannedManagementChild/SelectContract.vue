@@ -84,12 +84,13 @@ export default {
       this.getBySectionProject()
     },
     getBySectionProject () {
+      this.error = false
       if (this.refreshLoading) {
         this.list = [];
         this.refreshLoading = false;
       }
       const params = {
-        contractName: this.searchValue,
+        queryField: this.searchValue,
         ...this.listQuery
       }
       getBySectionProject(params).then( ({data}) => {
