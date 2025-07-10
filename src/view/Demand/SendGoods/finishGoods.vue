@@ -153,7 +153,21 @@ export default {
       }))
     }
     if (this.text == 'edit') {
-      this.editDetails()
+      let editGoodsData = JSON.parse(this.$route.query.goodData)
+      if(editGoodsData && editGoodsData.length>0){
+        this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
+        ...item,
+        planDetailId: item.id,
+        fileList01: [],
+        fileList02: [],
+        manufactureDate:'',
+        expirationDate:"",
+        sendTotal: item.ssendTotal
+      }))
+      }else{
+        this.editDetails()
+      }
+      
     }
 
 
@@ -212,6 +226,7 @@ export default {
         if (res.code == 0) {
           this.params = res.data
           // 存到缓存里
+          
           this.$store.dispatch('public/setGoodsSelect', res.data.materialCirculationDetailsTableDTOS)
           if (res.data.materialCirculationDetailsTableDTOS && res.data.materialCirculationDetailsTableDTOS.length > 0) {
             this.goodsData = res.data.materialCirculationDetailsTableDTOS.map(item => {
@@ -242,6 +257,26 @@ export default {
             });
             window.history.back()
           }
+
+           let  params = {
+              shippingDate: this.params.shippingDate,
+              arrivalDate: this.params.arrivalDate,
+              carNumber: this.params.carNumber,
+              contacts: this.params.contacts,
+              contactsPhone: this.params.contactsPhone,
+              contractName: this.params.contractName,
+              fileByList: this.params.fileByList,
+              fileList: this.params.fileList,
+              id: this.params.id,
+              oddNumbers: this.params.oddNumbers,
+              planId: this.params.planId,
+              planName: this.params.planName,
+              sectionName: this.params.sectionName,
+              shipmentBatchNumber: this.params.shipmentBatchNumber,
+              shippingAddress: this.params.shippingAddress,
+            }
+             // 存到缓存里
+          this.$store.dispatch('public/setEditGoods', params)
         }
       })
     },
@@ -366,12 +401,7 @@ export default {
     },
     editBack(text, id) {
       // 如果缓存里有数据就带变有可选地物资
-      let dataList = this.$store.state.public.goodsSelect
-      if (dataList && dataList.length > 0) {
-        this.$router.push({ path: '/selectGoods', query: { text: text, id: id } })
-      } else {
-        Toast.fail('没有可选择的选项');
-      }
+     this.$router.push({ path: '/selectGoods', query: { text: text, id: id,planId:this.params.planId } })
 
     },
     delgoods(index) {
@@ -404,6 +434,10 @@ export default {
         Toast.fail('请完善信息');
         return;
       }
+      // 给字段加缓存
+      let obj = { packagingFm: [] }
+      obj.packagingFm = this.goodsData.map(item => item.packagingFm)
+
       let hgz = [] //合格证
       let cjbg = []
       let fileList = []
@@ -430,6 +464,7 @@ export default {
         }
         demandSaveSendGoods(params).then((res) => {
           if (res.code == 0) {
+             this.$store.dispatch('public/setHistoryList', obj)
             Toast.success(res.data);
             this.$router.push({ path: "/Information" })
           }
@@ -450,21 +485,7 @@ export default {
           }
         } else {
           params = {
-            shippingDate: this.params.shippingDate,
-            arrivalDate: this.params.arrivalDate,
-            carNumber: this.params.carNumber,
-            contacts: this.params.contacts,
-            contactsPhone: this.params.contactsPhone,
-            contractName: this.params.contractName,
-            fileByList: this.params.fileByList,
-            fileList: this.params.fileList,
-            id: this.params.id,
-            oddNumbers: this.params.oddNumbers,
-            planId: this.params.planId,
-            planName: this.params.planName,
-            sectionName: this.params.sectionName,
-            shipmentBatchNumber: this.params.shipmentBatchNumber,
-            shippingAddress: this.params.shippingAddress,
+            ...this.$store.state.public.editGoods,
             materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
           }
         }
