@@ -3,7 +3,7 @@
     <div class="list-search-container">
       <!-- <van-search v-model="params.planName" placeholder="输入关键字搜索" shape="round" background="#eef6ff" @search="onSearch">
       </van-search> -->
-     <van-search v-model="params.planName" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
+     <van-search v-model="params.queryField" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
           @search="onSearch">
           <template slot='right-icon'>
             <van-icon name="search" @click="statusChange()" />

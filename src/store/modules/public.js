@@ -5,8 +5,8 @@ const state = {
   historyList: sessionStorage.getItem('historyList') || [],
   goodsSelect:[],
   editSendGoods:{},
-  historyList: JSON.parse(localStorage.getItem('historyList')) || {}
-
+  historyList: JSON.parse(localStorage.getItem('historyList')) || {},
+  editGoods:{}
 };
 
 const mutations = {
@@ -42,7 +42,9 @@ const mutations = {
   SET_EDIT_GOODS_SELECT:(state,editSendGoods)=>{
     state.editSendGoods = editSendGoods
   },
-
+  SET_EDIT_GOODS:(state,editGoods)=>{
+    state.editGoods = editGoods
+  }
 };
 
 const actions = {
@@ -64,6 +66,9 @@ const actions = {
   
   setEditSendGoods({commit}, data){
     commit('SET_EDIT_GOODS_SELECT', data)
+  },
+   setEditGoods({commit}, data){
+    commit('SET_EDIT_GOODS', data)
   }
 };
 

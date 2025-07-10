@@ -1,7 +1,7 @@
 <template>
   <div ref="container">
     <div class="list-search-container">
-      <van-search v-model="params.planName" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
+      <van-search v-model="params.queryField" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
           @search="onSearch">
           <template slot='right-icon'>
             <van-icon name="search" @click="statusChange()" />
@@ -374,7 +374,7 @@ export default {
     },
     //编辑
     handleEditClick(id, title) {
-      this.$router.push({ path: '/finishGoods', query: { id: id, text: title } })
+      this.$router.push({ path: '/finishGoods', query: {goodData:JSON.stringify([]), id: id, text: title } })
     },
     //文件修改
     handleUpload(id) {
