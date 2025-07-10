@@ -11,15 +11,10 @@ export default {
       visible: false, // 控制按钮的显示隐藏
     };
   },
-  watch:{
-    
-  },
   methods: {
     scrollTops() {
       // 当页面滚动超过一定距离时显示按钮
-     
       this.visible = document.querySelector(this.className) && document.querySelector(this.className).scrollTop > 300;
-       console.log(this.visible,"this.className")
     },
     scrollToTop() {
       // 平滑滚动到页面顶部
