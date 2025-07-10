@@ -66,10 +66,12 @@
     <div v-else>
       <van-empty description="暂无数据" />
     </div>
+    <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
 <script>
 import Vue from 'vue';
+import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { returnGoodsList } from '@/api/demand/returnGoods'
 import { getUserInfo } from '@/utils/user-info'
@@ -78,7 +80,7 @@ Vue.use(Toast);
 export default {
   name: 'MyToDoList',
   mixins: [keepPages],
-
+components:{BackToTop},
   data() {
     return {
       menuActiveIndex: 0,

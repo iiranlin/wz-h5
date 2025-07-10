@@ -110,10 +110,12 @@
                 @click="handleSendGoodsClick(result.id, 'add')">发货</van-button>
             <!-- 编辑里的选择发货物资传的是planId -->
         </div>
+         <back-to-top className=".default-container"></back-to-top>
     </div>
 </template>
 <script>
 import Vue from 'vue';
+import BackToTop from '@/components/BackToTop'
 import { Form } from 'vant';
 import { Field, Toast } from 'vant';
 import { supplyDetails } from '@/api/demand/demandManagement'
@@ -122,7 +124,7 @@ Vue.use(Field);
 Vue.use(Toast);
 export default {
     name: 'MyProcess',
-
+    components:{BackToTop},
     data() {
         return {
             username: '',

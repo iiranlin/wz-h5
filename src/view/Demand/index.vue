@@ -107,10 +107,12 @@
       </van-tabs>
     </div>
     <file-preview ref="filePreview"></file-preview>
+     <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import BackToTop from '@/components/BackToTop'
 import { demandManagementList, demandManagementLookPdf } from '@/api/demand/demandManagement'
 import FilePreview from "@/components/FilePreview.vue";
 import Vue from 'vue';
@@ -119,7 +121,7 @@ Vue.use(Toast);
 export default {
   name: 'dashboard',
   mixins: [keepPages],
-  components: { FilePreview },
+  components: { FilePreview,BackToTop },
   data() {
     return {
       menuActiveIndex: 0,

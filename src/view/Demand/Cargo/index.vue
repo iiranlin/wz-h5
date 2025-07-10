@@ -201,11 +201,14 @@
             </van-tabs>
         </div>
         <file-preview ref="filePreview"></file-preview>
+        <back-to-top className=".default-container"></back-to-top>
     </div>
 </template>
 <script>
 import Vue from 'vue';
+
 import { Sidebar, SidebarItem } from 'vant';
+import BackToTop from '@/components/BackToTop'
 import { Tab, Tabs } from 'vant';
 import { Step, Steps } from 'vant';
 import { lookGoodsDetails, shippingOrderNumber } from '@/api/demand/returnGoods'
@@ -224,7 +227,7 @@ Vue.use(SidebarItem);
 export default {
     name: 'MyProcess',
      mixins: [indexMixin],
-    components: { wuliu, FilePreview,FileDownloadView },
+    components: { wuliu, FilePreview,FileDownloadView ,BackToTop},
     data() {
         return {
             menuActiveIndex: 0,
