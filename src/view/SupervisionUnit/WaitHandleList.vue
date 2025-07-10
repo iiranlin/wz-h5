@@ -52,15 +52,18 @@
                 </van-list>
             </van-pull-refresh>
         </div>
+        <back-to-top className=".default-container"></back-to-top>
     </div>  
 </template>
 <script>
+import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfHandleList } from '@/api/myToDoList'
 
 export default {
     name:'WaitHandleList',
     mixins: [keepPages],
+    components: {BackToTop},
     dicts: ['flowBusinessType'],
 
     data() {

@@ -150,9 +150,11 @@
                 </div>
             </div>
         </van-popup>
+        <back-to-top className=".van-tabs__content"></back-to-top>
     </div>
 </template>
 <script>
+import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import eventBus from '@/utils/eventBus.js'
 import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,wfHistoryList } from '@/api/myToDoList'
@@ -160,7 +162,7 @@ import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,wf
 export default {
     name: 'DemandPlanningExamine',
     mixins: [keepPages],
-    components: {},
+    components: {BackToTop},
 
     data () {
         return {

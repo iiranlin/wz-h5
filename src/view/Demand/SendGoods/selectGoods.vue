@@ -13,7 +13,7 @@
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <!--本次需求未发货数量为0不可选-->
-        <van-checkbox shape="square" :name="item" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false">
+        <van-checkbox shape="square" :name="item.id" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false">
            <div class="detail-base-info">
                  <div class="detail-title-content">
             <img src="/static/icon-xqjh.png">
@@ -131,10 +131,11 @@ export default {
   
     this.text = this.$route.query.text
     if(this.text=='edit'){
-      //  因为是编辑参数从缓存里取
-    let arrdata = this.$store.state.public.goodsSelect
-      //   let arrdata = JSON.parse(this.$route.query.data)
-       this.selectGoodsList = arrdata.map(item => {
+      let planId = this.$route.query.planId
+      demandChooseGoods(planId).then((res)=>{
+        if(res.code==0){
+          Toast.clear()
+          this.selectGoodsList = res.data.details.map(item => {
             // 辅助函数：格式化日期为 YYYY-MM-DD
             const formatDate = (dateString) => {
               const date = new Date(dateString);
@@ -151,7 +152,32 @@ export default {
               updateDate: formatDate(item.updateDate)
             };
           });
-      this.result = this.selectGoodsList.map(item => item);
+          
+           this.result = this.$store.state.public.goodsSelect.map(item => item.id);
+          // this.selectGoodsList = res.data.details
+        }
+      })
+    //   //  因为是编辑参数从缓存里取
+    // let arrdata = this.$store.state.public.goodsSelect
+    //   //   let arrdata = JSON.parse(this.$route.query.data)
+    //    this.selectGoodsList = arrdata.map(item => {
+    //         // 辅助函数：格式化日期为 YYYY-MM-DD
+    //         const formatDate = (dateString) => {
+    //           const date = new Date(dateString);
+    //           const year = date.getFullYear();
+    //           const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+    //           const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
+    //           return `${year}-${month}-${day}`;
+    //         };
+          
+    //         return {
+    //           ...item,
+    //           createDate: formatDate(item.createDate),
+    //           supplyDate: formatDate(item.supplyDate),
+    //           updateDate: formatDate(item.updateDate)
+    //         };
+    //       });
+     
     }
     if(this.text=='add'){
        this.getSelectGoods()
@@ -185,6 +211,7 @@ export default {
               updateDate: formatDate(item.updateDate)
             };
           });
+          console.log(this.selectGoodsList,'11')
           // this.selectGoodsList = res.data.details
         }
       })
@@ -209,9 +236,10 @@ export default {
       }
       
       const query = this.searchQuery.toLowerCase();
-      this.selectGoodsList = this.selectGoodsList.filter(item => 
-        item.materialName.toLowerCase().includes(query)
-      );
+      this.selectGoodsList= this.selectGoodsList.filter(item => item.materialName.includes(query));
+      // this.selectGoodsList = this.selectGoodsList.filter(item => 
+      //   item.materialName.toLowerCase().includes(query)
+      // );
       // this.getSelectGoods()
     },
     onLoad() {
@@ -248,14 +276,18 @@ export default {
     },
     editClick(text,id){
        if(this.selectArrayData.length>0){
-        this.$router.push({ path: '/finishGoods',query:{id:id,text:text} })
+        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:id,text:text} })
       }else{
         Toast.fail('请选择至少一项');
       }
     },
     selectGoods(e){
-      this.selectArrayData=e.flat()
-      
+      const targetIds = new Set(e); // 转换为 Set，查找更快
+     this.selectArrayData = this.selectGoodsList.filter(item => targetIds.has(item.id));
+    //  console.log(arr)
+      // console.log(e)
+      // this.selectArrayData=e.flat()
+      // this.selectGoodsList.fi
       this.selectTotal = e.length
     },
   }
