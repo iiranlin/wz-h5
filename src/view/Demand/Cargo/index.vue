@@ -152,12 +152,12 @@
                                     </li>
                                     <li>
                                         <span>生产日期:</span>
-                                        <span v-if="item.createDate">{{ formattedCreateDate(item.createDate)
+                                        <span v-if="item.createDate">{{ formattedCreateDate(item.manufactureDate)
                                         }}</span>
                                     </li>
                                     <li>
                                         <span style="min-width: 3rem;">有效期截止日期:</span>
-                                        <span>{{ formattedCreateDate(item.updateDate) }}</span>
+                                        <span>{{ formattedCreateDate(item.expirationDate) }}</span>
                                     </li>
                                     <li>
                                         <span>收货地址:</span>

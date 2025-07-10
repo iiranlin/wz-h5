@@ -43,11 +43,11 @@
               input-align="right" />
             <van-field v-model="goodsData[index].packagingFm" @click.stop="fieldClick($event, 'packagingFm', index)" required label="包装形式" placeholder="请输入包装形式"
               input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].createDate" required name="datetimePicker"
-              :value="goodsData[index].createDate" label="生产日期" placeholder="点击选择日期"
+            <van-field readonly clickable v-model="goodsData[index].manufactureDate" required name="datetimePicker"
+              :value="goodsData[index].manufactureDate" label="生产日期" placeholder="点击选择日期"
               @click="showCalendars(item, index, 'show')" input-align="right" />
-            <van-field readonly clickable v-model="goodsData[index].updateDate" name="datetimePicker"
-              :value="goodsData[index].updateDate" label="有效截止日期" placeholder="有效截止日期"
+            <van-field readonly clickable v-model="goodsData[index].expirationDate" name="datetimePicker"
+              :value="goodsData[index].expirationDate" label="有效截止日期" placeholder="有效截止日期"
               @click="showCalendars(item, index, 'end')" input-align="right" />
             <van-field v-model="goodsData[index].field2" label="收货地址" required placeholder="收货地址" input-align="right" />
             <van-field readonly clickable v-model="goodsData[index].supplyDate" name="datetimePicker" required
@@ -147,6 +147,8 @@ export default {
         planDetailId: item.id,
         fileList01: [],
         fileList02: [],
+        manufactureDate:'',
+        expirationDate:"",
         sendTotal: item.ssendTotal
       }))
     }
@@ -224,9 +226,9 @@ export default {
 
               return {
                 ...item,
-                createDate: formatDate(item.createDate),
+                manufactureDate: formatDate(item.manufactureDate),
                 supplyDate: formatDate(item.supplyDate),
-                updateDate: formatDate(item.updateDate),
+                expirationDate: formatDate(item.expirationDate),
                 planDetailId: item.id,
                 sendTotal: item.ssendTotal,
                 fileList01: this.fileLists(item.fileByList),
@@ -296,7 +298,7 @@ export default {
       month = month.length === 1 ? `0${month}` : month;
       day = day.length === 1 ? `0${day}` : day;
       if (this.title == 'show') {
-        this.goodsData[this.isActive].createDate = `${year}-${month}-${day}`
+        this.goodsData[this.isActive].manufactureDate = `${year}-${month}-${day}`
         this.showCreateDates = false;
       }
       if (this.title == 'gong') {
@@ -304,7 +306,7 @@ export default {
         this.showCalendar = false;
       }
       if (this.title == 'end') {
-        this.goodsData[this.isActive].updateDate = `${year}-${month}-${day}`
+        this.goodsData[this.isActive].expirationDate = `${year}-${month}-${day}`
         this.showCalendar = false;
       }
     },
@@ -385,7 +387,7 @@ export default {
       const isValid = this.goodsData.every((item) => {
         return (
           item.supplyDate &&
-          item.createDate &&
+          item.manufactureDate &&
           item.sendTotal &&
           item.packagingFm &&
           item.addr &&
@@ -441,7 +443,7 @@ export default {
         // 判断缓存里有没有编辑好的基础信息
         let dataList = this.$store.state.public.editSendGoods
         let params = {}
-        if (dataList) {
+        if (dataList.shippingDate) {
           params = {
             ...this.$store.state.public.editSendGoods,
             materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
@@ -466,7 +468,7 @@ export default {
             materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
           }
         }
-
+        console.log(params)
         modifySendGoods(params).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);
