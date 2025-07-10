@@ -2,7 +2,7 @@
   <div class="in-out-management-list">
     <van-sticky>
       <div class="list-search-container">
-        <van-search v-model="formData.planName" placeholder="输入关键字搜索" left-icon="none" shape="round"
+        <van-search v-model="formData.queryField" placeholder="输入关键字搜索" left-icon="none" shape="round"
           @search="handeSearch()">
           <template slot='right-icon'>
             <van-icon name="search" @click="handeSearch()" />
@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       formData: {
-        planName: '',
+        queryField: '',
         storeStatus: ''
       },
       statusArr: [
@@ -130,6 +130,8 @@ export default {
         return '/static/icon-reject.png'
       } else if (['2', '4'].includes(status)) {
         return '/static/icon-return.png'
+      } else if (['1'].includes(status)) {
+        return '/static/icon-xqjh.png'
       } else {
         return '/static/icon-success.png'
       }

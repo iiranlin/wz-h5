@@ -89,7 +89,7 @@ export default {
         this.refreshLoading = false;
       }
       const params = {
-        contractName: this.searchValue,
+        queryField: this.searchValue,
         ...this.listQuery
       }
       getBySectionProject(params).then( ({data}) => {

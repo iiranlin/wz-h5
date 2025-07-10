@@ -2,7 +2,7 @@
   <div class="in-out-management-list">
     <van-sticky>
       <div class="list-search-container">
-        <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" left-icon="none"
+        <van-search v-model="formData.queryField" placeholder="输入关键字搜索" shape="round" left-icon="none"
           @search="handeSearch()">
           <template slot='right-icon'>
             <van-icon name="search" @click="handeSearch()"/>
@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       formData: {
-        keywords: '',
+        queryField: '',
       },
       dataList:[],
 
@@ -139,26 +139,10 @@ export default {
     left: 0;
     z-index: 1;
     display: flex;
-    background: #eef6ff;
     margin-bottom: 10px;
 
     .van-search {
       flex: 1;
-    }
-
-    ::v-deep .van-dropdown-menu__bar {
-      border-radius: 50px;
-      width: 90px;
-      height: 32px;
-      margin-top: 10px;
-      margin-right: 15px;
-      font-size: 12px;
-      box-shadow: inherit;
-
-      .van-dropdown-menu__title {
-        font-size: 12px;
-      }
-
     }
   }
 }

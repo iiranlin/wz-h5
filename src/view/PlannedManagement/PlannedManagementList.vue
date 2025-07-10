@@ -160,7 +160,7 @@ export default {
       const params = {
         pageStatus: '0',
         planStatus: this.statusValue,
-        planName: this.searchValue,
+        queryField: this.searchValue,
         ...this.listQuery
       }
       let toast = this.$toast.loading({

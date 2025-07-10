@@ -13,10 +13,6 @@
             </div>
           </div>
           <ul class="detail-ul">
-            <li v-if="formData.storeNumber">
-              <span>入库单号：</span>
-              <span>{{ formData.storeNumber }}</span>
-            </li>
             <li>
               <span>需求名称：</span>
               <span>{{ formData.planName }}</span>
@@ -60,10 +56,6 @@
                   <span>{{ item.materialName }}</span>
                 </div>
                 <ul class="detail-list-ul">
-                  <li>
-                    <span>物资名称：</span>
-                    <span>{{ item.materialName }}</span>
-                  </li>
                   <li>
                     <span>规格型号：</span>
                     <span>{{ item.specModel }}</span>
