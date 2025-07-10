@@ -83,7 +83,7 @@
                 <span>{{item.expirationDate |formatToDate}}</span>
               </li>
               <li>
-                <span>交货地点：</span>
+                <span>使用地点：</span>
                 <span>{{ item.addr }}</span>
               </li>
               <li>
