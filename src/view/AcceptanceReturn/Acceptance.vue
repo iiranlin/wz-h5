@@ -1,16 +1,5 @@
 <template>
-  <div class="tab-list in-out-management-list">
-     <!-- <van-sticky>
-    <div class="list-search-container">
-      <van-search
-        v-model="formData.keywords"
-        placeholder="输入关键字搜索"
-        shape="round"
-        background="#eef6ff"
-        @search="handeSearchClick()">
-      </van-search>
-    </div>
-    </van-sticky> -->
+  <div class="tab-list in-out-management-list default-scroll">
     <van-sticky>
       <div class="list-search-container">
         <van-search v-model="formData.keywords" placeholder="输入关键字搜索" shape="round" left-icon="none" @search="handeSearchClick()">
@@ -90,16 +79,18 @@
               </div>
             </van-list>
           </van-pull-refresh>
+    <back-to-top className=".in-out-management"></back-to-top>
   </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import BackToTop from '@/components/BackToTop'
 import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 
 export default {
   name: 'Acceptance',
   mixins: [keepPages],
-
+  components:{BackToTop},
   data() {
     return {
       menuActiveIndex: '',
@@ -293,7 +284,7 @@ export default {
   }
 
   ::v-deep .van-sticky--fixed{
-    top: 69px !important;
+    top: 0px !important;
   }
   
   .list-search-container {

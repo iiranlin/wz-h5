@@ -1,23 +1,7 @@
 <template>
   <div class="acceptance-return in-out-management">
-    <!-- <div class="tab-img">
-      <div>
-        <img src="@/assets/img/acceptImg.png" alt="" @click="changeTab(0)">
-      </div>
-      <div>
-        <img src="@/assets/img/returnImg.png" alt="" @click="changeTab(1)">
-      </div>
-    </div> -->
-
-     <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
+     <van-tabs  v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" class="in-out-management-tab">
-    <!-- <van-tabs
-      class="switch-tab"
-      v-model="menuActiveIndex"
-      color="#0571ff"
-      background="#eef6ff"
-      title-active-color="#0571ff"
-      title-inactive-color="#2e2e2e"> -->
       <van-tab title="收货管理">
         <div slot="title">
             <img src="@/assets/img/SHGL.png">

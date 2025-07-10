@@ -1,5 +1,5 @@
 <template>
-  <div :class="[isView?'default-container':'default-container1',tabs?'default-container':'default-container1']">
+  <div :class="[(isView||tabs)?'default-container1':'default-container','default-scroll']">
     <div class="detail-base-info">
       <div class="detail-title-content">
         <img src="/static/icon-xqjh.png">
@@ -164,6 +164,7 @@
           </van-tab>
      </van-tabs>
     <file-preview ref="filePreview"></file-preview>
+    <back-to-top className=".default-scroll"></back-to-top>
     <div class="default-button-container" v-if="!isView">
       <van-button class="button-info" round type="info" @click="addClick">确定收货</van-button>
     </div>
@@ -174,6 +175,7 @@
 </template>
 <script>
 import {parseTime} from '@/utils'
+import BackToTop from '@/components/BackToTop'
 import indexMixin from '@/view/mixins'
 import {saveTake,defaultTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 import FilePreview from "@/components/FilePreview.vue";
@@ -183,7 +185,7 @@ import FileDownloadView from "@/components/FileDownloadView.vue";
 export default {
   name: 'DoAccept',
   mixins: [indexMixin],
-  components: { FilePreview,FileUploadView ,FileDownloadView},
+  components: { FilePreview,FileUploadView ,FileDownloadView,BackToTop},
   props: {
     isView: {
       type: Boolean,
@@ -388,11 +390,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.default-container {
+.default-container{
   padding-bottom: 10px;
 }
 .default-container1 {
-  padding-bottom: 1.2rem;
+ padding-bottom: 40px;
 }
 .box-container {
   padding: 0px;

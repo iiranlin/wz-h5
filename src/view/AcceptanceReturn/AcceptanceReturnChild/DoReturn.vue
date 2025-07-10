@@ -1,5 +1,5 @@
 <template>
-  <div class="default-container">
+  <div class="default-container default-scroll">
     <div class="detail-base-info">
       <div class="detail-title-content">
         <img src="/static/icon-xqjh.png">
@@ -124,11 +124,13 @@
         </div>
       </van-tab>
     </van-tabs>
+    <back-to-top className=".default-scroll"></back-to-top>
     <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
 <script>
 import {parseTime} from '@/utils'
+import BackToTop from '@/components/BackToTop'
 import indexMixin from '@/view/mixins'
 import {detailByBack} from '@/api/prodmgr-inv/AcceptanceReturn'
 import FilePreview from "@/components/FilePreview.vue";
@@ -137,7 +139,7 @@ import FileDownloadView from "@/components/FileDownloadView.vue";
 export default {
   name: 'DoReturn',
   mixins: [indexMixin],
-  components: { FilePreview ,FileDownloadView},
+  components: { FilePreview ,FileDownloadView,BackToTop},
   data() {
     return {
       id:'',

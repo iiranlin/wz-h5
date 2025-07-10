@@ -54,17 +54,20 @@
         </div>
       </van-list>
     </van-pull-refresh>
+     <back-to-top className=".in-out-management"></back-to-top>
   </div>
 
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import BackToTop from '@/components/BackToTop'
 import {listCyRetreat} from '@/api/prodmgr-inv/AcceptanceReturn'
+
 
 export default {
   name: 'Return',
   mixins: [keepPages],
-
+  components:{BackToTop},
   data() {
     return {
       menuActiveIndex: 0,
@@ -315,7 +318,7 @@ export default {
 .in-out-management-list {
 
   ::v-deep .van-sticky--fixed{
-    top: 69px !important;
+    top: 0px !important;
   }
   
   .list-search-container {
