@@ -1,5 +1,5 @@
 <template>
-    <div class="default-container" ref="container" :style="{ paddingBottom: result.status === 6 ? '0' : '1.3rem' }">
+    <div ref="container" :style="{ paddingBottom: result.status === 6 ? '0' : '1.3rem' }">
          <div class="detail-base-info">
              <div class="detail-title-content">
             <img src="/static/icon-xqjh.png">

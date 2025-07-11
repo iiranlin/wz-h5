@@ -1,5 +1,5 @@
 <template>
-    <div class="default-container" ref="container">
+    <div class="default-containers" ref="container">
         <div class="detail-base-info">
             <div class="detail-title-content">
                 <img src="/static/icon-xqjh.png">

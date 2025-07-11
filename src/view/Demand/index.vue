@@ -107,7 +107,7 @@
       </van-tabs>
     </div>
     <file-preview ref="filePreview"></file-preview>
-     <back-to-top className=".tabs"></back-to-top>
+     <back-to-top className=".van-tabs__content"></back-to-top>
   </div>
 </template>
 <script>
@@ -162,11 +162,11 @@ export default {
           status: '4',
           title: '供货中',
         },
-        // {
-        //   id: 5,
-        //   status: '5',
-        //   title: '已验收',
-        // },
+        {
+          id: 5,
+          status: '5',
+          title: '已验收',
+        },
         {
           id: 6,
           status: '6',
@@ -183,7 +183,7 @@ export default {
         { text: '未确认', value: '2' },
         { text: '已确认', value: '3' },
         { text: '供货中', value: '4' },
-        // { text: '已验收', value: '5' },
+        { text: '已验收', value: '5' },
         { text: '已完成', value: '6' },
       ],
     };

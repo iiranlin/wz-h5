@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" >
+  <div class="default-container" ref="container" >
     <div class="list-search-container">
       <van-search v-model="params.queryField" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
           @search="onSearch">
@@ -133,7 +133,7 @@
       </div>
     </van-dialog>
     <file-preview ref="filePreview"></file-preview>
-    <back-to-top className=".tabs"></back-to-top>
+    <back-to-top className=".van-tabs__content"></back-to-top>
   </div>
 </template>
 <script>

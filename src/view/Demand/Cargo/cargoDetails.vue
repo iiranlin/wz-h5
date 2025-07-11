@@ -1,5 +1,5 @@
 <template>
-    <div class="default-container" ref="container" :style="{ 'padding-bottom': (params.status == 1 || btnEvent==true) ? '1.3rem' : '0' }"
+    <div class="default-containers" ref="container" :style="{ 'padding-bottom': (params.status == 1 || btnEvent==true) ? '1.3rem' : '0' }"
 >
         <div class="detail-base-info">
             <div class="detail-title-content">

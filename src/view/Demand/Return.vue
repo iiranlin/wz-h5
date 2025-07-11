@@ -66,7 +66,7 @@
     <div v-else>
       <van-empty description="暂无数据" />
     </div>
-    <back-to-top className=".tabs"></back-to-top>
+    <back-to-top className=".van-tabs__content"></back-to-top>
   </div>
 </template>
 <script>
