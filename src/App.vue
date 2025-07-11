@@ -14,19 +14,20 @@ export default {
   mounted() {
     if(this.isTablet()){
       this.handleResize()
-      window.addEventListener('resize', this.handleResize)
+      // window.addEventListener('resize', this.handleResize)
     }
   },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize)
-  },
+  // beforeDestroy() {
+  //   window.removeEventListener('resize', this.handleResize)
+  // },
   methods: {
     handleResize() {
-      if (window.innerWidth > window.innerHeight) {
-        document.documentElement.style.fontSize = 50 + 'px'
-      }else{
-        document.documentElement.style.fontSize = 42 + 'px'
-      }
+      document.documentElement.style.fontSize = 42 + 'px'
+      // if (window.innerWidth > window.innerHeight) {
+      //   document.documentElement.style.fontSize = 42 + 'px'
+      // }else{
+      //   document.documentElement.style.fontSize = 42 + 'px'
+      // }
     },
     isTablet() {
       const userAgent = navigator.userAgent.toLowerCase()

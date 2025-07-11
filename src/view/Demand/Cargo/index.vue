@@ -488,10 +488,8 @@ li :nth-child(2) {
 }
  .Logistics-Information-dt {
     width: 100%;
-    height: 150px;
-
-    img {
-      width: 100%;
-    }
+    height: 300px;
+    padding: 10px;
+    box-sizing: border-box;
   }
 </style>

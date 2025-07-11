@@ -135,10 +135,6 @@ export default {
   .Logistics-Information-dt {
     width: 100%;
     height: 150px;
-
-    img {
-      width: 100%;
-    }
   }
 
   ::v-deep .van-step__title {
