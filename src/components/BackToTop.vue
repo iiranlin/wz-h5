@@ -17,9 +17,7 @@ export default {
   methods: {
     scrollTops() {
       // 当页面滚动超过一定距离时显示按钮
-     
-      this.visible = document.querySelector(this.className) && document.querySelector(this.className).scrollTop > 300;
-       console.log(this.visible,"this.className")
+      this.visible = document.querySelector(this.className) && document.querySelector(this.className).scrollTop > 300
     },
     scrollToTop() {
       // 平滑滚动到页面顶部
@@ -36,10 +34,10 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener("scroll", this.scrollTops, true);
+    window.addEventListener("scroll", this.scrollTops, true)
   },
   beforeDestroy() {
-    window.removeEventListener('scroll', this.scrollTops);
+    window.removeEventListener('scroll', this.scrollTops)
   }
 };
 </script>

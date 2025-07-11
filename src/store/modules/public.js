@@ -1,11 +1,10 @@
 const state = {
-  materiaList: null,
+  materiaList: [],
   interfaceMateriaList: JSON.parse(localStorage.getItem('interfaceMateriaList')) || [],
+  historyList: JSON.parse(localStorage.getItem('historyList')) || {},
   sendGoods:{},
-  historyList: sessionStorage.getItem('historyList') || [],
   goodsSelect:[],
   editSendGoods:{},
-  historyList: JSON.parse(localStorage.getItem('historyList')) || {},
   editGoods:{}
 };
 

@@ -41,7 +41,7 @@
     <div class="select-materials-list">
       <div class="van-list">
         <van-checkbox-group v-model="materiaId" v-if="filteredList.length">
-          <van-checkbox shape="square" :name="item.uniqueNumber" v-for="item in filteredList" :key="item.uniqueNumber"
+          <van-checkbox shape="square" :name="item.uniqueNumber" v-for="item in filteredList" :key="item.uniqueNumber || item.allocationUniqueNumber"
             :disabled="item.amount === item.cumulativeAmount">
             <ul class="list-ul">
               <li>
@@ -83,6 +83,7 @@
       </div>
     </div>
     <div class="default-button-container">
+      <van-checkbox v-model="allChecked" shape="square" @change="allChange">全选</van-checkbox>
       <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
     </div>
     <back-to-top className=".default-container"></back-to-top>
@@ -108,7 +109,8 @@ export default {
         pageSize: 10
       },
       contractData: {},
-      queryType: ''
+      queryType: '',
+      allChecked: false
     }
   },
   computed: {
@@ -137,6 +139,7 @@ export default {
       this.loading = true
       getListBySectionId({ contractId }).then(({ data }) => {
         this.materiaId = (this.$store.state.public.materiaList || []).map(item => item.uniqueNumber || item.allocationUniqueNumber)
+        this.allChecked = this.materiaId.length === data.length
         this.materiaList = this.$store.state.public.materiaList
         let interfaceMateriaList = (this.$store.state.public.interfaceMateriaList || [])
         
@@ -170,11 +173,25 @@ export default {
         this.$notify({ type: 'warning', message: '请选择需求物资' });
         return
       }
-      this.materiaList = this.list.filter(item => this.materiaId.includes(item.uniqueNumber))
+      let materiaList = this.materiaList.filter(item => this.materiaId.includes(item.uniqueNumber || item.allocationUniqueNumber))
+      const list = this.list.filter(item => this.materiaId.includes(item.uniqueNumber))
+      materiaList = materiaList.concat(list)
+      let obj = {}
+      this.materiaList = materiaList.reduce((cur, next) => {
+        obj[next.uniqueNumber || next.allocationUniqueNumber] ? "" : obj[next.uniqueNumber || next.allocationUniqueNumber] = true && cur.push(next);
+        return cur;
+      }, [])
       this.$store.dispatch('public/setMateriaList', this.materiaList)
       const { contractId, id } = this.$route.query
       const query = this.queryType == 'update' ? { contractId, type: this.queryType, id } : { contractId }
       this.$router.push({ name: 'SaveMaterials', query })
+    },
+    allChange () {
+      if(this.allChecked){
+        this.materiaId = this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber)
+      }else{
+        this.materiaId = []
+      }
     }
   }
 }
@@ -272,10 +289,6 @@ export default {
     padding-left: 10px;
     padding-bottom: 8px;
     font-size: 14px;
-  }
-
-  .button-info {
-    // min-width: 150px;
   }
 
   .select-Contract-money {

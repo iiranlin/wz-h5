@@ -36,7 +36,11 @@
       </div>
     </div>
     <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff" title-inactive-color="#2e2e2e">
-      <van-tab title="物资明细">
+      <van-tab :title="`物资明细（${detail.details.length}项）`">
+        <div slot="title">
+          <span>物资明细</span>
+          <span class="select-materials-select">（{{ detail.details.length }}项）</span>
+        </div>
         <material-details :list="detail.details"></material-details>
       </van-tab>
       <van-tab title="日志记录">
@@ -134,6 +138,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.select-materials-select {
+  font-size: 12px;
+}
 .van-tabs{
   padding-bottom: 62px;
 }

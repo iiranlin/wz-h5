@@ -139,13 +139,13 @@ export default {
     }
   },
   activated() {
-    const finallyData = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
-    const materiaList = this.materiaList.concat(finallyData)
-    let obj = {}
-    this.materiaList = materiaList.reduce((cur, next) => {
-      obj[next.uniqueNumber || next.allocationUniqueNumber] ? "" : obj[next.uniqueNumber || next.allocationUniqueNumber] = true && cur.push(next);
-      return cur;
-    }, [])
+    this.materiaList = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
+    // const materiaList = this.materiaList.concat(finallyData)
+    // let obj = {}
+    // this.materiaList = materiaList.reduce((cur, next) => {
+    //   obj[next.uniqueNumber || next.allocationUniqueNumber] ? "" : obj[next.uniqueNumber || next.allocationUniqueNumber] = true && cur.push(next);
+    //   return cur;
+    // }, [])
     this.$store.dispatch('public/setMateriaList', this.materiaList)
   },
   mounted() {
@@ -153,12 +153,12 @@ export default {
   },
   methods: {
     init() {
-      const finallyData = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
       const { id = null, contractId = null, type = '' } = this.$route.query
       this.queryId = id
       this.contractId = contractId
       this.queryType = type
-      this.materiaList.push(...finallyData)
+      this.materiaList = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
+      // this.materiaList.push(...finallyData)
       if (type != 'update') {
         this.getSectionProject()
       } else {
@@ -171,7 +171,7 @@ export default {
       if (historyList) {
         for (const key in obj) {
           if (historyList[key]) {
-            obj[key] = historyList[key][index] || ''
+            obj[key] = obj[key] || historyList[key][index] || ''
           }
         }
       }
@@ -185,7 +185,8 @@ export default {
         planAmount: item.amount - item.cumulativeAmount,
         allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber,
         field2: item.field2 || item.deliveryLocation,
-        ...obj
+        addr: item.addr || obj.addr, field0: item.field0 || obj.field0, field1: item.field1 || obj.field1
+        // ...obj
       }))
       return finallyData
     },
