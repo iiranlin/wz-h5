@@ -58,39 +58,39 @@
                       <span>本次发货数量：</span>
                       <span class="li-span-click">{{ item.sendTotal }}</span>
                     </li>
-                    <li v-if="isView">
+                    <li >
                       <span>生产日期：</span>
                       <span>{{ item.manufactureDate |formatToDate }}</span>
                     </li>
-                    <li class="li-item-overlength" v-if="isView">
+                    <li class="li-item-overlength" >
                       <span>有效期截止日期：</span>
                       <span>{{ item.expirationDate }}</span>
                     </li>
-                    <li v-if="isView">
+                    <li >
                       <span >使用地点：</span>
                       <span>{{ item.addr }}</span>
                     </li>
-                    <li v-if="isView">
+                    <li >
                       <span>收货地址：</span>
                       <span>{{ item.field2 }}</span>
                     </li>
-                    <li v-if="isView">
+                    <li >
                       <span>供应时间：</span>
                       <span>{{ item.supplyDate |formatToDate}}</span>
                     </li>
-                    <li class="li-item-overlength" v-if="isView">
+                    <li class="li-item-overlength" >
                       <span>收货人及联系方式：</span>
                       <span>{{ item.receiver }}</span>
                     </li>
-                    <li v-if="isView">
+                    <li >
                       <span>投资方：</span>
                       <span>{{ item.field0 }}</span>
                     </li>
-                    <li v-if="isView">
+                    <li >
                       <span>投资比例：</span>
                       <span>{{ item.field1 }}</span>
                     </li>
-                    <li class="li-item-remark" v-if="isView">
+                    <li class="li-item-remark" >
                       <span>备注：</span>
                       <div class="remark-detail">{{item.remark || '未填写'}}</div>
                     </li>
