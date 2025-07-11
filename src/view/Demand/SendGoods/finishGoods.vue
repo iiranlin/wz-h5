@@ -376,10 +376,10 @@ export default {
           errors[`goodsData[${index}].receiver`] = "请填写收货人";
         }
         if (!item.fileList01 || item.fileList01.length === 0) {
-          errors[`goodsData[${index}].fileList01`] = "请上传文件1";
+          errors[`goodsData[${index}].fileList01`] = "合格证附件";
         }
         if (!item.fileList02 || item.fileList02.length === 0) {
-          errors[`goodsData[${index}].fileList02`] = "请上传文件2";
+          errors[`goodsData[${index}].fileList02`] = "厂检报告附件";
         }
       });
  
