@@ -86,8 +86,20 @@
                                 </li>
                             </ul>
                             <div v-if="!logistics.oddNumbers">
+                              
                                 <div class="tab-div">
-                                    <van-row class="th-row">
+                                    <van-row class="th-row" align="center">
+                                        <van-col span="10">操作人</van-col>
+                                        <van-col span="8">货运位置</van-col>
+                                        <van-col span="6">填写时间</van-col>
+                                    </van-row>
+                                    <van-row v-for="item in logistics.materialTrackMessageDTOS"
+                                        :key="item.id">
+                                        <van-col span="10">{{ item.createUserName }}</van-col>
+                                        <van-col span="8">{{ item.positionInformation }}</van-col>
+                                        <van-col span="6">{{ formattedCreateDate(item.createDate) }}</van-col>
+                                    </van-row>
+                                    <!-- <van-row class="th-row">
                                         <van-col>操作人</van-col>
                                         <van-col>货运位置</van-col>
                                         <van-col>填写时间</van-col>
@@ -97,7 +109,7 @@
                                         <van-col>{{ item.createUserName }}</van-col>
                                         <van-col>{{ item.positionInformation }}</van-col>
                                         <van-col>{{ formattedCreateDate(item.createDate) }}</van-col>
-                                    </van-row>
+                                    </van-row> -->
                                 </div>
                             </div>
                             <div v-else>
@@ -450,29 +462,8 @@ li :nth-child(2) {
     border: 1px solid #e9e9e9;
     border-bottom: 0;
     border-right: 0;
-
-    .th-row,
-    .th-rows {
-        display: flex;
-        justify-content: space-between;
-        background: #f1f8ff;
-        border-bottom: 1px solid #e9e9e9;
-
-        .van-col {
-            line-height: 40px;
-            width: 90px;
-            padding: 0 10px;
-            border-right: 1px solid #e9e9e9;
-            font-size: 12px;
-
-            &:nth-child(1) {
-                width: 60px;
-            }
-        }
-    }
-
-    .th-rows {
-        background: #fff;
+    .th-row{
+        background-color: azure;
     }
 }
 
@@ -491,5 +482,11 @@ li :nth-child(2) {
     height: 300px;
     padding: 10px;
     box-sizing: border-box;
+  }
+  /deep/ .van-col{
+    font-size: 0.3rem;
+    padding: 0.2rem !important;
+    text-align: center !important;
+    border: 2px solid #fcfcfc;
   }
 </style>
