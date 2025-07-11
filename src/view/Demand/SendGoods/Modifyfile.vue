@@ -1,5 +1,5 @@
 <template>
-    <div class="default-container" ref="container" style="padding-bottom: 1.5rem;">
+    <div class="default-containers" ref="container" style="padding-bottom: 1.5rem;">
         <div class="detail-base-info">
         <div class="detail-title-content">
             <img src="/static/icon-xqjh.png">
@@ -40,46 +40,6 @@
             </ul>
         </div>
     </div>
-        <!-- <ul class="list-ul" style="margin: 10px;">
-            <li>
-                <span>发货单号：</span>
-                <span>{{ params.shipmentBatchNumber }}</span>
-            </li>
-
-            <li>
-                <span>货运状态：</span>
-                <span v-if="params.status == 1">未发货</span>
-                <span v-if="params.status == 2">货运中</span>
-                <span v-if="params.status == 3">已完成</span>
-            </li>
-
-
-          
-            <li>
-                <span>发货时间：</span>
-                <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate)
-                }}</span>
-            </li>
-            <li>
-                <span>操作人：</span>
-                <span>{{ params.createUserName }}</span>
-            </li>
-            <li>
-                <span>操作时间：</span>
-                <span v-if="params.createDate">{{ formatTimestamp(params.createDate) }}</span>
-            </li>
-            <li class="li-item-both">
-                <div class="li-item-left">
-                    <span style="width: 150px;">退货环节:</span>
-                    <span style="color:red;" v-if="params.backNode == 2">收货不通过</span>
-                    <span v-else>收货通过</span>
-                </div>
-                <div class="li-item-right">
-                    <span>退货时间:</span>
-                    <span>{{ formattedCreateDate(params.backDate) }}</span>
-                </div>
-            </li>
-        </ul> -->
         <div class="tabs">
             <van-tabs sticky  v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
           title-inactive-color="#2e2e2e">
@@ -250,10 +210,12 @@
             <!-- 编辑里的选择发货物资传的是planId -->
         </div>
         <file-preview ref="filePreview"></file-preview>
+        <back-to-top className=".default-container"></back-to-top>
     </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import BackToTop from '@/components/BackToTop'
 import { detailBySend } from '@/api/demand/sendGoods'
 import { minioUpload } from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
@@ -268,7 +230,7 @@ Vue.use(Uploader,Toast);
 export default {
     name: 'MyToDoList',
     mixins: [keepPages,indexMixin],
-    components: { FilePreview,FileUploadView,FileDownloadView },
+    components: { FilePreview,FileUploadView,FileDownloadView,BackToTop },
     data() {
         return {
             menuActiveIndex: 0,

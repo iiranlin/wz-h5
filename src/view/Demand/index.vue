@@ -107,10 +107,12 @@
       </van-tabs>
     </div>
     <file-preview ref="filePreview"></file-preview>
+     <back-to-top className=".van-tabs__content"></back-to-top>
   </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import BackToTop from '@/components/BackToTop'
 import { demandManagementList, demandManagementLookPdf } from '@/api/demand/demandManagement'
 import FilePreview from "@/components/FilePreview.vue";
 import Vue from 'vue';
@@ -119,7 +121,7 @@ Vue.use(Toast);
 export default {
   name: 'dashboard',
   mixins: [keepPages],
-  components: { FilePreview },
+  components: { FilePreview,BackToTop },
   data() {
     return {
       menuActiveIndex: 0,
@@ -160,6 +162,11 @@ export default {
           status: '4',
           title: '供货中',
         },
+        // {
+        //   id: 5,
+        //   status: '5',
+        //   title: '已验收',
+        // },
         {
           id: 6,
           status: '6',
@@ -172,17 +179,12 @@ export default {
       total: 0,
        statusArr: [
         { text: '全部', value: '' },
-        { text: '已驳回', value: '0' },
-        { text: '未提交', value: '1' },
+
         { text: '未确认', value: '2' },
         { text: '已确认', value: '3' },
         { text: '供货中', value: '4' },
-        { text: '已撤回', value: '5' },
+        { text: '已验收', value: '5' },
         { text: '已完成', value: '6' },
-        { text: '收货完成', value: '7' },
-        { text: '已入库', value: '8' },
-        { text: '已完成', value: '9' },
-        { text: '已退回', value: '10' },
       ],
     };
   },

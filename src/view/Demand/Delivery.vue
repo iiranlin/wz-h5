@@ -1,5 +1,5 @@
 <template>
-  <div ref="container">
+  <div class="default-container" ref="container" >
     <div class="list-search-container">
       <van-search v-model="params.queryField" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
           @search="onSearch">
@@ -133,10 +133,12 @@
       </div>
     </van-dialog>
     <file-preview ref="filePreview"></file-preview>
+    <back-to-top className=".van-tabs__content"></back-to-top>
   </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import BackToTop from '@/components/BackToTop'
 import Vue from 'vue';
 import { Dialog } from 'vant';
 import { Form } from 'vant';
@@ -156,7 +158,7 @@ Vue.use(Dialog);
 export default {
   name: 'Information',
   mixins: [keepPages],
-  components: { FilePreview },
+  components: { FilePreview,BackToTop },
   data() {
     return {
       formKey: 0,

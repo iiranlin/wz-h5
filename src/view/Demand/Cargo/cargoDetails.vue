@@ -1,5 +1,5 @@
 <template>
-    <div class="default-container" ref="container" :style="{ 'padding-bottom': (params.status == 1 || btnEvent==true) ? '1.3rem' : '0' }"
+    <div class="default-containers" ref="container" :style="{ 'padding-bottom': (params.status == 1 || btnEvent==true) ? '1.3rem' : '0' }"
 >
         <div class="detail-base-info">
             <div class="detail-title-content">
@@ -206,10 +206,12 @@
                 @click="handleDoAccept">初验收货</van-button>
         </div>
         <file-preview ref="filePreview"></file-preview>
+        <back-to-top className=".default-container"></back-to-top>
     </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import BackToTop from '@/components/BackToTop'
 import { detailBySend, snedGoodsSure } from '@/api/demand/sendGoods'
 import FilePreview from "@/components/FilePreview.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
@@ -221,7 +223,7 @@ Vue.use(Toast);
 export default {
     name: 'cargoDetails',
     mixins: [keepPages, indexMixin],
-    components: { FilePreview, FileDownloadView },
+    components: { FilePreview, FileDownloadView,BackToTop},
     data() {
         return {
             menuActiveIndex: 0,
@@ -358,9 +360,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .detail-title-content {
-
     position: relative;
-
     .detail-title-status {
         position: absolute;
         right: 10px;

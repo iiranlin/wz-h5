@@ -11,9 +11,6 @@ export default {
       visible: false, // 控制按钮的显示隐藏
     };
   },
-  watch:{
-    
-  },
   methods: {
     scrollTops() {
       // 当页面滚动超过一定距离时显示按钮

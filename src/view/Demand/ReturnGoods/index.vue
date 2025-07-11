@@ -1,5 +1,5 @@
 <template>
-    <div class="default-container" ref="container">
+    <div class="default-containers" ref="container">
         <div class="detail-base-info">
             <div class="detail-title-content">
                 <img src="/static/icon-xqjh.png">
@@ -84,6 +84,7 @@
             </van-list>
         </div>
         <file-preview ref="filePreview"></file-preview>
+         <back-to-top className=".default-container"></back-to-top>
     </div>
 </template>
 <script>
@@ -96,13 +97,14 @@ import indexMixin from '@/view/mixins'
 import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import BackToTop from '@/components/BackToTop'
 Vue.use(Toast);
 Vue.use(Form);
 Vue.use(Field);
 export default {
     name: 'MyProcess',
       mixins: [indexMixin],
-    components: { FilePreview, FileDownloadView,FileUploadView },
+    components: { FilePreview, FileDownloadView,FileUploadView,BackToTop },
     data() {
         return {
             username: '',
