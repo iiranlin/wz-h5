@@ -83,7 +83,7 @@
       </div>
     </div>
     <div class="default-button-container">
-      <van-checkbox v-model="allChecked" shape="square" @change="allChange">全选</van-checkbox>
+      <van-checkbox v-model="allChecked" shape="square" @click="allClick">全选</van-checkbox>
       <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
     </div>
     <back-to-top className=".default-container"></back-to-top>
@@ -176,6 +176,7 @@ export default {
       let materiaList = this.materiaList.filter(item => this.materiaId.includes(item.uniqueNumber || item.allocationUniqueNumber))
       const list = this.list.filter(item => this.materiaId.includes(item.uniqueNumber))
       materiaList = materiaList.concat(list)
+      console.log(materiaList)
       let obj = {}
       this.materiaList = materiaList.reduce((cur, next) => {
         obj[next.uniqueNumber || next.allocationUniqueNumber] ? "" : obj[next.uniqueNumber || next.allocationUniqueNumber] = true && cur.push(next);
@@ -186,7 +187,7 @@ export default {
       const query = this.queryType == 'update' ? { contractId, type: this.queryType, id } : { contractId }
       this.$router.push({ name: 'SaveMaterials', query })
     },
-    allChange () {
+    allClick () {
       if(this.allChecked){
         this.materiaId = this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber)
       }else{
@@ -194,7 +195,7 @@ export default {
       }
     },
     materiaIdChange () {
-      this.allChecked = this.materiaId.length === this.filteredList.length
+      this.allChecked = this.materiaId.length === this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber).length
     }
   }
 }
