@@ -16,11 +16,11 @@
           <span>需求组织：</span>
           <span>{{dataList.deptName}}</span>
         </li>
-        <li>
+        <li v-if="isLable">
           <span>操作人：</span>
           <span>{{dataList.createUserName}}</span>
         </li>
-        <li v-if="isView">
+        <li v-if="isLable">
           <span>收货时间：</span>
           <span>{{dataList.takeDate |formatDate }}</span>
         </li>
@@ -206,6 +206,7 @@ export default {
       showDatePicker: false, // 控制日期选择器显示
       id:"",
       tabs:true,  
+      isLable:false,
       dataList:[],
       fileTHList:[],
       fileZjdList:[],
@@ -359,7 +360,7 @@ export default {
       
     },
     checkClick(){
-      this.$router.push({name: 'DoAccept',query: {id:this.id,tabs:true}})
+      this.$router.push({name: 'DoAccept',query: {id:this.id,tabs:true,isLable:false}})
     },
     formatByDate(value) {
       if(value){
@@ -385,7 +386,8 @@ export default {
   mounted() {
     this.from = this.$route.query.from
     this.id = this.$route.query.id
-    this.tabs = this.$route.query.tabs
+    this.tabs = this.$route.query.tabs==(true||'true')
+    this.isLable =this.$route.query.isLable==(true||'true')
     this.getDetailList()  
   }
 }

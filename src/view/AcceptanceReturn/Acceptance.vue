@@ -226,7 +226,7 @@ export default {
      this.$store.dispatch('updateActiveTab', {
         activeTab:this.menuActiveIndex
       })
-      this.$router.push({name: 'DoAcceptDetail', query: {id:item.id,tabs:item.takeNumber?true:false}})
+      this.$router.push({name: 'DoAcceptDetail', query: {id:item.id,tabs:item.takeNumber?true:false,isLable:item.takeNumber?true:false}})
     },
     viewLogistic(item){
       this.$router.push({name: 'lookCargo', query: {id:item.planId,number:item.shipmentBatchNumber,logisticsNumber:item.oddNumbers}})
@@ -240,7 +240,7 @@ export default {
       this.$store.dispatch('updateActiveTab', {
         activeTab:this.menuActiveIndex
       })
-      this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true}})
+      this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true,isLable:false}})
     },
 
     //搜索点击
