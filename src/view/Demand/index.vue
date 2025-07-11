@@ -162,11 +162,11 @@ export default {
           status: '4',
           title: '供货中',
         },
-        {
-          id: 5,
-          status: '5',
-          title: '已验收',
-        },
+        // {
+        //   id: 5,
+        //   status: '5',
+        //   title: '已验收',
+        // },
         {
           id: 6,
           status: '6',
@@ -179,12 +179,11 @@ export default {
       total: 0,
        statusArr: [
         { text: '全部', value: '' },
-        { text: '已驳回', value: '0' },
-        { text: '未提交', value: '1' },
+
         { text: '未确认', value: '2' },
         { text: '已确认', value: '3' },
         { text: '供货中', value: '4' },
-        { text: '已验收', value: '5' },
+        // { text: '已验收', value: '5' },
         { text: '已完成', value: '6' },
       ],
     };
