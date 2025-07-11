@@ -1,20 +1,15 @@
 <template>
     <div ref="container" :style="{ paddingBottom: result.status === 6 ? '0' : '1.3rem' }">
          <div class="detail-base-info">
-             <div class="detail-title-content">
+             <div class="detail-title-content" style="padding-right: 1.5rem;">
                 <img src="/static/icon-xqjh.png">
-                    <span style="font-size: 0.3rem;">供应需求名称：</span>
-                    <span style="font-size: 0.3rem;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ result.planName }}</span>
+                    <span style="font-size: 0.32rem;">供应需求名称：</span>
+                    <span style="font-size: 0.32rem;overflow: hidden;text-overflow: ellipsis;">{{ result.planName }}</span>
                 <div class="detail-title-status">
                     <img :src="checkAuditStatus(result.status)" />
                     <span>{{ checkStatusText(result.status) }}</span>
                 </div>
             </div>
-            <!-- <div class="detail-title-content">
-                <img src="/static/icon-xqjh.png">
-                <span style="min-width: 03rem;">供应需求名称：</span>
-                <span class="text">{{ result.planName }}</span>
-            </div> -->
             <div>
                 <ul class="detail-ul">
                     <li>
@@ -29,13 +24,6 @@
                         <span>提报人：</span>
                         <span>{{ result.createUserName }}</span>
                     </li>
-                    <!-- <li class="li-status">
-            <template v-for="row in statusArr">
-              <van-tag :class="{ 'li-status-completed': row.value == '9' }"
-                :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
-                v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
-            </template>
-</li> -->
                 </ul>
             </div>
         </div>
@@ -248,7 +236,7 @@ export default {
     top: 0;
     display: flex;
     align-items: center;
-    height: 100%;
+    height: 0.55rem;
 
     img {
       width: 16px;

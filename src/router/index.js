@@ -260,7 +260,7 @@ export const routes = [
         component: () => import('@/view/Demand/SendGoods/Modifyfile.vue'),
         hidden: true,
         name: 'Modifyfile',
-        meta: { title: '发货详情' },
+        meta: { title: '修改附件' },
       },
       {
 

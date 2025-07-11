@@ -2,7 +2,7 @@
     <div class="default-containers" ref="container" :style="{ 'padding-bottom': (params.status == 1 || btnEvent==true) ? '1.3rem' : '0' }"
 >
         <div class="detail-base-info">
-            <div class="detail-title-content">
+            <div class="detail-title-content" style="padding-right: 1.5rem;">
                 <img src="/static/icon-xqjh.png">
                 <span>发货单号：</span>
                 <span>{{ params.shipmentBatchNumber }}</span>
@@ -367,7 +367,7 @@ export default {
         top: 0;
         display: flex;
         align-items: center;
-        height: 100%;
+        height: 0.55rem;
 
         img {
             width: 16px;
