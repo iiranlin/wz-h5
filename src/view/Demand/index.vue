@@ -162,11 +162,11 @@ export default {
           status: '4',
           title: '供货中',
         },
-        {
-          id: 5,
-          status: '5',
-          title: '已验收',
-        },
+        // {
+        //   id: 5,
+        //   status: '5',
+        //   title: '已验收',
+        // },
         {
           id: 6,
           status: '6',
