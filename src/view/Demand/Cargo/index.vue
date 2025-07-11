@@ -45,7 +45,7 @@
                     <van-list>
                         <div class="box-container">
                              <div class="detail-list-title-content">
-                                    <span class="font-weight">发货单号：</span>
+                                    <span class="font-weight" style="min-width: 1.6rem;">发货单号：</span>
                                     <span class="font-weight">{{ logistics.shipmentBatchNumber }}</span>
                                 </div>
                             <ul class="detail-list-ul">
@@ -124,7 +124,7 @@
                         <van-list>
                             <div class="box-container" v-for="(item, index) in logistics.materialCirculationDetailsTableDTOS" :key="index">
                                  <div class="detail-list-title-content">
-                                        <span class="font-weight">物资名称：</span>
+                                        <span class="font-weight" style="min-width: 1.6rem;">物资名称：</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
                                     </div>
                                 <ul class="detail-list-ul"

@@ -26,13 +26,6 @@
                 <span style="min-width: 4rem;">本次需求未发货数量：</span>
                 <span>{{ item.ssendTotal }}</span>
               </li>
-              <!-- <li class="li-status">
-            <template v-for="row in statusArr">
-              <van-tag :class="{ 'li-status-completed': row.value == '9' }"
-                :type="['0', '5'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
-                v-if="detail.planStatus == row.value">{{ row.text }}</van-tag>
-            </template>
-</li> -->
             </ul>
           </div>
         </div>
@@ -64,7 +57,7 @@
             <van-field v-model="goodsData[index].remark" label="备注" placeholder="请输入备注" input-align="right" />
           </van-form>
         </div>
-        <div style="padding-right: 1rem;">
+        <div style="padding-right: 0.5rem;">
           <file-upload-view title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01" />
           <file-upload-view title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01" />
         </div>
@@ -81,12 +74,14 @@
     <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date="minDate" :max-date="maxDate" />
     <van-calendar v-model="showCalendar" @confirm="createConfirm" />
     <history-list ref="historyList" @historyClick="historyClick"></history-list>
+    <back-to-top className=".default-container"></back-to-top>
   </div>
 
 </template>
 
 <script>
 import Vue from 'vue';
+import BackToTop from '@/components/BackToTop'
 import { Divider } from 'vant';
 import { Toast } from 'vant';
 import { DatetimePicker } from 'vant';
@@ -105,7 +100,8 @@ export default {
   name: "finishGoods",
   components: {
     FileUploadView,
-    historyList
+    historyList,
+    BackToTop
   },
   data() {
     const today = new Date();
@@ -226,7 +222,6 @@ export default {
         if (res.code == 0) {
           this.params = res.data
           // 存到缓存里
-          
           this.$store.dispatch('public/setGoodsSelect', res.data.materialCirculationDetailsTableDTOS)
           if (res.data.materialCirculationDetailsTableDTOS && res.data.materialCirculationDetailsTableDTOS.length > 0) {
             this.goodsData = res.data.materialCirculationDetailsTableDTOS.map(item => {
@@ -345,57 +340,6 @@ export default {
         this.showCalendar = false;
       }
     },
-    passReadUpload(file, index) {
-      let imgFile = new FormData();
-      imgFile.append("businessType", '01');
-      imgFile.append("key", file.file.name);
-      imgFile.append("file", file.file);
-      minioUpload(imgFile).then((res) => {
-        if (res.code == 0) {
-          this.$notify({
-            type: 'success',
-            message: "上传成功"
-          });
-          this.goodsData[index].fileList01 = [{
-            name: res.data.fileName,
-            url: res.data.filePath // 注意Vant通常使用url而不是path
-          }];
-        }
-      }).catch((err) => {
-        this.$notify({
-          type: 'warning',
-          message: "上传失败"
-        });
-      })
-    },
-    //厂检
-    checkReadUpload(file, index) {
-      let imgFile = new FormData();
-      imgFile.append("businessType", '01');
-      imgFile.append("key", file.file.name);
-      imgFile.append("file", file.file);
-      minioUpload(imgFile).then((res) => {
-        if (res.code == 0) {
-          this.$notify({
-            type: 'success',
-            message: "上传成功"
-          });
-          this.goodsData[index].fileList02 = [{
-            name: res.data.fileName,
-            url: res.data.filePath // 注意Vant通常使用url而不是path
-          }];
-          // this.$set(this.goodsData[index], 'factoryFileName', res.data.fileName); // 显示文件名
-
-          // this.params.fileName = res.data.fileName
-          // this.params.filePath = res.data.filePath
-        }
-      }).catch((err) => {
-        this.$notify({
-          type: 'warning',
-          message: "上传失败"
-        });
-      })
-    },
     back() {
       window.history.back();
     },
@@ -407,33 +351,76 @@ export default {
     delgoods(index) {
       this.goodsData.splice(index)
     },
+    validateForm() {
+      // 存储所有错误信息
+      const errors = {};
+    
+      // 遍历 goodsData，逐项验证
+      this.goodsData.forEach((item, index) => {
+         if (!item.sendTotal) {
+          errors[`goodsData[${index}].sendTotal`] = "请填写发货数量";
+        }
+         if (!item.packagingFm) {
+          errors[`goodsData[${index}].packagingFm`] = "请填写包装形式";
+        }
+         if (!item.manufactureDate) {
+          errors[`goodsData[${index}].manufactureDate`] = "请选择生产日期";
+        }
+         if (!item.field2) {
+          errors[`goodsData[${index}].field2`] = "请填写收货地址";
+        }
+        if (!item.supplyDate) {
+          errors[`goodsData[${index}].supplyDate`] = "请选择供应时间";
+        }
+        if (!item.receiver) {
+          errors[`goodsData[${index}].receiver`] = "请填写收货人";
+        }
+        if (!item.fileList01 || item.fileList01.length === 0) {
+          errors[`goodsData[${index}].fileList01`] = "请上传文件1";
+        }
+        if (!item.fileList02 || item.fileList02.length === 0) {
+          errors[`goodsData[${index}].fileList02`] = "请上传文件2";
+        }
+      });
+ 
+        // 如果有错误，显示第一个错误并返回 false
+        if (Object.keys(errors).length > 0) {
+          const firstErrorKey = Object.keys(errors)[0];
+          Toast.fail(errors[firstErrorKey]); // 显示第一个错误提示
+          return false;
+        }
+      
+        return true; // 验证通过
+      },
     save() {
       if (this.goodsData.length == 0) {
         Toast('没有可提交的内容');
         return;
       }
-
-      // 先校验所有数据
-      const isValid = this.goodsData.every((item) => {
-        return (
-          item.supplyDate &&
-          item.manufactureDate &&
-          item.sendTotal &&
-          item.packagingFm &&
-          item.addr &&
-          item.field2 &&
-          item.fileList01 &&
-          item.receiver &&
-          item.fileList02 &&
-          item.fileList01.length > 0 &&
-          item.fileList02.length > 0
-        );
-      });
-
-      if (!isValid) {
-        Toast.fail('请完善信息');
-        return;
+      if(!this.validateForm()){
+        return
       }
+      // // 先校验所有数据
+      // const isValid = this.goodsData.every((item) => {
+      //   return (
+      //     item.supplyDate &&
+      //     item.manufactureDate &&
+      //     item.sendTotal &&
+      //     item.packagingFm &&
+      //     item.addr &&
+      //     item.field2 &&
+      //     item.fileList01 &&
+      //     item.receiver &&
+      //     item.fileList02 &&
+      //     item.fileList01.length > 0 &&
+      //     item.fileList02.length > 0
+      //   );
+      // });
+
+      // if (!isValid) {
+      //   Toast.fail('请完善信息');
+      //   return;
+      // }
       // 给字段加缓存
       let obj = { packagingFm: [] }
       obj.packagingFm = this.goodsData.map(item => item.packagingFm)
@@ -497,16 +484,6 @@ export default {
           }
 
         })
-      }
-      // 只修改文件
-      if (this.text == 'file') {
-        modifySendGoods(params).then((res) => {
-          if (res.code == 0) {
-            Toast.success(res.data);
-            this.$router.push({ path: "/Information" })
-          }
-        })
-
       }
     },
     formattedCreateDate(timestamp) {

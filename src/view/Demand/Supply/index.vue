@@ -2,14 +2,14 @@
     <div ref="container" :style="{ paddingBottom: result.status === 6 ? '0' : '1.3rem' }">
          <div class="detail-base-info">
              <div class="detail-title-content">
-            <img src="/static/icon-xqjh.png">
-            <span style="font-size: 0.3rem;">供应需求名称：</span>
-                <span style="font-size: 0.3rem;overflow: hidden;">{{ result.planName }}</span>
-            <div class="detail-title-status">
-              <img :src="checkAuditStatus(result.status)" />
-              <span>{{ checkStatusText(result.status) }}</span>
+                <img src="/static/icon-xqjh.png">
+                    <span style="font-size: 0.3rem;">供应需求名称：</span>
+                    <span style="font-size: 0.3rem;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ result.planName }}</span>
+                <div class="detail-title-status">
+                    <img :src="checkAuditStatus(result.status)" />
+                    <span>{{ checkStatusText(result.status) }}</span>
+                </div>
             </div>
-          </div>
             <!-- <div class="detail-title-content">
                 <img src="/static/icon-xqjh.png">
                 <span style="min-width: 03rem;">供应需求名称：</span>
@@ -48,7 +48,7 @@
         <van-list>
             <div class="box-container" v-for="(item, index) in result.demandPlanDetailsGyDTOList" :key="index">
                 <div class="detail-list-title-content">
-                        <span class="font-weight">物资名称：</span>
+                        <span class="font-weight" style="min-width: 1.6rem;">物资名称：</span>
                         <span class="font-weight">{{ item.materialName }}</span>
                     </div>
                    <ul class="detail-list-ul" 

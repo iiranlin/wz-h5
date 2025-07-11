@@ -21,15 +21,6 @@
                 <span>操作时间：</span>
                 <span v-if="params.createDate">{{ formatTimestamp(params.createDate) }}</span>
             </li>
-             <li>
-                <span>退货环节：</span>
-                <span style="color:red;" v-if="params.issueType == 2">质检不通过</span>
-                        <span style="color:red;" v-else>收货不通过</span>
-            </li>
-             <li>
-                <span>退货时间：</span>
-                <span v-if="params.backDate">{{ formattedCreateDate(params.backDate) }}</span>
-            </li>
           <!-- <li class="li-status">
             <template v-for="row in statusArr">
               <van-tag :class="{ 'li-status-completed': row.value == '9' }"

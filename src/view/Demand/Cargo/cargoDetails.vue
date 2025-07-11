@@ -105,7 +105,7 @@
                             <div class="box-container"
                                 v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
                                 <div class="detail-list-title-content">
-                                    <span class="font-weight">物资名称：</span>
+                                    <span class="font-weight" style="min-width: 1.6rem;">物资名称：</span>
                                     <span class="font-weight">{{ item.materialName }}</span>
                                 </div>
                                 <ul class="detail-list-ul">

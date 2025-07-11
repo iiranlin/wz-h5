@@ -10,10 +10,11 @@
       <!-- <van-search v-model="searchQuery" placeholder="输入关键字搜索" background="center" :show-action="showAction"
         @search="onSearch" @cancel="onCancel" @focus="onFocus" /> -->
     </div>
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+    <div class="tabs">
+          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <!--本次需求未发货数量为0不可选-->
-        <van-checkbox shape="square" :name="item.id" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false">
+        <van-checkbox shape="square" :name="item.id" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false" ref="checkboxGroup">
            <div class="detail-base-info">
                  <div class="detail-title-content">
             <img src="/static/icon-xqjh.png">
@@ -80,7 +81,12 @@
         </van-checkbox>
       </van-checkbox-group>
     </van-list>
+    </div>
+
     <div class="default-button-container">
+        <div class="allChoose">
+          <van-checkbox v-model="isAllSelected" @change="toggleAll">全选</van-checkbox>
+        </div>
         <div class="chooseNum">
             已选物资<span class="number">{{ selectTotal }}</span>项
         </div>
@@ -123,7 +129,8 @@ export default {
       editData:{},
       fileDisabled:false,
       text:"",
-      filteredItems: []
+      filteredItems: [],
+      isAllSelected:false
     }
   },
   mounted() {
@@ -157,26 +164,6 @@ export default {
           // this.selectGoodsList = res.data.details
         }
       })
-    //   //  因为是编辑参数从缓存里取
-    // let arrdata = this.$store.state.public.goodsSelect
-    //   //   let arrdata = JSON.parse(this.$route.query.data)
-    //    this.selectGoodsList = arrdata.map(item => {
-    //         // 辅助函数：格式化日期为 YYYY-MM-DD
-    //         const formatDate = (dateString) => {
-    //           const date = new Date(dateString);
-    //           const year = date.getFullYear();
-    //           const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-    //           const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
-    //           return `${year}-${month}-${day}`;
-    //         };
-          
-    //         return {
-    //           ...item,
-    //           createDate: formatDate(item.createDate),
-    //           supplyDate: formatDate(item.supplyDate),
-    //           updateDate: formatDate(item.updateDate)
-    //         };
-    //       });
      
     }
     if(this.text=='add'){
@@ -184,7 +171,12 @@ export default {
     }
     
   },
-  
+  watch: {
+    // 监听selectedItems变化，动态更新全选状态
+    selectedItems() {
+      this.updateAllSelected();
+    }
+  },
   methods: {
     getSelectGoods(){
        Toast.loading({
@@ -211,8 +203,6 @@ export default {
               updateDate: formatDate(item.updateDate)
             };
           });
-          console.log(this.selectGoodsList,'11')
-          // this.selectGoodsList = res.data.details
         }
       })
     },
@@ -237,10 +227,6 @@ export default {
       
       const query = this.searchQuery.toLowerCase();
       this.selectGoodsList= this.selectGoodsList.filter(item => item.materialName.includes(query));
-      // this.selectGoodsList = this.selectGoodsList.filter(item => 
-      //   item.materialName.toLowerCase().includes(query)
-      // );
-      // this.getSelectGoods()
     },
     onLoad() {
       // 异步更新数据
@@ -282,14 +268,27 @@ export default {
       }
     },
     selectGoods(e){
-      const targetIds = new Set(e); // 转换为 Set，查找更快
+      const targetIds = new Set(e);
      this.selectArrayData = this.selectGoodsList.filter(item => targetIds.has(item.id));
-    //  console.log(arr)
-      // console.log(e)
-      // this.selectArrayData=e.flat()
-      // this.selectGoodsList.fi
       this.selectTotal = e.length
     },
+   toggleAll() {
+      if (this.isAllSelected) {
+        // 全选：选中所有id
+       this.result = this.selectGoodsList
+      .filter(item => item.ssendTotal != 0)
+      .map(item => item.id);
+      } else {
+        this.result = [];
+      }
+    },
+    // 监听选项变化，更新全选状态（可选）
+    updateAllSelected() {
+      const selectableItems = this.selectGoodsList.filter(item => item.ssendTotal != 0);
+      this.isAllSelected = selectableItems.every(item => 
+        this.result.includes(item.id)
+      );
+    }
   }
 }
 </script>
@@ -403,17 +402,22 @@ export default {
 .default-button-container{
     display: flex;
     font-size: 14px;
-    justify-content:space-around;
+    justify-content:space-between;
+    padding: 0 0.2rem;
+    box-sizing: border-box;
+    .allChoose{
+      width: 15%;
+    }
     .chooseNum{
-      width: 40%;
-      padding-left: 10px;
+      width: 28%;
+      padding-left: 0.1rem;
     }
     .btns{
       flex: 1;
       display: flex;
       justify-content: space-around;
       .btn{
-        margin: 0 10px;
+        margin: 0 0.1rem;
         display: flex;
         justify-content: center;
         height: 30px;
