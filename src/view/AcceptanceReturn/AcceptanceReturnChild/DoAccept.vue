@@ -164,13 +164,13 @@
           </van-tab>
      </van-tabs>
     <file-preview ref="filePreview"></file-preview>
-    <back-to-top className=".default-scroll"></back-to-top>
     <div class="default-button-container" v-if="!isView">
       <van-button class="button-info" round type="info" @click="addClick">确定收货</van-button>
     </div>
     <div class="default-button-container" v-if="!tabs">
       <van-button class="button-info" round type="info" @click="checkClick">初验收货</van-button>
     </div>
+    <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
 <script>
