@@ -6,7 +6,7 @@
         <van-tab title="入库列表">
           <div slot="title">
             <img src="@/assets/img/RKLB.png">
-            <span class="in-out-management-tab-span">入库列表</span>
+            <span class="in-out-management-tab-span">入库单</span>
           </div>
           <in-list-content></in-list-content>
         </van-tab>
@@ -20,14 +20,14 @@
         <van-tab title="退货列表">
           <div slot="title">
             <img src="@/assets/img/THLB.png">
-            <span class="in-out-management-tab-span">退货列表</span>
+            <span class="in-out-management-tab-span">退货单</span>
           </div>
           <refund-list-content></refund-list-content>
         </van-tab>
         <van-tab title="出库列表">
           <div slot="title">
             <img src="@/assets/img/CKLB.png">
-            <span class="in-out-management-tab-span">出库列表</span>
+            <span class="in-out-management-tab-span">出库单</span>
           </div>
           <out-list-content></out-list-content>
         </van-tab>

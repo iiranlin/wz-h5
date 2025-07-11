@@ -25,7 +25,7 @@ export default {
       if (window.innerWidth > window.innerHeight) {
         document.documentElement.style.fontSize = 50 + 'px'
       }else{
-        document.documentElement.style.fontSize = 60 + 'px'
+        document.documentElement.style.fontSize = 42 + 'px'
       }
     },
     isTablet() {

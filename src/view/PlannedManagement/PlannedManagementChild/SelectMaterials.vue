@@ -40,7 +40,7 @@
     </van-sticky>
     <div class="select-materials-list">
       <div class="van-list">
-        <van-checkbox-group v-model="materiaId" v-if="filteredList.length">
+        <van-checkbox-group v-model="materiaId" v-if="filteredList.length" @change="materiaIdChange">
           <van-checkbox shape="square" :name="item.uniqueNumber" v-for="item in filteredList" :key="item.uniqueNumber || item.allocationUniqueNumber"
             :disabled="item.amount === item.cumulativeAmount">
             <ul class="list-ul">
@@ -192,6 +192,9 @@ export default {
       }else{
         this.materiaId = []
       }
+    },
+    materiaIdChange () {
+      this.allChecked = this.materiaId.length === this.filteredList.length
     }
   }
 }
