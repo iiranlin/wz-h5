@@ -133,7 +133,7 @@
       </div>
     </van-dialog>
     <file-preview ref="filePreview"></file-preview>
-    <back-to-top className=".default-container"></back-to-top>
+    <back-to-top className=".tabs"></back-to-top>
   </div>
 </template>
 <script>

@@ -360,9 +360,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .detail-title-content {
-
     position: relative;
-
     .detail-title-status {
         position: absolute;
         right: 10px;
