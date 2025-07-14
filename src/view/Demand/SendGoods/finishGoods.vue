@@ -1,13 +1,18 @@
 <template>
   <div class="finish">
     <div class="main">
-      <div class="box" v-for="(item, index) in goodsData" :key="index">
+      <div v-if="goodsData.length>0">
+        <div class="box" v-for="(item, index) in goodsData" :key="index">
         <div class="detail-base-info">
-          <div class="detail-title-content">
-            <img src="/static/icon-xqjh.png">
-            <span>物资名称：</span>
-            <span>{{ item.materialName }}</span>
-          </div>
+          <div class="detail-title-content" style="padding-right: 0px;">
+                <img src="/static/icon-xqjh.png">
+                <span>物资名称：</span>
+                <span>{{ item.materialName }}</span>
+                <div class="detail-title-status">
+                    
+                    <span @click="delgoods(index)" style="color: red;">删除</span>
+                </div>
+            </div>
           <div>
             <ul class="detail-list-ul">
               <li>
@@ -61,6 +66,10 @@
           <file-upload-view title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01" />
           <file-upload-view title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01" />
         </div>
+      </div>
+      </div>
+      <div v-else>
+        <van-empty description="暂无数据" />
       </div>
     </div>
 
@@ -152,7 +161,9 @@ export default {
     }
     if (this.text == 'edit') {
       let editGoodsData = JSON.parse(this.$route.query.goodData)
-      if(editGoodsData && editGoodsData.length>0){
+      console.log(editGoodsData,'1111')
+      if(Array.isArray(editGoodsData) && editGoodsData.length>0){
+        
         this.goodsData = editGoodsData.map(item => ({
         ...item,
         planDetailId: item.id,
@@ -340,7 +351,7 @@ export default {
 
     },
     delgoods(index) {
-      this.goodsData.splice(index)
+      this.goodsData.splice(index,1)
     },
     validateForm() {
       // 存储所有错误信息
@@ -348,8 +359,11 @@ export default {
     
       // 遍历 goodsData，逐项验证
       this.goodsData.forEach((item, index) => {
-         if (!item.sendTotal) {
+         // 发货数量：必填且必须大于0
+        if (item.sendTotal === undefined || item.sendTotal === null || item.sendTotal === "") {
           errors[`goodsData[${index}].sendTotal`] = "请填写发货数量";
+        } else if (Number(item.sendTotal) <= 0) {
+          errors[`goodsData[${index}].sendTotal`] = "发货数量必须大于0";
         }
          if (!item.packagingFm) {
           errors[`goodsData[${index}].packagingFm`] = "请填写包装形式";
@@ -367,10 +381,10 @@ export default {
           errors[`goodsData[${index}].receiver`] = "请填写收货人";
         }
         if (!item.fileList01 || item.fileList01.length === 0) {
-          errors[`goodsData[${index}].fileList01`] = "合格证附件";
+          errors[`goodsData[${index}].fileList01`] = "请上传合格证附件";
         }
         if (!item.fileList02 || item.fileList02.length === 0) {
-          errors[`goodsData[${index}].fileList02`] = "厂检报告附件";
+          errors[`goodsData[${index}].fileList02`] = "请上传厂检报告附件";
         }
       });
  

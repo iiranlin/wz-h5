@@ -197,7 +197,7 @@ export default {
                 message: '加载中...',
                 forbidClick: true,
             });
-      demandChooseGoods(this.goodsId).then((res)=>{
+      editSnedGoods(this.goodsId).then((res)=>{
         if(res.code==0){
           Toast.clear()
           this.selectGoodsList = res.data.details.map(item => {
