@@ -24,6 +24,13 @@ export function demandSnedGoods(id) {
   })
 }
 
+//
+export function editSnedGoods(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detailWz/`+id,
+    method: 'GET',
+  })
+}
 //发货单附件
 export function demandSnedGoodsUpload(data) {
   return request({

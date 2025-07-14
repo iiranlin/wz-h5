@@ -14,7 +14,7 @@
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <!--本次需求未发货数量为0不可选-->
-        <van-checkbox shape="square" :name="item.id" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false" ref="checkboxGroup">
+        <van-checkbox shape="square" :name="item.allocationUniqueNumber" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false" ref="checkboxGroup">
            <div class="detail-base-info">
                  <div class="detail-title-content">
             <img src="/static/icon-xqjh.png">
@@ -102,7 +102,7 @@
 </template>
 <script>
 import BackToTop from '@/components/BackToTop'
-import {demandChooseGoods,demandSnedGoodsUpload} from '@/api/demand/demandManagement'
+import {editSnedGoods,demandSnedGoodsUpload} from '@/api/demand/demandManagement'
 import keepPages from '@/view/mixins/keepPages'
 import Vue from 'vue';
 import { Toast } from 'vant';
@@ -130,18 +130,30 @@ export default {
       fileDisabled:false,
       text:"",
       filteredItems: [],
-      isAllSelected:false
+      isAllSelected:false,
+      planId:""
+    }
+  },
+  watch:{
+    result:{
+     handler(newVal) {
+        console.log('通过watch监听选中变化:', newVal);
+        this.selectGoods(newVal)
+      },
+      deep: true
+    },
+      // 监听selectedItems变化，动态更新全选状态
+    selectedItems() {
+      this.updateAllSelected();
     }
   },
   mounted() {
    this.goodsId = this.$route.query.id 
-  
+    this.planId = this.$route.query.planId
     this.text = this.$route.query.text
     if(this.text=='edit'){
-      let planId = this.$route.query.planId
-      demandChooseGoods(planId).then((res)=>{
+      editSnedGoods(this.planId).then((res)=>{
         if(res.code==0){
-          Toast.clear()
           this.selectGoodsList = res.data.details.map(item => {
             // 辅助函数：格式化日期为 YYYY-MM-DD
             const formatDate = (dateString) => {
@@ -160,9 +172,16 @@ export default {
             };
           });
           
-           this.result = this.$store.state.public.goodsSelect.map(item => item.id);
+           this.result = this.$store.state.public.goodsSelect.map(item => item.allocationUniqueNumber);
+           console.log(this.result,'11')
           // this.selectGoodsList = res.data.details
-        }
+        } else {
+            this.$notify({
+              type: 'warning',
+              message: "暂无可选物资"
+            });
+            window.history.back()
+          }
       })
      
     }
@@ -171,12 +190,7 @@ export default {
     }
     
   },
-  watch: {
-    // 监听selectedItems变化，动态更新全选状态
-    selectedItems() {
-      this.updateAllSelected();
-    }
-  },
+
   methods: {
     getSelectGoods(){
        Toast.loading({
@@ -262,14 +276,14 @@ export default {
     },
     editClick(text,id){
        if(this.selectArrayData.length>0){
-        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:id,text:text} })
+        this.$router.push({ path: '/finishGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:id,text:text,planId:this.planId} })
       }else{
         Toast.fail('请选择至少一项');
       }
     },
     selectGoods(e){
       const targetIds = new Set(e);
-     this.selectArrayData = this.selectGoodsList.filter(item => targetIds.has(item.id));
+     this.selectArrayData = this.selectGoodsList.filter(item => targetIds.has(item.allocationUniqueNumber));
       this.selectTotal = e.length
     },
    toggleAll() {
@@ -277,7 +291,7 @@ export default {
         // 全选：选中所有id
        this.result = this.selectGoodsList
       .filter(item => item.ssendTotal != 0)
-      .map(item => item.id);
+      .map(item => item.allocationUniqueNumber);
       } else {
         this.result = [];
       }
@@ -286,7 +300,7 @@ export default {
     updateAllSelected() {
       const selectableItems = this.selectGoodsList.filter(item => item.ssendTotal != 0);
       this.isAllSelected = selectableItems.every(item => 
-        this.result.includes(item.id)
+        this.result.includes(item.allocationUniqueNumber)
       );
     }
   }

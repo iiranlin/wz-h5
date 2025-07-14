@@ -128,7 +128,8 @@ export default {
       fileDisabled: false,
       fileList01: [],
       fileList02: [],
-      params: {}
+      params: {},
+      planId:""
       // fileList1:[],
       // fileList2:[]
     };
@@ -136,7 +137,8 @@ export default {
   created() {
     this.goodsId = this.$route.query.id
     // 带回来的编辑标识
-    this.text = this.$route.query.text
+    this.text = this.$route.query.text,
+    this.planId = this.$route.query.planId
     if (this.text == 'add') {
       this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
         ...item,
@@ -151,7 +153,7 @@ export default {
     if (this.text == 'edit') {
       let editGoodsData = JSON.parse(this.$route.query.goodData)
       if(editGoodsData && editGoodsData.length>0){
-        this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
+        this.goodsData = editGoodsData.map(item => ({
         ...item,
         planDetailId: item.id,
         fileList01: [],
@@ -165,8 +167,6 @@ export default {
       }
       
     }
-
-
   },
   activated() {
     const finallyData = this.historyCache({ packagingFm: ''}, 0)
@@ -245,12 +245,6 @@ export default {
                 fileList02: this.fileListss(item.fileByList),
               };
             })
-          } else {
-            this.$notify({
-              type: 'warning',
-              message: "暂无可选物资"
-            });
-            window.history.back()
           }
 
            let  params = {
@@ -287,9 +281,6 @@ export default {
 
       let img = [{ fileName: imgUrl.cjbg[0].fileName, filePath: imgUrl.cjbg[0].filePath }]
       return img
-    },
-    onSubmit(values) {
-
     },
     onConfirm(date) {
       this.gongyingDate = `${date.getMonth() + 1}/${date.getDate()}`;
@@ -345,7 +336,7 @@ export default {
     },
     editBack(text, id) {
       // 如果缓存里有数据就带变有可选地物资
-     this.$router.push({ path: '/selectGoods', query: { text: text, id: id,planId:this.params.planId } })
+     this.$router.push({ path: '/selectGoods', query: { text: text, id: id,id:this.goodsId,planId:this.planId } })
 
     },
     delgoods(index) {
@@ -400,27 +391,6 @@ export default {
       if(!this.validateForm()){
         return
       }
-      // // 先校验所有数据
-      // const isValid = this.goodsData.every((item) => {
-      //   return (
-      //     item.supplyDate &&
-      //     item.manufactureDate &&
-      //     item.sendTotal &&
-      //     item.packagingFm &&
-      //     item.addr &&
-      //     item.field2 &&
-      //     item.fileList01 &&
-      //     item.receiver &&
-      //     item.fileList02 &&
-      //     item.fileList01.length > 0 &&
-      //     item.fileList02.length > 0
-      //   );
-      // });
-
-      // if (!isValid) {
-      //   Toast.fail('请完善信息');
-      //   return;
-      // }
       // 给字段加缓存
       let obj = { packagingFm: [] }
       obj.packagingFm = this.goodsData.map(item => item.packagingFm)

@@ -76,7 +76,7 @@
                     <van-button class="button-info" round type="info" @click.stop="handleSendGoodsClick(item.id)"
                       v-if="item.status == 1">确认发货</van-button>
                     <van-button class="button-info" plain round type="info"
-                      @click.stop="handleEditClick(item.id, 'edit')" v-if="item.status == 1">编辑</van-button>
+                      @click.stop="handleEditClick(item.id, 'edit',item.planId)" v-if="item.status == 1">编辑</van-button>
                     <van-button class="button-info" plain round type="danger" @click.stop="handleDelClick(item.id)"
                       v-if="item.status == 1">删除</van-button>
                     <van-button class="button-info" plain round type="info"
@@ -375,8 +375,8 @@ export default {
         })
     },
     //编辑
-    handleEditClick(id, title) {
-      this.$router.push({ path: '/finishGoods', query: {goodData:JSON.stringify([]), id: id, text: title } })
+    handleEditClick(id, title,planId) {
+      this.$router.push({ path: '/finishGoods', query: {goodData:JSON.stringify([]), id: id, text: title,planId:planId } })
     },
     //文件修改
     handleUpload(id) {
