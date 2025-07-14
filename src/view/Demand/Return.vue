@@ -12,8 +12,7 @@
     </div>
     <div class="tabs" v-if="returnList.length > 0">
       <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad" :offset="10"
-          :immediate-check="false">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad" >
           <div class="detail-base-info">
                 <div v-for="(item, index) in returnList" :key="index" class="box-container"
             @click="handleDetailsItemClick(item.id)">
@@ -134,7 +133,7 @@ components:{BackToTop},
             this.returnList = [];
             this.allRefreshLoading = false;
           }
-          if (res.data.list.length < 1) {
+          if (this.params.pageNum === 1) {
             this.returnList = res.data.list
           } else {
 
