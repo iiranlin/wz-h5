@@ -132,7 +132,7 @@ export default {
         this.detailList = data.materialSupplierOutDetailDTOS;
         this.fileList = JSON.parse(data.fileByList).lld;
 
-        this.fileList = [...this.fileList,...this.fileList]
+        // this.fileList = [...this.fileList,...this.fileList]
       }).catch((error) => {
 
       }).finally(() => {
