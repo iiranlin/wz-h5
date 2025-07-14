@@ -10,7 +10,7 @@
                 <span>{{ item.materialName }}</span>
                 <div class="detail-title-status">
                     
-                    <span @click="delgoods(index)" style="color: red;">删除</span>
+                    <span @click="delgoods(index)" style="color: red;font-size: 0.3rem;">删除</span>
                 </div>
             </div>
           <div>

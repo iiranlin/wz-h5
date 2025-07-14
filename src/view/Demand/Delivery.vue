@@ -562,8 +562,7 @@ export default {
 }
 
 .button-info {
-  width: 85px;
-  font-size: 12px;
+  min-width: 2rem;
 }
 
 .footer_button {
