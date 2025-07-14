@@ -182,7 +182,7 @@ export default {
         supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
         minDate: this.minDate,
         showDatePicker: this.showDatePicker,
-        planAmount: item.amount - item.cumulativeAmount,
+        planAmount: item.planAmount || item.amount - item.cumulativeAmount,
         allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber,
         field2: item.field2 || item.deliveryLocation,
         addr: item.addr || obj.addr, field0: item.field0 || obj.field0, field1: item.field1 || obj.field1

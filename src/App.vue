@@ -14,12 +14,9 @@ export default {
   mounted() {
     if(this.isTablet()){
       this.handleResize()
-      // window.addEventListener('resize', this.handleResize)
+      window.addEventListener('resize', this.handleResize)
     }
   },
-  // beforeDestroy() {
-  //   window.removeEventListener('resize', this.handleResize)
-  // },
   methods: {
     handleResize() {
       document.documentElement.style.fontSize = 42 + 'px'
@@ -36,6 +33,9 @@ export default {
       const screenWidth = window.innerWidth;
       return isTabletUA || (isMobileUA && screenWidth > 768)
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>

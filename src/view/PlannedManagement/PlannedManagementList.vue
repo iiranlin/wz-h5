@@ -84,15 +84,19 @@
   </div>
 </template>
 <script>
+import keepPages from '@/view/mixins/keepPages'
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'PlannedManagement',
-  mixins: [indexMixin],
-  // dicts: ['JLDW'],
+  mixins: [keepPages, indexMixin],
   components: { BackToTop, activitiAssignee },
+  beforeRouteLeave (to, from, next) {
+    from.meta.plannedManagementIndex = this.statusValue
+    next()
+  },
   data() {
     return {
       searchValue: '',
@@ -122,6 +126,11 @@ export default {
         pageSize: 10
       },
       businessCode: { '1': 'FBYLXQ', '2': 'FBYLJH', '3': 'YLXQ', '4': 'YLJH' }
+    }
+  },
+  created () {
+    if(this.$route.meta.plannedManagementIndex){
+      this.statusValue = this.$route.meta.plannedManagementIndex
     }
   },
   mounted() {
