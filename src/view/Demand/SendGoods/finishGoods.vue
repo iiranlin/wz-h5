@@ -409,29 +409,24 @@ export default {
       let obj = { packagingFm: [] }
       obj.packagingFm = this.goodsData.map(item => item.packagingFm)
 
-      let hgz = [] //合格证
-      let cjbg = []
-      let fileList = []
       this.goodsData.forEach((item) => {
-        hgz.push({
-          fileName: item.fileList01[0].fileName,
-          filePath: item.fileList01[0].filePath,
-        });
-        cjbg.push({
-          fileName: item.fileList02[0].fileName,
-          filePath: item.fileList02[0].filePath,
-        });
+        let fileByList = {};
+        //报验结果
+        if (item.fileList01.length > 0) {
+          this.$set(fileByList, "hgz", item.fileList01);
+        }
+        if (item.fileList02.length > 0) {
+          this.$set(fileByList, "cjbg", item.fileList01);
+        }
+        item.fileByList = JSON.stringify(fileByList);
       });
+      let materialCirculationDetailsTableParamList = this.goodsData
       //保存
       if (this.text == 'add') {
-        let materialCirculationDetailsTableParamList = this.goodsData.map((item) => ({
-          ...item,
-          fileByList: JSON.stringify({ hgz, cjbg })
-        }))
         // 如果网络请求只有这个字段的值materialCirculationDetailsTableParamList，那就是缓存里的值被刷新没了，从头开始走流程就可以了
         let params = {
           ...this.$store.state.public.sendGoods,
-          materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
+          materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
         }
         demandSaveSendGoods(params).then((res) => {
           if (res.code == 0) {
@@ -442,25 +437,20 @@ export default {
 
         })
       } else {
-        let materialCirculationDetailsTableParamList = this.goodsData.map((item) => ({
-          ...item,
-          fileByList: JSON.stringify({ hgz, cjbg })
-        }))
         // 判断缓存里有没有编辑好的基础信息
         let dataList = this.$store.state.public.editSendGoods
         let params = {}
         if (dataList.shippingDate) {
           params = {
             ...this.$store.state.public.editSendGoods,
-            materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
+            materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
           }
         } else {
           params = {
             ...this.$store.state.public.editGoods,
-            materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
+            materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
           }
         }
-        console.log(params)
         modifySendGoods(params).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);
