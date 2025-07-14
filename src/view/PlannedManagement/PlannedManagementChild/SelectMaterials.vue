@@ -24,7 +24,7 @@
           <span style="color: red;">{{ contractData.materialUsedRatio }}%</span>
         </li>
       </ul>
-      <div class="list-ul-button">
+      <div class="list-ul-button" v-if="queryType != 'update'">
         <van-tag type="primary" round size="medium" @click="selectClick">选择合同</van-tag>
       </div>
     </div>
