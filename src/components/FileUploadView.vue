@@ -53,7 +53,7 @@ export default {
         },
         accept:{
             type: String,
-            default: '',
+            default: '.pdf',
         }
     },
     data() {
@@ -64,6 +64,14 @@ export default {
     methods:{
         //附件上传前
         beforeRead(file){
+            const types = ['.pdf'];
+            if (!types.includes(`.${file.name.split('.').pop().toLowerCase()}`)) {
+              this.$notify({
+                type: 'warning',
+                message: '仅支持上传 PDF 文件!',
+              });
+              return false;
+            }
             const isLt10M = file.size / 1024 / 1024 < 10;
             const isFileName = file.name.length < 90;
 
@@ -92,6 +100,11 @@ export default {
             
             file.status = 'uploading';
             file.message = '上传中...';
+            const Toast = this.$toast.loading({
+              message: '上传中...',
+              duration: 0,
+              forbidClick: true,
+            });
 
             minioUpload(formData).then(({data}) => {
                 this.$notify({
@@ -108,6 +121,8 @@ export default {
                     type: 'warning',
                     message: "上传失败"
                 });
+            }).finally( () => {
+              Toast.clear();
             })
         },
          //匹配附件图标
