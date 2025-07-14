@@ -148,6 +148,7 @@ components:{BackToTop},
       })
     },
     formattedCreateDate(timestamp) {
+      if (!timestamp) return ''; // 处理空值
       const date = new Date(timestamp);
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0

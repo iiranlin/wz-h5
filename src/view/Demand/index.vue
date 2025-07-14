@@ -29,19 +29,7 @@
                       <span>{{ checkStatusText(item.status) }}</span>
                     </div>
                   </div>
-                   <!-- <div class="detail-title-content">
-                    <span style="font-size: 0.3rem;">需求编号：</span>
-                    <span style="font-size: 0.3rem;color: rgb(19, 77, 170);">{{ item.planNumber }}</span>
-                    <div class="detail-title-status">
-                      <img :src="checkAuditStatus(item.status)" />
-                      <span>{{ checkStatusText(item.status) }}</span>
-                    </div>
-                  </div> -->
                   <ul class="list-ul">
-                    <!-- <li>
-                      <span class="font-weight">需求编号:</span>
-                      <span class="font-weight">{{ item.planNumber }}</span>
-                    </li> -->
                     <li>
                       <span>需求名称：</span>
                       <span class="text">{{ item.planName }}</span>
@@ -72,17 +60,6 @@
                         </template>
                       </span>
                     </li>
-                    <!-- <li class="li-status">
-                      <van-tag type="primary" round size="medium" v-if="item.status == 2">未确认</van-tag>
-                      <van-tag type="primary" round size="medium" v-if="item.status == 3"><i class="font_family
-                icon-icon-selected-16
-                "></i>已确认</van-tag>
-                      <van-tag type="primary" round size="success" v-if="item.status == 4"><i class="font_family
-                    icon-icon-selected-16
-                    "></i>供应中</van-tag>
-                      <van-tag type="primary" round size="medium" v-if="item.status == 6"
-                        class="li-status-completed">已完成</van-tag>
-                    </li> -->
                   </ul>
                   <div class="list-ul-button">
                     <van-button class="button-info" plain round type="info" @click.stop="handleSupplyClick(item.id)"
@@ -222,6 +199,7 @@ export default {
       })
     },
     formattedCreateDate(timestamp) {
+      if(!timestamp) return ''
       const date = new Date(timestamp);
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0

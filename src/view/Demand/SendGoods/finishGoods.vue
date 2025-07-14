@@ -471,6 +471,7 @@ export default {
       }
     },
     formattedCreateDate(timestamp) {
+      if(!timestamp) return ''
       const date = new Date(timestamp);
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
