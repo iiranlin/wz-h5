@@ -161,7 +161,6 @@ export default {
     }
     if (this.text == 'edit') {
       let editGoodsData = JSON.parse(this.$route.query.goodData)
-      console.log(editGoodsData,'1111')
       if(Array.isArray(editGoodsData) && editGoodsData.length>0){
         
         this.goodsData = editGoodsData.map(item => ({
@@ -460,7 +459,6 @@ export default {
             materialCirculationDetailsTableParamList: materialCirculationDetailsTableParamList //取出store里的物资数据用于保存
           }
         }
-        console.log(params)
         modifySendGoods(params).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);

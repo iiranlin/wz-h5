@@ -11,7 +11,7 @@
         @search="onSearch" @cancel="onCancel" @focus="onFocus" /> -->
     </div>
     <div class="tabs">
-          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+          <van-list v-model="loading" :finished="finished" finished-text="没有更多了">
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <!--本次需求未发货数量为0不可选-->
         <van-checkbox shape="square" :name="item.allocationUniqueNumber" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false" ref="checkboxGroup">
@@ -137,7 +137,6 @@ export default {
   watch:{
     result:{
      handler(newVal) {
-        console.log('通过watch监听选中变化:', newVal);
         this.selectGoods(newVal)
       },
       deep: true
@@ -173,7 +172,6 @@ export default {
           });
           
            this.result = this.$store.state.public.goodsSelect.map(item => item.allocationUniqueNumber);
-           console.log(this.result,'11')
           // this.selectGoodsList = res.data.details
         } else {
             this.$notify({
@@ -242,21 +240,6 @@ export default {
       const query = this.searchQuery.toLowerCase();
       this.selectGoodsList= this.selectGoodsList.filter(item => item.materialName.includes(query));
     },
-    onLoad() {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-        // 加载状态结束
-        this.loading = false;
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 500);
-    },
     back() {
       history.back()
     },
@@ -283,12 +266,11 @@ export default {
     },
     selectGoods(e){
       const targetIds = new Set(e);
-     this.selectArrayData = this.selectGoodsList.filter(item => targetIds.has(item.allocationUniqueNumber));
+      this.selectArrayData = this.selectGoodsList.filter(item => targetIds.has(item.allocationUniqueNumber));
       this.selectTotal = e.length
     },
    toggleAll() {
       if (this.isAllSelected) {
-        // 全选：选中所有id
        this.result = this.selectGoodsList
       .filter(item => item.ssendTotal != 0)
       .map(item => item.allocationUniqueNumber);

@@ -283,8 +283,6 @@ export default {
       const hours = now.getHours(); // 时（0-23）
       const minutes = now.getMinutes(); // 分（0-59）
       const seconds = now.getSeconds(); // 秒（0-59）
-
-      console.log(`${year}-${month}-${date} ${hours}:${minutes}:${seconds}`);
       return `${year}-${month}-${date}`;
     },
     formattedCreateDate(timestamp) {
