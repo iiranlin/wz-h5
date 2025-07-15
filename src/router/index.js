@@ -9,7 +9,9 @@ import ItemHead from '@/components/itemHead'
 const typeName = {
   submit: '提交',
   update: '修改',
-  view: '详情'
+  view: '详情',
+  create:'新增',
+  update:'编辑',
 }
 
 export const routes = [
@@ -165,6 +167,21 @@ export const routes = [
         name: 'LogisticsView',
         meta: { title: '查看物流' },
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/LogisticsView.vue')
+      },
+      {
+        path: 'ReceiptList',
+        name: 'ReceiptList',
+        meta: { title: '选择收货信息' },
+        component: () => import('@/view/PlannedManagement/PlannedManagementChild/ReceiptList.vue')
+      },
+      {
+        path: 'ReceiptOperate',
+        name: 'ReceiptOperate',
+        component: () => import('@/view/PlannedManagement/PlannedManagementChild/ReceiptOperate.vue'),
+        beforeEnter(to, from, next) {
+          to.meta.title = `${typeName[to.query.type]}收货信息`,
+          next()
+        }
       },
     ]
   },
