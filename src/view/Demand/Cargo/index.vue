@@ -284,6 +284,7 @@ export default {
              // 获取发货单号
             listPcNumber(this.wuLiuId).then((res)=>{
                 if(res.code==0){
+                    console.log(res.data[0].shipmentBatchNumber)
                     this.shipmentBatchNumber = JSON.stringify(res.data[0].shipmentBatchNumber)
                     this.getOrderNumber(res.data[0].shipmentBatchNumber)
                 }
@@ -380,6 +381,7 @@ export default {
             return `${year}-${month}-${day}`;
         },
         expressDataFun(expressData) {
+            //  console.log(expressData)
             this.expressData = expressData
         },
         imgClick(fileName, filePath) {

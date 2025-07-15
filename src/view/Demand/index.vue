@@ -231,7 +231,7 @@ export default {
     },
     //查看物流
     handleLookClick(id, number, logisticsNumber) {
-       this.$router.push({ path: '/lookCargo', query: { id: id, number: number, logisticsNumber: logisticsNumber } })
+       this.$router.push({ name: 'LogisticsView', query: { id: id, number: number, logisticsNumber: logisticsNumber } })
     },
     //供应详情
     handleSupplyClick(id) {
