@@ -1,7 +1,7 @@
 <template>
   <div class="select-materials">
     <div class="select-materials-search">
-     <van-search v-model="searchQuery" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
+     <van-search v-model="searchQuery" placeholder="输入规格型号" left-icon="none" shape="round" :show-action="showAction"
           @search="onSearch">
           <template slot='right-icon'>
             <van-icon name="search" @click="statusChange()" />
@@ -14,7 +14,7 @@
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了">
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <!--本次需求未发货数量为0不可选-->
-        <van-checkbox shape="square" :name="item.allocationUniqueNumber" v-for="(item, index) in selectGoodsList" :key="index" :disabled="item.ssendTotal == 0 ? true : false" ref="checkboxGroup">
+        <van-checkbox shape="square" :name="item.allocationUniqueNumber" v-for="(item, index) in filteredList" :key="index" :disabled="item.ssendTotal == 0 ? true : false" ref="checkboxGroup">
            <div class="detail-base-info">
                  <div class="detail-title-content">
             <img src="/static/icon-xqjh.png">
@@ -134,6 +134,12 @@ export default {
       planId:""
     }
   },
+   computed: {
+    filteredList() {
+      if (!this.searchQuery) return this.selectGoodsList; // 如果搜索值为空，返回所有数据
+      return this.selectGoodsList.filter(item => item.specModel.includes(this.searchQuery)); // 过滤匹配的数据项
+    }
+  },
   watch:{
     result:{
      handler(newVal) {
@@ -151,37 +157,8 @@ export default {
     this.planId = this.$route.query.planId
     this.text = this.$route.query.text
     if(this.text=='edit'){
-      editSnedGoods(this.planId).then((res)=>{
-        if(res.code==0){
-          this.selectGoodsList = res.data.details.map(item => {
-            // 辅助函数：格式化日期为 YYYY-MM-DD
-            const formatDate = (dateString) => {
-              const date = new Date(dateString);
-              const year = date.getFullYear();
-              const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-              const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
-              return `${year}-${month}-${day}`;
-            };
-          
-            return {
-              ...item,
-              createDate: formatDate(item.createDate),
-              supplyDate: formatDate(item.supplyDate),
-              updateDate: formatDate(item.updateDate)
-            };
-          });
-          
-           this.result = this.$store.state.public.goodsSelect.map(item => item.allocationUniqueNumber);
-          // this.selectGoodsList = res.data.details
-        } else {
-            this.$notify({
-              type: 'warning',
-              message: "暂无可选物资"
-            });
-            window.history.back()
-          }
-      })
-     
+    
+     this.editDetails()
     }
     if(this.text=='add'){
        this.getSelectGoods()
@@ -218,6 +195,39 @@ export default {
         }
       })
     },
+    editDetails(){
+        editSnedGoods(this.planId).then((res)=>{
+        if(res.code==0){
+          this.selectGoodsList = res.data.details.map(item => {
+            // 辅助函数：格式化日期为 YYYY-MM-DD
+            const formatDate = (dateString) => {
+              const date = new Date(dateString);
+              const year = date.getFullYear();
+              const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+              const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
+              return `${year}-${month}-${day}`;
+            };
+          
+            return {
+              ...item,
+              createDate: formatDate(item.createDate),
+              supplyDate: formatDate(item.supplyDate),
+              updateDate: formatDate(item.updateDate)
+            };
+          });
+          
+           this.result = this.$store.state.public.goodsSelect.map(item => item.allocationUniqueNumber);
+          // this.selectGoodsList = res.data.details
+        } else {
+            this.$notify({
+              type: 'warning',
+              message: "暂无可选物资"
+            });
+            window.history.back()
+          }
+      })
+    },
+
      formatDate(timestamp) {
       const date = new Date(timestamp);
       return date.toLocaleDateString().replace(/\//g, "-"); // 或者使用其他格式化选项，如 toLocaleString 或 toISOString
@@ -232,19 +242,27 @@ export default {
       // this.showAction = false;
     },
     statusChange(){
-      if (this.searchQuery.trim() === '') {
-        this.getSelectGoods()
-        return;
-      }
+    //   if (this.searchQuery.trim() === '') {
+    //     if(this.text=='add'){
+    //        this.getSelectGoods()
+    //     }else{
+    //       this.editDetails()
+    //     }
+       
+    //     return;
+    //   }
       
-      const query = this.searchQuery.toLowerCase();
-      this.selectGoodsList= this.selectGoodsList.filter(item => item.materialName.includes(query));
+    //   const query = this.searchQuery.toLowerCase();
+    // // 使用原始数据进行过滤，并创建新数组
+    // this.selectGoodsList = this.selectGoodsList.filter(item => 
+    //   item.materialName.toLowerCase().includes(query)
+    // );
     },
     back() {
       history.back()
     },
     editBack(text,id){
-      this.$router.push({path:'/sendGoods',query:{title:text,id:id}})
+      this.$router.push({path:'/sendGoods',query:{title:text,id:id,planId:this.planId}})
     },
     selectClick () {
       this.$router.push({ name: 'SelectContract' })

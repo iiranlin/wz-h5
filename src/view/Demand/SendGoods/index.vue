@@ -181,11 +181,13 @@ export default {
       text: "",
       fileDisabled: false,
       fileByList: "",
+      planId:''
     };
   },
   created() {
     this.text = this.$route.query.title;
     this.goodsId = this.$route.query.id;
+    this.planId = this.$route.query.planId;
     //编辑
     if (this.text == "edit") {
       this.editDetails();
@@ -417,7 +419,7 @@ export default {
           // 编辑时如果到了这页面就把数据存到缓存里
           this.$store.dispatch("public/setEditSendGoods", params);
           //判断有没有可供选择的物资
-          this.$router.push({ path: "/selectGoods", query: { text: text } });
+          this.$router.push({ path: "/selectGoods", query: { text: text,planId:this.planId } });
         })
         .catch(() => {
           //验证失败
