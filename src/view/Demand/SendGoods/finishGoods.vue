@@ -24,7 +24,7 @@
                   <span>{{ item.unit }}</span>
                 </li>
                 <li>
-                  <span style="min-width: 2rem;">次计划数量：</span>
+                  <span style="min-width: 2rem;">本次计划数量：</span>
                   <span>{{ item.planAmount }}</span>
                 </li>
                 <li style="color: red;">
