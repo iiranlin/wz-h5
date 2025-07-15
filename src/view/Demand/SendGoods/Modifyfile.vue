@@ -118,7 +118,7 @@
                                v-for="(item, index) in materialCirculationDetailsTableDTOS" :key="index" >
                                 <div class="detail-list-title-content">
                                     <span class="font-weight">物资名称：</span>
-                                    <span class="font-weight">{{ item.materialName }}</span>
+                                    <span class="font-weight" style="min-width: 2.5rem;">{{ item.materialName }}</span>
                                 </div>
                                 <ul class="detail-list-ul" >
                                    
