@@ -37,7 +37,7 @@
           <van-divider />
           <div class="detail-list-ul">
             <van-form ref="form">
-              <van-field v-model="goodsData[index].sendTotal" required label="发货数量" placeholder="发货数量"
+              <van-field v-model="goodsData[index].sendTotal" type="number" required label="发货数量" placeholder="发货数量"
                 input-align="right" />
               <van-field v-model="goodsData[index].packagingFm" @click.stop="fieldClick($event, 'packagingFm', index)"
                 required label="包装形式" placeholder="请输入包装形式" input-align="right" />
