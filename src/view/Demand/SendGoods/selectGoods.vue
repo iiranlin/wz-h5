@@ -53,7 +53,7 @@
             </li>
              <li>
               <span>收货地点:</span>
-              <span>{{ item.shippingAddress }}</span>
+              <span>{{ item.field2 }}</span>
             </li>
               <li>
               <span>收货人及联系方式:</span>

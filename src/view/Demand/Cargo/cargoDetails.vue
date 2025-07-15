@@ -24,7 +24,7 @@
                     </li>
                     <li>
                         <span>操作人：</span>
-                        <span>{{ params.sectionName }}</span>
+                        <span>{{ params.createUserName }}</span>
                     </li>
                     <li>
                         <span>操作时间：</span>
@@ -40,7 +40,7 @@
                     <van-list>
                         <div class="box-container">
                             <div class="detail-list-title-content">
-                                <span class="font-weight">供应需求名称：</span>
+                                <span class="font-weight" style="min-width: 2.5rem;">供应需求名称：</span>
                                 <span class="font-weight">{{ params.planName }}</span>
                             </div>
                             <ul class="detail-list-ul">
