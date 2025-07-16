@@ -20,33 +20,41 @@
           <span>{{ contractData.seller }}</span>
         </li>
         <li class="li-item-overlength">
-          <span style="color: red;">计划金额比例：</span>
-          <span style="color: red;">{{ contractData.materialUsedRatio }}%</span>
+          <span >计划金额比例：</span>
+          <span class="li-span-click">{{ contractData.materialUsedRatio }}%</span>
         </li>
       </ul>
-      <div class="list-ul-button" v-if="queryType != 'update'">
+      <!-- <div class="list-ul-button" v-if="queryType != 'update'">
         <van-tag type="primary" round size="medium" @click="selectClick">选择合同</van-tag>
-      </div>
+      </div> -->
     </div>
     <van-sticky class="select-materials-sticky">
       <div class="select-materials-search">
-        <p class="select-materials-search-p font-weight">
-      <img src="/static/icon-return.png"/>
-      <span>请选择需求物资</span>
-      <span class="select-materials-select">（已选择<span class="select-materials-select-num">{{ materiaId.length }}</span>项）</span></p>
-      <van-search v-model="searchValue" placeholder="输入规格型号" background="center" :show-action="showAction"
-        @search="onSearch" />
+        <p class="select-materials-search-p">
+        <van-checkbox v-model="allChecked" @click="allClick">全选</van-checkbox>
+          <!-- <img src="/static/icon-return.png"/>
+          <span>请选择需求物资</span>
+          <span class="select-materials-select">（已选择<span class="select-materials-select-num">{{ materiaId.length }}</span>项）</span> -->
+        </p>
+        <!-- <van-search v-model="searchValue" placeholder="输入规格型号" background="center" :show-action="showAction"
+          @search="onSearch" /> -->
+        <van-search v-model="searchValue" placeholder="输入规格型号" left-icon="none" background="center" :show-action="showAction"
+          @search="onSearch">
+          <template slot='right-icon'>
+            <van-icon name="search" />
+          </template>
+        </van-search>
       </div>
     </van-sticky>
     <div class="select-materials-list">
       <div class="van-list">
         <van-checkbox-group v-model="materiaId" v-if="filteredList.length" @change="materiaIdChange">
-          <van-checkbox shape="square" :name="item.uniqueNumber" v-for="item in filteredList" :key="item.uniqueNumber || item.allocationUniqueNumber"
+          <van-checkbox :name="item.uniqueNumber" v-for="(item, index) in filteredList" :key="item.uniqueNumber || item.allocationUniqueNumber"
             :disabled="item.amount === item.cumulativeAmount">
             <ul class="list-ul">
               <li>
-                <span class="font-weight">物资名称：</span>
-                <span class="font-weight">{{ item.materialName }}</span>
+                <span class="font-weight">{{index+1}}.{{ item.materialName }}</span>
+                <!-- <span class="font-weight">{{ item.materialName }}</span> -->
               </li>
               <li>
                 <span>规格型号：</span>
@@ -58,11 +66,11 @@
               </li>
               <li>
                 <span>合同数量：</span>
-                <span class="li-span-click">{{ item.amount }}</span>
+                <span>{{ item.amount }}</span>
               </li>
               <li>
-                <span style="color: red;">已累计计划数量：</span>
-                <span style="color: red;">{{ item.cumulativeAmount }}</span>
+                <span>已累计计划数量：</span>
+                <span class="li-span-click">{{ item.cumulativeAmount }}</span>
               </li>
               <li>
                 <span>供应时间：</span>
@@ -83,19 +91,26 @@
       </div>
     </div>
     <div class="default-button-container">
-      <van-checkbox v-model="allChecked" shape="square" @click="allClick">全选</van-checkbox>
+      <!-- <van-checkbox v-model="allChecked" shape="square" @click="allClick">全选</van-checkbox> -->
+      <div class="default-button-container-selected" @click="selectedClick">
+        <img src="@/assets/img/Icon.png"/>
+        <span>已选择 <span class="li-span-click">{{materiaId.length}}</span> 项</span>
+        <img :class="{'default-button-container-selected-img': $refs.selectedList && $refs.selectedList.sheetShow}" src="@/assets/img/Icon-slideup.png"/>
+      </div>
       <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
     </div>
     <back-to-top className=".default-container"></back-to-top>
+    <selected-list ref="selectedList" :selectedData="materiaList" @deleteCallback="deleteCallback"></selected-list>
   </div>
 </template>
 <script>
 import BackToTop from '@/components/BackToTop'
+import selectedList from './components/selectedList'
 import { materialContractDetail } from '@/api/prodmgr-inv/materialContract'
 import { getListBySectionId } from '@/api/prodmgr-inv/materialSectionAllocation'
 export default {
   name: 'SelectMaterials',
-  components: { BackToTop },
+  components: { BackToTop, selectedList },
   data() {
     return {
       searchValue: '',
@@ -173,15 +188,6 @@ export default {
         this.$notify({ type: 'warning', message: '请选择需求物资' });
         return
       }
-      let materiaList = this.materiaList.filter(item => this.materiaId.includes(item.uniqueNumber || item.allocationUniqueNumber))
-      const list = this.list.filter(item => this.materiaId.includes(item.uniqueNumber))
-      materiaList = materiaList.concat(list)
-      console.log(materiaList)
-      let obj = {}
-      this.materiaList = materiaList.reduce((cur, next) => {
-        obj[next.uniqueNumber || next.allocationUniqueNumber] ? "" : obj[next.uniqueNumber || next.allocationUniqueNumber] = true && cur.push(next);
-        return cur;
-      }, [])
       this.$store.dispatch('public/setMateriaList', this.materiaList)
       const { contractId, id } = this.$route.query
       const query = this.queryType == 'update' ? { contractId, type: this.queryType, id } : { contractId }
@@ -196,7 +202,24 @@ export default {
     },
     materiaIdChange () {
       this.allChecked = this.materiaId.length === this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber).length
-    }
+      this.$nextTick(() => {
+        let materiaList = this.materiaList.filter(item => this.materiaId.includes(item.uniqueNumber || item.allocationUniqueNumber))
+        const list = this.list.filter(item => this.materiaId.includes(item.uniqueNumber))
+        materiaList = materiaList.concat(list)
+        let obj = {}
+        this.materiaList = materiaList.reduce((cur, next) => {
+          obj[next.uniqueNumber || next.allocationUniqueNumber] ? "" : obj[next.uniqueNumber || next.allocationUniqueNumber] = true && cur.push(next);
+          return cur;
+        }, [])
+      })
+    },
+    selectedClick () {
+      this.$refs.selectedList.init()
+    },
+    deleteCallback(index) {
+      this.materiaList.splice(index, 1)
+      this.materiaId = this.materiaList.map( item => item.uniqueNumber || item.allocationUniqueNumber)
+    },
   }
 }
 </script>
@@ -206,17 +229,13 @@ export default {
   flex-direction: column;
   background: #f8f8f8;
 
+  .detail-list-ul{
+    padding-left: 33px;
+  }
+
   .select-materials-sticky {
     ::v-deep .van-sticky {
       background: #f8f8f8;
-    }
-    img{
-      width: 0.6rem;
-      height: 0.6rem;
-      vertical-align: middle;
-    }
-    span{
-      vertical-align: middle;
     }
   }
 
@@ -224,26 +243,25 @@ export default {
   .select-materials-search {
     display: flex;
     justify-content: space-between;
-    padding-top: 10px;
 
     .select-materials-search-p {
       font-size: 14px;
-      line-height: 35px;
-      padding: 0 10px;
-    }
-
-    .select-materials-select {
-      font-size: 12px;
-    }
-
-    .select-materials-select-num {
-      color: #1d93ff;
+      padding-left: 13px;
+      .van-checkbox{
+        height: 100%;
+        margin-left: 2px;
+        ::v-deep .van-checkbox__icon{
+          font-size: 18px;
+          .van-icon{
+            border: 1px solid #1989fa;
+          }
+        }
+      }
     }
   }
 
   .van-search {
-    padding-top: 0;
-    width: 165px;
+    width: 222px;
 
     .van-search__content {
       border-radius: 50px;
@@ -266,14 +284,22 @@ export default {
 
     .van-checkbox {
       box-sizing: border-box;
-      margin-left: 8px;
-      margin-right: 8px;
+      margin-left: 6px;
+      margin-right: 6px;
       margin-bottom: 10px;
       background: #ffffff;
       border-radius: 7px;
       box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
       position: relative;
       padding: 10px;
+      align-items: baseline;
+
+      ::v-deep .van-checkbox__icon{
+        font-size: 18px;
+        .van-icon{
+          border: 1px solid #1989fa;
+        }
+      }
 
       ::v-deep .van-checkbox__label {
         width: calc(100% - 25px);
@@ -288,20 +314,30 @@ export default {
       }
     }
   }
-
-  .select-Contract-p {
-    padding-left: 10px;
-    padding-bottom: 8px;
-    font-size: 14px;
-  }
-
-  .select-Contract-money {
-    :nth-child(1) {
-      width: auto !important;
+  .default-button-container{
+    justify-content: space-between;
+    padding-left: 14px;
+    padding-right: 19px;
+    box-sizing: border-box;
+    box-shadow: 4px 0px 5px rgba(32, 30, 74, 0.1);
+    z-index: 10000;
+    .default-button-container-selected{
+      font-size: 13px;
+      span{
+        vertical-align: middle;
+      }
+      img{
+        width: 28px;
+        height: 28px;
+        vertical-align: middle;
+      }
+      .default-button-container-selected-img{
+        transform: rotate(180deg)
+      }
     }
-
-    :nth-child(2) {
-      width: auto !important;
+    .button-info{
+      width: 169px;
+      height: 34px;
     }
   }
 }

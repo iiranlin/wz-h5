@@ -72,7 +72,8 @@ import {
   CheckboxGroup,
   Sidebar,
   SidebarItem,
-  Empty
+  Empty,
+  Stepper
 } from "vant";
 Vue.use(Row);
 Vue.use(Col);
@@ -125,6 +126,7 @@ Vue.use(CheckboxGroup);
 Vue.use(Sidebar);
 Vue.use(SidebarItem);
 Vue.use(Empty);
+Vue.use(Stepper);
 
 Vue.prototype.parseTime = parseTime;
 

@@ -8,45 +8,53 @@
         </template>
       </van-search>
     </van-sticky>
-    <div class="detail-floor-content">
+    <!-- <div class="detail-floor-content">
       <img src="/static/icon-return.png"/>
       <span>请选择合同</span>
-    </div>
+    </div> -->
     <div class="select-Contract-list">
       <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error" error-text="请求失败，点击重新加载" @load="onLoad">
-          <van-radio-group v-model="contractId">
-            <van-radio :name="item.id" v-for="item in list" :key="item.id">
-              <ul class="list-ul">
-                <li>
-                  <span class="font-weight">合同名称：</span>
-                  <span class="font-weight">{{ item.contractName }}</span>
-                </li>
-                <li>
-                  <span>合同编号：</span>
-                  <span>{{ item.contractNo }}</span>
-                </li>
-                <li>
-                  <span>物资名称：</span>
-                  <span>{{ item.itemName }}</span>
-                </li>
-                <li>
-                  <span>供应商：</span>
-                  <span>{{ item.seller }}</span>
-                </li>
-                <li class="select-Contract-money">
-                  <span style="color: red;">计划金额比例：</span>
-                  <span style="color: red;">{{ item.materialUsedRatio }}%</span>
-                </li>
-              </ul>
-            </van-radio>
-          </van-radio-group>
+          <!-- <van-radio-group v-model="contractId">
+            <van-radio :name="item.id" v-for="item in list" :key="item.id"> -->
+              <div class="box-container" v-for="item in list" :key="item.id" @click="contractClick(item.id)">
+                <div class="detail-list-title-content">
+                    <span>{{ item.contractName }}</span>
+                </div>
+                <ul class="detail-list-ul">
+                  <!-- <li>
+                    <span class="font-weight">合同名称：</span>
+                    <span class="font-weight">{{ item.contractName }}</span>
+                  </li> -->
+                  <li>
+                    <span>合同编号：</span>
+                    <span>{{ item.contractNo }}</span>
+                  </li>
+                  <li>
+                    <span>物资名称：</span>
+                    <span>{{ item.itemName }}</span>
+                  </li>
+                  <li>
+                    <span>供应商：</span>
+                    <span>{{ item.seller }}</span>
+                  </li>
+                  <li class="select-Contract-money">
+                    <span>计划金额比例：</span>
+                    <span class="li-span-click">{{ item.materialUsedRatio }}%</span>
+                  </li>
+                  <li class="li-span-open">
+                    <span class="li-span-grey">点击选择<van-icon name="arrow" /></span>
+                  </li>
+                </ul>
+              </div>
+            <!-- </van-radio>
+          </van-radio-group> -->
         </van-list>
       </van-pull-refresh>
     </div>
-    <div class="default-button-container">
+    <!-- <div class="default-button-container">
       <van-button class="button-info" type="info" round @click="addClick">确定选择</van-button>
-    </div>
+    </div> -->
     <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
@@ -64,7 +72,7 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      contractId: null,
+      // contractId: null,
       list: [],
       listQuery: {
         pageNum: 1,
@@ -114,31 +122,35 @@ export default {
       this.listQuery.pageNum = 1
       this.onLoad();
     },
-    handleWaitItemClick() {
-
-    },
-    addClick() {
-      if (!this.contractId) {
+    contractClick(contractId) {
+      if (!contractId) {
         this.$notify({ type: 'warning', message: '请选择合同' });
         return
       }
-      this.$router.push({ name: 'SelectMaterials', query: {contractId: this.contractId} })
+      this.$router.push({ name: 'SelectMaterials', query: {contractId} })
     }
   }
 }
 </script>
 <style lang="less" scoped>
+.detail-list-title-content{
+  height: auto;
+  line-height: 20px;
+  padding-top: 8px;
+}
+.box-container{
+  padding: 0;
+}
 .select-Contract {
   display: flex;
   flex-direction: column;
   
   .select-Contract-list{
     height: 100%;
+    padding-top: 8px;
   }
 
   .van-list {
-    // padding-top: 80px;
-    padding-bottom: 40px;
     background: #f8f8f8;
 
     .van-radio {

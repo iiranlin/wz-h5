@@ -25,8 +25,8 @@
           error-text="请求失败，点击重新加载" @load="onLoad">
           <div v-for="(item, index) in list" :key="index" class="box-container">
             <div class="list-title-content">
-              <span>需求编号：</span>
-              <span class="font-weight" style="color:#134daa;">{{ item.planNumber }}</span>
+              <span class="li-span-grey">需求编号：</span>
+              <span class="li-span-grey">{{ item.planNumber }}</span>
               <div class="li-title-status">
                 <img :src="checkAuditStatus(item.planStatus)" />
                 <span>{{ checkStatusText(item.planStatus) }}</span>
@@ -34,8 +34,7 @@
             </div>
             <ul class="list-ul" @click="handleWaitItemClick(item)">
               <li>
-                <span>需求名称：</span>
-                <span>{{ item.planName }}</span>
+                <span class="font-weight">{{ item.planName }}</span>
               </li>
               <li>
                 <span>供应商：</span>
@@ -68,7 +67,7 @@
               <van-button class="button-info" plain round type="info"
                 v-if="['3', '4', '0', '2'].includes(item.planStatus)"
                 @click="handleProcessClick(item)">查看流程</van-button>
-              <van-button class="button-info" plain round type="info"
+              <van-button class="button-info" plain round type="default"
                 v-if="['1', '4', '0', '5', '10'].includes(item.planStatus)" @click="addClick(item)">编辑</van-button>
               <van-button class="button-info" round type="info"
                 v-if="['1', '4', '0', '5', '10'].includes(item.planStatus)"

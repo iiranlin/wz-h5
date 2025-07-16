@@ -183,6 +183,12 @@ export const routes = [
           next()
         }
       },
+      {
+        path: 'EditedMaterials',
+        name: 'EditedMaterials',
+        meta: { title: '编辑物资' },
+        component: () => import('@/view/PlannedManagement/PlannedManagementChild/EditedMaterials.vue')
+      },
     ]
   },
   {
