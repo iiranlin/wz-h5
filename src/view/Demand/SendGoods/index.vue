@@ -238,7 +238,7 @@ export default {
           delete finallyData[key];
         }
       }
-      this.$set(this.params, Object.assign({}, this.params, finallyData));
+      this.params = Object.assign({}, this.params, finallyData)
     },
     fieldClick($event, name) {
       this.$refs.historyList.init($event, name);
