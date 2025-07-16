@@ -301,7 +301,7 @@ export default {
     // 监听选项变化，更新全选状态（可选）
     updateAllSelected() {
      const selectableNumbers = this.selectGoodsList
-      .filter(item =>item.allocationUniqueNumber)
+      .filter(item => item.ssendTotal != 0)
       .map(item => item.allocationUniqueNumber);
     this.isAllSelected = selectableNumbers.every(num => 
       this.result.includes(num)
