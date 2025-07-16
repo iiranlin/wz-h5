@@ -144,6 +144,7 @@ export default {
     result:{
      handler(newVal) {
         this.selectGoods(newVal)
+         this.updateAllSelected();
       },
       deep: true
     },
@@ -217,6 +218,7 @@ export default {
           });
           
            this.result = this.$store.state.public.goodsSelect.map(item => item.allocationUniqueNumber);
+           
           // this.selectGoodsList = res.data.details
         } else {
             this.$notify({
@@ -298,10 +300,12 @@ export default {
     },
     // 监听选项变化，更新全选状态（可选）
     updateAllSelected() {
-      const selectableItems = this.selectGoodsList.filter(item => item.ssendTotal != 0);
-      this.isAllSelected = selectableItems.every(item => 
-        this.result.includes(item.allocationUniqueNumber)
-      );
+     const selectableNumbers = this.selectGoodsList
+      .filter(item =>item.allocationUniqueNumber)
+      .map(item => item.allocationUniqueNumber);
+    this.isAllSelected = selectableNumbers.every(num => 
+      this.result.includes(num)
+    );
     }
   }
 }

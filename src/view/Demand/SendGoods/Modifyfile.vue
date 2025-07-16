@@ -39,7 +39,7 @@
                         <div class="box-container">
                             <div class="detail-list-title-content">
                                     <span class="font-weight">供应需求名称：</span>
-                                    <span class="font-weight">{{ params.planName }}</span>
+                                    <span class="font-weight" style="min-width: 2.5rem;">{{ params.planName }}</span>
                                 </div>
                             <!-- <div>
                                     <span class="font-weight dot-before" style="min-width: 2.5rem;">供应需求名称:</span>
@@ -118,7 +118,7 @@
                                v-for="(item, index) in materialCirculationDetailsTableDTOS" :key="index" >
                                 <div class="detail-list-title-content">
                                     <span class="font-weight">物资名称：</span>
-                                    <span class="font-weight" style="min-width: 2.5rem;">{{ item.materialName }}</span>
+                                    <span class="font-weight" style="min-width: 1rem;">{{ item.materialName }}</span>
                                 </div>
                                 <ul class="detail-list-ul" >
                                    
