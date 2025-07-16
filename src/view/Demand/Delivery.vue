@@ -54,7 +54,7 @@
                       <span style="color:#1989fa;" v-if="item.oddNumbers"
                         @click.stop="handleLookClick(item.planId, item.shipmentBatchNumber, item.oddNumbers)">{{
                         item.oddNumbers }}</span>
-                      <span v-else>其他</span>
+                      <span v-else style="color:#1989fa;">其他</span>
                     </li>
                     <li>
                       <span>操作人: </span>
