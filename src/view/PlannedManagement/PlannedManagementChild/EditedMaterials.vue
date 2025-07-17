@@ -66,7 +66,7 @@
           </ul>
         </div>
         <div class="detail-base-info-edited-all" style="padding-top: 0;">
-          <p><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+          <p @click="applicationAllClick({receiver: '', addr: '', field2: '', phone: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
         </div>
       </template>
       <template v-else>
@@ -79,7 +79,7 @@
         </div>
         <div class="detail-title-content-edited detail-title-content-edited-button">
           <van-button type="default" plain round @click="receiptClick">选择收货</van-button>
-          <van-button plain round type="info"><img src="@/assets/img/Icon-plus.png"
+          <van-button plain round type="info" @click="createClick"><img src="@/assets/img/Icon-plus.png"
               class="detail-title-content-edited-add" />新建</van-button>
         </div>
       </template>
@@ -100,7 +100,7 @@
         </li>
       </ul>
       <div class="detail-base-info-edited-all">
-        <p><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+        <p @click="applicationAllClick({supplyDate: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
       </div>
     </div>
     <div class="detail-base-info detail-base-info-edited">
@@ -119,7 +119,7 @@
         </li>
       </ul>
       <div class="detail-base-info-edited-all">
-        <p><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+        <p @click="applicationAllClick({field0: '', field1: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
       </div>
     </div>
     <div class="detail-base-info detail-base-info-edited">
@@ -204,6 +204,9 @@ export default {
     receiptClick() {
       this.$router.push({ name: 'ReceiptList', query: { uniqueNumber: this.uniqueNumber, contractId: this.contractId, type: this.queryType, id: this.queryId } })
     },
+    createClick() {
+      this.$router.push({ name: 'ReceiptOperate', query: { type: 'create' } })
+    },
     sureClick(isData) {
       if (isData) {
         if (!this.sectionInfo.planAmount) {
@@ -250,6 +253,24 @@ export default {
         this.$store.dispatch('public/setMateriaList', data)
       }
       this.$router.push({ name: 'SaveMaterials', query: { contractId: this.contractId, type: this.queryType, id: this.queryId } })
+    },
+    applicationAllClick (obj) {
+      this.$dialog.confirm({
+        title: '提示',
+        message: '确认要应用到所有物资吗？',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const data = this.$store.state.public.materiaList || []
+        data.forEach((item, index) => {
+          for (const key in obj) {
+            if (Object.hasOwnProperty.call(obj, key)) {
+              item[key] = this.sectionInfo[key]
+            }
+          }
+        });
+        this.$store.dispatch('public/setMateriaList', data)
+      })
     }
   }
 }
