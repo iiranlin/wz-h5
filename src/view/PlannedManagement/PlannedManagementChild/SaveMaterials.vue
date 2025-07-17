@@ -267,6 +267,8 @@ export default {
         })
         this.$store.dispatch('public/setMateriaList', this.materiaList)
         this.$store.dispatch('public/setInterfaceMateriaList', this.materiaList)
+        this.editedMateriaList = this.materiaList.filter(item => item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1)
+        this.editMateriaList = this.materiaList.filter(item => !(item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1))
       })
     },
     cumulativeAmount(item) {
