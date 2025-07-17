@@ -164,7 +164,17 @@ export default {
         },
         //确定
         handleConfirm(){
-
+          if(this.currentIndex == null){
+            this.$notify({
+                type: 'warning',
+                message: '请选择收货信息!',
+            });
+            return
+          }
+          const data = this.dataList[this.currentIndex]
+          this.$store.dispatch('public/setHistoryData', {receiver: data.receiver, phone: data.phone, receiveraddress: data.receiveraddress, addr: data.addr})
+          const { uniqueNumber = null, contractId, type, id } = this.$route.query
+          this.$router.push({name: 'EditedMaterials', query: {uniqueNumber, contractId, type, id}})
         },
         //列表刷新
         onRefresh(){

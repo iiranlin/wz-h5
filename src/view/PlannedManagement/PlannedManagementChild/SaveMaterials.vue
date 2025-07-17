@@ -20,18 +20,18 @@
     </div>
     <div class="detail-floor-content">
       <div>
-        <van-button type="default" class="van-button-selected">全部物资</van-button>
-        <van-button type="default">未完善物资</van-button>
+        <van-button type="default" :class="{'van-button-selected': btnClickIndex == '0'}" @click="btnClick('0')">全部物资</van-button>
+        <van-button type="default" :class="{'van-button-selected': btnClickIndex == '1'}" @click="btnClick('1')">未完善物资</van-button>
       </div>
       <span @click="returnClick"><span class="detail-floor-content-add">+</span>添加物资</span>
     </div>
     <!-- <van-form @submit="onSubmit"> -->
-      <div class="box-container" v-for="(item, index) in materiaList" :key="item.id">
+      <div class="box-container" v-for="(item, index) in btnClickIndex == '0'?materiaList:editMateriaList" :key="item.id">
         <div class="div-child">
           <ul class="detail-list-ul">
             <li class="detail-list-ul-text">
               <span class="font-weight">{{index+1}}.{{ item.materialName }}</span>
-              <img :src="materiaList.length?editedStatus:editStatus" />
+              <img :src="item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1?editedStatus:editStatus" />
             </li>
             <li>
               <span>供应商：</span>
@@ -65,7 +65,7 @@
               <span v-if="item.supplyDate">{{ item.supplyDate }}</span>
               <span v-else class="li-span-grey">填写</span>
             </li>
-            <li>
+            <!-- <li>
               <span>使用地点：</span>
               <span v-if="item.addr">{{ item.addr }}</span>
               <span v-else class="li-span-grey">填写</span>
@@ -74,13 +74,13 @@
               <span>收货地址：</span>
               <span v-if="item.field2">{{ item.field2 }}</span>
               <span v-else class="li-span-grey">填写</span>
-            </li>
+            </li> -->
             <li>
               <span>收货人联系方式：</span>
               <span v-if="item.receiver">{{ item.receiver }}</span>
               <span v-else class="li-span-grey">填写</span>
             </li>
-            <li>
+            <!-- <li>
               <span>投资方：</span>
               <span v-if="item.field0">{{ item.field0 }}</span>
               <span v-else class="li-span-grey">填写</span>
@@ -94,7 +94,7 @@
               <span>备注：</span>
               <span v-if="item.remark">{{ item.remark }}</span>
               <span v-else class="li-span-grey">填写</span>
-            </li>
+            </li> -->
             
           </ul>
           <!-- <van-cell-group>
@@ -129,15 +129,15 @@
       <div class="default-button-container">
         <!-- <van-checkbox v-model="allChecked" shape="square" @click="allClick">全选</van-checkbox> -->
         <div class="default-button-container-selected" @click="selectedClick">
-          <span>已填写 <span class="li-span-click">{{materiaList.length}}</span><span>/{{materiaList.length}}</span> </span>
-          <img v-if="materiaList.length" :class="{'default-button-container-selected-img': $refs.editedList && $refs.editedList.sheetShow}" src="@/assets/img/Icon-slideup.png"/>
+          <span>已填写 <span class="li-span-click">{{editedMateriaList.length}}</span><span>/{{materiaList.length}}</span> </span>
+          <img v-if="editedMateriaList.length" :class="{'default-button-container-selected-img': $refs.editedList && $refs.editedList.sheetShow}" src="@/assets/img/Icon-slideup.png"/>
         </div>
-        <van-button class="button-info" round type="info" native-type="submit" :disabled="materiaList.length > 0">保存</van-button>
+        <van-button class="button-info" round type="info" :disabled="editedMateriaList.length != materiaList.length || !materiaList.length" @click="onSubmit">保存</van-button>
       </div>
       <history-list ref="historyList" @historyClick="historyClick"></history-list>
     <!-- </van-form> -->
     <back-to-top className=".default-container"></back-to-top>
-    <edited-list ref="editedList" :editedData="materiaList"></edited-list>
+    <edited-list ref="editedList" :editedData="materiaList" :editedMateriaList="editedMateriaList"></edited-list>
   </div>
 </template>
 <script>
@@ -190,7 +190,11 @@ export default {
       queryType: '',
       queryId: '',
       editedStatus,
-      editStatus
+      editStatus,
+      editedMateriaList: [],
+      editMateriaList: [],
+      btnClickIndex: '0',
+      materialUsedRatio: ''
     }
   },
   activated() {
@@ -202,10 +206,11 @@ export default {
   },
   methods: {
     init() {
-      const { id = null, contractId = null, type = '' } = this.$route.query
+      const { id = null, contractId = null, type = '', materialUsedRatio } = this.$route.query
       this.queryId = id
       this.contractId = contractId
       this.queryType = type
+      this.materialUsedRatio = materialUsedRatio
       this.materiaList = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
       if (type != 'update') {
         this.getSectionProject()
@@ -215,17 +220,17 @@ export default {
     },
     historyCache(obj, index, isDefault) {
       const data = this.$store.state.public.materiaList || []
-      const historyList = this.$store.state.public.historyList || {}
-      if (historyList) {
-        for (const key in obj) {
-          if (historyList[key]) {
-            obj[key] = obj[key] || historyList[key][index] || ''
-          }
-        }
-      }
-      if (isDefault) {
-        return obj
-      }
+      // const historyList = this.$store.state.public.historyList || {}
+      // if (historyList) {
+      //   for (const key in obj) {
+      //     if (historyList[key]) {
+      //       obj[key] = obj[key] || historyList[key][index] || ''
+      //     }
+      //   }
+      // }
+      // if (isDefault) {
+      //   return obj
+      // }
       const finallyData = data.map((item) => Object.assign({}, item, {
         supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
         minDate: this.minDate,
@@ -233,8 +238,12 @@ export default {
         planAmount: item.planAmount || item.amount - item.cumulativeAmount,
         allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber,
         field2: item.field2 || item.deliveryLocation,
-        addr: item.addr || obj.addr, field0: item.field0 || obj.field0, field1: item.field1 || obj.field1
+        // addr: item.addr || obj.addr, field0: item.field0 || obj.field0, field1: item.field1 || obj.field1
       }))
+
+      this.editedMateriaList = finallyData.filter(item => item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1)
+      this.editMateriaList = finallyData.filter(item => !(item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1))
+
       return finallyData
     },
     async getSectionProject() {
@@ -273,6 +282,9 @@ export default {
       this.$set(this.materiaList, index, Object.assign({}, item, { showDatePicker: false }))
     },
     deleteClick(index) {
+      const row = this.materiaList[index]
+      const uniqueNumber = row.uniqueNumber || row.allocationUniqueNumber
+      this.editedMateriaList = this.editedMateriaList.filter(item => !(uniqueNumber === item.uniqueNumber || uniqueNumber === item.allocationUniqueNumber))
       this.materiaList.splice(index, 1)
       this.$store.dispatch('public/setMateriaList', this.materiaList)
     },
@@ -291,20 +303,21 @@ export default {
         contractId: this.contractId,
         detailsModifyParams: this.materiaList.map(item => ({ ...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber }))
       }
-      let obj = { addr: [], field2: [], field0: [], field1: [] }
-      obj.addr = this.materiaList.map(item => item.addr)
-      obj.field2 = this.materiaList.map(item => item.field2)
-      obj.field0 = this.materiaList.map(item => item.field0)
-      obj.field1 = this.materiaList.map(item => item.field1)
+      // let obj = { addr: [], field2: [], field0: [], field1: [] }
+      // obj.addr = this.materiaList.map(item => item.addr)
+      // obj.field2 = this.materiaList.map(item => item.field2)
+      // obj.field0 = this.materiaList.map(item => item.field0)
+      // obj.field1 = this.materiaList.map(item => item.field1)
 
-      materialDemandPlanRestSaveModify(data, type).then(({ message }) => {
-        this.$store.dispatch('public/setHistoryList', obj)
+      materialDemandPlanRestSaveModify(data, type).then(({ data, message }) => {
+        // this.$store.dispatch('public/setHistoryList', obj)
+        id = id || data
         this.$toast(message)
-        this.$router.push({ path: '/PlannedManagementList' })
+        this.$router.push({ name: 'SaveSuccess' , query: {id}})
       })
     },
     returnClick() {
-      const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId } : { contractId: this.contractId }
+      const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId, materialUsedRatio: this.materialUsedRatio } : { contractId: this.contractId, materialUsedRatio: this.materialUsedRatio }
       this.$router.push({ name: 'SelectMaterials', query })
     },
     onCheck(tableData) {
@@ -355,9 +368,9 @@ export default {
       }
       return true
     },
-    fieldClick($event, name, index) {
-      this.$refs.historyList.init($event, name, index)
-    },
+    // fieldClick($event, name, index) {
+    //   this.$refs.historyList.init($event, name, index)
+    // },
     historyClick(data, name, index, historyIndex) {
       let obj = { addr: '', field2: '', field0: '', field1: '' }
       let finallyData = this.historyCache(obj, historyIndex, true)
@@ -369,12 +382,16 @@ export default {
       this.$set(this.materiaList, index, Object.assign({}, this.materiaList[index], finallyData))
     },
     selectedClick () {
-      if(this.materiaList.length){
+      if(this.editedMateriaList.length){
         this.$refs.editedList.init()
       }
     },
     editedClick (item, index) {
-      this.$router.push({name: 'EditedMaterials', query: {uniqueNumber: item.uniqueNumber || item.allocationUniqueNumber}})
+      const query = this.queryType == 'update' ? {uniqueNumber: item.uniqueNumber || item.allocationUniqueNumber, contractId: this.contractId, type: this.queryType, id: this.queryId} : {uniqueNumber: item.uniqueNumber || item.allocationUniqueNumber, contractId: this.contractId}
+      this.$router.push({name: 'EditedMaterials', query})
+    },
+    btnClick (code) {
+      this.btnClickIndex = code
     }
   }
 }

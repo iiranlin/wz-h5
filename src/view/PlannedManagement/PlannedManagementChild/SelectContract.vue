@@ -17,7 +17,7 @@
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error" error-text="请求失败，点击重新加载" @load="onLoad">
           <!-- <van-radio-group v-model="contractId">
             <van-radio :name="item.id" v-for="item in list" :key="item.id"> -->
-              <div class="box-container" v-for="item in list" :key="item.id" @click="contractClick(item.id)">
+              <div class="box-container" v-for="item in list" :key="item.id" @click="contractClick(item.id, item.materialUsedRatio)">
                 <div class="detail-list-title-content">
                     <span>{{ item.contractName }}</span>
                 </div>
@@ -122,12 +122,12 @@ export default {
       this.listQuery.pageNum = 1
       this.onLoad();
     },
-    contractClick(contractId) {
+    contractClick(contractId, materialUsedRatio) {
       if (!contractId) {
         this.$notify({ type: 'warning', message: '请选择合同' });
         return
       }
-      this.$router.push({ name: 'SelectMaterials', query: {contractId} })
+      this.$router.push({ name: 'SelectMaterials', query: {contractId, materialUsedRatio} })
     }
   }
 }

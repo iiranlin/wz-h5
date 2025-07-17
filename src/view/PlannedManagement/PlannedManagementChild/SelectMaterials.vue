@@ -21,7 +21,7 @@
         </li>
         <li class="li-item-overlength">
           <span >计划金额比例：</span>
-          <span class="li-span-click">{{ contractData.materialUsedRatio }}%</span>
+          <span class="li-span-click">{{ materialUsedRatio }}%</span>
         </li>
       </ul>
       <!-- <div class="list-ul-button" v-if="queryType != 'update'">
@@ -84,6 +84,9 @@
                 <span>交货地点：</span>
                 <span>{{ item.deliveryLocation }}</span>
               </li>
+              <li class="li-span-open">
+                <span class="li-span-grey" @click.stop="openClick(item.materialId)">查看详情<van-icon name="arrow" /></span>
+              </li>
             </ul>
           </van-checkbox>
         </van-checkbox-group>
@@ -95,7 +98,7 @@
       <div class="default-button-container-selected" @click="selectedClick">
         <img src="@/assets/img/Icon.png"/>
         <span>已选择 <span class="li-span-click">{{materiaId.length}}</span> 项</span>
-        <img :class="{'default-button-container-selected-img': $refs.selectedList && $refs.selectedList.sheetShow}" src="@/assets/img/Icon-slideup.png"/>
+        <img v-if="materiaId.length" :class="{'default-button-container-selected-img': $refs.selectedList && $refs.selectedList.sheetShow}" src="@/assets/img/Icon-slideup.png"/>
       </div>
       <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
     </div>
@@ -125,7 +128,8 @@ export default {
       },
       contractData: {},
       queryType: '',
-      allChecked: false
+      allChecked: false,
+      materialUsedRatio: ''
     }
   },
   computed: {
@@ -142,8 +146,9 @@ export default {
   },
   methods: {
     init() {
-      const { contractId, type } = this.$route.query
+      const { contractId, type, materialUsedRatio } = this.$route.query
       this.queryType = type
+      this.materialUsedRatio = materialUsedRatio
       this.materialContractDetail(contractId)
       this.getListBySectionId(contractId)
     },
@@ -189,8 +194,8 @@ export default {
         return
       }
       this.$store.dispatch('public/setMateriaList', this.materiaList)
-      const { contractId, id } = this.$route.query
-      const query = this.queryType == 'update' ? { contractId, type: this.queryType, id } : { contractId }
+      const { contractId, id, materialUsedRatio } = this.$route.query
+      const query = this.queryType == 'update' ? { contractId, type: this.queryType, id, materialUsedRatio } : { contractId, materialUsedRatio }
       this.$router.push({ name: 'SaveMaterials', query })
     },
     allClick () {
@@ -203,7 +208,7 @@ export default {
     materiaIdChange () {
       this.allChecked = this.materiaId.length === this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber).length
       this.$nextTick(() => {
-        let materiaList = this.materiaList.filter(item => this.materiaId.includes(item.uniqueNumber || item.allocationUniqueNumber))
+        let materiaList = this.$store.state.public.materiaList.filter(item => this.materiaId.includes(item.uniqueNumber || item.allocationUniqueNumber))
         const list = this.list.filter(item => this.materiaId.includes(item.uniqueNumber))
         materiaList = materiaList.concat(list)
         let obj = {}
@@ -214,12 +219,21 @@ export default {
       })
     },
     selectedClick () {
-      this.$refs.selectedList.init()
+      if(this.materiaId.length){
+        this.$refs.selectedList.init()
+        return
+      }
     },
     deleteCallback(index) {
       this.materiaList.splice(index, 1)
       this.materiaId = this.materiaList.map( item => item.uniqueNumber || item.allocationUniqueNumber)
+      if(!this.materiaId.length){
+        this.$refs.selectedList.init()
+      }
     },
+    openClick (id) {
+      this.$router.push({ name: 'MaterialDetailsView', query:{id} })
+    }
   }
 }
 </script>

@@ -189,6 +189,18 @@ export const routes = [
         meta: { title: '编辑物资' },
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/EditedMaterials.vue')
       },
+      {
+        path: 'SaveSuccess',
+        name: 'SaveSuccess',
+        meta: { title: '保存成功' },
+        component: () => import('@/view/PlannedManagement/PlannedManagementChild/SaveSuccess.vue')
+      },
+      {
+        path: 'MaterialDetailsView',
+        name: 'MaterialDetailsView',
+        meta: { title: '物资详情' },
+        component: () => import('@/view/PlannedManagement/PlannedManagementChild/MaterialDetailsView.vue')
+      },
     ]
   },
   {

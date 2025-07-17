@@ -1,11 +1,12 @@
 const state = {
   materiaList: [],
-  interfaceMateriaList: JSON.parse(localStorage.getItem('interfaceMateriaList')) || [],
+  interfaceMateriaList: [],
   historyList: JSON.parse(localStorage.getItem('historyList')) || {},
   sendGoods:{},
   goodsSelect:[],
   editSendGoods:{},
-  editGoods:{}
+  editGoods:{},
+  historyData: {}
 };
 
 const mutations = {
@@ -32,7 +33,6 @@ const mutations = {
     state.historyList = object
   },
   SET_INTERFACE_MATERIA_LIST:(state, interfaceMateriaList)=>{
-    localStorage.setItem('interfaceMateriaList', JSON.stringify(interfaceMateriaList))
     state.interfaceMateriaList = interfaceMateriaList
   },
   SET_GOODS_SELECT:(state,goodsSelect)=>{
@@ -43,6 +43,9 @@ const mutations = {
   },
   SET_EDIT_GOODS:(state,editGoods)=>{
     state.editGoods = editGoods
+  },
+  SET_HISTORY_DATA:(state, historyData)=>{
+    state.historyData = historyData
   }
 };
 
@@ -68,6 +71,9 @@ const actions = {
   },
    setEditGoods({commit}, data){
     commit('SET_EDIT_GOODS', data)
+  },
+  setHistoryData({commit}, data){
+    commit('SET_HISTORY_DATA', data)
   }
 };
 
