@@ -1,7 +1,7 @@
 <template>
     <div class="detail-button-container">
         <div class="detail-floor-content">
-            <img src="/static/icon_receipt.png"/>
+            <img src="/static/icon-receipt.png"/>
             <span>选择收货信息</span>
         </div>
         <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
