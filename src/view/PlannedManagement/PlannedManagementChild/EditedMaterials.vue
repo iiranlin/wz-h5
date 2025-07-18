@@ -105,7 +105,7 @@
     </div>
     <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
-        <img src="@/assets/img/Icon-time.png" />
+        <img src="@/assets/img/Icon-invest.png" />
         <span>投资信息</span>
       </div>
       <ul class="detail-list-ul-edited">
@@ -172,6 +172,7 @@ export default {
     const historyData = this.$store.state.public.historyData || {}
     if (JSON.stringify(historyData) === '{}') {
       this.init()
+      return
     }
     this.sectionInfo = Object.assign({}, this.sectionInfo, historyData)
     this.$store.dispatch('public/setHistoryData', {})
