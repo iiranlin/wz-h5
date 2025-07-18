@@ -2,7 +2,7 @@
   <van-action-sheet v-model="sheetShow">
     <p class="action-sheet-p"><span>已填写 <span class="li-span-click">{{ editedMateriaList.length }}</span>/{{ editedData.length }} </span></p>
     <div class="action-sheet-content">
-      <ul class="list-ul" v-for="(item, index) in editedData" :key="item.uniqueNumber || item.allocationUniqueNumber">
+      <ul class="list-ul" v-for="(item, index) in editedData" :key="item.uniqueNumber || item.allocationUniqueNumber" @click="editedClick(item, index)">
         <li class="detail-list-ul-text">
           <span class="font-weight">{{ index + 1 }}.{{ item.materialName }}</span>
           <img :src="item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1?editedStatus:editStatus" />
@@ -45,8 +45,8 @@ export default {
     init() {
       this.sheetShow = !this.sheetShow
     },
-    deleteClick (index) {
-      this.$emit('deleteCallback', index)
+    editedClick (item, index) {
+      this.$emit('editedClick', item, index)
     }
   },
 }

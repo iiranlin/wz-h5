@@ -26,7 +26,8 @@
       <span @click="returnClick"><span class="detail-floor-content-add">+</span>添加物资</span>
     </div>
     <!-- <van-form @submit="onSubmit"> -->
-      <div class="box-container" v-for="(item, index) in btnClickIndex == '0'?materiaList:editMateriaList" :key="item.id">
+      <div class="box-container" v-for="(item, index) in btnClickIndex == '0'?materiaList:editMateriaList" :key="item.id"
+        :class="item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1?'':'box-container-unedited'">
         <div class="div-child">
           <ul class="detail-list-ul">
             <li class="detail-list-ul-text">
@@ -130,14 +131,15 @@
         <!-- <van-checkbox v-model="allChecked" shape="square" @click="allClick">全选</van-checkbox> -->
         <div class="default-button-container-selected" @click="selectedClick">
           <span>已填写 <span class="li-span-click">{{editedMateriaList.length}}</span><span>/{{materiaList.length}}</span> </span>
-          <img v-if="editedMateriaList.length" :class="{'default-button-container-selected-img': $refs.editedList && $refs.editedList.sheetShow}" src="@/assets/img/Icon-slideup.png"/>
+          <img :class="{'default-button-container-selected-img': $refs.editedList && $refs.editedList.sheetShow}" src="@/assets/img/Icon-slideup.png"/>
         </div>
-        <van-button class="button-info" round type="info" :disabled="editedMateriaList.length != materiaList.length || !materiaList.length" @click="onSubmit">保存</van-button>
+        <!-- <van-button class="button-info" round type="info" :disabled="editedMateriaList.length != materiaList.length || !materiaList.length" @click="onSubmit">保存</van-button> -->
+        <van-button class="button-info" round type="info" @click="onSubmit">保存</van-button>
       </div>
       <history-list ref="historyList" @historyClick="historyClick"></history-list>
     <!-- </van-form> -->
     <back-to-top className=".default-container"></back-to-top>
-    <edited-list ref="editedList" :editedData="materiaList" :editedMateriaList="editedMateriaList"></edited-list>
+    <edited-list ref="editedList" :editedData="materiaList" :editedMateriaList="editedMateriaList" @editedClick="editedClick"></edited-list>
   </div>
 </template>
 <script>
@@ -296,6 +298,16 @@ export default {
         type = 'modify'
         id = this.queryId
       }
+
+      const isSection = this.scrollToSection()
+      if (!isSection) {
+        this.$notify({
+          type: 'warning',
+          message: '请完善物资!',
+        });
+        return
+      }
+
       const isValid = this.onCheck(this.materiaList)
       if (!isValid) {
         return
@@ -384,9 +396,7 @@ export default {
       this.$set(this.materiaList, index, Object.assign({}, this.materiaList[index], finallyData))
     },
     selectedClick () {
-      if(this.editedMateriaList.length){
-        this.$refs.editedList.init()
-      }
+      this.$refs.editedList.init()
     },
     editedClick (item, index) {
       const query = this.queryType == 'update' ? {uniqueNumber: item.uniqueNumber || item.allocationUniqueNumber, contractId: this.contractId, type: this.queryType, id: this.queryId} : {uniqueNumber: item.uniqueNumber || item.allocationUniqueNumber, contractId: this.contractId}
@@ -394,6 +404,14 @@ export default {
     },
     btnClick (code) {
       this.btnClickIndex = code
+    },
+    scrollToSection() {
+      const element = document.getElementsByClassName('box-container-unedited')
+      if (element.length) {
+        element[0].scrollIntoView({ behavior: 'smooth' })
+        return false
+      }
+      return true
     }
   }
 }
