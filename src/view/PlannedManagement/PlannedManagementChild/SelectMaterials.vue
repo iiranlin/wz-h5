@@ -337,7 +337,7 @@ export default {
     z-index: 10000;
     .default-button-container-selected{
       font-size: 13px;
-      span{
+      &>span{
         vertical-align: middle;
       }
       img{

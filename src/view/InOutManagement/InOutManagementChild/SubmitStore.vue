@@ -1,6 +1,6 @@
 <template>
   <div class="submit-store-view">
-    <van-form @submit="onSubmit" label-align="left" label-width="180px">
+    <van-form @submit="onSubmit" label-align="left">
       <div class="submit-store-view-mian">
         <div class="detail-base-info">
           <div class="detail-title-content">
@@ -121,10 +121,24 @@
                       :key="val.filePath">{{ val.fileName }}</span>
                   </li> -->
                   <template v-if="queryType === 'submit'">
-                    <van-field v-model="item.storeTotal" type="number" name="入库数量" label="入库数量" placeholder="请输入入库数量"
+                    <li class="detail-list-li-input">
+                      <van-field label="入库数量" placeholder="请输入入库数量" required clearable input-align="right">
+                        <template #input>
+                          <van-stepper v-model="item.storeTotal" :min="0" @change="putChange(item, index)" />
+                        </template>
+                      </van-field>
+                    </li>
+                    <li class="detail-list-li-input">
+                      <van-field label="退货数量" placeholder="请输入退货数量" required clearable input-align="right">
+                        <template #input>
+                          <van-stepper v-model="item.refundZjTotal" :min="0" @change="changeRefund(item, index)" />
+                        </template>
+                      </van-field>
+                    </li>
+                    <!-- <van-field v-model="item.storeTotal" type="number" name="入库数量" label="入库数量" placeholder="请输入入库数量"
                       @blur="putChange(item, index)" input-align="right" required :rules="rules.storeTotal" />
                     <van-field v-model="item.refundZjTotal" type="number" name="退货数量" label="退货数量" placeholder="请输入退货数量"
-                      @blur="changeRefund(item, index)" input-align="right" required :rules="rules.refundZjTotal" />
+                      @blur="changeRefund(item, index)" input-align="right" required :rules="rules.refundZjTotal" /> -->
                   </template>
                   <template v-else>
                     <li>
@@ -293,22 +307,26 @@ export default {
     },
     putChange(item, index) {
       //入库不能超过收货，最终算出退货
-      if (Number(item.storeTotal) > Number(item.putTotal)) {
-        this.$toast('入库数量不能大于收货数量！')
-        this.tableData[index].storeTotal = item.putTotal
-      } else {
-        this.tableData[index].refundZjTotal = Number(item.putTotal) - Number(item.storeTotal)
-      }
+      this.$nextTick( () => {
+        if (Number(item.storeTotal) > Number(item.putTotal)) {
+          this.$toast('入库数量不能大于收货数量！')
+          this.tableData[index].storeTotal = item.putTotal
+        } else {
+          this.tableData[index].refundZjTotal = Number(item.putTotal) - Number(item.storeTotal)
+        }
+      })
     },
     //填写退货数量
     changeRefund(item, index) {
       //退货不能超过收货，最终算出入库
-      if (Number(item.refundZjTotal) > Number(item.putTotal)) {
-        this.$toast('退货数量不能大于收货数量！')
-        this.tableData[index].refundZjTotal = Number(item.putTotal) - Number(item.storeTotal);
-      } else {
-        this.tableData[index].storeTotal = Number(item.putTotal) - Number(item.refundZjTotal);
-      }
+      this.$nextTick( () => {
+        if (Number(item.refundZjTotal) > Number(item.putTotal)) {
+          this.$toast('退货数量不能大于收货数量！')
+          this.tableData[index].refundZjTotal = Number(item.putTotal) - Number(item.storeTotal);
+        } else {
+          this.tableData[index].storeTotal = Number(item.putTotal) - Number(item.refundZjTotal);
+        }
+      })
     },
     onCheck(tableData) {
       const errors = [];
@@ -389,6 +407,27 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.detail-list-li-input {
+
+  & :nth-child(2) {
+    text-align: center;
+  }
+
+  ::v-deep .van-cell__title {
+    color: #151b3e;
+  }
+
+  .van-stepper {
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+
+    ::v-deep .van-stepper__input {
+      background: #fff;
+      width: 50px;
+    }
+  }
+}
+
 .submit-store-view-mian {
   display: flex;
   flex-direction: column;

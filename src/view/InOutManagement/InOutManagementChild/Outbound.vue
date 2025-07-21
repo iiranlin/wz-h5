@@ -132,8 +132,17 @@
               <span>{{childItem.expirationDate && parseTime(childItem.expirationDate,'{y}-{m}-{d}')}}</span>
             </li>
             <template v-if="queryType === 'submit'">
-              <van-field class="outbound-field-text" v-model="childItem.outTotal" name="出库数量" label="出库数量：" placeholder="请输入出库数量" input-align="right" label-width="252px" required/>
-              <van-field class="outbound-field-text" v-model="childItem.remark" name="备注" label="备注：" placeholder="请输入备注" input-align="right" label-width="110px"/>
+              <li class="detail-list-li-input">
+                <van-field label="出库数量" placeholder="请输入出库数量" required clearable input-align="right">
+                  <template #input>
+                    <van-stepper v-model="childItem.outTotal" :min="0" />
+                  </template>
+                </van-field>
+              </li>
+              <li class="detail-list-li-input">
+              <!-- <van-field class="outbound-field-text" v-model="childItem.outTotal" name="出库数量" label="出库数量：" placeholder="请输入出库数量" input-align="right" label-width="252px" required/> -->
+                <van-field class="outbound-field-text" v-model="childItem.remark" name="备注" label="备注：" placeholder="请输入备注" input-align="right"/>
+              </li>
             </template>
             <template v-if="queryType === 'save'">
               <li>
@@ -466,5 +475,26 @@ export default {
 <style lang="less" scoped>
 .box-container {
   padding: 0px;
+}
+
+::v-deep .van-cell__title {
+  color: #151b3e;
+}
+
+.detail-list-li-input {
+
+  & :nth-child(2) {
+    text-align: center;
+  }
+
+  .van-stepper {
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+
+    ::v-deep .van-stepper__input {
+      background: #fff;
+      width: 50px;
+    }
+  }
 }
 </style>

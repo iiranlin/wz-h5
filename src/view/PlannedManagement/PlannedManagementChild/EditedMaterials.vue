@@ -29,7 +29,7 @@
       </ul>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field label="本次计划数量" placeholder="请输入数量" required clearable :label-width="240"
+          <van-field label="本次计划数量" placeholder="请输入数量" required clearable
             input-align="right">
             <template #input>
               <van-stepper v-model="sectionInfo.planAmount" :max="sectionInfo.amount - sectionInfo.cumulativeAmount" />
@@ -110,11 +110,11 @@
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field required v-model="sectionInfo.field0" label="投资方" placeholder="请输入投资方" :label-width="240"
+          <van-field required v-model="sectionInfo.field0" label="投资方" placeholder="请输入投资方"
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field required v-model="sectionInfo.field1" label="投资比例" placeholder="请输入投资比例" :label-width="240"
+          <van-field required v-model="sectionInfo.field1" label="投资比例" placeholder="请输入投资比例"
             input-align="right" />
         </li>
       </ul>
