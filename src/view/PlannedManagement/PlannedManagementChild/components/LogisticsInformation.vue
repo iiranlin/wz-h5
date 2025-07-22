@@ -38,16 +38,14 @@
       <div class="Logistics-Information-dt">
         <wuliu :courierNumber="detailObj.oddNumbers" @expressDataFun="expressDataFun" />
       </div>
-      <van-steps direction="vertical" active-color="#0086ff" :active="0">
-        <van-step v-for="(item, index) in expressData.routeDtos" :key="index">
-          <div>
-            <p>{{ expressData.logisticsStatusDesc }}</p>
+      <div class="Logistics-Information-list">
+        <ul>
+          <li v-for="(item, index) in expressData.routeDtos" :key="index">
+            <p>{{ item.context }}</p>
             <p>{{ item.time }}</p>
-            <p class="Logistics-Information-text">{{ item.context }}</p>
-          </div>
-          <!-- <div class="Logistics-Information-text">{{ item.time }}</div> -->
-        </van-step>
-      </van-steps>
+          </li>
+        </ul>
+      </div>
     </template>
     <template v-else>
       <div class="tab-div">
@@ -71,10 +69,6 @@ export default {
   name: 'LogisticsInformation',
   components: { wuliu },
   props: {
-    activeKey: {
-      type: Number,
-      default: 0
-    },
     detail: {
       type: Object,
       default: () => {
@@ -102,7 +96,6 @@ export default {
 		},
 	},
   created() {
-    // console.log(this.activeKey)
   },
   activated() {
   },
@@ -122,6 +115,7 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  background: #fff;
 
   .detail-ul {
     padding: 4px;
@@ -134,7 +128,7 @@ export default {
 
   .Logistics-Information-dt {
     width: 100%;
-    height: 300px;
+    height: 164px;
   }
 
   ::v-deep .van-step__title {
@@ -174,6 +168,20 @@ export default {
 
     .th-rows {
       background: #fff;
+    }
+  }
+  .Logistics-Information-list{
+    ul{
+      li{
+        margin-top: 8px;
+        background: #f0f2f6;
+        padding: 10px 12px 10px 17px;
+        font-size: 12px;
+        p:nth-child(2){
+          margin-top: 10px;
+          opacity: 0.5;
+        }
+      }
     }
   }
 }

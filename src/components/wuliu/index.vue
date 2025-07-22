@@ -256,6 +256,7 @@ export default {
 .app-container {
   overflow: hidden;
   position: relative;
+  height: 100%;
 
   .arcgis-container {
     width: 100%;

@@ -18,7 +18,7 @@
         </li>
         <li>
           <span>退货单号：</span>
-          <span>{{dataList.backNumber}}</span>
+          <span>{{backNode == '1'?dataList.backQualNumber:dataList.backNumber}}</span>
         </li>
         <li>
           <span>收货单号：</span>
@@ -154,11 +154,13 @@ export default {
         remark: ''
       },
       showDatePicker: false, // 控制日期选择器显示
-      menuActiveIndex:'0'
+      menuActiveIndex:'0',
+      backNode: ''
     }
   },
   mounted() {
     this.id = this.$route.query.id
+    this.backNode = this.$route.query.backNode
     this.getDetailList() 
   },
     filters: {

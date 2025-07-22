@@ -1,11 +1,10 @@
 <template>
-  <div v-if="materialCirculationDetailsTableDTOS.length">
+  <div v-if="materialCirculationDetailsTableDTOS.length" class="deliveryMaterial-details">
     <div class="box-container" v-for="(item, index) in materialCirculationDetailsTableDTOS" :key="index">
       <div>
         <ul class="detail-ul">
           <li>
-            <span>物资名称：</span>
-            <span>{{ item.materialName }}</span>
+            <span class="font-weight">{{ index+1 }}.{{ item.materialName }}</span>
           </li>
           <li>
             <span>规格型号：</span>
@@ -120,10 +119,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.deliveryMaterial-details{
+  background: #fff;
+}
 .box-container {
   box-shadow: none;
-  border: 1px solid #e9e9e9;
   padding: 0;
+  border-bottom: 0.5px solid #e3e3e3;
+  border-radius: inherit;
 
   .detail-ul {
     padding: 4px;

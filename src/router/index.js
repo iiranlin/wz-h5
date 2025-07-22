@@ -190,6 +190,12 @@ export const routes = [
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/EditedMaterials.vue')
       },
       {
+        path: 'ViewMaterials',
+        name: 'ViewMaterials',
+        meta: { title: '物资详情' },
+        component: () => import('@/view/PlannedManagement/PlannedManagementChild/ViewMaterials.vue')
+      },
+      {
         path: 'SaveSuccess',
         name: 'SaveSuccess',
         meta: { title: '保存成功' },

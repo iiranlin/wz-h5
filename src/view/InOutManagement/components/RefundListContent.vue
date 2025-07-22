@@ -15,7 +15,7 @@
         <div v-for="(item, index) in dataList" :key="index" class="box-container" @click="handleWaitItemClick(item)">
            <div class="list-title-content">
             <span>退货单号：</span>
-            <span class="font-weight" style="color:#134daa;">{{item.backNode == '2'?item.backNumber:item.backQualNumber}}</span>
+            <span class="font-weight" style="color:#134daa;">{{ item.backQualNumber }}</span>
           </div>
           <ul class="list-ul">
             <li>
@@ -110,7 +110,7 @@ export default {
     },
     handleWaitItemClick (item) {
       // this.$router.push({ name: 'SubmitStore', query: {type: 'view'} })
-      this.$router.push({name: 'DoReturn',query:{id: item.id}})
+      this.$router.push({name: 'DoReturn',query:{id: item.id, backNode: '1'}})
     },
     detailsClick (item) {
       this.$router.push({ name: 'DoAcceptDetail', query: {id: item.id}  })

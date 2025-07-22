@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="box-container" v-for="(item, index) in list" :key="index">
-      <div>
-        <div class="detail-list-title-content">
-            <span>物资名称：</span>
-            <span>{{item.materialName}}</span>
+      <div class="box-container-main" @click="detailsClick(item)">
+        <div class="material-details-detail-list-title-content">
+          <span>{{ index + 1 }}.{{ item.materialName }}</span>
+          <img class="detail-ul-bottom-text-Arrow" src="@/assets/img/Arrow-R.png" />
         </div>
         <ul class="detail-list-ul">
           <li>
@@ -35,31 +35,36 @@
             <span>供应时间：</span>
             <span>{{ item.supplyDate && parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
           </li>
-          <li>
-            <span>使用地点：</span>
-            <span>{{ item.addr }}</span>
-          </li>
-          <li>
-            <span>收货地址：</span>
-            <span>{{ item.addr }}</span>
-          </li>
+         
           <li class="li-item-overlength">
             <span>收货人及联系方式：</span>
             <span>{{ item.receiver }}</span>
           </li>
-          <li>
-            <span>投资方：</span>
-            <span>{{ item.field0 }}</span>
-          </li>
-          <li>
-            <span>投资比例：</span>
-            <span>{{ item.field1 }}</span>
-          </li>
-          <li class="li-item-remark"> 
-            <span>备注：</span>
-            <div class="remark-detail">{{item.remark || '未填写'}}</div>
-          </li>
         </ul>
+        <div class="detail-ul-text" v-if="searchChecked">
+          <ul class="detail-ul">
+            <li>
+              <p>
+                <span>已发货：</span>
+                <span>{{ item.planNumber }}</span>
+              </p>
+              <p>
+                <span>已验收：</span>
+                <span>{{ item.planNumber }}</span>
+              </p>
+            </li>
+            <li>
+              <p>
+                <span>已入库：</span>
+                <span>{{ item.planNumber }}</span>
+              </p>
+              <p>
+                <span>已出库：</span>
+                <span>{{ item.planNumber }}</span>
+              </p>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <van-empty v-if="list.length === 0" description="暂无数据" />
@@ -75,7 +80,11 @@ export default {
       default: () => {
         return []
       }
-    }
+    },
+    searchChecked: {
+      type: Boolean,
+      default: true
+    },
   },
   data() {
     return {
@@ -87,16 +96,65 @@ export default {
   },
   activated() {
   },
-  mounted () {
+  mounted() {
   },
   methods: {
+    detailsClick (item) {
+      this.$router.push({name: 'ViewMaterials', query: {id: item.id}})
+    }
   },
 }
 </script>
 <style lang="less" scoped>
 .box-container {
   padding: 0px;
+
+  .box-container-main{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .material-details-detail-list-title-content {
+    box-sizing: border-box;
+    width: 100%;
+    line-height: 34px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #151b3e;
+    padding-left: 12px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .detail-ul-bottom-text-Arrow {
+      width: 14px !important;
+      height: 14px !important;
+    }
+  }
+
+  .detail-list-ul{
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .detail-ul-text {
+    margin: 10px;
+    margin-top: 0;
+    background: #f0f2f6;
+    border-radius: 5px;
+
+    .detail-ul {
+      padding: 10px 12px;
+      padding-left: 20px;
+      p{
+        flex: 1;
+        text-align: left;
+      }
+    }
+  }
 }
+
 .li-item-both {
   justify-content: space-between;
 }
