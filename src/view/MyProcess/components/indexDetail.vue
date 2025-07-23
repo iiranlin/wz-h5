@@ -56,6 +56,7 @@
               <div class="list-middle">
                 <p v-if="item.status == '2' || item.actId=='root'"><img src="@/assets/img/Icon-state-yes.png" alt=""></p>
                 <p v-if="item.status == '3'"><img src="@/assets/img/Icon-state-no.png" alt=""></p>
+                <p v-if="item.status == '6'"><img src="@/assets/img/Icon-state-goback.png" alt=""></p>
                 <p v-if="item.status == '' && item.actId!='root'"><img src="@/assets/img/Icon-state-waiting.png" alt=""></p></p>
                 <div class="middle-border"></div>
               </div>
@@ -64,6 +65,7 @@
                   <span class="list-right-title">{{item.assigneeName}}</span>
                   <span v-if="item.status == '2'" style="color:rgba(19, 77, 170, 1);font-weight: 600">通过</span>
                   <span v-if="item.status == '3'"  style="color:rgba(244, 160, 47, 1);font-weight: 600">驳回</span>
+                  <span v-if="item.status == '6'" style="color:rgba(19, 77, 170, 1);font-weight: 600">撤销审核</span>
                   <span v-if="item.status == '' && item.actId=='root'"  style="color:rgba(19, 77, 170, 1);font-weight: 600">发起</span>
                   <span v-if="item.status == '' && item.actId!='root'"  style="color:rgba(21, 27, 62, 0.5);font-weight: 400">未审批</span>
                 </div>
