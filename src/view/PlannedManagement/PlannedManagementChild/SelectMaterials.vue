@@ -20,7 +20,7 @@
           <span>{{ contractData.seller }}</span>
         </li>
         <li class="li-item-overlength">
-          <span >计划金额比例：</span>
+          <span>计划金额比例：</span>
           <span class="li-span-click">{{ materialUsedRatio }}%</span>
         </li>
       </ul>
@@ -31,15 +31,15 @@
     <van-sticky class="select-materials-sticky">
       <div class="select-materials-search">
         <p class="select-materials-search-p">
-        <van-checkbox v-model="allChecked" @click="allClick">全选</van-checkbox>
+          <van-checkbox v-model="allChecked" @click="allClick">全选</van-checkbox>
           <!-- <img src="/static/icon-return.png"/>
           <span>请选择需求物资</span>
           <span class="select-materials-select">（已选择<span class="select-materials-select-num">{{ materiaId.length }}</span>项）</span> -->
         </p>
         <!-- <van-search v-model="searchValue" placeholder="输入规格型号" background="center" :show-action="showAction"
           @search="onSearch" /> -->
-        <van-search v-model="searchValue" placeholder="输入规格型号" left-icon="none" background="center" :show-action="showAction"
-          @search="onSearch">
+        <van-search v-model="searchValue" placeholder="输入规格型号" left-icon="none" background="center"
+          :show-action="showAction" @search="onSearch">
           <template slot='right-icon'>
             <van-icon name="search" />
           </template>
@@ -49,11 +49,11 @@
     <div class="select-materials-list">
       <div class="van-list">
         <van-checkbox-group v-model="materiaId" v-if="filteredList.length" @change="materiaIdChange">
-          <van-checkbox :name="item.uniqueNumber" v-for="(item, index) in filteredList" :key="item.uniqueNumber || item.allocationUniqueNumber"
-            :disabled="item.amount === item.cumulativeAmount">
+          <van-checkbox :name="item.uniqueNumber" v-for="(item, index) in filteredList"
+            :key="item.uniqueNumber || item.allocationUniqueNumber" :disabled="item.amount === item.cumulativeAmount">
             <ul class="list-ul">
               <li>
-                <span class="font-weight">{{index+1}}.{{ item.materialName }}</span>
+                <span class="font-weight">{{ index + 1 }}.{{ item.materialName }}</span>
                 <!-- <span class="font-weight">{{ item.materialName }}</span> -->
               </li>
               <li>
@@ -96,9 +96,11 @@
     <div class="default-button-container">
       <!-- <van-checkbox v-model="allChecked" shape="square" @click="allClick">全选</van-checkbox> -->
       <div class="default-button-container-selected" @click="selectedClick">
-        <img src="@/assets/img/Icon.png"/>
-        <span>已选择 <span class="li-span-click">{{materiaId.length}}</span> 项</span>
-        <img v-if="materiaId.length" :class="{'default-button-container-selected-img': $refs.selectedList && $refs.selectedList.sheetShow}" src="@/assets/img/Icon-slideup.png"/>
+        <img src="@/assets/img/Icon.png" />
+        <span>已选择 <span class="li-span-click">{{ materiaId.length }}</span> 项</span>
+        <img v-if="materiaId.length"
+          :class="{ 'default-button-container-selected-img': $refs.selectedList && $refs.selectedList.sheetShow }"
+          src="@/assets/img/Icon-slideup.png" />
       </div>
       <van-button class="button-info" round type="info" @click="addClick">下一步</van-button>
     </div>
@@ -135,7 +137,12 @@ export default {
   computed: {
     filteredList() {
       if (!this.searchValue) return this.list; // 如果搜索值为空，返回所有数据
-      return this.list.filter(item => item.specModel.includes(this.searchValue)); // 过滤匹配的数据项
+      return this.list.filter(item => item.specModel.includes(this.searchValue) ||
+        item.materialName.includes(this.searchValue) ||
+        item.unit.includes(this.searchValue) ||
+        item.receiver.includes(this.searchValue) ||
+        item.deliveryLocation.includes(this.searchValue)
+      ); // 过滤匹配的数据项
     }
   },
   activated() {
@@ -162,17 +169,17 @@ export default {
         this.allChecked = this.materiaId.length === data.length
         this.materiaList = this.$store.state.public.materiaList
         let interfaceMateriaList = (this.$store.state.public.interfaceMateriaList || [])
-        
-        data = data.map( (item) => {
+
+        data = data.map((item) => {
           let Obj = item
           interfaceMateriaList.map((val) => {
-            if(item.uniqueNumber == (val.uniqueNumber || val.allocationUniqueNumber)){
-              Obj = Object.assign({}, item, {cumulativeAmount: Number(item.cumulativeAmount) - Number(val.planAmount) || 0})
+            if (item.uniqueNumber == (val.uniqueNumber || val.allocationUniqueNumber)) {
+              Obj = Object.assign({}, item, { cumulativeAmount: Number(item.cumulativeAmount) - Number(val.planAmount) || 0 })
             }
           })
           return Obj
         })
-        
+
         const listDataA = data.filter(item => item.amount === item.cumulativeAmount)
         const listDataB = data.filter(item => !(item.amount === item.cumulativeAmount))
         this.list = listDataB.concat(listDataA)
@@ -198,14 +205,14 @@ export default {
       const query = this.queryType == 'update' ? { contractId, type: this.queryType, id, materialUsedRatio } : { contractId, materialUsedRatio }
       this.$router.push({ name: 'SaveMaterials', query })
     },
-    allClick () {
-      if(this.allChecked){
+    allClick() {
+      if (this.allChecked) {
         this.materiaId = this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber)
-      }else{
+      } else {
         this.materiaId = []
       }
     },
-    materiaIdChange () {
+    materiaIdChange() {
       this.allChecked = this.materiaId.length === this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber).length
       this.$nextTick(() => {
         let materiaList = this.$store.state.public.materiaList.filter(item => this.materiaId.includes(item.uniqueNumber || item.allocationUniqueNumber))
@@ -218,21 +225,21 @@ export default {
         }, [])
       })
     },
-    selectedClick () {
-      if(this.materiaId.length){
+    selectedClick() {
+      if (this.materiaId.length) {
         this.$refs.selectedList.init()
         return
       }
     },
     deleteCallback(index) {
       this.materiaList.splice(index, 1)
-      this.materiaId = this.materiaList.map( item => item.uniqueNumber || item.allocationUniqueNumber)
-      if(!this.materiaId.length){
+      this.materiaId = this.materiaList.map(item => item.uniqueNumber || item.allocationUniqueNumber)
+      if (!this.materiaId.length) {
         this.$refs.selectedList.init()
       }
     },
-    openClick (id) {
-      this.$router.push({ name: 'MaterialDetailsView', query:{id} })
+    openClick(id) {
+      this.$router.push({ name: 'MaterialDetailsView', query: { id } })
     }
   }
 }
@@ -243,7 +250,7 @@ export default {
   flex-direction: column;
   background: #f8f8f8;
 
-  .detail-list-ul{
+  .detail-list-ul {
     padding-left: 33px;
   }
 
@@ -261,12 +268,15 @@ export default {
     .select-materials-search-p {
       font-size: 14px;
       padding-left: 13px;
-      .van-checkbox{
+
+      .van-checkbox {
         height: 100%;
         margin-left: 2px;
-        ::v-deep .van-checkbox__icon{
+
+        ::v-deep .van-checkbox__icon {
           font-size: 18px;
-          .van-icon{
+
+          .van-icon {
             border: 1px solid #1989fa;
           }
         }
@@ -308,9 +318,10 @@ export default {
       padding: 10px;
       align-items: baseline;
 
-      ::v-deep .van-checkbox__icon{
+      ::v-deep .van-checkbox__icon {
         font-size: 18px;
-        .van-icon{
+
+        .van-icon {
           border: 1px solid #1989fa;
         }
       }
@@ -328,28 +339,34 @@ export default {
       }
     }
   }
-  .default-button-container{
+
+  .default-button-container {
     justify-content: space-between;
     padding-left: 14px;
     padding-right: 19px;
     box-sizing: border-box;
     box-shadow: 4px 0px 5px rgba(32, 30, 74, 0.1);
     z-index: 10000;
-    .default-button-container-selected{
+
+    .default-button-container-selected {
       font-size: 13px;
-      &>span{
+
+      &>span {
         vertical-align: middle;
       }
-      img{
+
+      img {
         width: 28px;
         height: 28px;
         vertical-align: middle;
       }
-      .default-button-container-selected-img{
+
+      .default-button-container-selected-img {
         transform: rotate(180deg)
       }
     }
-    .button-info{
+
+    .button-info {
       width: 169px;
       height: 34px;
     }

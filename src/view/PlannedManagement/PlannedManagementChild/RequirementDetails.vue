@@ -95,7 +95,7 @@
         </div>
       </div>
     </van-sticky>
-    <material-details :list="detail.details" :searchChecked="searchChecked"></material-details>
+    <material-details :list="filteredList" :searchChecked="searchChecked"></material-details>
     <div class="default-button-container" v-if="['1', '4', '0', '5', '10'].includes(detail.planStatus)">
       <van-button class="button-info" round type="info" @click="handleExamineClick(detail)">提交审核</van-button>
     </div>
@@ -141,6 +141,16 @@ export default {
       recordList: [],
       historyData: {},
       searchChecked: true
+    }
+  },
+  computed: {
+    filteredList() {
+      if (!this.searchValue) return this.detail.details; // 如果搜索值为空，返回所有数据
+      return this.detail.details.filter(item => item.specModel.includes(this.searchValue) ||
+        item.materialName.includes(this.searchValue) ||
+        item.unit.includes(this.searchValue) ||
+        item.receiver.includes(this.searchValue)
+      ); // 过滤匹配的数据项
     }
   },
   created() {

@@ -10,7 +10,7 @@
       <!-- <van-search v-model="searchQuery" placeholder="输入关键字搜索" background="center" :show-action="showAction"
         @search="onSearch" @cancel="onCancel" @focus="onFocus" /> -->
     </div>
-    <div class="tabs">
+    <div class="tabs" v-if="filteredList.length">
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了">
       <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <!--本次需求未发货数量为0不可选-->
@@ -82,6 +82,7 @@
       </van-checkbox-group>
     </van-list>
     </div>
+    <van-empty v-else description="暂无数据" />
 
     <div class="default-button-container">
         <div class="allChoose">
@@ -137,7 +138,15 @@ export default {
    computed: {
     filteredList() {
       if (!this.searchQuery) return this.selectGoodsList; // 如果搜索值为空，返回所有数据
-      return this.selectGoodsList.filter(item => item.specModel.includes(this.searchQuery)); // 过滤匹配的数据项
+      return this.selectGoodsList.filter(item => item.specModel.includes(this.searchQuery) ||
+        item.materialName.includes(this.searchValue) ||
+        item.unit.includes(this.searchValue) ||
+        item.receiver.includes(this.searchValue) ||
+        item.addr.includes(this.searchValue) ||
+        item.field2.includes(this.searchValue) ||
+        item.field0.includes(this.searchValue) ||
+        item.field1.includes(this.searchValue)
+      ); // 过滤匹配的数据项
     }
   },
   watch:{
