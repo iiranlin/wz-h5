@@ -94,7 +94,7 @@
             <van-button size="mini" type="info" round class="button-info" v-if="result.status == 2"
                 @click="handleConfirmClick(result.id)">确认需求</van-button>
             <van-button size="mini" type="info" round class="button-info"
-                v-if="result.status == 4 || result.status == 3"
+                v-if="btnStatus && (result.status == 4 || result.status == 3)"
                 @click="handleSendGoodsClick(result.id, 'add')">发货</van-button>
             <!-- 编辑里的选择发货物资传的是planId -->
         </div>
@@ -123,6 +123,7 @@ export default {
             loading: false,
             finished: false,
             result: {},
+            btnStatus:false,
             list: [],
             allRefreshLoading: false,
             id: '',
@@ -161,6 +162,11 @@ export default {
                     this.allRefreshLoading = false
                     this.finished = false
                     this.result = res.data
+                    this.result.demandPlanDetailsGyDTOList.forEach(item=>{
+                        if(item.ssendTotal>0){
+                            this.btnStatus = true
+                        }
+                    })
                 }
             })
         },

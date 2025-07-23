@@ -41,6 +41,12 @@ export function detailBySend(id) {
     method: 'get',
   })
 }
+export function detailByUpdateSend(id) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/detailByUpdateSend/${id}`,
+    method: 'get',
+  })
+}
 //增加货运位置
 export function addFreightLocations(data) {
   return request({

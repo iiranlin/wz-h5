@@ -46,16 +46,16 @@
       </div>
     </div>
     <div class="detail-log-info">
-        <index-detail></index-detail>
+        <log-recording></log-recording>
     </div>
   </div>
 </template>
 <script>
-import IndexDetail from './components/indexDetail'
+import LogRecording from './components/LogRecording'
 import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'RequirementDetails',
-  components: { IndexDetail, },
+  components: { LogRecording, },
   data() {
     return {
       menuActiveIndex: '',
@@ -69,7 +69,7 @@ export default {
   activated() {
   },
   mounted() {
-    const id = this.$route.params.businessId
+    const id = this.$route.params.logId
     id && this.materialDemandPlanRestDetail(id)
   },
   methods: {
@@ -116,6 +116,9 @@ export default {
       padding: 10px 12px;
     }
   }
+
+
+
 }
 .select-materials-select {
   font-size: 12px;
@@ -148,6 +151,5 @@ export default {
 }
 .detail-log-info{
     margin-top: 0.25rem;
-    min-height:200px ;
 }
 </style>

@@ -239,6 +239,7 @@ export default {
     handleDoAccept(item) {
       this.$store.dispatch('updateActiveTab', {
         activeTab:this.menuActiveIndex
+
       })
       this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true,isLable:false}})
     },
