@@ -46,21 +46,21 @@
             <li>
               <p>
                 <span>已发货：</span>
-                <span>{{ item.planNumber }}</span>
+                <span>{{ item.sendTotal }}</span>
               </p>
               <p>
                 <span>已验收：</span>
-                <span>{{ item.planNumber }}</span>
+                <span>{{ item.putTotal }}</span>
               </p>
             </li>
             <li>
               <p>
                 <span>已入库：</span>
-                <span>{{ item.planNumber }}</span>
+                <span>{{ item.storeTotal }}</span>
               </p>
               <p>
                 <span>已出库：</span>
-                <span>{{ item.planNumber }}</span>
+                <span>{{ item.outCkTotal }}</span>
               </p>
             </li>
           </ul>
