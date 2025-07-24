@@ -99,6 +99,7 @@
   </div>
 </template>
 <script>
+import { materialDemandPlanDetailsDetail } from '@/api/prodmgr-inv/materialDemandPlanDetails'
 export default {
   name: 'ViewMaterials',
   data() {
@@ -112,6 +113,19 @@ export default {
   methods: {
     init() {
       const { id = '' } = this.$route.query
+      this.materialDemandPlanDetailsDetail(id)
+    },
+    materialDemandPlanDetailsDetail(id) {
+      let toast = this.$toast.loading({
+        duration: 0,
+        message: "正在加载...",
+        forbidClick: true
+      });
+      materialDemandPlanDetailsDetail(id).then(({ data }) => {
+        this.sectionInfo = data
+      }).finally((err) => {
+        toast.clear()
+      })
     },
   }
 }

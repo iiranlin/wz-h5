@@ -35,7 +35,7 @@
         <img src="@/assets/img/Icon-batch.png"/>
         <span>{{ activeKey.text }}</span>
       </div>
-      <van-popover v-model="showPopover" trigger="click">
+      <van-popover v-model="showPopover" trigger="click" v-if="!shipmentBatchNumber">
         <div class="van-popover__action" v-for="item in tabList" :key="item.value" @click="activeKeyChange(item)">
           <div class="van-popover__action-text van-hairline--bottom" :class="{'van-popover__action-text-active': activeKey.value == item.value}" v-if="item.text">{{ item.text }}</div>
         </div>
@@ -79,6 +79,7 @@ export default {
       tabList: [],
       detail: {},
       showPopover: false,
+      shipmentBatchNumber: ''
     }
   },
   created() {
@@ -86,7 +87,8 @@ export default {
   activated() {
   },
   mounted () {
-    const {id = null} = this.$route.query
+    const {id = null, shipmentBatchNumber = ''} = this.$route.query
+    this.shipmentBatchNumber = shipmentBatchNumber
     this.materialDemandPlanRestDetail(id)
     this.getBatch(id)
   },
@@ -118,7 +120,15 @@ export default {
         value: item.shipmentBatchNumber,
       }))
       if (this.tabList.length) {
-        this.activeKey = this.tabList[0]
+        if(this.shipmentBatchNumber){
+          this.tabList.forEach((item) => {
+            if(item.value === this.shipmentBatchNumber){
+              this.activeKey = item
+            }
+          })
+        }else{
+          this.activeKey = this.tabList[0]
+        }
         this.detailWlgz(this.activeKey.value)
       }
     },

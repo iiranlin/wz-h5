@@ -80,7 +80,7 @@ service.interceptors.response.use(
     if(!response.config.minioSm4){
       response.data = JSON.parse(decrypt(response.data, secretKey))
     }
-    console.info(response.data)
+    console.info(response.config.url, response.data)
     // 二进制数据则直接返回
     if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
       return response.data

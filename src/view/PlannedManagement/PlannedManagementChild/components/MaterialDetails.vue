@@ -41,7 +41,7 @@
             <span>{{ item.receiver }}</span>
           </li>
         </ul>
-        <div class="detail-ul-text" v-if="searchChecked">
+        <div class="detail-ul-text" v-if="searchChecked && ['6', '7', '8', '9'].includes(planStatus)">
           <ul class="detail-ul">
             <li>
               <p>
@@ -85,6 +85,10 @@ export default {
       type: Boolean,
       default: true
     },
+    planStatus: {
+      type: String,
+      default: ''
+    },
   },
   data() {
     return {
@@ -100,6 +104,7 @@ export default {
   },
   methods: {
     detailsClick (item) {
+      console.log(item)
       this.$router.push({name: 'ViewMaterials', query: {id: item.id}})
     }
   },

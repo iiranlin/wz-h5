@@ -1,12 +1,11 @@
 <template>
     <div :class="['default-container',type == '0'?'detail-button-container':'']">
         <div class="detail-base-info">
-            <div class="detail-title-content">
-                <img src="/static/icon-xqjh.png">
-                <span>需求名称：</span>
-                <span>{{detailInfo.planName}}</span>
+            <div class="detail-title-text">
+                <p>需求名称：</p>
+                <p>{{ detailInfo.planName }}</p>
             </div>
-            <div>
+            <div class="detail-ul-text">
                 <ul class="detail-ul">
                     <li>
                         <span>标段名称:</span>
@@ -22,12 +21,76 @@
                     </li>
                     <li>
                         <span>填报时间：</span>
-                        <span>{{parseTime(detailInfo.createDate,'{y}-{m}-{d} {h}:{i}:{s}')}}</span>
+                        <span>{{detailInfo.createDate && parseTime(detailInfo.createDate,'{y}-{m}-{d} {h}:{i}:{s}')}}</span>
                     </li>
                 </ul>
             </div>
+            <div class="detail-ul-bottom-text">
+              <ul class="detail-ul">
+                <li>
+                  <span>物资项目：<span class="li-span-click">{{ detailInfo.demandPlanDetailsGyDTOList.length }}</span> 项</span>
+                  <span @click="handleLogClick(detailInfo)"><img class="detail-ul-bottom-text-log" src="@/assets/img/Icon-log.png" /> <span
+                      class="detail-ul-bottom-text-span">查看日志</span> <img class="detail-ul-bottom-text-Arrow"
+                      src="@/assets/img/Arrow-R.png" /></span>
+                </li>
+              </ul>
+            </div>
         </div>
-        <van-tabs 
+        <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
+          <div class="detail-title-content">
+            <img src="@/assets/img/Icon-logistics.png" />
+            <span>物流信息</span>
+          </div>
+          <ul class="detail-list-ul" v-for="(item, index) in dataPc" :key="index" @click="logisticsClick(item)">
+            <li>
+              <span>发货批次{{ index + 1 }}</span>
+              <span><img class="detail-ul-bottom-text-Arrow" src="@/assets/img/Arrow-R.png" /></span>
+            </li>
+          </ul>
+        </div>
+        <div class="detail-base-info detail-base-info-edited" v-if="recordList.length">
+          <div class="detail-title-content detail-base-info-edited-div" @click="handleProcessClick(detailInfo)">
+            <div class="detail-base-info-edited-img">
+              <img src="@/assets/img/Icon-process.png" />
+              <span>流程信息</span>
+            </div>
+            <div class="detail-base-info-edited-img">
+              <img class="detail-ul-bottom-text-Arrow" src="@/assets/img/Arrow-R.png" />
+            </div>
+          </div>
+          <ul class="detail-ul">
+            <li>
+              <p class="detail-ul-p">
+                <img v-if="historyData.status == '2' || historyData.actId=='root'" src="@/assets/img/Icon-state-yes.png" alt="">
+                <img v-if="historyData.status == '3'" src="@/assets/img/Icon-state-no.png" alt="">
+                <img v-if="historyData.status == '6'" src="@/assets/img/Icon-state-goback.png" alt="">
+                <img v-if="historyData.status == '' && historyData.actId!='root'" src="@/assets/img/Icon-state-waiting.png" alt="">
+                <span>{{ historyData.assigneeName }}</span>
+                <span v-if="historyData.status == '2'" style="color:rgba(19, 77, 170, 1);font-weight: 600">通过</span>
+                <span v-if="historyData.status == '3'"  style="color:rgba(244, 160, 47, 1);font-weight: 600">驳回</span>
+                <span v-if="historyData.status == '6'" style="color:rgba(19, 77, 170, 1);font-weight: 600">撤销审核</span>
+                <span v-if="historyData.status == '' && historyData.actId=='root'"  style="color:rgba(19, 77, 170, 1);font-weight: 600">发起</span>
+                <span v-if="historyData.status == '' && historyData.actId!='root'"  style="color:rgba(21, 27, 62, 0.5);font-weight: 400">未审批</span>
+              </p>
+              <span>{{ historyData.endTime }}</span>
+            </li>
+          </ul>
+        </div>
+        <van-sticky class="select-materials-sticky">
+          <div class="select-materials-search">
+            <van-search v-model="searchValue" placeholder="输入规格型号" left-icon="none" background="center"
+              :show-action="showAction">
+              <template slot='right-icon'>
+                <van-icon name="search" />
+              </template>
+            </van-search>
+            <div class="select-materials-search-switch" v-if="['6', '7', '8', '9'].includes(detailInfo.planStatus)">
+              <van-switch v-model="searchChecked" /><span>显示供应概览</span>
+            </div>
+          </div>
+        </van-sticky>
+        <material-details :list="filteredList" :planStatus="detailInfo.planStatus" :searchChecked="searchChecked"></material-details>
+        <!-- <van-tabs 
             sticky
             v-model="menuActiveIndex" 
             color="#0571ff"
@@ -133,11 +196,15 @@
                     </div>
                 </van-list>
             </van-tab>
-        </van-tabs>
+        </van-tabs> -->
         <div class="default-button-container" v-if="type == 0">
-            <van-button class="button-info" block type="info" round @click="handleReject()">驳回</van-button>
-            <van-button class="button-info" block type="info" round @click="handleEditAdopt()">修改后通过</van-button>
-            <van-button class="button-info" block type="info" round @click="handleAdopt()">通过</van-button>
+            <div class="default-button-container-div">
+              <p @click="handleReject()"><img src="@/assets/img/Icon-detailInfo.png" alt=""><span>驳回</span></p>
+              <p @click="handleEditAdopt()"><img src="@/assets/img/Icon-modify-after.png" alt=""><span>修改后通过</span></p>
+            </div>
+            <!-- <van-button class="button-info" block type="info" round @click="handleReject()">驳回</van-button>
+            <van-button class="button-info" block type="info" round @click="handleEditAdopt()">修改后通过</van-button> -->
+            <van-button class="button-info button-info-container" block type="info" round @click="handleAdopt()">通过</van-button>
         </div>
         <!--选择审批人弹框-->
         <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
@@ -158,11 +225,14 @@ import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import eventBus from '@/utils/eventBus.js'
 import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,wfHistoryList } from '@/api/myToDoList'
+import { materialDemandPlanRestDetailGyMx } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
+import MaterialDetails from '@/view/PlannedManagement/PlannedManagementChild/components/MaterialDetails'
 
 export default {
     name: 'DemandPlanningExamine',
     mixins: [keepPages],
-    components: {BackToTop},
+    components: {BackToTop, MaterialDetails},
 
     data () {
         return {
@@ -172,7 +242,7 @@ export default {
             //列表条目信息
             listObj:{},
             //详情信息
-            detailInfo:{},
+            detailInfo:{demandPlanDetailsGyDTOList: []},
             //明细信息
             detailList:[],
             //是否显示选择审批人弹框
@@ -190,7 +260,23 @@ export default {
             processList:[],
             loading:false,
             finished:false,
+            dataPc: [],
+            recordList: [],
+            historyData: {},
+            searchValue: '',
+            showAction: false,
+            searchChecked: true
         }
+    },
+    computed: {
+      filteredList() {
+        if (!this.searchValue) return this.detailInfo.demandPlanDetailsGyDTOList; // 如果搜索值为空，返回所有数据
+        return this.detailInfo.demandPlanDetailsGyDTOList.filter(item => item.specModel.includes(this.searchValue) ||
+          item.materialName.includes(this.searchValue) ||
+          item.unit.includes(this.searchValue) ||
+          item.receiver.includes(this.searchValue)
+        ); // 过滤匹配的数据项
+      }
     },
     created() {
         this.listObj = JSON.parse(this.$route.params.obj);
@@ -209,19 +295,34 @@ export default {
         }.bind(this));
 
         this.getDetail();
+        this.getBatch()
+        this.wfHistoryList()
     },
     activated() {
        
     },
     methods: {
+        async getBatch() {
+          const res = await listPc(this.listObj.businessId)
+          this.dataPc = res.data
+        },
+        wfHistoryList() {
+          wfHistoryList(this.listObj.businessId).then(({ data }) => {
+            if(data.recordList.length){
+              this.recordList = data.recordList || []
+              this.historyData = data.recordList[0]
+            }
+          })
+        },
         //获取审批详情
         getDetail(){
+            const params = { pageNum: 1, pageSize: -1, id: this.listObj.businessId }
             let toast = this.$toast.loading({
                 duration: 0,
                 message: "正在加载...",
                 forbidClick: true
             });
-            materialDemandPlanRestDetail(this.listObj.businessId).then(({data}) => {
+            materialDemandPlanRestDetailGyMx(params).then(({data}) => {
                 this.detailInfo = data;
                 this.detailList = data.details;
             }).catch((err) => {
@@ -385,6 +486,16 @@ export default {
                 toast.clear();
             });
         },
+        handleLogClick(item) {
+          this.$router.push({name: "viewLog", params: {logId: item.id}})
+        },
+        //查看流程点击
+        handleProcessClick(item) {
+          this.$router.push({ name: "MyProcess", params: { businessId: item.id } })
+        },
+        logisticsClick(item) {
+          this.$router.push({ name: 'LogisticsView', query: { id: this.detailInfo.id, shipmentBatchNumber: item.shipmentBatchNumber } })
+        }
     },
 }
 </script>
@@ -393,12 +504,10 @@ export default {
     padding: 0px;
 }
 .default-container {
-    overflow-y: hidden;
     display: flex;
     flex-direction: column;
 }
 .detail-button-container {
-    overflow-y: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -415,5 +524,248 @@ export default {
 ::v-deep .van-tabs__content {
     height: calc(100% - 56px);
     overflow-y: auto;
+}
+.detail-title-text {
+  padding: 0 12px;
+
+  p {
+    &:nth-child(1) {
+      font-size: 11px;
+      color: #1159cc;
+      padding-bottom: 5px;
+    }
+
+    &:nth-child(2) {
+      padding-left: 5px;
+      font-weight: 600;
+    }
+  }
+}
+
+.detail-ul-text {
+  margin: 10px;
+  background: #f2f2f2;
+  border-radius: 5px;
+
+  .detail-ul {
+    padding: 10px 12px;
+  }
+}
+
+.detail-ul-bottom-text {
+  padding-bottom: 10px;
+
+  .detail-ul {
+    padding: 0 22px;
+
+    .detail-ul-bottom-text-span,
+    img {
+      vertical-align: middle;
+    }
+
+    .detail-ul-bottom-text-log {
+      width: 13px;
+      height: 14px;
+    }
+  }
+}
+
+.detail-base-info-edited {
+  width: auto;
+  box-sizing: border-box;
+  margin-left: 6px;
+  margin-right: 6px;
+  margin-top: 8px;
+  background: #ffffff;
+  border-radius: 7px;
+  box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
+  position: relative;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+
+  .detail-title-content {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    img {
+      width: 26px;
+      height: 26px;
+    }
+
+    span {
+      line-height: 26px;
+      margin-left: 0;
+      font-size: 13px;
+    }
+  }
+
+  .detail-list-ul {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    padding-left: 17px;
+    padding-right: 12px;
+    background: #f0f2f6;
+  }
+
+  .detail-ul {
+    padding-left: 16px;
+    padding-right: 30px;
+    border-top: 0.5px solid #e3e3e3;
+
+    .detail-ul-p {
+      display: flex;
+      align-items: center;
+
+      & :nth-child(1) {
+        margin-right: 3px;
+      }
+
+      & :nth-child(2) {
+        margin-right: 3px;
+      }
+    }
+  }
+
+  .detail-base-info-edited-div {
+    justify-content: space-between;
+
+    .detail-base-info-edited-img {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.detail-ul-bottom-text-Arrow {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.select-materials-sticky {
+  ::v-deep .van-sticky {
+    background: #f2f4f8;
+  }
+}
+
+.select-materials-search {
+  display: flex;
+  justify-content: space-between;
+
+  .select-materials-search-p {
+    font-size: 14px;
+    padding-left: 13px;
+
+    .van-checkbox {
+      height: 100%;
+      margin-left: 2px;
+
+      ::v-deep .van-checkbox__icon {
+        font-size: 18px;
+
+        .van-icon {
+          border: 1px solid #1989fa;
+        }
+      }
+    }
+  }
+}
+
+.van-search {
+  width: 222px;
+
+  .van-search__content {
+    border-radius: 50px;
+    background: #fff;
+  }
+
+  .van-cell {
+    border-radius: 50px;
+    background: #fff;
+  }
+}
+
+.select-materials-search-switch {
+  display: flex;
+  align-items: center;
+  padding-right: 15px;
+
+  span {
+    margin-left: 5px;
+    font-size: 12px;
+  }
+
+  .van-switch {
+    width: 34px;
+    height: 18px;
+    font-size: inherit;
+
+    ::v-deep .van-switch__node {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.select-materials-select {
+  font-size: 12px;
+}
+
+.van-tabs {
+  padding-bottom: 62px;
+}
+
+.detail-title-content {
+  position: relative;
+
+  .detail-title-status {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    span {
+      margin-left: 3px;
+      color: #134daa;
+      font-size: 11px;
+    }
+  }
+
+}
+
+.default-button-container{
+  justify-content: space-between;
+  .default-button-container-div{
+    display: flex;
+    p{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 10px;
+      width: 80px;
+      &:nth-child(1){
+        border-right: 0.5px solid #f1f1f1;
+      }
+      img{
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+  .button-info-container{
+    width: 169px !important;
+    margin-right: 12px;
+  }
 }
 </style>

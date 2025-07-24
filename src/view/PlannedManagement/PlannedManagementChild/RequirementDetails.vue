@@ -32,34 +32,28 @@
       <div class="detail-ul-bottom-text">
         <ul class="detail-ul">
           <li>
-            <span>物资项目：<span class="li-span-click">{{ detail.details.length }}</span> 项</span>
-            <span><img class="detail-ul-bottom-text-log" src="@/assets/img/Icon-log.png" /> <span
+            <span>物资项目：<span class="li-span-click">{{ detail.demandPlanDetailsGyDTOList.length }}</span> 项</span>
+            <span @click="handleLogClick(detail)"><img class="detail-ul-bottom-text-log" src="@/assets/img/Icon-log.png" /> <span
                 class="detail-ul-bottom-text-span">查看日志</span> <img class="detail-ul-bottom-text-Arrow"
                 src="@/assets/img/Arrow-R.png" /></span>
           </li>
         </ul>
       </div>
     </div>
-    <!-- <div class="detail-base-info detail-base-info-edited">
+    <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
       <div class="detail-title-content">
         <img src="@/assets/img/Icon-logistics.png" />
         <span>物流信息</span>
       </div>
-      <ul class="detail-list-ul" v-for="(item, index) in dataPc" :key="index">
+      <ul class="detail-list-ul" v-for="(item, index) in dataPc" :key="index" @click="logisticsClick(item)">
         <li>
-          <span>发货批次{{ index + 1 }}：</span>
+          <span>发货批次{{ index + 1 }}</span>
           <span><img class="detail-ul-bottom-text-Arrow" src="@/assets/img/Arrow-R.png" /></span>
         </li>
-        <li>
-          <span>规格型号：</span>
-        </li>
-        <li>
-          <span>计量单位：</span>
-        </li>
       </ul>
-    </div> -->
+    </div>
     <div class="detail-base-info detail-base-info-edited" v-if="recordList.length">
-      <div class="detail-title-content detail-base-info-edited-div">
+      <div class="detail-title-content detail-base-info-edited-div" @click="handleProcessClick(detail)">
         <div class="detail-base-info-edited-img">
           <img src="@/assets/img/Icon-process.png" />
           <span>流程信息</span>
@@ -71,12 +65,21 @@
       <ul class="detail-ul">
         <li>
           <p class="detail-ul-p">
-            <img class="detail-ul-bottom-text-Arrow" src="@/assets/img/Icon-state.png"
+            <!-- <img class="detail-ul-bottom-text-Arrow" src="@/assets/img/Icon-state.png"
               v-if="historyData.status == '2'" />
-            <img class="detail-ul-bottom-text-Arrow" src="/static/icon-reject.png" v-else />
+            <img class="detail-ul-bottom-text-Arrow" src="/static/icon-reject.png" v-else /> -->
+            <img v-if="historyData.status == '2' || historyData.actId=='root'" src="@/assets/img/Icon-state-yes.png" alt="">
+            <img v-if="historyData.status == '3'" src="@/assets/img/Icon-state-no.png" alt="">
+            <img v-if="historyData.status == '6'" src="@/assets/img/Icon-state-goback.png" alt="">
+            <img v-if="historyData.status == '' && historyData.actId!='root'" src="@/assets/img/Icon-state-waiting.png" alt="">
             <span>{{ historyData.assigneeName }}</span>
-            <span :class="historyData.status == '2' ? 'li-span-click' : 'li-span-orange'">{{ historyData.status ==
-          '2' ? '通过' : '驳回' }}</span>
+            <!-- <span :class="historyData.status == '2' ? 'li-span-click' : 'li-span-orange'">{{ historyData.status ==
+          '2' ? '通过' : '驳回' }}</span> -->
+            <span v-if="historyData.status == '2'" style="color:rgba(19, 77, 170, 1);font-weight: 600">通过</span>
+            <span v-if="historyData.status == '3'"  style="color:rgba(244, 160, 47, 1);font-weight: 600">驳回</span>
+            <span v-if="historyData.status == '6'" style="color:rgba(19, 77, 170, 1);font-weight: 600">撤销审核</span>
+            <span v-if="historyData.status == '' && historyData.actId=='root'"  style="color:rgba(19, 77, 170, 1);font-weight: 600">发起</span>
+            <span v-if="historyData.status == '' && historyData.actId!='root'"  style="color:rgba(21, 27, 62, 0.5);font-weight: 400">未审批</span>
           </p>
           <span>{{ historyData.endTime }}</span>
         </li>
@@ -90,12 +93,12 @@
             <van-icon name="search" />
           </template>
         </van-search>
-        <div class="select-materials-search-switch">
+        <div class="select-materials-search-switch" v-if="['6', '7', '8', '9'].includes(detail.planStatus)">
           <van-switch v-model="searchChecked" /><span>显示供应概览</span>
         </div>
       </div>
     </van-sticky>
-    <material-details :list="filteredList" :searchChecked="searchChecked"></material-details>
+    <material-details :list="filteredList" :planStatus="detail.planStatus" :searchChecked="searchChecked"></material-details>
     <div class="default-button-container" v-if="['1', '4', '0', '5', '10'].includes(detail.planStatus)">
       <van-button class="button-info" round type="info" @click="handleExamineClick(detail)">提交审核</van-button>
     </div>
@@ -107,7 +110,7 @@
 import BackToTop from '@/components/BackToTop'
 import MaterialDetails from './components/MaterialDetails'
 import LogRecording from './components/LogRecording'
-import { materialDemandPlanRestDetail, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialDemandPlanRestDetail, materialDemandPlanRestDetailGyMx, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import activitiAssignee from '@/components/activitiAssignee'
 import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { wfHistoryList } from '@/api/myToDoList'
@@ -120,7 +123,7 @@ export default {
       searchValue: '',
       showAction: false,
       detail: {
-        details: []
+        demandPlanDetailsGyDTOList: []
       },
       statusArr: [
         { text: '全部', value: '' },
@@ -145,8 +148,8 @@ export default {
   },
   computed: {
     filteredList() {
-      if (!this.searchValue) return this.detail.details; // 如果搜索值为空，返回所有数据
-      return this.detail.details.filter(item => item.specModel.includes(this.searchValue) ||
+      if (!this.searchValue) return this.detail.demandPlanDetailsGyDTOList; // 如果搜索值为空，返回所有数据
+      return this.detail.demandPlanDetailsGyDTOList.filter(item => item.specModel.includes(this.searchValue) ||
         item.materialName.includes(this.searchValue) ||
         item.unit.includes(this.searchValue) ||
         item.receiver.includes(this.searchValue)
@@ -172,17 +175,22 @@ export default {
     },
     wfHistoryList(id) {
       wfHistoryList(id).then(({ data }) => {
-        this.recordList = data.recordList
-        this.historyData = data.recordList[data.recordList.length - 1];
+        if(data.recordList.length){
+          this.recordList = data.recordList
+          this.historyData = data.recordList[0];
+        }
       })
     },
-    materialDemandPlanRestDetail(id) {
+    async materialDemandPlanRestDetail(id) {
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
         forbidClick: true
       });
-      materialDemandPlanRestDetail(id).then(({ data }) => {
+      const params = { pageNum: 1, pageSize: -1, id }
+      // const GyMxData = await materialDemandPlanRestDetailGyMx(params)
+      // console.log(GyMxData.data.demandPlanDetailsGyDTOList)
+      materialDemandPlanRestDetailGyMx(params).then(({ data }) => {
         this.detail = data
       }).finally((err) => {
         toast.clear()
@@ -217,6 +225,16 @@ export default {
         return '/static/icon-success.png'
       }
     },
+    handleLogClick(item) {
+      this.$router.push({name: "viewLog", params: {logId: item.id}})
+    },
+    //查看流程点击
+    handleProcessClick(item) {
+      this.$router.push({ name: "MyProcess", params: { businessId: item.id } })
+    },
+    logisticsClick(item) {
+      this.$router.push({ name: 'LogisticsView', query: { id: this.detail.id, shipmentBatchNumber: item.shipmentBatchNumber } })
+    }
   },
 }
 </script>
