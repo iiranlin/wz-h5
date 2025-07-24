@@ -11,11 +11,6 @@
                     <span>{{ checkStatusText(params.status) }}</span>
                 </div>
             </div>
-            <!-- <div class="detail-title-content">
-                <img src="/static/icon-xqjh.png">
-                <span>发货单号：</span>
-                <span>{{ params.shipmentBatchNumber }}</span>
-            </div> -->
             <div>
                 <ul class="detail-ul">
                     <li>
@@ -44,15 +39,6 @@
                                 <span class="font-weight">{{ params.planName }}</span>
                             </div>
                             <ul class="detail-list-ul">
-
-                                <!-- <li>
-                                        <span class="font-weight dot-before" style="min-width: 2.5rem;">供应需求名称:</span>
-                                        <span class="font-weight" style="text-align: left;">{{ params.planName }}</span>
-                                    </li> -->
-                                <!-- <li>
-                                    <span style="width: 250px;">供应需求名称:</span>
-                                    <span>{{ params.planName }}</span>
-                                </li> -->
                                 <li>
                                     <span>需求项目：</span>
                                     <span class="text">{{ params.sectionName }}</span>
@@ -166,23 +152,6 @@
                                         <span>备注：</span>
                                         <div class="remark-detail">{{ item.remark || '未填写' }}</div>
                                     </li>
-
-
-
-                                    <!-- <li>
-                                        <span>合格证附件:</span>
-                                        <span style="color:#1989fa;"
-                                            v-if="item.fileByList && item.fileByList.hgz && item.fileByList.hgz.length > 0"
-                                            @click="imgClick(item.fileByList.hgz[0].fileName, item.fileByList.hgz[0].filePath)">{{
-                                            item.fileByList.hgz[0].fileName }}</span>
-                                    </li>
-                                    <li>
-                                        <span style="min-width: 3rem;">厂检报告附件:</span>
-                                        <span style="color:#1989fa;"
-                                            v-if="item.fileByList && item.fileByList.cjbg && item.fileByList.cjbg.length > 0"
-                                            @click="imgClick(item.fileByList.cjbg[0].fileName, item.fileByList.cjbg[0].filePath)">{{
-                                            item.fileByList.cjbg[0].fileName }}</span>
-                                    </li> -->
                                 </ul>
                                 <file-download-view class="outbound-field-uploader" style="width: 100% !important;"
                                     title="合格证附件：" :fileList="filterList(item.fileByList, 'hgz') || []" />
