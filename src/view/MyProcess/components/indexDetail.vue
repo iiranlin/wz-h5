@@ -1,43 +1,5 @@
 <template>
-    <!-- <div class="my-process" ref="container">
-        <van-list 
-            v-model="loading" 
-            :finished="finished" 
-            finished-text="没有更多了..." 
-            @load="getList">
-
-            <div v-for="(item,index) in dataList" :key="index" class="box-container">
-                <ul class="list-ul">
-                    <li>
-                        <span class="font-weight">节点：</span>
-                        <span class="font-weight">{{item.actName}}</span>
-                    </li>
-                    <li>
-                        <span>单位：</span>
-                        <span>{{item.orgName}}</span>
-                    </li>
-                    <li>
-                        <span>操作人：</span>
-                        <span>{{item.assigneeName}}</span>
-                    </li>
-                    <li>
-                        <span>操作时间：</span>
-                        <span>{{item.endTime}}</span>
-                    </li>
-                    <li class="li-status">
-                        <span>状态：</span>
-                        <span class="font-weight" style="color:#158aff" v-if="item.status == '2'">通过</span>
-                        <span class="font-weight" style="color:#ee0a24" v-if="item.status == '3'">驳回</span>
-                    </li>
-                    <li>
-                        <span>意见：</span>
-                        <span>{{item.message}}</span>
-                    </li>
-                </ul>
-            </div>
-        </van-list>
-    </div> -->
-    <div class="approval-process ">
+    <div class="approval-process">
       <div class="process-title detail-floor-content list-title-content">
         <img src="@/assets/img/Icon-flow.png"/>
         <span>流程信息</span>
@@ -121,7 +83,6 @@ export default {
 .approval-process {
   margin: 0.1rem 0.25rem 0.25rem 0.25rem;
   border-radius: 6px;
-  height:100%;
   background: #fff;
   .detail-floor-content{
     padding: 5px 12px 2px 12px;

@@ -18,10 +18,10 @@
             @click="handleDetailsItemClick(item.id)">
             <div class="list-title-content">
                     <span>退货单号：</span>
-                    <span class="font-weight" style="color:#134daa;">{{ item.backNumber }}</span>
+                    <span class="font-weight" style="color:#134daa;">{{ item.issueType=='1'?item.backNumber:item.backQualNumber }}</span>
                     <div class="li-title-status">
                       <img :src="checkAuditStatus(item.backNode)" />
-                      <span>{{ checkStatusText(item.backNode) }}</span>
+                      <span>{{ checkStatusText(item.issueType) }}</span>
                     </div>
                   </div>
             <ul class="list-ul">
@@ -190,7 +190,7 @@ components:{BackToTop},
     checkAuditStatus(status) {
       if (status == '0') {
         return '/static/icon-reject.png'
-      } else if (['5', '10'].includes(status)) {
+      } else if (['1', '2'].includes(status)) {
         return '/static/icon-return.png'
       } else {
         return '/static/icon-success.png'
