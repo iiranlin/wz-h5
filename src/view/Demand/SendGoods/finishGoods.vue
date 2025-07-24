@@ -37,8 +37,14 @@
           <van-divider />
           <div class="detail-list-ul">
             <van-form ref="form">
-              <van-field v-model="goodsData[index].sendTotal" type="number" required label="发货数量" placeholder="发货数量"
-                input-align="right" />
+              <!-- <van-field v-model="goodsData[index].sendTotal" type="number" required label="发货数量" placeholder="发货数量"
+                input-align="right" /> -->
+              <van-field label="发货数量" placeholder="请输入发货数量" required clearable 
+                            input-align="right">
+                            <template #input>
+                              <van-stepper v-model="goodsData[index].sendTotal" min='0'  :max="item.ssendTotal" />
+                            </template>
+              </van-field>
               <van-field v-model="goodsData[index].packagingFm" @click.stop="fieldClick($event, 'packagingFm', index)"
                 required label="包装形式" placeholder="请输入包装形式" input-align="right" />
               <van-field readonly clickable v-model="goodsData[index].manufactureDate" required name="datetimePicker"
@@ -81,7 +87,7 @@
       <van-button class="button-info" round type="info" @click="save">保存</van-button>
     </div>
     <!-- 生产日期 -->
-    <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date="minDate" :max-date="maxDate" />
+    <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date='minDate' :max-date="maxDate"/>
     <van-calendar v-model="showCalendar" @confirm="createConfirm" />
     <history-list ref="historyList" @historyClick="historyClick"></history-list>
     <back-to-top className=".default-container"></back-to-top>
@@ -98,7 +104,7 @@ import { DatetimePicker } from 'vant';
 import historyList from '@/components/historyList'
 import _ from 'lodash'
 import { demandSnedGoods, demandSnedGoodsUpload, demandSaveSendGoods } from '@/api/demand/demandManagement'
-import { modifySendGoods, detailBySendEdit } from '@/api/demand/sendGoods'
+import { modifySendGoods, detailBySendEdit, detailByUpdateSend} from '@/api/demand/sendGoods'
 import { minioUpload } from '@/api/blcd-base/minio'
 import { Notify } from 'vant';
 import FileUploadView from "@/components/FileUploadViewType.vue";
@@ -125,7 +131,6 @@ export default {
       goodsData: [],
       minDate: new Date(2010, 0, 1),
       maxDate: today,
-      value: '',
       showPicker: false,
       stopCalendar: false,
       uploader: [],
@@ -147,8 +152,9 @@ export default {
   created() {
     this.goodsId = this.$route.query.id
     // 带回来的编辑标识
-    this.text = this.$route.query.text,
-      this.planId = this.$route.query.planId
+    this.text = this.$route.query.text.toString(),
+    this.planId = this.$route.query.planId
+
     if (this.text == 'add') {
       this.goodsData = _.cloneDeep(JSON.parse(this.$route.query.goodData)).map(item => ({
         ...item,
@@ -163,7 +169,6 @@ export default {
     if (this.text == 'edit') {
       let editGoodsData = JSON.parse(this.$route.query.goodData)
       if (Array.isArray(editGoodsData) && editGoodsData.length > 0) {
-
         this.goodsData = editGoodsData.map(item => ({
           ...item,
           planDetailId: item.id,
@@ -171,7 +176,7 @@ export default {
           fileList02: [],
           manufactureDate: '',
           expirationDate: "",
-          sendTotal: item.ssendTotal
+          sendTotal: item.sendTotal
         }))
       } else {
         this.editDetails()
@@ -227,37 +232,36 @@ export default {
       }
       this.$set(this.goodsData, index, Object.assign({}, this.goodsData[index], finallyData))
     },
+    formatDate(dateString){
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+      const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
+      return `${year}-${month}-${day}`;
+    },
     // 编辑回显
     editDetails() {
-      detailBySendEdit(this.goodsId).then((res) => {
+      detailByUpdateSend(this.goodsId).then((res) => {
         if (res.code == 0) {
           this.params = res.data
           // 存到缓存里
           this.$store.dispatch('public/setGoodsSelect', res.data.materialCirculationDetailsTableDTOS)
           if (res.data.materialCirculationDetailsTableDTOS && res.data.materialCirculationDetailsTableDTOS.length > 0) {
-            this.goodsData = res.data.materialCirculationDetailsTableDTOS.map(item => {
+          this.goodsData = res.data.materialCirculationDetailsTableDTOS.map(item => {
               // 辅助函数：格式化日期为 YYYY-MM-DD
-              const formatDate = (dateString) => {
-                const date = new Date(dateString);
-                const year = date.getFullYear();
-                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-                const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
-                return `${year}-${month}-${day}`;
-              };
-
+              console.log(item.expirationDate)
               return {
                 ...item,
-                manufactureDate: formatDate(item.manufactureDate),
-                supplyDate: formatDate(item.supplyDate),
-                expirationDate: formatDate(item.expirationDate),
+                manufactureDate:this.formatDate(item.manufactureDate),
+                supplyDate: this.formatDate(item.supplyDate),
+                expirationDate: item.expirationDate ? this.formatDate(item.expirationDate):item.expirationDate,
                 planDetailId: item.id,
-                sendTotal: item.ssendTotal,
+                sendTotal: item.sendTotal,
                 fileList01: this.fileLists(item.fileByList),
                 fileList02: this.fileListss(item.fileByList),
               };
             })
           }
-
           let params = {
             shippingDate: this.params.shippingDate,
             arrivalDate: this.params.arrivalDate,
@@ -553,4 +557,7 @@ export default {
 //   background-color: blue;
 //   height: 6px;
 //   width: 6px;
-// }</style>
+/deep/.van-calendar__popup.van-popup--bottom, .van-calendar__popup.van-popup--top{
+    height: 92% !important;
+}
+</style>

@@ -95,12 +95,22 @@
                       <div class="remark-detail">{{item.remark || '未填写'}}</div>
                     </li>
                     <template v-if="!isView">
-                      <van-cell-group>
-                        <van-field v-model="item.putTotal" label="收货数量"   type="number" placeholder="请输入数量" required clearable :label-width="240"
-                                  input-align="right" @input="handleInput($event, index,item)" />
-                        <van-field v-model="item.refundTotal" label="退货数量" type="number" placeholder="请输入数量" required clearable :label-width="240"
-                                  input-align="right" @input="handleInput1($event, index,item)"/>
-                      </van-cell-group>
+                      <li class="detail-list-li-input">
+                          <van-field label="实收数量" placeholder="请输入数量" required clearable 
+                            input-align="right">
+                            <template #input>
+                              <van-stepper v-model="item.putTotal" min='0'  :max="item.sendTotal" @input="handleInput($event, index,item)" />
+                            </template>
+                          </van-field>
+                      </li>    
+                      <li class="detail-list-li-input">
+                          <van-field label="退货数量" placeholder="请输入数量" required clearable 
+                            input-align="right">
+                            <template #input>
+                              <van-stepper v-model="item.refundTotal"  min='0'  :max="item.sendTotal" @input="handleInput1($event, index,item)"/>
+                            </template>
+                          </van-field>
+                      </li>    
                     </template>
                     <template v-else>
                       <li>
@@ -268,7 +278,7 @@ export default {
       const num = Number(val);
       if (!isNaN(num) && num <= item.sendTotal) {
         this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = num; 
-        this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal = this.dataList.materialCirculationDetailsTableDTOS[index].sendTotal - this.dataList.materialCirculationDetailsTableDTOS[index].putTotal
+        this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal =this.dataList.materialCirculationDetailsTableDTOS[index].sendTotal - this.dataList.materialCirculationDetailsTableDTOS[index].putTotal
       } else {
         this.$toast('收货数量不能大于发货数量'); 
         this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = 0; 
@@ -386,7 +396,7 @@ export default {
   mounted() {
     this.from = this.$route.query.from
     this.id = this.$route.query.id
-    this.tabs = this.$route.query.tabs==(true||'true')
+    this.tabs = this.$route.query.tabs==(true||'true') 
     this.isLable =this.$route.query.isLable==(true||'true')
     this.getDetailList()  
   }
@@ -402,5 +412,34 @@ export default {
 .box-container {
   padding: 0px;
 }
+
+
+.detail-list-li-input {
+  border-top: 1px solid #e3e3e3;
+
+  & :nth-child(2) {
+    text-align: center;
+  }
+
+  ::v-deep .van-cell__title {
+    color: #151b3e;
+  }
+
+  .van-cell {
+   
+    padding-right: 10px;
+  }
+
+  .van-stepper {
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+
+    ::v-deep .van-stepper__input {
+      background: #fff;
+      width: 50px;
+    }
+  }
+}
+
 
 </style>

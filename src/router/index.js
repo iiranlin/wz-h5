@@ -119,6 +119,12 @@ export const routes = [
         meta: { title: '查看流程' },
         component: () => import('@/view/MyProcess/index.vue')
       },
+       {
+        path: '/viewLog/:logId',
+        name: 'viewLog',
+        meta: { title: '查看日志' },
+        component: () => import('@/view/MyProcess/log.vue')
+      },
     ]
   },
   {

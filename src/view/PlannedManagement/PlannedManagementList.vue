@@ -72,6 +72,10 @@
               <van-button class="button-info" round type="info"
                 v-if="['1', '4', '0', '5', '10'].includes(item.planStatus)"
                 @click="handleExamineClick(item)">提交审核</van-button>
+
+              <!-- <van-button class="button-info" plain round type="info"
+                v-if="['3', '4', '0', '2'].includes(item.planStatus)"
+                @click="handleLogClick(item)">查看日志</van-button> -->
             </div>
           </div>
         </van-list>
@@ -250,6 +254,14 @@ export default {
         },
       });
     },
+    // handleLogClick(item) {
+    //   this.$router.push({
+    //     name: "viewLog",
+    //     params: {
+    //       logId: item.id
+    //     },
+    //   });
+    // },
     deleteClick(item) {
       this.$dialog.confirm({
         title: '标题',
