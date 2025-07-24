@@ -1,32 +1,5 @@
 <template>
   <div class="default-container save-materials">
-    <!-- <div class="detail-base-info">
-
-      <div>
-        <ul class="detail-ul">
-          <li>
-            <span>需求名称：</span>
-            <span>{{ detail.planName }}</span>
-          </li>
-          <li>
-            <span>需求项目：</span>
-            <span>{{ detail.sectionName }}</span>
-          </li>
-          <li>
-            <span>需求组织：</span>
-            <span>{{ detail.deptName }}</span>
-          </li>
-          <li>
-            <span>提报人：</span>
-            <span>{{ detail.createUserName }}</span>
-          </li>
-          <li>
-            <span>提报时间：</span>
-            <span>{{ parseTime(detail.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
-          </li>
-        </ul>
-      </div>
-    </div> -->
     <div class="detail-base-info">
       <div class="detail-title-text">
         <p>需求名称：</p>
@@ -93,7 +66,6 @@ export default {
 .save-materials {
   display: flex;
   flex-direction: column;
-  padding-bottom: 50px;
   .detail-title-text{
     padding: 0.25rem 0.5rem;
     p{
@@ -148,6 +120,6 @@ export default {
 }
 .detail-log-info{
     margin-top: 0.25rem;
-    min-height:200px ;
+    margin-bottom: 0.1rem;
 }
 </style>
