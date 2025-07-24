@@ -1,11 +1,13 @@
 <template>
 	<div class="app-wrapper">
-		<div class="app-container">
+		<div :class="isTabbar?'app-container':'default-container'">
 			<transition name="fade-transform" mode="out-in">
-				<router-view :key="key" />
+        <keep-alive :include="keepPages">
+          <router-view :key="key" />
+        </keep-alive>
 			</transition>
 		</div>
-		<div class="nav-container">
+		<div class="nav-container" v-show="isTabbar">
 			<navbar :navMenu="checkNavMenu()"/>
 		</div>
 	</div>
@@ -23,11 +25,6 @@ export default {
 	name: 'Layout',
 	components: {
 		Navbar
-	},
-	computed: {
-		key() {
-			return this.$route.path
-		},
 	},
 	data() {
 		return {
@@ -102,6 +99,17 @@ export default {
 			],
       		userInfo: getUserInfo()
 		}
+	},
+	computed: {
+    key() {
+      return this.$route.fullPath
+    },
+    keepPages() {
+      return this.$store.getters.getKeepPages
+    },
+    isTabbar() {
+      return this.$route.meta.isTabbar
+    },
 	},
 	created() {
 		if (isAndroid()) {

@@ -33,7 +33,7 @@ export default {
             let obj = this.navMenu.find((item) => {
                 return route.path.includes(item.link)
             })
-            this.active = obj.link;
+            this.active = obj?.link;
             //清空meta里的默认tab角标
             this.$route.meta.myToDoNavIndex = 0;
             this.$route.meta.inOutNavIndex = 0;
@@ -42,7 +42,7 @@ export default {
     created () {
         //清空所有缓存页面
         this.$store.commit('changeKeepPages', 'index') // 经测试include为空值时所有页面都会缓存
-        const path = this.$route.path
+        const path = this.$route.fullPath
         this.active = path === '/'?this.navMenu[0].link:path;
         this.$router.push(this.active)
     }

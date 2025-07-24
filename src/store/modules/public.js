@@ -6,7 +6,8 @@ const state = {
   goodsSelect:[],
   editSendGoods:{},
   editGoods:{},
-  historyData: {}
+  historyData: {},
+  scrollPosition: 0
 };
 
 const mutations = {
@@ -46,6 +47,9 @@ const mutations = {
   },
   SET_HISTORY_DATA:(state, historyData)=>{
     state.historyData = historyData
+  },
+  SET_SCROLL_POSITION(state, scrollPosition) {
+    state.scrollPosition = scrollPosition
   }
 };
 
@@ -74,6 +78,9 @@ const actions = {
   },
   setHistoryData({commit}, data){
     commit('SET_HISTORY_DATA', data)
+  },
+  setScrollPosition({commit}, data){
+    commit('SET_SCROLL_POSITION', data)
   }
 };
 

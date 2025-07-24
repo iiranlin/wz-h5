@@ -3,15 +3,15 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 import Layout from '@/layout'
-import ItemHead from '@/components/itemHead'
+// import ItemHead from '@/components/itemHead'
 
 
 const typeName = {
   submit: '提交',
   update: '修改',
   view: '详情',
-  create:'新增',
-  update:'编辑',
+  create: '新增',
+  update: '编辑',
 }
 
 export const routes = [
@@ -24,68 +24,68 @@ export const routes = [
       {
         path: 'MyToDoList',
         name: 'MyToDoList',
-        meta: { title: '我的待办' },
+        meta: { title: '我的待办', isTabbar: true },
         component: () => import('@/view/MyToDo/MyToDoList.vue')
       },
       {
         path: '/PlannedManagementList',
         name: 'PlannedManagementList',
-        meta: { title: '计划管理' },
+        meta: { title: '计划管理', isTabbar: true },
         component: () => import('@/view/PlannedManagement/PlannedManagementList.vue')
       },
       {
         path: '/AcceptanceReturn',
         name: 'AcceptanceReturn',
-        meta: { title: '验收管理' },
+        meta: { title: '验收管理', isTabbar: true },
         component: () => import('@/view/AcceptanceReturn/AcceptanceReturn.vue')
       },
       {
         path: '/InOutManagementList',
         name: 'InOutManagementList',
-        meta: { title: '出入库管理' },
+        meta: { title: '出入库管理', isTabbar: true },
         component: () => import('@/view/InOutManagement/InOutManagementList.vue')
       },
       {
         path: '/WaitExamineList',
         name: 'WaitExamineList',
-        meta: { title: '待审核' },
+        meta: { title: '待审核', isTabbar: true },
         component: () => import('@/view/SupervisionUnit/WaitExamineList.vue')
       },
       {
         path: '/WaitHandleList',
         name: 'WaitHandleList',
-        meta: { title: '待处理' },
+        meta: { title: '待处理', isTabbar: true },
         component: () => import('@/view/SupervisionUnit/WaitHandleList.vue')
       },
       {
         path: '/OverExamineList',
         name: 'OverExamineList',
-        meta: { title: '已审核' },
+        meta: { title: '已审核', isTabbar: true },
         component: () => import('@/view/SupervisionUnit/OverExamineList.vue')
       },
       {
         path: '/dashboard',
         name: 'dashboard',
-        meta: { title: '需求管理' },
+        meta: { title: '需求管理', isTabbar: true },
         component: () => import('@/view/Demand/index.vue')
       },
       {
         path: '/Information',
         name: 'Information',
-        meta: { title: '发货管理' },
+        meta: { title: '发货管理', isTabbar: true },
         component: () => import('@/view/Demand/Delivery.vue')
       },
       {
         path: '/MyManager',
         name: 'MyManager',
-        meta: { title: '退货管理' },
+        meta: { title: '退货管理', isTabbar: true },
         component: () => import('@/view/Demand/Return.vue')
       },
     ]
   },
   {
     path: '/MyToDoManager',
-    component: ItemHead,
+    component: Layout,
     hidden: true,
     children: [
       {
@@ -110,7 +110,7 @@ export const routes = [
   },
   {
     path: '/MyProcess',
-    component: ItemHead,
+    component: Layout,
     hidden: true,
     children: [
       {
@@ -123,7 +123,7 @@ export const routes = [
   },
   {
     path: '/PlannedManagementChild',
-    component: ItemHead,
+    component: Layout,
     hidden: true,
     children: [
       {
@@ -180,7 +180,7 @@ export const routes = [
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/ReceiptOperate.vue'),
         beforeEnter(to, from, next) {
           to.meta.title = `${typeName[to.query.type]}收货信息`,
-          next()
+            next()
         }
       },
       {
@@ -211,7 +211,7 @@ export const routes = [
   },
   {
     path: '/InOutManagementChild',
-    component: ItemHead,
+    component: Layout,
     hidden: true,
     children: [
       {
@@ -250,7 +250,7 @@ export const routes = [
   },
   {
     path: '/AcceptanceReturnChild',
-    component: ItemHead,
+    component: Layout,
     hidden: true,
     children: [
       {
@@ -276,7 +276,7 @@ export const routes = [
   // 确认需求
   {
     path: '/Demand',
-    component: ItemHead,
+    component: Layout,
     hidden: true,
     children: [
       {

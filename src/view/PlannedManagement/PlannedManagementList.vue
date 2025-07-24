@@ -1,6 +1,6 @@
 <template>
   <div class="planned-management">
-    <van-sticky class="planned-management-search-bj">
+    <van-sticky>
       <div class="planned-management-search">
         <van-search v-model="searchValue" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
           @search="onSearch">
@@ -78,7 +78,7 @@
       </van-pull-refresh>
     </div>
     <van-icon name="plus" @click="addClick()" />
-    <back-to-top className=".planned-management"></back-to-top>
+    <back-to-top :className="className"></back-to-top>
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
   </div>
 </template>
@@ -89,11 +89,12 @@ import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
-  name: 'PlannedManagement',
-  mixins: [keepPages, indexMixin],
+  name: 'PlannedManagementList',
+  mixins: [indexMixin],
   components: { BackToTop, activitiAssignee },
   beforeRouteLeave (to, from, next) {
     from.meta.plannedManagementIndex = this.statusValue
+    this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
     next()
   },
   data() {
@@ -122,9 +123,10 @@ export default {
       ],
       listQuery: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 5
       },
-      businessCode: { '1': 'FBYLXQ', '2': 'FBYLJH', '3': 'YLXQ', '4': 'YLJH' }
+      businessCode: { '1': 'FBYLXQ', '2': 'FBYLJH', '3': 'YLXQ', '4': 'YLJH' },
+      className: '.planned-management'
     }
   },
   created () {
@@ -183,6 +185,8 @@ export default {
         if (this.list.length >= data.total) {
           this.finished = true
           return
+        }else{
+          this.finished = false
         }
         this.listQuery.pageNum++
       }).catch(() => {
@@ -191,13 +195,13 @@ export default {
       }).finally((err) => {
         this.loading = false
         toast.clear()
+        this.scrollPositionInit(this.className, this.finished)
       })
     },
     //列表刷新
     onRefresh() {
       this.refreshLoading = true
       this.loading = true
-      this.finished = false
       this.listQuery.pageNum = 1
       this.onLoad();
     },
