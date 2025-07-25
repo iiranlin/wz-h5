@@ -1,5 +1,5 @@
 <template>
-    <div :class="['default-container',type == '0'?'detail-button-container':'']">
+    <div :class="['default-container', 'default-container-scroll',type == '0'?'detail-button-container':'']">
         <div class="detail-base-info">
             <div class="detail-title-text">
                 <p>需求名称：</p>
@@ -220,7 +220,7 @@
                 </div>
             </div>
         </van-popup>
-        <back-to-top className=".van-tabs__content"></back-to-top>
+        <back-to-top className=".default-container-scroll"></back-to-top>
     </div>
 </template>
 <script>
