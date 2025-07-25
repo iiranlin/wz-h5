@@ -197,7 +197,7 @@
                 </van-list>
             </van-tab>
         </van-tabs> -->
-        <div class="default-button-container" v-if="type == 0">
+        <div class="default-button-container default-button-container-box" v-if="type == 0">
             <div class="default-button-container-div">
               <p @click="handleReject()"><img src="@/assets/img/Icon-detailInfo.png" alt=""><span>驳回</span></p>
               <p @click="handleEditAdopt()"><img src="@/assets/img/Icon-modify-after.png" alt=""><span>修改后通过</span></p>
@@ -205,6 +205,9 @@
             <!-- <van-button class="button-info" block type="info" round @click="handleReject()">驳回</van-button>
             <van-button class="button-info" block type="info" round @click="handleEditAdopt()">修改后通过</van-button> -->
             <van-button class="button-info button-info-container" block type="info" round @click="handleAdopt()">通过</van-button>
+        </div>
+        <div class="default-button-container" v-if="listObj.nameType == 'handle'">
+          <van-button class="button-info button-info-container" round type="info" @click.stop="handleClick(listObj)">处理</van-button>
         </div>
         <!--选择审批人弹框-->
         <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
@@ -495,6 +498,16 @@ export default {
         },
         logisticsClick(item) {
           this.$router.push({ name: 'LogisticsView', query: { id: this.detailInfo.id, shipmentBatchNumber: item.shipmentBatchNumber } })
+        },
+        //处理点击
+        handleClick(item){
+            this.$router.push({
+                name: "SaveMaterials",
+                query: { 
+                    id: item.businessId,
+                    type: 'update',
+                },
+            });
         }
     },
 }
@@ -745,6 +758,12 @@ export default {
 }
 
 .default-button-container{
+  .button-info-container{
+    width: 169px !important;
+  }
+}
+
+.default-button-container-box{
   justify-content: space-between;
   .default-button-container-div{
     display: flex;

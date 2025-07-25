@@ -342,7 +342,7 @@ export default {
            this.$router.push({
                 name: "DemandPlanningExamine",
                 params: { 
-                    obj: JSON.stringify(item),
+                    obj: JSON.stringify({...item, nameType: 'handle'}),
                     type: '1',
                 },
             });
