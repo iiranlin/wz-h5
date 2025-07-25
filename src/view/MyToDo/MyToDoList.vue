@@ -145,7 +145,7 @@
                 </van-tab>
             </van-tabs>
         </div>
-        <back-to-top className=".my-to-do-list"></back-to-top>
+        <back-to-top :className="className"></back-to-top>
     </div>  
 </template>
 <script>
@@ -159,17 +159,17 @@ export default {
     mixins: [keepPages, indexMixin],
     components: {BackToTop},
     dicts: ['flowBusinessType','flowTaskStatus'],
-
-    beforeRouteEnter (to, from, next) {
-        next();
-    },
     beforeRouteLeave (to, from, next) {
+      console.log(to,from)
         from.meta.myToDoNavIndex = this.menuActiveIndex;
+        console.log(document.querySelector(this.className).scrollTop)
+        this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
         next();
     },
 
     data() {
         return {
+            className: '.my-to-do-list',
             menuActiveIndex: 0,
             offsetTop: 0,
 
@@ -221,7 +221,13 @@ export default {
         this.$store.commit('removeThisPage', 'DemandPlanningExamine')
     },
     activated () {
-
+      if(this.menuActiveIndex == '0'){
+        this.scrollPositionInit(this.className, this.waitFinished)
+      }else if(this.menuActiveIndex == '1'){
+        this.scrollPositionInit(this.className, this.waitHandleFinished)
+      }else if(this.menuActiveIndex == '2'){
+        this.scrollPositionInit(this.className, this.historyFinished)
+      }
     },
     methods: {
         //获取待审批的订单
@@ -252,6 +258,7 @@ export default {
                 this.waitFinished = true;
             }).finally(() => {
                 toast.clear();
+                this.scrollPositionInit(this.className, this.waitFinished)
             });
         },
         //获取待处理数据
@@ -279,6 +286,7 @@ export default {
                 this.waitHandleFinished = true;
             }).finally(() => {
                 toast.clear();
+                this.scrollPositionInit(this.className, this.waitHandleFinished)
             });
         },
         //获取已审批订单
@@ -309,6 +317,7 @@ export default {
                 this.historyFinished = true;
             }).finally(() => {
                 toast.clear();
+                this.scrollPositionInit(this.className, this.historyFinished)
             });
         },
         //判断标题

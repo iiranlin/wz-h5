@@ -87,20 +87,23 @@
               </div>
             </van-list>
           </van-pull-refresh>
-    <back-to-top className=".in-out-management"></back-to-top>
+    <back-to-top :className="className"></back-to-top>
   </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 
 export default {
   name: 'Acceptance',
-  mixins: [keepPages],
+  mixins: [keepPages, indexMixin],
   components:{BackToTop},
   data() {
     return {
+      className: '.in-out-management',
+
       menuActiveIndex: '',
 
       formData: {
@@ -175,6 +178,7 @@ export default {
     }
   },
   activated() {
+    this.scrollPositionInit(this.className, this.allFinished)
     if (this.$route.params.refresh) {
       this.waitRefresh()
       this.historyRefresh()
@@ -192,7 +196,6 @@ export default {
       });
       listTake(params).then((res) => {
         if(res.success){
-          console.log(res.data.list)
           this.listLoading = false //加载结束
             if (this.allRefreshLoading) {
               this.dataList = [];

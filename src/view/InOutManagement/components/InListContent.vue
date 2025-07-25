@@ -90,12 +90,15 @@
   </div>
 </template>
 <script>
+import indexMixin from '@/view/mixins'
 import { listStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { recall } from '@/api/prodmgr-inv/audit'
 export default {
   name: 'InListContent',
+  mixins: [indexMixin],
   data() {
     return {
+      className: '.in-out-management',
       formData: {
         queryField: '',
         storeStatus: ''
@@ -193,6 +196,7 @@ export default {
       }).finally((err) => {
         this.loading = false
         toast.clear()
+        this.scrollPositionInit(this.className, this.finished)
       })
     },
     submitStore(item) {

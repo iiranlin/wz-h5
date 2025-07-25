@@ -33,7 +33,7 @@
         </van-tab>
       </van-tabs>
     </div>
-    <back-to-top className=".in-out-management"></back-to-top>
+    <back-to-top :className="className"></back-to-top>
   </div>
 </template>
 <script>
@@ -45,17 +45,15 @@ import BackToTop from '@/components/BackToTop'
 export default {
   name: 'InOutManagementList',
   components: { InListContent, InventoryListContent, RefundListContent, OutListContent, BackToTop },
-
-  beforeRouteEnter (to, from, next) {
-    next();
-  },
   beforeRouteLeave (to, from, next) {
     from.meta.inOutNavIndex = this.activeIndex;
+    this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
     next();
   },
 
   data() {
     return {
+      className: '.in-out-management',
       activeIndex: 0,
     };
   },

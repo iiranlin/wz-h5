@@ -34,11 +34,13 @@ export default {
 
   data() {
     return {
+      className: '.in-out-management',
       menuActiveIndex: 0,
     }
   },
   beforeRouteLeave (to, from, next) {
       from.meta.myToDoNavIndex = this.menuActiveIndex;
+      this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
       next();
   },
   created () {
