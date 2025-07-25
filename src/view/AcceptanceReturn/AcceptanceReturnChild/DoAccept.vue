@@ -118,7 +118,7 @@
                     </template>
                     <template v-else>
                       <li>
-                        <span>收货数量：</span>
+                        <span>实收数量：</span>
                         <span class="li-span-click">{{ item.putTotal }}</span>
                       </li>
                       <li>
@@ -284,7 +284,7 @@ export default {
         this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = num; 
         this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal =this.dataList.materialCirculationDetailsTableDTOS[index].sendTotal - this.dataList.materialCirculationDetailsTableDTOS[index].putTotal
       } else {
-        this.$toast('收货数量不能大于发货数量'); 
+        this.$toast('实收数量不能大于发货数量'); 
         this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = 0; 
       }
     },

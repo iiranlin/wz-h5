@@ -1,18 +1,21 @@
 <template>
   <div class="select-materials">
-    <div class="select-materials-search">
-     <van-search v-model="searchQuery" placeholder="输入规格型号" left-icon="none" shape="round" :show-action="showAction"
-          @search="onSearch">
-          <template slot='right-icon'>
-            <van-icon name="search" @click="statusChange()" />
-          </template>
-        </van-search>
-      <!-- <van-search v-model="searchQuery" placeholder="输入关键字搜索" background="center" :show-action="showAction"
-        @search="onSearch" @cancel="onCancel" @focus="onFocus" /> -->
-    </div>
+    <van-sticky>
+      <div class="select-materials-search">
+        <van-search v-model="searchQuery" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
+            @search="onSearch">
+            <template slot='right-icon'>
+              <van-icon name="search" @click="statusChange()" />
+            </template>
+          </van-search>
+        <!-- <van-search v-model="searchQuery" placeholder="输入关键字搜索" background="center" :show-action="showAction"
+          @search="onSearch" @cancel="onCancel" @focus="onFocus" /> -->
+      </div>
+    </van-sticky>
     <div class="tabs" v-if="filteredList.length">
-          <van-list v-model="loading" :finished="finished" finished-text="没有更多了">
-      <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
+      <div class="van-list-div">
+          <!-- <van-list v-model="loading" :finished="finished" finished-text="没有更多了"> -->
+            <van-checkbox-group v-model="result" @change="selectGoods" ref="checkboxGroup">
         <!--本次需求未发货数量为0不可选-->
         <van-checkbox shape="square" :name="item.allocationUniqueNumber" v-for="(item, index) in filteredList" :key="index" :disabled="item.ssendTotal == 0 ? true : false" ref="checkboxGroup">
            <div class="detail-base-info">
@@ -80,7 +83,8 @@
            
         </van-checkbox>
       </van-checkbox-group>
-    </van-list>
+    <!-- </van-list> -->
+      </div>
     </div>
     <van-empty v-else description="暂无数据" />
 
@@ -375,9 +379,10 @@ export default {
     }
   }
 
-  .van-list {
+  .van-list-div {
     background: #f8f8f8;
-    padding-bottom: 40px;
+    padding-top: 5px;
+    padding-bottom: 50px;
     .van-checkbox{
       box-sizing: border-box;
       margin-left: 8px;

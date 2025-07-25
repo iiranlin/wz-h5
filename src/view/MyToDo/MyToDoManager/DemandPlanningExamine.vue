@@ -78,7 +78,7 @@
         </div>
         <van-sticky class="select-materials-sticky">
           <div class="select-materials-search">
-            <van-search v-model="searchValue" placeholder="输入规格型号" left-icon="none" background="center"
+            <van-search v-model="searchValue" placeholder="输入关键字搜索" left-icon="none" background="center"
               :show-action="showAction">
               <template slot='right-icon'>
                 <van-icon name="search" />

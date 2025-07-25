@@ -36,9 +36,9 @@
           <span>请选择需求物资</span>
           <span class="select-materials-select">（已选择<span class="select-materials-select-num">{{ materiaId.length }}</span>项）</span> -->
         </p>
-        <!-- <van-search v-model="searchValue" placeholder="输入规格型号" background="center" :show-action="showAction"
+        <!-- <van-search v-model="searchValue" placeholder="输入关键字搜索" background="center" :show-action="showAction"
           @search="onSearch" /> -->
-        <van-search v-model="searchValue" placeholder="输入规格型号" left-icon="none" background="center"
+        <van-search v-model="searchValue" placeholder="输入关键字搜索" left-icon="none" background="center"
           :show-action="showAction" @search="onSearch">
           <template slot='right-icon'>
             <van-icon name="search" />

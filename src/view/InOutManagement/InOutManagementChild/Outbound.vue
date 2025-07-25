@@ -77,7 +77,7 @@
       <span>物资明细（共{{detailList.length}}项）</span>
       <van-search ref="getheight"
           v-model="searchValue" 
-          placeholder="输入规格型号" 
+          placeholder="输入关键字搜索" 
           shape="round" 
           left-icon="none"
           background="#f2f4f8"
@@ -193,7 +193,11 @@ export default {
   computed: {
     filteredList() {
       if (!this.searchValue) return this.detailList; // 如果搜索值为空，返回所有数据
-      return this.detailList.filter(item => item.specModel.includes(this.searchValue)); // 过滤匹配的数据项
+      return this.detailList.filter(item => item.specModel.includes(this.searchValue) ||
+        item.materialName.includes(this.searchValue) ||
+        item.unit.includes(this.searchValue) ||
+        item.sellerName.includes(this.searchValue)
+      ); // 过滤匹配的数据项
     }
   },
 
