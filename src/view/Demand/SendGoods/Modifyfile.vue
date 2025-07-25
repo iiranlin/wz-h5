@@ -46,9 +46,12 @@
                                         <span class="font-weight">{{ params.planName }}</span>
                                 </div> -->
                             <ul class="detail-list-ul">
-                                
                                 <li>
-                                    <span>需求项目：</span>
+                                  <span>建设项目：</span>
+                                  <span>{{ params.projectName }}</span>
+                                </li> 
+                                <li>
+                                    <span>标段项目：</span>
                                     <span class="text">{{ params.sectionName }}</span>
                                 </li>
                                 <li>

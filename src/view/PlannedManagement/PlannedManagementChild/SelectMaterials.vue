@@ -85,7 +85,7 @@
                 <span>{{ item.deliveryLocation }}</span>
               </li>
               <li class="li-span-open">
-                <span class="li-span-grey" @click.stop="openClick(item.materialId)">查看详情<van-icon name="arrow" /></span>
+                <span class="li-span-grey" @click.stop="openClick(item)">查看详情<van-icon name="arrow" /></span>
               </li>
             </ul>
           </van-checkbox>
@@ -238,8 +238,8 @@ export default {
         this.$refs.selectedList.init()
       }
     },
-    openClick(id) {
-      this.$router.push({ name: 'MaterialDetailsView', query: { id } })
+    openClick(item) {
+      this.$router.push({ name: 'MaterialDetailsView', query: { item: JSON.stringify(item) } })
     }
   }
 }

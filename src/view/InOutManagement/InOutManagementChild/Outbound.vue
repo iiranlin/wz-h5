@@ -9,7 +9,11 @@
       <div>
         <ul class="detail-ul">
           <li>
-            <span>需求项目：</span>
+            <span>建设项目：</span>
+            <span>{{ detailInfo.projectName }}</span>
+          </li> 
+          <li>
+            <span>标段项目：</span>
             <span>{{detailInfo.sectionName}}</span>
           </li>
           <li>
@@ -204,7 +208,7 @@ export default {
 
       formData: {
         planName: '',     //需求名称
-        sectionName: '',  //需求项目
+        sectionName: '',  //标段项目
         deptName: '',     //需求组织
         receiveDeptName: '',  //领用单位
         pickUserName: '',   //领料人

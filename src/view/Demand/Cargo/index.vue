@@ -9,7 +9,11 @@
             <div>
                 <ul class="detail-ul">
                     <li>
-                        <span>标段项目名称：</span>
+                      <span>建设项目：</span>
+                      <span>{{ params.projectName }}</span>
+                    </li> 
+                    <li>
+                        <span>标段项目：</span>
                         <span>{{ params.sectionName }}</span>
                     </li>
                     <li>

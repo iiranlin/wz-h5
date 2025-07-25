@@ -87,7 +87,6 @@
   </div>
 </template>
 <script>
-import keepPages from '@/view/mixins/keepPages'
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'

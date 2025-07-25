@@ -12,7 +12,11 @@
           <span>{{ detailGyMx.planName }}</span>
         </li>
         <li>
-          <span>需求项目：</span>
+          <span>建设项目：</span>
+          <span>{{ detailGyMx.projectName }}</span>
+        </li> 
+        <li>
+          <span>标段项目：</span>
           <span>{{ detailGyMx.sectionName }}</span>
         </li>
         <li>

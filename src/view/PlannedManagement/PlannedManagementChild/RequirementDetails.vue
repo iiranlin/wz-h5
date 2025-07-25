@@ -12,7 +12,11 @@
             <span>{{ detail.planNumber }}</span>
           </li>
           <li>
-            <span>需求项目：</span>
+            <span>建设项目：</span>
+            <span>{{ detail.projectName }}</span>
+          </li> 
+          <li>
+            <span>标段项目：</span>
             <span>{{ detail.sectionName }}</span>
           </li>
           <li>

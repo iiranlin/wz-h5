@@ -10,7 +10,7 @@
       <ul class="detail-ul">
         <li>
           <span>建设项目：</span>
-          <span>{{dataList.sectionName}}</span>
+          <span>{{dataList.projectName}}</span>
         </li> 
         <li>
           <span>标段项目：</span>

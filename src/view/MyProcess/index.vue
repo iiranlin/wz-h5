@@ -8,6 +8,10 @@
       <div class="detail-ul-text">
         <ul class="detail-ul">
           <li>
+            <span>建设项目：</span>
+            <span>{{ detail.projectName }}</span>
+          </li> 
+          <li>
             <span>标段项目：</span>
             <span>{{ detail.sectionName }}</span>
           </li>

@@ -16,6 +16,34 @@
           <span>{{ detailInfo.unit }}</span>
         </li>
         <li>
+          <span>合同数量：</span>
+          <span>{{ detailInfo.amount }}</span>
+        </li>
+        <li>
+          <span>已累计计划数量：</span>
+          <span class="li-span-click">{{ detailInfo.cumulativeAmount }}</span>
+        </li>
+        <li>
+          <span>供应时间：</span>
+          <span>{{ detailInfo.deliveryDate }}</span>
+        </li>
+        <li>
+          <span>收货人及联系方式：</span>
+          <span>{{ detailInfo.receiver }}</span>
+        </li>
+        <li>
+          <span>交货地点：</span>
+          <span>{{ detailInfo.deliveryLocation }}</span>
+        </li>
+        <!-- <li>
+          <span>规格型号：</span>
+          <span>{{ detailInfo.specModel }}</span>
+        </li>
+        <li>
+          <span>计量单位：</span>
+          <span>{{ detailInfo.unit }}</span>
+        </li>
+        <li>
           <span>需求数量：</span>
           <span>{{ detailInfo.amount }}</span>
         </li>
@@ -50,9 +78,9 @@
         <li>
           <span>投资比例：</span>
           <span>{{ detailInfo.field1 }}</span>
-        </li>
+        </li> -->
       </ul>
-      <div class="detail-list-title-content">
+      <!-- <div class="detail-list-title-content">
         <span>备注：</span>
         <div class="remark-detail">{{ detailInfo.remark || '未填写' }}</div>
       </div>
@@ -65,14 +93,14 @@
           :fileList="filterList(detailInfo.fileByList, 'hgz') || []" />
         <file-download-view class="outbound-field-uploader" title="厂检报告附件："
           :fileList="filterList(detailInfo.fileByList, 'cjbg') || []" />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 <script>
 import indexMixin from '@/view/mixins'
 import FileDownloadView from "@/components/FileDownloadView.vue"
-import { materialManagementDictDetail } from "@/api/prodmgr-inv/materialManagementDict"
+import { materialDemandPlanDetailsDetail } from '@/api/prodmgr-inv/materialDemandPlanDetails'
 export default {
   name: 'MaterialDetailsView',
   mixins: [indexMixin],
@@ -92,16 +120,17 @@ export default {
   },
   methods: {
     init() {
-      const { id } = this.$route.query
-      this.materialManagementDictDetail(id)
+      const { item } = this.$route.query
+      this.detailInfo = JSON.parse(item)
+      // this.materialDemandPlanDetailsDetail(id)
     },
-    materialManagementDictDetail(id) {
+    materialDemandPlanDetailsDetail(id) {
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
         forbidClick: true
       });
-      materialManagementDictDetail(id).then(({ data }) => {
+      materialDemandPlanDetailsDetail(id).then(({ data }) => {
         this.detailInfo = data
       }).finally(() => {
         toast.clear()

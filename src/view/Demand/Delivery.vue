@@ -42,6 +42,10 @@
                     </li>
 
                     <li>
+                      <span>建设项目：</span>
+                      <span>{{ item.projectName }}</span>
+                    </li> 
+                    <li>
                       <span>标段项目: </span>
                       <span>{{ item.sectionName }}</span>
                     </li>

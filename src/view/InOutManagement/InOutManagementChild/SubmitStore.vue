@@ -18,7 +18,11 @@
               <span>{{ formData.planName }}</span>
             </li>
             <li>
-              <span>需求项目：</span>
+              <span>建设项目：</span>
+              <span>{{ formData.projectName }}</span>
+            </li> 
+            <li>
+              <span>标段项目：</span>
               <span>{{ formData.sectionName }}</span>
             </li>
             <li>

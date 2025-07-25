@@ -20,15 +20,15 @@
         </li>
         <li>
           <span>合同数量：</span>
-          <span>{{ sectionInfo.amount }}</span>
+          <span class="li-span-click">{{ sectionInfo.amount }}</span>
         </li>
         <li>
           <span>累计计划量（含本次）：</span>
-          <span>{{ }}</span>
+          <span class="li-span-click">{{ sectionInfo.cumulativeAmount }}</span>
         </li>
         <li>
           <span>本次计划数量：</span>
-          <span>{{ sectionInfo.planAmount }}</span>
+          <span class="li-span-click">{{ sectionInfo.planAmount }}</span>
         </li>
       </ul>
     </div>
@@ -79,7 +79,7 @@
         </li>
         <li>
           <span>投资比例：</span>
-          <span>{{ sectionInfo.field1 }}</span>
+          <span class="li-span-click">{{ sectionInfo.field1 }}</span>
         </li>
       </ul>
     </div>
