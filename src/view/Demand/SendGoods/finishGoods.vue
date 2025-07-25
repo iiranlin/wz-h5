@@ -37,8 +37,6 @@
           <van-divider />
           <div class="detail-list-ul">
             <van-form ref="form">
-              <!-- <van-field v-model="goodsData[index].sendTotal" type="number" required label="发货数量" placeholder="发货数量"
-                input-align="right" /> -->
               <van-field label="发货数量" placeholder="请输入发货数量" required clearable 
                             input-align="right">
                             <template #input>
@@ -69,9 +67,9 @@
               <van-field v-model="goodsData[index].remark" label="备注" placeholder="请输入备注" input-align="right" />
             </van-form>
           </div>
-          <div style="padding-right: 0.5rem;">
+          <div style="padding-right: 0.5rem;padding-bottom:1.25rem;">
             <file-upload-view title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01" />
-            <file-upload-view title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01" />
+            <file-upload-view title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01" :maxCount="99"/>
           </div>
         </div>
       </div>

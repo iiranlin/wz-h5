@@ -8,7 +8,7 @@
       <div class="detail-ul-text">
         <ul class="detail-ul">
           <li>
-            <span>需求项目：</span>
+            <span>标段项目：</span>
             <span>{{ detail.sectionName }}</span>
           </li>
           <li>

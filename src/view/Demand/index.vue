@@ -35,7 +35,7 @@
                       <span class="text">{{ item.planName }}</span>
                     </li>
                     <li>
-                      <span>需求项目：</span>
+                      <span>标段项目：</span>
                       <span>{{ item.sectionName }}</span>
                     </li>
                     <li>
