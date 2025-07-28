@@ -110,6 +110,9 @@
                             <div style="padding: 0 20px;">
                                  <file-upload-view style="padding-right: 0.5rem;margin-left: 0px;"  title="发货单附件" :fileList="fileList" businessType="01"/>
                             </div>
+                            <div style="padding: 0 20px;">
+                                 <file-upload-view style="padding-right: 0.5rem;margin-left: 0px;"  title="装车照片" :fileList="zczp" businessType="01" :required="false" accept=".jpg" maxCount="100"/>
+                            </div>
                         </div>
                     </van-list>
                 </van-tab>
@@ -249,6 +252,7 @@ export default {
             allRefreshLoading: false,
             allRefresh: false,
             fileList: [],
+            zczp: [],
             showFile: false,
             materialCirculationDetailsTableDTOS:[]
         };
@@ -285,6 +289,9 @@ export default {
                         updateDate:this.formattedCreateDate(item.updateDate),
                         // fileByList: JSON.parse(item.fileByList)
                     }))
+                    // 装车照片
+                    let { zczp } = res.data.fileByList || {}
+                    this.zczp = zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
                 }
             })
         },
@@ -353,7 +360,10 @@ export default {
                             fhd.push({ fileName: item.fileName, filePath: item.filePath });
                         })
                     }
-                    let fileByList = JSON.stringify({ fhd });
+
+                    //装车照片
+                    let zczp = this.zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
+                    let fileByList = JSON.stringify({ fhd, zczp });
                     
                     let params = {
                         // ...this.params,
@@ -362,6 +372,7 @@ export default {
                         contacts: this.params.contacts,
                         contactsPhone: this.params.contactsPhone,
                         fileList: fileList,
+                        zczp: zczp,
                         fileByList: fileByList,
                         sectionName: this.params.sectionName,
                         planName:this.params.planName,
