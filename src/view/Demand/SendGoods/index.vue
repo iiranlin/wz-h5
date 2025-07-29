@@ -121,7 +121,7 @@
             :fileList="zczp"
             businessType="01"
             accept=".jpg"
-            maxCount="100"
+            :maxCount="100"
           />
         </div>
       </div>
