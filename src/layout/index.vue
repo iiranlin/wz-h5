@@ -129,7 +129,7 @@ export default {
 	},
 	computed: {
     key() {
-      return this.$route.fullPath
+      return this.$route.path
     },
     keepPages() {
       return this.$store.getters.getKeepPages

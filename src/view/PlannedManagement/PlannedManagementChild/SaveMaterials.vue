@@ -99,8 +99,10 @@
         <img :class="{ 'default-button-container-selected-img': $refs.editedList && $refs.editedList.sheetShow }"
           src="@/assets/img/Icon-slideup.png" />
       </div>
-      <file-upload-view :fileList="sectionInfo.fileList || []" :maxCount="99" :isFileList="false" businessType="01"></file-upload-view>
-      <van-button class="button-info" round type="info" @click="onSubmit">保存</van-button>
+      <div class="default-button-container-button">
+        <file-upload-view :fileList="sectionInfo.fileList || []" :maxCount="99" :isFileList="false" businessType="01"></file-upload-view>
+        <van-button class="button-info" round type="info" @click="onSubmit">保存</van-button>
+      </div>
     </div>
     <history-list ref="historyList" @historyClick="historyClick"></history-list>
     <back-to-top className=".default-container"></back-to-top>
@@ -169,6 +171,9 @@ export default {
   activated() {
     this.materiaList = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
     this.$store.dispatch('public/setMateriaList', this.materiaList)
+    if(!this.materiaList.length){
+      this.init()
+    }
   },
   mounted() {
     this.init()
@@ -524,6 +529,13 @@ export default {
 
       .default-button-container-selected-img {
         transform: rotate(180deg)
+      }
+    }
+
+    .default-button-container-button{
+      display: flex;
+      .button-info{
+        margin-left: 10px;
       }
     }
 

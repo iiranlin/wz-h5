@@ -45,11 +45,12 @@ export default {
     },
     scrollPositionInit(className, finished){
       this.$nextTick(() => {
-        const scrollPosition = this.$store.state.public.scrollPosition
+        const name = this.$route.name
+        const scrollPosition = this.$store.state.public.scrollPosition[name] || 0
         if(scrollPosition > 0){
           document.querySelector(className).scrollTop = scrollPosition // 从Vuex store中恢复滚动位置到列表中
           if(scrollPosition === document.querySelector(className).scrollTop || finished){
-            this.$store.dispatch('public/setScrollPosition', 0)
+            this.$store.dispatch('public/setScrollPosition', {[name]: 0})
           }
         }
       })

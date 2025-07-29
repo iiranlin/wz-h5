@@ -43,14 +43,6 @@
                                         <span>{{item.startDeptName}}</span>
                                     </li>
                                     <li>
-                                        <span>提交人：</span>
-                                        <span>{{item.startUserName}}</span>
-                                    </li>
-                                    <li>
-                                        <span>提交时间：</span>
-                                        <span>{{parseTime(item.startTime,'{y}-{m}-{d}')}}</span>
-                                    </li>
-                                    <li>
                                         <span>建设项目：</span>
                                         <span>{{item.startUserName}}</span>
                                     </li>
@@ -65,6 +57,14 @@
                                     <li>
                                         <span>物资名称：</span>
                                         <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>提交人：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>提交时间：</span>
+                                        <span>{{parseTime(item.startTime,'{y}-{m}-{d}')}}</span>
                                     </li>
                                 </ul>
                                 <div class="list-ul-button">
@@ -139,6 +139,22 @@
                                         <span>{{item.startDeptName}}</span>
                                     </li>
                                     <li>
+                                        <span>建设项目：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>标段项目：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>合同名称：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>物资名称：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
                                         <span>提交人：</span>
                                         <span>{{item.startUserName}}</span>
                                     </li>
@@ -157,22 +173,6 @@
                                     <li>
                                         <span>提交时间：</span>
                                         <span>{{parseTime(item.startTime,'{y}-{m}-{d}')}}</span>
-                                    </li>
-                                    <li>
-                                        <span>建设项目：</span>
-                                        <span>{{item.startUserName}}</span>
-                                    </li>
-                                    <li>
-                                        <span>标段项目：</span>
-                                        <span>{{item.startUserName}}</span>
-                                    </li>
-                                    <li>
-                                        <span>合同名称：</span>
-                                        <span>{{item.startUserName}}</span>
-                                    </li>
-                                    <li>
-                                        <span>物资名称：</span>
-                                        <span>{{item.startUserName}}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -197,7 +197,7 @@ export default {
     dicts: ['flowBusinessType','flowTaskStatus'],
     beforeRouteLeave (to, from, next) {
         from.meta.myToDoNavIndex = this.menuActiveIndex;
-        this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
+        this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
         next();
     },
 

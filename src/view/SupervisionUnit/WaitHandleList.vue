@@ -67,7 +67,7 @@ export default {
     components: {BackToTop},
     dicts: ['flowBusinessType'],
     beforeRouteLeave (to, from, next) {
-      this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
+      this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
       next();
     },
 

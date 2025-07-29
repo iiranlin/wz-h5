@@ -40,7 +40,7 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
       from.meta.myToDoNavIndex = this.menuActiveIndex;
-      this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
+      this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
       next();
   },
   created () {

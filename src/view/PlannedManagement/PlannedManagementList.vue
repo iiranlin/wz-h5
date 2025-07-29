@@ -108,7 +108,7 @@ export default {
   components: { BackToTop, activitiAssignee },
   beforeRouteLeave (to, from, next) {
     from.meta.plannedManagementIndex = this.statusValue
-    this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
+    this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
     next()
   },
   data() {

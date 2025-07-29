@@ -7,7 +7,7 @@ const state = {
   editSendGoods:{},
   editGoods:{},
   historyData: {},
-  scrollPosition: 0
+  scrollPosition: {}
 };
 
 const mutations = {
@@ -49,7 +49,8 @@ const mutations = {
     state.historyData = historyData
   },
   SET_SCROLL_POSITION(state, scrollPosition) {
-    state.scrollPosition = scrollPosition
+    const inData = state.scrollPosition
+    state.scrollPosition = {...inData, ...scrollPosition}
   }
 };
 

@@ -49,7 +49,7 @@ export default {
     from.meta.activeIndex = this.activeIndex
     from.meta.storeStatus = this.$refs.InListContent?.formData.storeStatus
     from.meta.inventoryStatus = this.$refs.InventoryListContent?.formData.status
-    this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
+    this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
     next();
   },
 
