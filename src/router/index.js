@@ -223,10 +223,10 @@ export const routes = [
       {
         path: 'SubmitStore',
         name: 'SubmitStore',
-        meta: { title: '提交入库' },
+        meta: { title: '提交报检材料' },
         component: () => import('@/view/InOutManagement/InOutManagementChild/SubmitStore.vue'),
         beforeEnter(to, from, next) {
-          to.meta.title = to.query.type == 'view' ? `入库${typeName[to.query.type]}` : `${typeName[to.query.type]}入库`
+          to.meta.title = to.query.type == 'view' ? `报检材料${typeName[to.query.type]}` : `${typeName[to.query.type]}报检材料`
           next()
         }
       },

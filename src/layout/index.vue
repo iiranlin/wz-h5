@@ -75,6 +75,12 @@ export default {
 					normalIcon: '/static/YSH_B.png',
 					link: '/OverExamineList'
 				},
+				{
+					title: '计划管理',
+					activeIcon: '/static/JGGL_A.png',
+					normalIcon: '/static/JGGL_B.png',
+					link: '/PlannedManagementList'
+				},
 			],
 			//供应商导航菜单
 			supplier:[

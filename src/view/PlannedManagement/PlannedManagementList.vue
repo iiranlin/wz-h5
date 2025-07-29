@@ -1,24 +1,26 @@
 <template>
   <div class="planned-management">
-    <van-sticky>
-      <div class="planned-management-search">
-        <van-search v-model="searchValue" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
-          @search="onSearch">
-          <template slot='right-icon'>
-            <van-icon name="search" @click="statusChange()" />
-          </template>
-        </van-search>
-        <!-- <van-dropdown-menu active-color="#028bff">
-          <van-dropdown-item v-model="statusValue" :options="statusArr" @change="statusChange" />
-        </van-dropdown-menu>
-        <van-button round @click="resetClick">重置</van-button> -->
-      </div>
-      <van-tabs v-model="statusValue" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
-        title-inactive-color="#2e2e2e" @change="statusChange">
-        <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value">
-        </van-tab>
-      </van-tabs>
-    </van-sticky>
+    <div class="planned-management-top">
+      <van-sticky>
+        <div class="planned-management-search">
+          <van-search v-model="searchValue" placeholder="输入关键字搜索" left-icon="none" shape="round" :show-action="showAction"
+            @search="onSearch">
+            <template slot='right-icon'>
+              <van-icon name="search" @click="statusChange()" />
+            </template>
+          </van-search>
+          <!-- <van-dropdown-menu active-color="#028bff">
+            <van-dropdown-item v-model="statusValue" :options="statusArr" @change="statusChange" />
+          </van-dropdown-menu>
+          <van-button round @click="resetClick">重置</van-button> -->
+        </div>
+        <van-tabs v-model="statusValue" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
+          title-inactive-color="#2e2e2e" @change="statusChange">
+          <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value">
+          </van-tab>
+        </van-tabs>
+      </van-sticky>
+    </div>
     <div class="planned-management-list">
       <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error"
@@ -99,6 +101,7 @@ import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { getUserInfo } from '@/utils/user-info'
 export default {
   name: 'PlannedManagementList',
   mixins: [indexMixin],
@@ -137,7 +140,8 @@ export default {
         pageSize: 5
       },
       businessCode: { '1': 'FBYLXQ', '2': 'FBYLJH', '3': 'YLXQ', '4': 'YLJH' },
-      className: '.planned-management'
+      className: '.planned-management',
+      userInfo: getUserInfo()
     }
   },
   created () {
@@ -146,6 +150,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.userInfo)
   },
   methods: {
     onSearch() {
@@ -356,7 +361,7 @@ export default {
   // }
 
   .planned-management-list {
-    height: 100%;
+    flex: 1;
   }
 
   ::v-deep .van-dropdown-menu__bar {

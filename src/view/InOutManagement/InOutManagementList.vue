@@ -8,14 +8,14 @@
             <img src="@/assets/img/RKLB.png">
             <span class="in-out-management-tab-span">入库单</span>
           </div>
-          <in-list-content></in-list-content>
+          <in-list-content ref="InListContent"></in-list-content>
         </van-tab>
         <van-tab title="需求库存">
           <div slot="title">
             <img src="@/assets/img/KCLB.png">
             <span class="in-out-management-tab-span">需求库存</span>
           </div>
-          <inventory-list-content></inventory-list-content>
+          <inventory-list-content ref="InventoryListContent"></inventory-list-content>
         </van-tab>
         <van-tab title="退货列表">
           <div slot="title">
@@ -46,7 +46,9 @@ export default {
   name: 'InOutManagementList',
   components: { InListContent, InventoryListContent, RefundListContent, OutListContent, BackToTop },
   beforeRouteLeave (to, from, next) {
-    from.meta.inOutNavIndex = this.activeIndex;
+    from.meta.activeIndex = this.activeIndex
+    from.meta.storeStatus = this.$refs.InListContent?.formData.storeStatus
+    from.meta.inventoryStatus = this.$refs.InventoryListContent?.formData.status
     this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
     next();
   },
@@ -58,8 +60,8 @@ export default {
     };
   },
   created() {
-    if(this.$route.meta.inOutNavIndex){
-      this.activeIndex = this.$route.meta.inOutNavIndex;
+    if(this.$route.meta.activeIndex){
+      this.activeIndex = this.$route.meta.activeIndex
     }
   },
   activated() {

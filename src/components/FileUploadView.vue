@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="file-upload-title">
+        <div class="file-upload-title" v-if="title">
             <span class="title">{{title}}</span>
         </div>
-        <div class="file-upload-content">
+        <div class="file-upload-content" v-if="isFileList">
             <ul>
                 <li v-for="(item,index) in fileList" :key="index">
-                    <div class="file-info">
+                    <div class="file-info" :class="{'file-info-a': !isShowButton}">
                         <img :src="checkFileImage(item.fileName)"/>
                         <span @click="previewClick(item)">{{item.fileName}}</span>
                         <img class="file-delete" src="/static/icon_file_delete.png" @click="handleFileDelete(index)"/>
@@ -14,13 +14,13 @@
                 </li>
             </ul>
         </div>
-        <div class="file-add" v-if="fileList.length < maxCount">
+        <div class="file-add" v-if="fileList.length < maxCount && isShowButton">
             <van-uploader 
                 :preview-imag='false'
                 :after-read="afterReadTransfer"
                 :before-read="beforeRead"
                 :accept="accept">
-                <van-button class="button-info" icon="plus" type="default" round block>上传文件</van-button>
+                <van-button class="button-info" type="default" round block><img class="file-download" src="@/assets/img/Icon-download.png"/><span>上传附件</span></van-button>
             </van-uploader>
         </div>
         <!-- 附件预览 -->
@@ -54,7 +54,15 @@ export default {
         accept:{
             type: String,
             default: '.pdf',
-        }
+        },
+        isFileList:{
+            type: Boolean,
+            default: true,
+        },
+        isShowButton:{
+            type: Boolean,
+            default: true,
+        },
     },
     data() {
         return {
@@ -218,6 +226,10 @@ export default {
         right: 0px;
     }
 }
+.file-info-a{
+  margin-left: 20px;
+  margin-right: 20px;
+}
 .file-add {
     text-align: center;
     margin: 0px 45px 0px 45px;
@@ -232,5 +244,18 @@ export default {
     ::v-deep .van-button {
         height: 36px;
     }
+    .van-button__text{
+      span{
+        vertical-align: middle;
+      }
+      .file-download{
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+      }
+    }
+}
+.file-add-a{
+  display: none;
 }
 </style>

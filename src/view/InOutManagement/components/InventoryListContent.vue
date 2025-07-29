@@ -101,7 +101,9 @@ export default {
     };
   },
   created() {
-   
+    if(this.$route.meta.status){
+      this.formData.status = this.$route.meta.status
+    }
   },
   activated() {
   },

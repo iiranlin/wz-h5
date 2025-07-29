@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="file-download-title">
+        <div class="file-download-title" v-if="title">
             <span class="title">{{title}}</span>
         </div>
         <div class="file-download-content">

@@ -50,6 +50,22 @@
                                         <span>提交时间：</span>
                                         <span>{{parseTime(item.startTime,'{y}-{m}-{d}')}}</span>
                                     </li>
+                                    <li>
+                                        <span>建设项目：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>标段项目：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>合同名称：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>物资名称：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
                                 </ul>
                                 <div class="list-ul-button">
                                     <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">审核</van-button>
@@ -126,7 +142,7 @@
                                         <span>提交人：</span>
                                         <span>{{item.startUserName}}</span>
                                     </li>
-                                    <li class="li-item-overlength">
+                                    <!-- <li class="li-item-overlength">
                                         <span>审核开始时间：</span>
                                         <span>{{parseTime(item.startTime,'{y}-{m}-{d} {h}:{i}:{s}')}}</span>
                                     </li>
@@ -137,6 +153,26 @@
                                     <li>
                                         <span>审核意见：</span>
                                         <span>{{item.message}}</span>
+                                    </li> -->
+                                    <li>
+                                        <span>提交时间：</span>
+                                        <span>{{parseTime(item.startTime,'{y}-{m}-{d}')}}</span>
+                                    </li>
+                                    <li>
+                                        <span>建设项目：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>标段项目：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>合同名称：</span>
+                                        <span>{{item.startUserName}}</span>
+                                    </li>
+                                    <li>
+                                        <span>物资名称：</span>
+                                        <span>{{item.startUserName}}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -160,9 +196,7 @@ export default {
     components: {BackToTop},
     dicts: ['flowBusinessType','flowTaskStatus'],
     beforeRouteLeave (to, from, next) {
-      console.log(to,from)
         from.meta.myToDoNavIndex = this.menuActiveIndex;
-        console.log(document.querySelector(this.className).scrollTop)
         this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
         next();
     },

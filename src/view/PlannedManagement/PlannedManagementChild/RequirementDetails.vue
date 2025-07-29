@@ -44,6 +44,13 @@
         </ul>
       </div>
     </div>
+    <div class="detail-base-info detail-base-info-edited" v-if="detail.fileList?.length">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>附件</span>
+      </div>
+      <file-download-view :fileList="detail.fileList || []"></file-download-view>
+    </div>
     <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
       <div class="detail-title-content">
         <img src="@/assets/img/Icon-logistics.png" />
@@ -118,9 +125,10 @@ import { materialDemandPlanRestDetail, materialDemandPlanRestDetailGyMx, materia
 import activitiAssignee from '@/components/activitiAssignee'
 import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { wfHistoryList } from '@/api/myToDoList'
+import FileDownloadView from "@/components/FileDownloadView.vue"
 export default {
   name: 'RequirementDetails',
-  components: { MaterialDetails, LogRecording, activitiAssignee, BackToTop },
+  components: { MaterialDetails, LogRecording, activitiAssignee, BackToTop, FileDownloadView },
   data() {
     return {
       menuActiveIndex: '',

@@ -184,7 +184,7 @@
         </van-tabs>
       </div>
       <div class="default-button-container" v-if="queryType === 'submit'">
-        <van-button class="button-info" round type="info" native-type="submit">提交入库审核</van-button>
+        <van-button class="button-info" round type="info" native-type="submit">提交报检审核</van-button>
       </div>
     </van-form>
     <!-- 附件预览 -->
@@ -223,7 +223,7 @@ export default {
       id: null,
       statusArr: [
         { value: '', text: '全部' },
-        { value: "1", text: "未入库" },
+        { value: "1", text: "待检测" },
         { value: "2", text: "部分退货" },
         { value: "3", text: "已入库" },
         { value: "4", text: "已退货" },
@@ -312,24 +312,36 @@ export default {
     putChange(item, index) {
       //入库不能超过收货，最终算出退货
       this.$nextTick( () => {
-        if (Number(item.storeTotal) > Number(item.putTotal)) {
-          this.$toast('入库数量不能大于收货数量！')
+        if(Number(item.storeTotal) > 0){
           this.tableData[index].storeTotal = item.putTotal
-        } else {
-          this.tableData[index].refundZjTotal = Number(item.putTotal) - Number(item.storeTotal)
+          this.tableData[index].refundZjTotal = 0
+        }else{
+          this.tableData[index].refundZjTotal = item.putTotal
         }
+        // if (Number(item.storeTotal) > Number(item.putTotal)) {
+        //   this.$toast('入库数量不能大于收货数量！')
+        //   this.tableData[index].storeTotal = item.putTotal
+        // } else {
+        //   this.tableData[index].refundZjTotal = Number(item.putTotal) - Number(item.storeTotal)
+        // }
       })
     },
     //填写退货数量
     changeRefund(item, index) {
       //退货不能超过收货，最终算出入库
       this.$nextTick( () => {
-        if (Number(item.refundZjTotal) > Number(item.putTotal)) {
-          this.$toast('退货数量不能大于收货数量！')
-          this.tableData[index].refundZjTotal = Number(item.putTotal) - Number(item.storeTotal);
-        } else {
-          this.tableData[index].storeTotal = Number(item.putTotal) - Number(item.refundZjTotal);
+        if(Number(item.refundZjTotal) > 0){
+          this.tableData[index].refundZjTotal = item.putTotal
+          this.tableData[index].storeTotal = 0
+        }else{
+          this.tableData[index].storeTotal = item.putTotal
         }
+        // if (Number(item.refundZjTotal) > Number(item.putTotal)) {
+        //   this.$toast('退货数量不能大于收货数量！')
+        //   this.tableData[index].refundZjTotal = Number(item.putTotal) - Number(item.storeTotal);
+        // } else {
+        //   this.tableData[index].storeTotal = Number(item.putTotal) - Number(item.refundZjTotal);
+        // }
       })
     },
     onCheck(tableData) {
@@ -337,7 +349,7 @@ export default {
       tableData.forEach((row, index) => {
         const rowNum = index + 1;
         if (Number(row.refundZjTotal) > 0 && row.fileList03.length == 0) {
-          errors.push(`第${rowNum}行，有退货数量，请上传退货附件 `);
+          errors.push(`第${rowNum}个，有退货数量，请上传退货附件 `);
         }
       });
 

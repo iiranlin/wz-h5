@@ -82,7 +82,7 @@
             <van-button class="button-info" plain round type="info" @click="withdrawClick(item)"
               v-if="item.storeStatus == '5'">撤回</van-button>
             <van-button class="button-info" round type="info" @click="submitStore(item)"
-              v-if="item.storeStatus == '1' || item.storeStatus == '6'">入库</van-button>
+              v-if="item.storeStatus == '1' || item.storeStatus == '6'">提交报检材料</van-button>
           </div>
         </div>
       </van-list>
@@ -96,6 +96,10 @@ import { recall } from '@/api/prodmgr-inv/audit'
 export default {
   name: 'InListContent',
   mixins: [indexMixin],
+  beforeRouteLeave (to, from, next) {
+    from.meta.storeStatus = this.formData.storeStatus
+    next();
+  },
   data() {
     return {
       className: '.in-out-management',
@@ -105,7 +109,7 @@ export default {
       },
       statusArr: [
         { value: '', text: '全部' },
-        { value: "1", text: "未入库" },
+        { value: "1", text: "待检测" },
         { value: "2", text: "部分退货" },
         { value: "3", text: "已入库" },
         { value: "4", text: "已退货" },
@@ -123,6 +127,9 @@ export default {
     };
   },
   created() {
+    if(this.$route.meta.storeStatus){
+      this.formData.storeStatus = this.$route.meta.storeStatus
+    }
   },
   activated() {
   },

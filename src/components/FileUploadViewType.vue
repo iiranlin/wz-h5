@@ -20,7 +20,7 @@
                 :after-read="afterReadTransfer"
                 :before-read="beforeRead"
                 :accept="accept">
-                <van-button class="button-info" icon="plus" type="default" round block>上传文件</van-button>
+                <van-button class="button-info" icon="plus" type="default" round block>上传附件</van-button>
             </van-uploader>
         </div>
         <!-- 附件预览 -->
@@ -72,13 +72,13 @@ export default {
               });
               return false;
             }
-            const isLt10M = file.size / 1024 / 1024 < 10;
+            const isLt500M = file.size / 1024 / 1024 < 500;
             const isFileName = file.name.length < 90;
 
-            if (!isLt10M) {
+            if (!isLt500M) {
                 this.$notify({
                     type: 'warning',
-                    message: '上传文件大小不能超过 10MB!',
+                    message: '上传文件大小不能超过 500MB!',
                 });
                 return false;
             }

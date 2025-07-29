@@ -52,22 +52,28 @@
                 </van-list>
             </van-pull-refresh>
         </div>
-        <back-to-top className=".default-container"></back-to-top>
+        <back-to-top :className="className"></back-to-top>
     </div>  
 </template>
 <script>
 import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfHandleList } from '@/api/myToDoList'
+import indexMixin from '@/view/mixins'
 
 export default {
     name:'WaitHandleList',
-    mixins: [keepPages],
+    mixins: [keepPages, indexMixin],
     components: {BackToTop},
     dicts: ['flowBusinessType'],
+    beforeRouteLeave (to, from, next) {
+      this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
+      next();
+    },
 
     data() {
         return {
+            className: '.default-container',
             formData: {
                 keywords: '',
             },
@@ -91,7 +97,7 @@ export default {
        
     },
     activated () {
-
+      this.scrollPositionInit(this.className, this.finished)
     },
     methods: {
         //获取列表数据

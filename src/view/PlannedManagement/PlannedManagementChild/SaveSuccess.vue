@@ -19,12 +19,13 @@ export default {
   },
   methods: {
     buttonClick (code) {
+      const { id = null } = this.$route.query
       const objFun = {
         'returnList': () => {
           this.$router.push({ name: 'PlannedManagementList' })
         },
         'view': () => {
-          this.$router.push({ name: 'RequirementDetails', query: {id: null } })
+          this.$router.push({ name: 'RequirementDetails', query: { id } })
         }
       }
       objFun[code] && objFun[code]()

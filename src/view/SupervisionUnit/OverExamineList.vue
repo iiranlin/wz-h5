@@ -61,7 +61,7 @@
                 </van-list>
             </van-pull-refresh>
         </div>
-        <back-to-top className=".default-container"></back-to-top>
+        <back-to-top :className="className"></back-to-top>
     </div>  
 </template>
 <script>
@@ -75,9 +75,14 @@ export default {
     mixins: [keepPages,indexMixin],
     components: {BackToTop},
     dicts: ['flowBusinessType','flowTaskStatus'],
+    beforeRouteLeave (to, from, next) {
+      this.$store.dispatch('public/setScrollPosition', document.querySelector(this.className).scrollTop)
+      next();
+    },
 
     data() {
         return {
+            className: '.default-container',
             formData: {
                 keywords: '',
             },
@@ -101,7 +106,7 @@ export default {
         
     },
     activated () {
-        
+      this.scrollPositionInit(this.className, this.finished)
     },
     methods: {
         //获取列表数据
