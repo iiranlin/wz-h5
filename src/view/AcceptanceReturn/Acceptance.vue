@@ -82,7 +82,7 @@
                   </li> -->
                 </ul>
                 <div class="list-ul-button" v-if="item.takeStatus === '1'">
-                  <van-button class="button-info" round type="info" @click="handleDoAccept(item)">初验收货</van-button>
+                  <van-button class="button-info" round type="info" @click.stop="handleDoAccept(item)">初验收货</van-button>
                 </div>
               </div>
             </van-list>

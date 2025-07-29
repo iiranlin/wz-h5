@@ -128,9 +128,9 @@ export default {
     }
     span {
         font-size: 14px;
-        color: #0571ff;
+        // color: #0571ff;
         margin-left: 10px;
-        font-weight: 600;
+        // font-weight: 600;
         margin-right: 35px;
         word-break: break-all;
     }

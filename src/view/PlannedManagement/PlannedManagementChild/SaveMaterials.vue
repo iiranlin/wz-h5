@@ -22,7 +22,7 @@
         </ul>
       </div>
     </div>
-    <div class="box-container box-containerA" v-if="sectionInfo.fileList.length">
+    <div class="box-container box-containerA" v-if="sectionInfo.fileList?.length">
       <div class="detail-title-contentA">
         <img src="/static/icon-file.png">
         <span>附件</span>
@@ -231,7 +231,7 @@ export default {
           sectionName: data.sectionName,
           title: dayjs().format('YYYY年MM月') + '甲供物资计划申请表',
           deptName: data.deptName,
-          fileList: []
+          fileList: data.fileList[0]?.fileList || []
         }
         this.materiaList = data.details.map((item) => {
           return Object.assign({}, item, { supplyDate: item.supplyDate && parseTime(item.supplyDate, '{y}-{m}-{d}'), minDate: item.supplyDate ? new Date(item.supplyDate) : this.minDate, showDatePicker: this.showDatePicker, backPlanAmount: item.planAmount || 0 })
@@ -284,6 +284,7 @@ export default {
       const data = {
         id,
         contractId: this.contractId,
+        fileList: [{ fileList: this.sectionInfo.fileList }],
         detailsModifyParams: this.materiaList.map(item => ({ ...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber }))
       }
       // let obj = { addr: [], field2: [], field0: [], field1: [] }

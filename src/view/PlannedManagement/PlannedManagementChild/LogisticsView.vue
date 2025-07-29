@@ -39,7 +39,7 @@
         <img src="@/assets/img/Icon-batch.png"/>
         <span>{{ activeKey.text }}</span>
       </div>
-      <van-popover v-model="showPopover" trigger="click" v-if="!shipmentBatchNumber">
+      <van-popover v-model="showPopover" trigger="click">
         <div class="van-popover__action" v-for="item in tabList" :key="item.value" @click="activeKeyChange(item)">
           <div class="van-popover__action-text van-hairline--bottom" :class="{'van-popover__action-text-active': activeKey.value == item.value}" v-if="item.text">{{ item.text }}</div>
         </div>

@@ -76,11 +76,32 @@ export default {
 					link: '/OverExamineList'
 				},
 				{
-					title: '计划管理',
+					title: '计划查询',
 					activeIcon: '/static/JGGL_A.png',
 					normalIcon: '/static/JGGL_B.png',
 					link: '/PlannedManagementList'
 				},
+			],
+			//指挥部
+			supervisionUnitSN:[
+				{
+					title: '待审核',
+					activeIcon: '/static/DSH_A.png',
+					normalIcon: '/static/DSH_B.png',
+					link: '/WaitExamineList'
+				},
+				{
+					title: '待处理',
+					activeIcon: '/static/DCL_A.png',
+					normalIcon: '/static/DCL_B.png',
+					link: '/WaitHandleList'
+				},
+				{
+					title: '已审核',
+					activeIcon: '/static/YSH_A.png',
+					normalIcon: '/static/YSH_B.png',
+					link: '/OverExamineList'
+				}
 			],
 			//供应商导航菜单
 			supplier:[
@@ -146,6 +167,9 @@ export default {
           },
           'GYS': () => {
             return this.supplier
+          },
+          'SN': () => {
+            return this.supervisionUnitSN
           }
         }
         return (obj[code] && obj[code]()) || this.constructionUnit

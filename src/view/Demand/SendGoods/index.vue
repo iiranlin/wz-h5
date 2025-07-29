@@ -544,6 +544,9 @@ export default {
     img {
       min-width: auto !important;
     }
+    span{
+      text-align: left;
+    }
   }
 }
 .default-container {

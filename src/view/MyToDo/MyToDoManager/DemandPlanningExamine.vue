@@ -36,6 +36,13 @@
               </ul>
             </div>
         </div>
+        <div class="detail-base-info detail-base-info-edited" v-if="detailInfo.fileList[0]?.fileList.length">
+          <div class="detail-title-content">
+            <img src="/static/icon-file.png" />
+            <span>附件</span>
+          </div>
+          <file-download-view :fileList="detailInfo.fileList[0]?.fileList || []"></file-download-view>
+        </div>
         <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
           <div class="detail-title-content">
             <img src="@/assets/img/Icon-logistics.png" />
@@ -245,7 +252,7 @@ export default {
             //列表条目信息
             listObj:{},
             //详情信息
-            detailInfo:{demandPlanDetailsGyDTOList: []},
+            detailInfo:{demandPlanDetailsGyDTOList: [], fileList: []},
             //明细信息
             detailList:[],
             //是否显示选择审批人弹框

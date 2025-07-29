@@ -44,12 +44,12 @@
         </ul>
       </div>
     </div>
-    <div class="detail-base-info detail-base-info-edited" v-if="detail.fileList?.length">
+    <div class="detail-base-info detail-base-info-edited" v-if="detail.fileList[0]?.fileList.length">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
         <span>附件</span>
       </div>
-      <file-download-view :fileList="detail.fileList || []"></file-download-view>
+      <file-download-view :fileList="detail.fileList[0]?.fileList || []"></file-download-view>
     </div>
     <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
       <div class="detail-title-content">
@@ -110,7 +110,7 @@
       </div>
     </van-sticky>
     <material-details :list="filteredList" :planStatus="detail.planStatus" :searchChecked="searchChecked"></material-details>
-    <div class="default-button-container" v-if="['1', '4', '0', '5', '10'].includes(detail.planStatus)">
+    <div class="default-button-container" v-if="['1', '4', '0', '5', '10'].includes(detail.planStatus) && isJL">
       <van-button class="button-info" round type="info" @click="handleExamineClick(detail)">提交审核</van-button>
     </div>
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
@@ -126,6 +126,7 @@ import activitiAssignee from '@/components/activitiAssignee'
 import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { wfHistoryList } from '@/api/myToDoList'
 import FileDownloadView from "@/components/FileDownloadView.vue"
+import { getUserInfo } from '@/utils/user-info'
 export default {
   name: 'RequirementDetails',
   components: { MaterialDetails, LogRecording, activitiAssignee, BackToTop, FileDownloadView },
@@ -135,7 +136,8 @@ export default {
       searchValue: '',
       showAction: false,
       detail: {
-        demandPlanDetailsGyDTOList: []
+        demandPlanDetailsGyDTOList: [],
+        fileList: []
       },
       statusArr: [
         { text: '全部', value: '' },
@@ -155,7 +157,8 @@ export default {
       dataPc: [],
       recordList: [],
       historyData: {},
-      searchChecked: true
+      searchChecked: true,
+      userInfo: getUserInfo()
     }
   },
   computed: {
@@ -166,6 +169,10 @@ export default {
         item.unit.includes(this.searchValue) ||
         item.receiver.includes(this.searchValue)
       ); // 过滤匹配的数据项
+    },
+    isJL() {
+      const deptCode = this.userInfo.deptCode
+      return !deptCode.startsWith('JL')
     }
   },
   created() {
