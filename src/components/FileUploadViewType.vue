@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="file-upload-title" v-if="title">
-            <span class="title">{{title}}</span>
+            <span :class="['title', { required }]">{{title}}</span>
         </div>
         <div>
             <ul>
@@ -54,6 +54,11 @@ export default {
         accept:{
             type: String,
             default: '.pdf',
+        },
+        // 是否必填 默认是 
+        required:{
+            type: Boolean,
+            default: true,
         }
     },
     data() {
@@ -64,11 +69,12 @@ export default {
     methods:{
         //附件上传前
         beforeRead(file){
-            const types = ['.pdf'];
+            const types = [this.accept];
+            const extensions = this.accept.substr(1).toUpperCase()// PDF
             if (!types.includes(`.${file.name.split('.').pop().toLowerCase()}`)) {
               this.$notify({
                 type: 'warning',
-                message: '仅支持上传 PDF 文件!',
+                message: `仅支持上传 ${extensions} 文件!`,
               });
               return false;
             }
@@ -169,7 +175,7 @@ export default {
         color: #646566;
         // font-weight: 600;
     }
-    .title::before {
+    .title.required::before {
         position: absolute;
         left: 0.2rem;
         color: #ee0a24;

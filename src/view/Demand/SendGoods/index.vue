@@ -113,6 +113,17 @@
             businessType="01"
           />
         </div>
+        <div style="padding-right: 0.3rem">
+          <file-upload-view
+            :required="false"
+            class="outbound-field-uploader"
+            title="装车照片"
+            :fileList="zczp"
+            businessType="01"
+            accept=".jpg"
+            :maxCount="100"
+          />
+        </div>
       </div>
       <div class="default-button-container">
         <van-button
@@ -181,6 +192,8 @@ export default {
       },
       goodsList: [],
       fileList: [],
+      // 装车照片
+      zczp: [],
       // 传过来的标识，用来判断是新增还是编辑
       text: "",
       fileDisabled: false,
@@ -277,6 +290,8 @@ export default {
           this.params.arrivalDate = this.formattedCreateDate(
             res.data.arrivalDate
           );
+          // 装车照片
+          this.zczp = file.zczp || []
         }
       });
     },
@@ -346,7 +361,9 @@ export default {
             contactsPhone: [this.params.contactsPhone],
           };
           this.$store.dispatch('public/setHistoryList', obj)
-          let fileByList = JSON.stringify({ fhd });
+          //装车照片
+          let zczp = this.zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
+          let fileByList = JSON.stringify({ fhd, zczp });
           let params = {
             ...this.params,
             fileList: fileList,
