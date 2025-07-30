@@ -58,6 +58,7 @@
 </template>
 <script>
 import {listCrRetreat} from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { getUserInfo } from '@/utils/user-info'
 export default {
   name: 'RefundListContent',
   data() {
@@ -74,7 +75,8 @@ export default {
       allListQuery: {
         pageNum: 1,
         pageSize: 10,
-      }
+      },
+      userInfo: getUserInfo()
     };
   },
   created() {
@@ -96,7 +98,7 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-      listCrRetreat(Object.assign({},this.allListQuery,this.formData)).then(({ data }) => {
+      listCrRetreat(Object.assign({},this.allListQuery,this.formData, {deptId: this.userInfo.deptId})).then(({ data }) => {
         if(this.allRefreshLoading){
           this.dataList = [];
           this.allRefreshLoading = false;
