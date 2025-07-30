@@ -163,7 +163,13 @@ export function download(url, params, method = 'post') {
         const blob = new Blob([data.data])
         const header = data.headers['content-disposition'] || data.headers['Content-Disposition']
         if (isAndroid()) {
-          Android.fileDownLoadStream(URL.createObjectURL(blob))
+          // Android.fileDownLoadStream(URL.createObjectURL(blob))
+          var reader = new FileReader();
+          reader.readAsDataURL(blob)
+          reader.onloadend = function() {
+            var base64data = reader.result;
+            Android.getBase64FromBlobData(base64data)
+          }
         }else{
           // saveAs(blob, decodeURI(header.split('filename=')[1]))
         }
