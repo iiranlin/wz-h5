@@ -37,3 +37,11 @@ export function detailByBack(id){
     method: 'GET',
   })
 }
+
+export function detailBySBack(id){
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/detailBySBack/${id}`,
+    method: 'GET',
+  })
+}
+

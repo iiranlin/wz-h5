@@ -30,7 +30,8 @@
         </li>
         <li>
           <span>退货环节：</span>
-          <span>{{dataList.backNode=='2'?"收货不通过":"报检不通过"}}</span>
+          <span v-if="backNode == '1'">{{dataList.isQualNode=='2'?"质检不通过":""}}</span>
+          <span v-else>{{dataList.backNode=='2'?"收货不通过":"报检不通过"}}</span>
         </li>
         <li>
           <span>退货时间：</span>
@@ -136,7 +137,7 @@
 import {parseTime} from '@/utils'
 import BackToTop from '@/components/BackToTop'
 import indexMixin from '@/view/mixins'
-import {detailByBack} from '@/api/prodmgr-inv/AcceptanceReturn'
+import {detailByBack, detailBySBack} from '@/api/prodmgr-inv/AcceptanceReturn'
 import FilePreview from "@/components/FilePreview.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
 
@@ -201,7 +202,8 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-       detailByBack(this.id).then((res)=>{
+      let url = this.backNode == '1'?detailBySBack:detailByBack
+      url(this.id).then((res)=>{
           if(res.success){
             this.dataList = res.data
           }
