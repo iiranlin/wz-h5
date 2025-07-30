@@ -26,7 +26,7 @@
               <span class="li-span-grey">需求编号：</span>
               <span class="li-span-grey">{{ item.planNumber }}</span>
               <div class="li-title-status">
-                <img :src="checkAuditStatus(item.status)" />
+                <img v-if="checkStatusText(item.status)" :src="checkAuditStatus(item.status)" />
                 <span>{{ checkStatusText(item.status) }}</span>
               </div>
             </div>
@@ -54,10 +54,6 @@
                 <span>提报时间：</span>
                 <span>{{ item.createDate && parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
               </li>
-              <li>
-                <span>需求计划表：</span>
-                <span class="li-span-click list-ul-li-span"><span @click.stop="imgClick(item.fileList[0]?.fileList || [])">{{ item.fileList[0]?.fileList[0]?.fileName }}</span><img @click.stop="handleFileDwonLoad(item.fileList[0]?.fileList[0] || {})" src="/static/icon_file_download.png" /></span>
-              </li>
             </ul>
             <div class="list-ul-button">
               <van-button class="button-info" plain round type="info"
@@ -70,7 +66,7 @@
                 @click="withdrawClick(item)">撤回</van-button>
               <van-button class="button-info" round type="info" v-if="['0'].includes(item.status)">退回经办人</van-button>
               <van-button class="button-info" round type="info" v-if="['0'].includes(item.status)">提交供应商</van-button>
-              <van-button class="button-info" round type="info" v-if="['0'].includes(item.status)">下载需求计划表</van-button>
+              <van-button class="button-info" round type="info" @click="fileDownLoadStream(item)">下载需求计划表</van-button>
             </div>
           </div>
         </van-list>
@@ -84,13 +80,9 @@
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
-import { materialDemandPlanRestList } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialDemandPlanRestList, downloadPlan } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { getUserInfo } from '@/utils/user-info'
 import FilePreview from "@/components/FilePreview.vue"
-function isAndroid() {
-  let userAgent = navigator.userAgent
-  return /Android|adr/gi.test(userAgent)
-}
 export default {
   name: 'DemandSupplyManagement',
   mixins: [indexMixin],
@@ -236,15 +228,12 @@ export default {
         return '/static/icon-success.png'
       }
     },
-    imgClick (data) {
-      const { fileName, filePath } = data[0]
-      this.$refs.filePreview.init(fileName, filePath)
-    },
-    //附件下载
-    handleFileDwonLoad({fileName, filePath}){
-      if (isAndroid()) {
-        Android.fileDownLoad(fileName,filePath)
-      }
+    fileDownLoadStream (item) {
+        downloadPlan(item.id)
+      let userAgent = navigator.userAgent
+      // if(/Android|adr/gi.test(userAgent)){
+      //   downloadPlan(item.id)
+      // }
     }
   }
 }

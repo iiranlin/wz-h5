@@ -1,10 +1,12 @@
 import axios from "axios";
 import store from "@/store";
-import { Dialog, Notify } from "vant";
+import { Dialog, Notify, Toast } from "vant";
 import { getToken, setToken } from "@/utils/auth";
-import { tansParams } from "@/utils/publicMethods";
+import { tansParams, blobValidate } from "@/utils/publicMethods";
+import errorCode from '@/utils/errorCode'
 import cache from '@/plugins/cache'
 import { encrypt, decrypt } from './sm4'
+// import { saveAs } from 'file-saver'
 const secretKey = '1234567890abcdef'
 
 function isAndroid() {
@@ -77,12 +79,15 @@ service.interceptors.request.use(
 );
 service.interceptors.response.use(
   (response) => {
-    if(!response.config.minioSm4){
+    if(!response.config.minioSm4 && !response.config.minioSm4R){
       response.data = JSON.parse(decrypt(response.data, secretKey))
     }
     console.info(response.config.url, response.data)
     // 二进制数据则直接返回
     if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
+      if(response.config.minioSm4R){
+        return response
+      }
       return response.data
     }
     const res = response.data;
@@ -147,25 +152,41 @@ service.interceptors.response.use(
 
 // 通用下载方法
 export function download(url, params, method = 'post') {
-  // downloadLoadingInstance = Loading.service({ text: "正在下载数据，请稍候", spinner: "el-icon-loading", background: "rgba(0, 0, 0, 0.7)", })
-  // return service({method: method, [method == 'post'?'data':'params']: params, url: url, responseType: 'blob'}).then(async (data) => {
-  //     const isLogin = await blobValidate(data.data);
-  //     if (isLogin) {
-  //         const blob = new Blob([data.data])
-  //         const header = data.headers['content-disposition'] || data.headers['Content-Disposition']
-  //         saveAs(blob, decodeURI(header.split('filename=')[1]))
-  //     } else {
-  //         const resText = await data.data.text();
-  //         const rspObj = JSON.parse(resText);
-  //         const errMsg = errorCode[rspObj.code] || rspObj.msg || errorCode['default']
-  //         Message.error(errMsg);
-  //     }
-  //     downloadLoadingInstance.close();
-  // }).catch((r) => {
-  //     console.error(r)
-  //     Message.error('下载文件出现错误，请联系管理员！')
-  //     downloadLoadingInstance.close();
-  // })
+  let toast = Toast.loading({
+    duration: 0,
+    message: "正在下载数据，请稍候",
+    forbidClick: true
+  });
+  return service({method: method, [method == 'post'?'data':'params']: params, url: url, responseType: 'blob', minioSm4R: true}).then(async (data) => {
+      const isLogin = await blobValidate(data.data);
+      if (isLogin) {
+        const blob = new Blob([data.data])
+        const header = data.headers['content-disposition'] || data.headers['Content-Disposition']
+        if (isAndroid()) {
+          Android.fileDownLoadStream(URL.createObjectURL(blob))
+        }else{
+          // saveAs(blob, decodeURI(header.split('filename=')[1]))
+        }
+      } else {
+        const resText = await data.data.text();
+        const rspObj = JSON.parse(resText);
+        const errMsg = errorCode[rspObj.code] || rspObj.msg || errorCode['default']
+        Notify({
+          message: errMsg,
+          type: 'danger',
+          duration: 5 * 1000
+        })
+      }
+      toast.clear()
+  }).catch((r) => {
+      console.error(r)
+      Notify({
+        message: '下载文件出现错误，请联系管理员！',
+        type: 'danger',
+        duration: 5 * 1000
+      })
+      toast.clear()
+  })
 }
 
 export default service;
