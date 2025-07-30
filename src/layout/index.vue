@@ -1,13 +1,13 @@
 <template>
 	<div class="app-wrapper">
-		<div :class="isTabbar?'app-container':'default-container'">
+		<div :class="isTabbar && checkNavMenu().length > 1?'app-container':'default-container'">
 			<transition name="fade-transform" mode="out-in">
         <keep-alive :include="keepPages">
           <router-view :key="key" />
         </keep-alive>
 			</transition>
 		</div>
-		<div class="nav-container" v-show="isTabbar">
+		<div class="nav-container" v-show="isTabbar && checkNavMenu().length > 1">
 			<navbar :navMenu="checkNavMenu()"/>
 		</div>
 	</div>
@@ -124,7 +124,16 @@ export default {
 					link: '/MyManager'
 				},
 			],
-      		userInfo: getUserInfo()
+			//物代
+			materialsAgent:[
+				{
+					title: '需求供应管理',
+					activeIcon: '/static/XQGL_A.png',
+					normalIcon: '/static/XQGL_B.png',
+					link: '/DemandSupplyManagement'
+				}
+			],
+      userInfo: getUserInfo()
 		}
 	},
 	computed: {
@@ -147,7 +156,7 @@ export default {
 		//判断角色菜单
 		checkNavMenu(){
       const deptCode = this.userInfo.deptCode
-      const codeArr = ['FB', 'ZB', 'JL', 'GYS']
+      const codeArr = ['FB', 'ZB', 'JL', 'GYS', 'GYS', 'WZDL']
       let code = ''
       codeArr.forEach( (item) => {
         if(deptCode.startsWith(item)){
@@ -170,6 +179,9 @@ export default {
           },
           'SN': () => {
             return this.supervisionUnitSN
+          },
+          'WZDL': () => {
+            return this.materialsAgent
           }
         }
         return (obj[code] && obj[code]()) || this.constructionUnit

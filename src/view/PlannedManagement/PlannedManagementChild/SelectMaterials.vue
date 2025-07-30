@@ -49,7 +49,7 @@
     <div class="select-materials-list">
       <div class="van-list">
         <van-checkbox-group v-model="materiaId" v-if="filteredList.length" @change="materiaIdChange">
-          <van-checkbox :name="item.uniqueNumber" v-for="(item, index) in filteredList"
+          <van-checkbox :name="item.uniqueNumber || item.allocationUniqueNumber" v-for="(item, index) in filteredList"
             :key="item.uniqueNumber || item.allocationUniqueNumber" :disabled="item.amount === item.cumulativeAmount">
             <ul class="list-ul">
               <li>
@@ -72,7 +72,7 @@
                 <span>已累计计划数量：</span>
                 <span class="li-span-click">{{ item.cumulativeAmount }}</span>
               </li>
-              <li>
+              <li v-if="item.deliveryDate">
                 <span>供应时间：</span>
                 <span>{{ item.deliveryDate }}</span>
               </li>
@@ -80,7 +80,7 @@
                 <span>收货人及联系方式：</span>
                 <span>{{ item.receiver }}</span>
               </li>
-              <li>
+              <li v-if="item.deliveryLocation">
                 <span>交货地点：</span>
                 <span>{{ item.deliveryLocation }}</span>
               </li>
@@ -166,23 +166,25 @@ export default {
       this.loading = true
       getListBySectionId({ contractId }).then(({ data }) => {
         this.materiaId = (this.$store.state.public.materiaList || []).map(item => item.uniqueNumber || item.allocationUniqueNumber)
-        this.allChecked = this.materiaId.length === data.length
         this.materiaList = this.$store.state.public.materiaList
         let interfaceMateriaList = (this.$store.state.public.interfaceMateriaList || [])
-
-        data = data.map((item) => {
+        let dataList = interfaceMateriaList.concat(data)
+        dataList = dataList.filter((item, index, self) => {
+          return self.findIndex(t => ((t.uniqueNumber || t.allocationUniqueNumber) === (item.uniqueNumber || item.allocationUniqueNumber))) === index;
+        }).map((item) => {
           let Obj = item
           interfaceMateriaList.map((val) => {
-            if (item.uniqueNumber == (val.uniqueNumber || val.allocationUniqueNumber)) {
+            if ((item.uniqueNumber || item.allocationUniqueNumber) == val.allocationUniqueNumber) {
               Obj = Object.assign({}, item, { cumulativeAmount: Number(item.cumulativeAmount) - Number(val.planAmount) || 0 })
             }
           })
           return Obj
         })
 
-        const listDataA = data.filter(item => item.amount === item.cumulativeAmount)
-        const listDataB = data.filter(item => !(item.amount === item.cumulativeAmount))
+        const listDataA = dataList.filter(item => item.amount === item.cumulativeAmount)
+        const listDataB = dataList.filter(item => !(item.amount === item.cumulativeAmount))
         this.list = listDataB.concat(listDataA)
+        this.allChecked = this.materiaId.length === this.list.filter(item => item.amount > item.cumulativeAmount).map(item => (item.uniqueNumber || item.allocationUniqueNumber)).length
       }).finally((err) => {
         this.loading = false
       })
@@ -207,16 +209,16 @@ export default {
     },
     allClick() {
       if (this.allChecked) {
-        this.materiaId = this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber)
+        this.materiaId = this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber || item.allocationUniqueNumber)
       } else {
         this.materiaId = []
       }
     },
     materiaIdChange() {
-      this.allChecked = this.materiaId.length === this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => item.uniqueNumber).length
+      this.allChecked = this.materiaId.length === this.filteredList.filter(item => item.amount > item.cumulativeAmount).map(item => (item.uniqueNumber || item.allocationUniqueNumber)).length
       this.$nextTick(() => {
         let materiaList = this.$store.state.public.materiaList.filter(item => this.materiaId.includes(item.uniqueNumber || item.allocationUniqueNumber))
-        const list = this.list.filter(item => this.materiaId.includes(item.uniqueNumber))
+        const list = this.list.filter(item => this.materiaId.includes(item.uniqueNumber || item.allocationUniqueNumber))
         materiaList = materiaList.concat(list)
         let obj = {}
         this.materiaList = materiaList.reduce((cur, next) => {

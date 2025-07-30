@@ -9,10 +9,6 @@
               <van-icon name="search" @click="statusChange()" />
             </template>
           </van-search>
-          <!-- <van-dropdown-menu active-color="#028bff">
-            <van-dropdown-item v-model="statusValue" :options="statusArr" @change="statusChange" />
-          </van-dropdown-menu>
-          <van-button round @click="resetClick">重置</van-button> -->
         </div>
         <van-tabs v-model="statusValue" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
           title-inactive-color="#2e2e2e" @change="statusChange">
@@ -30,8 +26,8 @@
               <span class="li-span-grey">需求编号：</span>
               <span class="li-span-grey">{{ item.planNumber }}</span>
               <div class="li-title-status">
-                <img :src="checkAuditStatus(item.planStatus)" />
-                <span>{{ checkStatusText(item.planStatus) }}</span>
+                <img :src="checkAuditStatus(item.status)" />
+                <span>{{ checkStatusText(item.status) }}</span>
               </div>
             </div>
             <ul class="list-ul" @click="handleWaitItemClick(item)">
@@ -55,53 +51,50 @@
                 <span>{{ item.sectionName }}</span>
               </li>
               <li>
-                <span>提报人：</span>
-                <span>{{ item.createUserName }}</span>
+                <span>提报时间：</span>
+                <span>{{ item.createDate && parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
               </li>
               <li>
-                <span>提报时间：</span>
-                <span>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
+                <span>需求计划表：</span>
+                <span class="li-span-click list-ul-li-span"><span @click.stop="imgClick(item.fileList[0]?.fileList || [])">{{ item.fileList[0]?.fileList[0]?.fileName }}</span><img @click.stop="handleFileDwonLoad(item.fileList[0]?.fileList[0] || {})" src="/static/icon_file_download.png" /></span>
               </li>
             </ul>
             <div class="list-ul-button">
               <van-button class="button-info" plain round type="info"
-                v-if="['6', '7', '8', '9'].includes(item.planStatus)"
+                v-if="!['0', '2'].includes(item.status)"
                 @click="supplyOverviewClick(item)">供应概览</van-button>
               <van-button class="button-info" plain round type="info"
-                v-if="['6', '7', '8', '9'].includes(item.planStatus)"
+                v-if="!['0', '2'].includes(item.status)"
                 @click="logisticsViewClick(item)">物流查看</van-button>
-              <van-button class="button-info" plain round type="info" v-if="['2'].includes(item.planStatus) && isJL"
+              <van-button class="button-info" plain round type="info" v-if="['2'].includes(item.status)"
                 @click="withdrawClick(item)">撤回</van-button>
-              <van-button class="button-info" plain round type="danger"
-                v-if="['1', '0', '5', '10'].includes(item.planStatus) && isJL" @click="deleteClick(item)">删除</van-button>
-              <van-button class="button-info" plain round type="info"
-                v-if="['3', '4', '0', '2'].includes(item.planStatus)"
-                @click="handleProcessClick(item)">查看流程</van-button>
-              <van-button class="button-info" plain round type="default"
-                v-if="['1', '4', '0', '5', '10'].includes(item.planStatus) && isJL" @click="addClick(item)">编辑</van-button>
-              <van-button class="button-info" round type="info"
-                v-if="['1', '4', '0', '5', '10'].includes(item.planStatus) && isJL"
-                @click="handleExamineClick(item)">提交审核</van-button>
+              <van-button class="button-info" round type="info" v-if="['0'].includes(item.status)">退回经办人</van-button>
+              <van-button class="button-info" round type="info" v-if="['0'].includes(item.status)">提交供应商</van-button>
+              <van-button class="button-info" round type="info" v-if="['0'].includes(item.status)">下载需求计划表</van-button>
             </div>
           </div>
         </van-list>
       </van-pull-refresh>
     </div>
-    <van-icon name="plus" @click="addClick()" v-if="isJL"/>
     <back-to-top :className="className"></back-to-top>
-    <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
+    <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
 <script>
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
-import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialDemandPlanRestList } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { getUserInfo } from '@/utils/user-info'
+import FilePreview from "@/components/FilePreview.vue"
+function isAndroid() {
+  let userAgent = navigator.userAgent
+  return /Android|adr/gi.test(userAgent)
+}
 export default {
-  name: 'PlannedManagementList',
+  name: 'DemandSupplyManagement',
   mixins: [indexMixin],
-  components: { BackToTop, activitiAssignee },
+  components: { BackToTop, activitiAssignee, FilePreview },
   beforeRouteLeave (to, from, next) {
     from.meta.plannedManagementIndex = this.statusValue
     this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
@@ -119,17 +112,11 @@ export default {
       statusValue: '',
       statusArr: [
         { text: '全部', value: '' },
-        { text: '已驳回', value: '0' },
-        { text: '未提交', value: '1' },
-        { text: '审核中', value: '2' },
-        { text: '已生效', value: '3' },
-        { text: '修改后同意', value: '4' },
-        { text: '已撤回', value: '5' },
-        { text: '供应中', value: '6' },
-        { text: '收货完成', value: '7' },
-        { text: '已入库', value: '8' },
+        { text: '未提交', value: '0' },
+        { text: '未确认', value: '2' },
+        { text: '已确认', value: '3' },
+        { text: '供货中', value: '4' },
         { text: '已完成', value: '9' },
-        { text: '已退回', value: '10' },
       ],
       listQuery: {
         pageNum: 1,
@@ -139,12 +126,6 @@ export default {
       className: '.planned-management',
       userInfo: getUserInfo(),
 
-    }
-  },
-	computed: {
-    isJL() {
-      const deptCode = this.userInfo.deptCode
-      return !deptCode.startsWith('JL')
     }
   },
   created () {
@@ -187,8 +168,8 @@ export default {
         this.refreshLoading = false;
       }
       const params = {
-        pageStatus: '0',
-        planStatus: this.statusValue,
+        pageStatus: '1',
+        status: this.statusValue,
         queryField: this.searchValue,
         ...this.listQuery
       }
@@ -226,64 +207,11 @@ export default {
     handleWaitItemClick(item) {
       this.$router.push({ name: 'RequirementDetails', query: { id: item.id } })
     },
-    addClick(item) {
-      this.$store.dispatch('public/setMateriaList', [])
-      this.$store.dispatch('public/setInterfaceMateriaList', [])
-      this.$store.dispatch('public/setDemandPlanningInfo', {})
-      if (item) {
-        this.$router.push({ name: 'SaveMaterials', query: { id: item.id, type: 'update' } })
-        return
-      }
-      // this.$router.push({ name: 'RequirementFilling' })
-      this.$router.push({ name: 'SelectContract' })
-    },
     supplyOverviewClick(item) {
       this.$router.push({ name: 'SupplyOverview', query: { id: item.id } })
     },
     logisticsViewClick(item) {
       this.$router.push({ name: 'LogisticsView', query: { id: item.id } })
-    },
-    //去审核点击
-    handleExamineClick(item) {
-      this.$dialog.confirm({
-        title: '标题',
-        message: '确认要提交审核吗？',
-        confirmButtonText: '确认',
-        cancelButtonText: '取消'
-      }).then(() => {
-        this.$refs.activitiAssignee.init(this.businessCode[item.planType], item)
-      })
-    },
-    //选择审核人回调
-    optionsSuccess(assignee, { id, planType }) {
-      materialDemandPlanRestSubmit({ ids: [id], planType: planType, assignee }).then(() => {
-        this.$toast('提交审核成功')
-        this.getList()
-      })
-    },
-    //查看流程点击
-    handleProcessClick(item) {
-      this.$router.push({
-        name: "MyProcess",
-        params: {
-          businessId: item.id
-        },
-      });
-    },
-    deleteClick(item) {
-      this.$dialog.confirm({
-        title: '标题',
-        message: '确认要删除吗？',
-        confirmButtonText: '确认',
-        cancelButtonText: '取消'
-      }).then(() => {
-        materialDemandPlanRestBatchRemove({ ids: [item.id] }).then(({ message }) => {
-          this.$toast(message)
-          this.refreshLoading = true
-          this.listQuery.pageNum = 1
-          this.materialDemandPlanRestList()
-        })
-      })
     },
     withdrawClick(item) {
       this.handleWithdraw({ businessId: item.id, businessType: item.planType == 1 ? 'FBYLXQ' : 'YLXQ' })
@@ -308,6 +236,16 @@ export default {
         return '/static/icon-success.png'
       }
     },
+    imgClick (data) {
+      const { fileName, filePath } = data[0]
+      this.$refs.filePreview.init(fileName, filePath)
+    },
+    //附件下载
+    handleFileDwonLoad({fileName, filePath}){
+      if (isAndroid()) {
+        Android.fileDownLoad(fileName,filePath)
+      }
+    }
   }
 }
 </script>
@@ -342,20 +280,6 @@ export default {
     }
   }
 
-  // .van-search {
-  //   flex: 1;
-
-  //   .van-search__content {
-  //     border-radius: 50px;
-  //     background: #fff;
-  //   }
-
-  //   .van-cell {
-  //     border-radius: 50px;
-  //     background: #fff;
-  //   }
-  // }
-
   .planned-management-list {
     flex: 1;
   }
@@ -376,7 +300,6 @@ export default {
 
 
   .van-list {
-    // padding-top: 10px;
     background: #f8f8f8;
 
     .list-ul-button {
@@ -399,6 +322,22 @@ export default {
       .li-status-completed {
         color: #6f6f6f;
         background: #ededed;
+      }
+    }
+
+    .list-ul-li-span{
+      display: flex;
+      white-space: normal;
+      justify-content: flex-end;
+      span{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      img{
+        flex: none;
+        width: 24px;
+        height: 24px;
       }
     }
   }

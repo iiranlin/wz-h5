@@ -23,7 +23,7 @@
           <span>已累计计划数量：</span>
           <span class="li-span-click">{{ detailInfo.cumulativeAmount }}</span>
         </li>
-        <li>
+        <li v-if="detailInfo.deliveryDate">
           <span>供应时间：</span>
           <span>{{ detailInfo.deliveryDate }}</span>
         </li>
@@ -31,7 +31,7 @@
           <span>收货人及联系方式：</span>
           <span>{{ detailInfo.receiver }}</span>
         </li>
-        <li>
+        <li v-if="detailInfo.deliveryLocation">
           <span>交货地点：</span>
           <span>{{ detailInfo.deliveryLocation }}</span>
         </li>

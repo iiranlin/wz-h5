@@ -168,12 +168,16 @@ export default {
       materialUsedRatio: ''
     }
   },
-  activated() {
-    this.materiaList = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
-    this.$store.dispatch('public/setMateriaList', this.materiaList)
-    if(!this.materiaList.length){
-      this.init()
+	watch: {
+    'sectionInfo.fileList': {
+      handler(newVal) {
+        this.$store.dispatch('public/setDemandPlanningInfo', this.sectionInfo)
+      },
+      deep: true
     }
+  },
+  activated() {
+    this.init()
   },
   mounted() {
     this.init()
@@ -186,25 +190,24 @@ export default {
       this.queryType = type
       this.materialUsedRatio = materialUsedRatio
       this.materiaList = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
+      this.$store.dispatch('public/setMateriaList', this.materiaList)
+      const demandPlanningInfo = this.$store.state.public.demandPlanningInfo || {}
       if (type != 'update') {
-        this.getSectionProject()
+        if (JSON.stringify(demandPlanningInfo) === '{}') {
+          this.getSectionProject()
+        }
       } else {
-        this.materialDemandPlanRestDetail()
+        if(!this.materiaList.length){
+          this.materialDemandPlanRestDetail()
+        }
+      }
+      
+      if (JSON.stringify(demandPlanningInfo) !== '{}') {
+        this.sectionInfo = demandPlanningInfo
       }
     },
     historyCache(obj, index, isDefault) {
       const data = this.$store.state.public.materiaList || []
-      // const historyList = this.$store.state.public.historyList || {}
-      // if (historyList) {
-      //   for (const key in obj) {
-      //     if (historyList[key]) {
-      //       obj[key] = obj[key] || historyList[key][index] || ''
-      //     }
-      //   }
-      // }
-      // if (isDefault) {
-      //   return obj
-      // }
       const finallyData = data.map((item) => Object.assign({}, item, {
         supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
         minDate: this.minDate,
@@ -212,7 +215,6 @@ export default {
         planAmount: item.planAmount || item.amount - item.cumulativeAmount,
         allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber,
         field2: item.field2 || item.deliveryLocation,
-        // addr: item.addr || obj.addr, field0: item.field0 || obj.field0, field1: item.field1 || obj.field1
       }))
 
       this.editedMateriaList = finallyData.filter(item => item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1)
@@ -223,32 +225,36 @@ export default {
     async getSectionProject() {
       const res = await getSectionProject()
       this.sectionInfo = {
+        projectName: res.data.projectName,
         sectionName: res.data.sectionName,
         title: dayjs().format('YYYY年MM月') + '甲供物资计划申请表',
         deptName: this.userInfo?.deptName,
         fileList: []
       }
+      this.$store.dispatch('public/setDemandPlanningInfo', this.sectionInfo)
     },
     materialDemandPlanRestDetail() {
       materialDemandPlanRestDetail(this.queryId).then(({ data }) => {
         this.contractId = data.contractId
         this.sectionInfo = {
+          projectName: data.projectName,
           sectionName: data.sectionName,
           title: dayjs().format('YYYY年MM月') + '甲供物资计划申请表',
           deptName: data.deptName,
           fileList: data.fileList[0]?.fileList || []
         }
+        this.$store.dispatch('public/setDemandPlanningInfo', this.sectionInfo)
         this.materiaList = data.details.map((item) => {
           return Object.assign({}, item, { supplyDate: item.supplyDate && parseTime(item.supplyDate, '{y}-{m}-{d}'), minDate: item.supplyDate ? new Date(item.supplyDate) : this.minDate, showDatePicker: this.showDatePicker, backPlanAmount: item.planAmount || 0 })
         })
         this.$store.dispatch('public/setMateriaList', this.materiaList)
-        this.$store.dispatch('public/setInterfaceMateriaList', this.materiaList)
+        this.$store.dispatch('public/setInterfaceMateriaList', [...this.materiaList])
         this.editedMateriaList = this.materiaList.filter(item => item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1)
         this.editMateriaList = this.materiaList.filter(item => !(item.planAmount && item.supplyDate && item.addr && item.field2 && item.receiver && item.field0 && item.field1))
       })
     },
     cumulativeAmount(item) {
-      return this.queryType == 'update' ? Number(item.cumulativeAmount) - Number(item.backPlanAmount || 0) + (Number(item.planAmount) || 0) : Number(item.cumulativeAmount) + (Number(item.planAmount) || 0)
+      return this.queryType == 'update' && !item.uniqueNumber ?  +item.cumulativeAmount - +item.backPlanAmount + +(item.planAmount || 0) : +item.cumulativeAmount + +(item.planAmount || 0)
     },
     dateClick(item, index) {
       this.$set(this.materiaList, index, Object.assign({}, item, { showDatePicker: true }))
@@ -263,6 +269,7 @@ export default {
       const row = this.materiaList[index]
       const uniqueNumber = row.uniqueNumber || row.allocationUniqueNumber
       this.editedMateriaList = this.editedMateriaList.filter(item => !(uniqueNumber === item.uniqueNumber || uniqueNumber === item.allocationUniqueNumber))
+      this.editMateriaList = this.editMateriaList.filter(item => !(uniqueNumber === item.uniqueNumber || uniqueNumber === item.allocationUniqueNumber))
       this.materiaList.splice(index, 1)
       this.$store.dispatch('public/setMateriaList', this.materiaList)
     },
@@ -292,17 +299,12 @@ export default {
         fileList: [{ fileList: this.sectionInfo.fileList }],
         detailsModifyParams: this.materiaList.map(item => ({ ...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber }))
       }
-      // let obj = { addr: [], field2: [], field0: [], field1: [] }
-      // obj.addr = this.materiaList.map(item => item.addr)
-      // obj.field2 = this.materiaList.map(item => item.field2)
-      // obj.field0 = this.materiaList.map(item => item.field0)
-      // obj.field1 = this.materiaList.map(item => item.field1)
 
       materialDemandPlanRestSaveModify(data, type).then(({ data, message }) => {
-        // this.$store.dispatch('public/setHistoryList', obj)
         id = data || id
         this.$toast(message)
-        this.$router.push({ name: 'SaveSuccess', query: { id } })
+        // this.$router.push({ name: 'SaveSuccess', query: { id } })
+        this.$router.push({ name: 'PlannedManagementList' })
       })
     },
     returnClick() {
@@ -357,9 +359,6 @@ export default {
       }
       return true
     },
-    // fieldClick($event, name, index) {
-    //   this.$refs.historyList.init($event, name, index)
-    // },
     historyClick(data, name, index, historyIndex) {
       let obj = { addr: '', field2: '', field0: '', field1: '' }
       let finallyData = this.historyCache(obj, historyIndex, true)
@@ -374,7 +373,8 @@ export default {
       this.$refs.editedList.init()
     },
     editedClick(item, index) {
-      const query = this.queryType == 'update' ? { uniqueNumber: item.uniqueNumber || item.allocationUniqueNumber, contractId: this.contractId, type: this.queryType, id: this.queryId } : { uniqueNumber: item.uniqueNumber || item.allocationUniqueNumber, contractId: this.contractId }
+      this.$store.dispatch('public/setMateriaData', item)
+      const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId } : { contractId: this.contractId }
       this.$router.push({ name: 'EditedMaterials', query })
     },
     btnClick(code) {

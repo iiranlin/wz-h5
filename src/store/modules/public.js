@@ -1,16 +1,25 @@
 const state = {
-  materiaList: [],
-  interfaceMateriaList: [],
-  historyList: JSON.parse(localStorage.getItem('historyList')) || {},
+  //计划管理
+  demandPlanningInfo: {}, //编辑页主信息
+  materiaList: [], //编辑页选中的物资数据
+  interfaceMateriaList: [], //编辑页回显的物资原始数据
+  materiaData: {}, //编辑页单个物资编辑的数据
+  historyData: {}, //编辑页物资收货信息
+  historyList: JSON.parse(localStorage.getItem('historyList')) || {}, //历史记录前端自己存的暂时不用了
+
   sendGoods:{},
   goodsSelect:[],
   editSendGoods:{},
   editGoods:{},
-  historyData: {},
+
+  //滚动条回到原来位置
   scrollPosition: {}
 };
 
 const mutations = {
+  SET_DEMAND_PLANNING_INFO: (state, demandPlanningInfo) => {
+    state.demandPlanningInfo = demandPlanningInfo;
+  },
   SET_MATERIA_LIST: (state, materiaList) => {
     state.materiaList = materiaList;
   },
@@ -51,10 +60,16 @@ const mutations = {
   SET_SCROLL_POSITION(state, scrollPosition) {
     const inData = state.scrollPosition
     state.scrollPosition = {...inData, ...scrollPosition}
-  }
+  },
+  SET_MATERIA_DATA:(state, materiaData)=>{
+    state.materiaData = materiaData
+  },
 };
 
 const actions = {
+  setDemandPlanningInfo({ commit }, data) {
+    commit('SET_DEMAND_PLANNING_INFO', data)
+  },
   setMateriaList({ commit }, data) {
     commit('SET_MATERIA_LIST', data)
   },
@@ -82,6 +97,9 @@ const actions = {
   },
   setScrollPosition({commit}, data){
     commit('SET_SCROLL_POSITION', data)
+  },
+  setMateriaData({commit}, data){
+    commit('SET_MATERIA_DATA', data)
   }
 };
 

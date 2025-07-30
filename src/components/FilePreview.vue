@@ -189,14 +189,14 @@ export default {
     bottom: 0;
     right: 0;
     background: rgba(0, 0, 0, .6);
-    z-index: 10;
+    z-index: 1000;
 
     .pass_bullet {
       width: 90%;
       height: 80%;
       box-shadow: 0px -5px 10px 0px rgba(13, 36, 105, 0.22);
       border-radius: 8px;
-      z-index: 20;
+      z-index: 1001;
       background: #FFFFFF;
       position: absolute;
       top: 50%;

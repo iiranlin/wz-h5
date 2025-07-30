@@ -81,6 +81,13 @@ export const routes = [
         meta: { title: '退货管理', isTabbar: true },
         component: () => import('@/view/Demand/Return.vue')
       },
+      {
+        path: '/DemandSupplyManagement',
+        name: 'DemandSupplyManagement',
+        meta: { title: '需求供应管理', isTabbar: true },
+        component: () => import('@/view/DemandSupplyManagement/index.vue')
+      },
+      
     ]
   },
   {

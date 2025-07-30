@@ -32,7 +32,7 @@
           <van-field label="本次计划数量" placeholder="请输入数量" required clearable
             input-align="right">
             <template #input>
-              <van-stepper v-model="sectionInfo.planAmount" :max="sectionInfo.amount - sectionInfo.cumulativeAmount" />
+              <van-stepper v-model="sectionInfo.planAmount" :min="0" :max="+sectionInfo.amount - +sectionInfo.cumulativeAmount + +(sectionInfo.backPlanAmount || 0)" />
             </template>
           </van-field>
         </li>
@@ -149,25 +149,10 @@ export default {
     return {
       sectionInfo: {},
       queryType: '',
-      uniqueNumber: '',
       contractId: '',
       queryId: '',
     }
   },
-  // watch: {
-  //   sectionInfo: {
-  //     handler(newVal) {
-  //       const data = this.$store.state.public.materiaList || []
-  //       data.forEach((item, index) => {
-  //         if(item.uniqueNumber == newVal.uniqueNumber || item.allocationUniqueNumber == newVal.allocationUniqueNumber){
-  //           this.$set(data, index, newVal)
-  //         }
-  //       });
-  //       this.$store.dispatch('public/setMateriaList', data)
-  //     },
-  //     deep: true
-  //   }
-  // },
   activated() {
     const historyData = this.$store.state.public.historyData || {}
     if (JSON.stringify(historyData) === '{}') {
@@ -182,16 +167,14 @@ export default {
   },
   methods: {
     init() {
-      const { uniqueNumber = null, type = '', contractId = '', id = '' } = this.$route.query
-      this.uniqueNumber = uniqueNumber
+      const { type = '', contractId = '', id = '' } = this.$route.query
       this.contractId = contractId
       this.queryType = type
       this.queryId = id
-      const data = this.$store.state.public.materiaList || []
-      this.sectionInfo = data.filter(item => item.uniqueNumber === uniqueNumber || item.allocationUniqueNumber === uniqueNumber)[0]
+      this.sectionInfo = Object.assign({}, this.$store.state.public.materiaData || {})
     },
     cumulativeAmount(item) {
-      return this.queryType == 'update' ? Number(item.cumulativeAmount) - Number(item.backPlanAmount || 0) + (Number(item.planAmount) || 0) : Number(item.cumulativeAmount) + (Number(item.planAmount) || 0)
+      return this.queryType == 'update' && !item.uniqueNumber ?  +item.cumulativeAmount - +item.backPlanAmount + +(item.planAmount || 0) : +(item.cumulativeAmount || 0) + +(item.planAmount || 0)
     },
     dateClick(item) {
       this.sectionInfo = Object.assign({}, item, { showDatePicker: true })
@@ -203,7 +186,7 @@ export default {
       this.sectionInfo = Object.assign({}, item, { showDatePicker: false })
     },
     receiptClick() {
-      this.$router.push({ name: 'ReceiptList', query: { uniqueNumber: this.uniqueNumber, contractId: this.contractId, type: this.queryType, id: this.queryId } })
+      this.$router.push({ name: 'ReceiptList', query: { contractId: this.contractId, type: this.queryType, id: this.queryId } })
     },
     createClick() {
       this.$router.push({ name: 'ReceiptOperate', query: { type: 'create' } })

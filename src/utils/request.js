@@ -145,4 +145,27 @@ service.interceptors.response.use(
   }
 );
 
+// 通用下载方法
+export function download(url, params, method = 'post') {
+  // downloadLoadingInstance = Loading.service({ text: "正在下载数据，请稍候", spinner: "el-icon-loading", background: "rgba(0, 0, 0, 0.7)", })
+  // return service({method: method, [method == 'post'?'data':'params']: params, url: url, responseType: 'blob'}).then(async (data) => {
+  //     const isLogin = await blobValidate(data.data);
+  //     if (isLogin) {
+  //         const blob = new Blob([data.data])
+  //         const header = data.headers['content-disposition'] || data.headers['Content-Disposition']
+  //         saveAs(blob, decodeURI(header.split('filename=')[1]))
+  //     } else {
+  //         const resText = await data.data.text();
+  //         const rspObj = JSON.parse(resText);
+  //         const errMsg = errorCode[rspObj.code] || rspObj.msg || errorCode['default']
+  //         Message.error(errMsg);
+  //     }
+  //     downloadLoadingInstance.close();
+  // }).catch((r) => {
+  //     console.error(r)
+  //     Message.error('下载文件出现错误，请联系管理员！')
+  //     downloadLoadingInstance.close();
+  // })
+}
+
 export default service;
