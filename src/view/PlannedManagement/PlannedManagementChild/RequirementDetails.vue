@@ -110,7 +110,11 @@
       </div>
     </van-sticky>
     <material-details :list="filteredList" :planStatus="detail.planStatus" :searchChecked="searchChecked"></material-details>
-    <div class="default-button-container" v-if="['1', '4', '0', '5', '10'].includes(detail.planStatus) && isJL">
+    <div class="default-button-container" v-if="queryName === 'DemandSupplyManagement' && ['0'].includes(detail.status)">
+      <van-button class="button-info" round @click="returnClick(detail)"><img src="@/assets/img/Icon-detailInfo.png"/>退回经办人</van-button>
+      <van-button class="button-info" round type="info" @click="submitClick(detail)">提交供应商</van-button>
+    </div>
+    <div class="default-button-container" v-else-if="['1', '4', '0', '5', '10'].includes(detail.planStatus) && isJL">
       <van-button class="button-info" round type="info" @click="handleExamineClick(detail)">提交审核</van-button>
     </div>
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
@@ -158,7 +162,8 @@ export default {
       recordList: [],
       historyData: {},
       searchChecked: true,
-      userInfo: getUserInfo()
+      userInfo: getUserInfo(),
+      queryName: ''
     }
   },
   computed: {
@@ -180,7 +185,8 @@ export default {
   activated() {
   },
   mounted() {
-    const id = this.$route.query.id
+    const {id = null, name = ''} = this.$route.query
+    this.queryName = name
     if (id) {
       this.materialDemandPlanRestDetail(id)
       this.getBatch(id)
@@ -253,7 +259,13 @@ export default {
     },
     logisticsClick(item) {
       this.$router.push({ name: 'LogisticsView', query: { id: this.detail.id, shipmentBatchNumber: item.shipmentBatchNumber } })
-    }
+    },
+    submitClick (item) {
+      this.$router.push({name: 'SubmitSupplier', query: {id: item.id}})
+    },
+    returnClick (item) {
+      this.$router.push({name: 'ReturnHandledBy', query: {id: item.id}})
+    },
   },
 }
 </script>
@@ -445,6 +457,14 @@ export default {
       ::v-deep .van-switch__node {
         width: 18px;
         height: 18px;
+      }
+    }
+  }
+  .default-button-container{
+    .button-info{
+      width: 169px;
+      img{
+        vertical-align: middle;
       }
     }
   }

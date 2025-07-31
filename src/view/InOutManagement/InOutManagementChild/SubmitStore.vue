@@ -73,7 +73,7 @@
                     <span class="li-span-click">{{ item.planAmount }}</span>
                   </li>
                   <li class="li-item-overlength">
-                    <span>本次收货数量：</span>
+                    <span>本次实收数量：</span>
                     <span class="li-span-click">{{ item.putTotal }}</span>
                   </li>
                   <li class="li-item-overlength">

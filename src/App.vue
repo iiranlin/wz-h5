@@ -28,7 +28,7 @@ export default {
     },
     isTablet() {
       const userAgent = navigator.userAgent.toLowerCase()
-      const isMobileUA = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|windows phone|phone|webos/i.test(userAgent)
+      const isMobileUA = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|windows phone|phone|webos|HarmonyOS/i.test(userAgent)
       const isTabletUA = /ipad|tablet/i.test(userAgent)
       const screenWidth = window.innerWidth;
       return isTabletUA || (isMobileUA && screenWidth > 768)

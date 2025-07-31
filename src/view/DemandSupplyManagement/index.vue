@@ -63,9 +63,9 @@
                 v-if="!['0', '2'].includes(item.status)"
                 @click="logisticsViewClick(item)">物流查看</van-button>
               <van-button class="button-info" plain round type="info" v-if="['2'].includes(item.status)"
-                @click="withdrawClick(item)">撤回</van-button>
-              <van-button class="button-info" round type="info" v-if="['0'].includes(item.status)">退回经办人</van-button>
-              <van-button class="button-info" round type="info" v-if="['0'].includes(item.status)">提交供应商</van-button>
+                @click="recallClick(item)">撤回</van-button>
+              <van-button class="button-info" round v-if="['0'].includes(item.status)" @click="returnClick(item)">退回经办人</van-button>
+              <van-button class="button-info" plain round type="info" v-if="['0'].includes(item.status)" @click="submitClick(item)">提交供应商</van-button>
               <van-button class="button-info" round type="info" @click="fileDownLoadStream(item)">下载需求计划表</van-button>
             </div>
           </div>
@@ -80,7 +80,7 @@
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
-import { materialDemandPlanRestList, downloadPlan } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialDemandPlanRestList, downloadPlan, recall } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { getUserInfo } from '@/utils/user-info'
 import FilePreview from "@/components/FilePreview.vue"
 export default {
@@ -197,16 +197,13 @@ export default {
       this.onLoad();
     },
     handleWaitItemClick(item) {
-      this.$router.push({ name: 'RequirementDetails', query: { id: item.id } })
+      this.$router.push({ name: 'RequirementDetails', query: { id: item.id, name: 'DemandSupplyManagement' } })
     },
     supplyOverviewClick(item) {
       this.$router.push({ name: 'SupplyOverview', query: { id: item.id } })
     },
     logisticsViewClick(item) {
       this.$router.push({ name: 'LogisticsView', query: { id: item.id } })
-    },
-    withdrawClick(item) {
-      this.handleWithdraw({ businessId: item.id, businessType: item.planType == 1 ? 'FBYLXQ' : 'YLXQ' })
     },
     checkStatusText(status) {
       let name = ''
@@ -228,12 +225,27 @@ export default {
         return '/static/icon-success.png'
       }
     },
+    recallClick ({id}) {
+      this.$dialog.confirm({
+        title: '标题',
+        message: '是否确认撤回?',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then( () => {
+        return recall({ id })
+      }).then(() => {
+        this.$toast("撤回成功")
+        this.getList()
+      })
+    },
+    returnClick (item) {
+      this.$router.push({name: 'ReturnHandledBy', query: {id: item.id}})
+    },
+    submitClick (item) {
+      this.$router.push({name: 'SubmitSupplier', query: {id: item.id}})
+    },
     fileDownLoadStream (item) {
-        downloadPlan(item.id)
-      let userAgent = navigator.userAgent
-      // if(/Android|adr/gi.test(userAgent)){
-      //   downloadPlan(item.id)
-      // }
+      downloadPlan(item.id)
     }
   }
 }

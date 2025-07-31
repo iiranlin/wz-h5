@@ -223,6 +223,25 @@ export const routes = [
     ]
   },
   {
+    path: '/DemandSupplyManagementChild',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'SubmitSupplier',
+        name: 'SubmitSupplier',
+        meta: { title: '提交供应商' },
+        component: () => import('@/view/DemandSupplyManagement/DemandSupplyManagementChild/SubmitSupplier.vue')
+      },
+      {
+        path: 'ReturnHandledBy',
+        name: 'ReturnHandledBy',
+        meta: { title: '退回经办人' },
+        component: () => import('@/view/DemandSupplyManagement/DemandSupplyManagementChild/ReturnHandledBy.vue')
+      }
+    ]
+  },
+  {
     path: '/InOutManagementChild',
     component: Layout,
     hidden: true,

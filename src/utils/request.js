@@ -2,17 +2,15 @@ import axios from "axios";
 import store from "@/store";
 import { Dialog, Notify, Toast } from "vant";
 import { getToken, setToken } from "@/utils/auth";
+import { isAndroid } from "@/utils";
 import { tansParams, blobValidate } from "@/utils/publicMethods";
 import errorCode from '@/utils/errorCode'
 import cache from '@/plugins/cache'
 import { encrypt, decrypt } from './sm4'
-// import { saveAs } from 'file-saver'
+import { saveAs } from 'file-saver'
+
 const secretKey = '1234567890abcdef'
 
-function isAndroid() {
-  let userAgent = navigator.userAgent
-  return /Android|adr/gi.test(userAgent)
-}
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -159,19 +157,18 @@ export function download(url, params, method = 'post') {
   });
   return service({method: method, [method == 'post'?'data':'params']: params, url: url, responseType: 'blob', minioSm4R: true}).then(async (data) => {
       const isLogin = await blobValidate(data.data);
+      const headers = data.headers['content-disposition'] || data.headers['Content-Disposition']
       if (isLogin) {
         const blob = new Blob([data.data])
-        const header = data.headers['content-disposition'] || data.headers['Content-Disposition']
         if (isAndroid()) {
-          // Android.fileDownLoadStream(URL.createObjectURL(blob))
-          var reader = new FileReader();
+          let reader = new FileReader()
           reader.readAsDataURL(blob)
           reader.onloadend = function() {
-            var base64data = reader.result;
-            Android.getBase64FromBlobData(base64data)
+            const base64data = reader.result
+            Android.getBase64FromBlobData(base64data, decodeURI(headers.split('filename=')[1]))
           }
         }else{
-          // saveAs(blob, decodeURI(header.split('filename=')[1]))
+          saveAs(blob, decodeURI(headers.split('filename=')[1]))
         }
       } else {
         const resText = await data.data.text();

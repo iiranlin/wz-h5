@@ -252,4 +252,9 @@ export function download(blob, fileName) {
   a.click();
   URL.revokeObjectURL(url);
   document.body.removeChild(a);
-} 
+}
+
+export function isAndroid() {
+  let userAgent = navigator.userAgent
+  return /Android|adr/gi.test(userAgent)
+}

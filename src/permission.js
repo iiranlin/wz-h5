@@ -1,11 +1,8 @@
 import router from "./router"
 import store from "./store"
 import { getToken, setToken } from "@/utils/auth"
+import { isAndroid } from "@/utils"
 
-function isAndroid() {
-  let userAgent = navigator.userAgent
-  return /Android|adr/gi.test(userAgent)
-}
 
 const whiteList = [""] // no redirect whitelist
 router.beforeEach(async (to, from, next) => {

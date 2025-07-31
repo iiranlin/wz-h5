@@ -19,17 +19,10 @@
     </div>
 </template>
 <script>
-import {minioDownload} from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
-
-function isAndroid() {
-  let userAgent = navigator.userAgent
-  return /Android|adr/gi.test(userAgent)
-}
-
+import { isAndroid } from "@/utils"
 export default {
     components: {FilePreview},
-
     props: {
         title:{
             type: String,

@@ -116,3 +116,30 @@ export function materialSupplierOutRestDetail(id) {
 export const downloadPlan = (data) => {
   return download(`${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/export`, data)
 }
+
+// 提交给供应商
+export const submitSeller = (data) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/submitSeller`,
+    method: 'post',
+    data
+  })
+}
+
+// 需求供应商撤回
+export const recall = (data) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/recall`,
+    method: 'post',
+    data
+  })
+}
+
+// 需求供应商退回经办人
+export const backUp = (params) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/backUp`,
+    method: 'get',
+    params
+  })
+}

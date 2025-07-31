@@ -15,12 +15,7 @@
 <script>
 import {Navbar} from './components'
 import { getUserInfo } from '@/utils/user-info'
-
-function isAndroid() {
-  let userAgent = navigator.userAgent
-  return /Android|adr/gi.test(userAgent)
-}
-
+import { isAndroid } from "@/utils"
 export default {
 	name: 'Layout',
 	components: {
