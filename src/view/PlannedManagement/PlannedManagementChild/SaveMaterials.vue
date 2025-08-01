@@ -186,7 +186,7 @@ export default {
     init() {
       const { id = null, contractId = null, type = '', materialUsedRatio } = this.$route.query
       this.queryId = id
-      this.contractId = contractId
+      this.contractId = contractId || this.contractId
       this.queryType = type
       this.materialUsedRatio = materialUsedRatio
       this.materiaList = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
