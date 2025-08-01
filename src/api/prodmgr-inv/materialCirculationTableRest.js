@@ -54,3 +54,16 @@ export const detailByStore = (id) => {
     method: 'get',
   })
 }
+
+/**
+ * 收货提交审核
+ * @param {*} params 
+ * @returns 
+ */
+export function materialCirculationTableRestSubmit(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/submit`,
+    method: 'post',
+    data
+  })
+}

@@ -231,7 +231,7 @@ export default {
       this.$store.dispatch('public/setInterfaceMateriaList', [])
       this.$store.dispatch('public/setDemandPlanningInfo', {})
       if (item) {
-        this.$router.push({ name: 'SaveMaterials', query: { id: item.id, type: 'update' } })
+        this.$router.push({ name: 'SaveMaterials', query: { id: item.id, contractId: item.contractId, type: 'update' } })
         return
       }
       // this.$router.push({ name: 'RequirementFilling' })

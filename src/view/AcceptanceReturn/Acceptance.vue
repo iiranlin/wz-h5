@@ -81,25 +81,30 @@
                     </van-tag>
                   </li> -->
                 </ul>
-                <div class="list-ul-button" v-if="item.takeStatus === '1'">
-                  <van-button class="button-info" round type="info" @click.stop="handleDoAccept(item)">初验收货</van-button>
+                <div class="list-ul-button">
+                  <van-button class="button-info" round type="info" v-if="item.takeStatus === '1'" @click.stop="handleDoAccept(item)">初验收货</van-button>
+                  <!-- <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">提交审核</van-button> -->
                 </div>
               </div>
             </van-list>
           </van-pull-refresh>
     <back-to-top :className="className"></back-to-top>
+    <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
   </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
+import activitiAssignee from '@/components/activitiAssignee'
 import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
+import { materialCirculationTableRestSubmit } from '@/api/prodmgr-inv/materialCirculationTableRest'
+
 
 export default {
   name: 'Acceptance',
   mixins: [keepPages, indexMixin],
-  components:{BackToTop},
+  components:{BackToTop, activitiAssignee},
   data() {
     return {
       className: '.in-out-management',
@@ -283,6 +288,24 @@ export default {
     },
     tabsChange(){
       this.allRefresh();
+    },
+    //选择审核人回调
+    optionsSuccess(assignee, { id, planType }) {
+      materialCirculationTableRestSubmit({ ids: [id], planType: planType, assignee }).then(() => {
+        this.$toast('提交审核成功')
+        this.allRefresh()
+      })
+    },
+    //去审核点击
+    handleExamineClick(item) {
+      this.$dialog.confirm({
+        title: '标题',
+        message: '确认要提交审核吗？',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.$refs.activitiAssignee.init('SH', item)
+      })
     },
   }
 }

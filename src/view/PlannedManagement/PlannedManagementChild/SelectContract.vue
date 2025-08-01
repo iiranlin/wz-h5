@@ -186,10 +186,6 @@ export default {
     background: #f8f8f8;
   }
 
-  .button-info {
-    // min-width: 150px;
-  }
-
   .select-Contract-money {
     :nth-child(1) {
       width: auto !important;
