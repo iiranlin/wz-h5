@@ -29,7 +29,7 @@
 </template>
 <script>
 import IndexDetail from './components/indexDetail'
-import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { defaultTake } from '@/api/prodmgr-inv/AcceptanceReturn'
 export default {
   name: 'RequirementDetails',
   components: { IndexDetail, },
@@ -47,16 +47,16 @@ export default {
   },
   mounted() {
     const id = this.$route.params.businessId
-    id && this.materialDemandPlanRestDetail(id)
+    id && this.defaultTake(id)
   },
   methods: {
-    materialDemandPlanRestDetail(id) {
+    defaultTake(id) {
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
         forbidClick: true
       });
-      materialDemandPlanRestDetail(id).then(({ data }) => {
+      defaultTake(id).then(({ data }) => {
         this.detail = data
       }).finally((err) => {
         toast.clear()
