@@ -54,7 +54,8 @@ export default {
         }
     },
     created () {
-        this.businessId = this.$route.params.businessId;
+        let { workflowId, businessId } = this.$route.params
+        this.businessId = workflowId || businessId
         this.getList();
     },
     methods: {
