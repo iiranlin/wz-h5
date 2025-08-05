@@ -30,6 +30,7 @@
 <script>
 import IndexDetail from './components/indexDetail'
 import { defaultTake } from '@/api/prodmgr-inv/AcceptanceReturn'
+import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
 export default {
   name: 'RequirementDetails',
   components: { IndexDetail, },
@@ -39,24 +40,31 @@ export default {
       detail: {
         details: []
       },
+      businessType: "",
     }
   },
   created() {
   },
   activated() {
   },
+  computed: {
+    detailApi(){
+      return this.businessType === "RK" ? defaultTake : materialDemandPlanRestDetail
+    },
+  },
   mounted() {
-    const id = this.$route.params.businessId
-    id && this.defaultTake(id)
+    const { businessType, businessId: id } = this.$route.params
+    this.businessType = businessType
+    id && this.materialDemandPlanRestDetail(id)
   },
   methods: {
-    defaultTake(id) {
+    materialDemandPlanRestDetail(id) {
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
         forbidClick: true
       });
-      defaultTake(id).then(({ data }) => {
+      this.detailApi(id).then(({ data }) => {
         this.detail = data
       }).finally((err) => {
         toast.clear()

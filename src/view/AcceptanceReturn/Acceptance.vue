@@ -82,8 +82,12 @@
                   </li> -->
                 </ul>
                 <div class="list-ul-button">
-                  <van-button class="button-info" round type="info" v-if="item.takeStatus === '1'" @click.stop="handleDoAccept(item)">初验收货</van-button>
-                  <!-- <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">提交审核</van-button> -->
+                  <!-- 状态不是未收货，按钮全不能操作 -->
+                  <van-button class="button-info" round type="info" v-if="item.takeStatus === '1'" @click.stop="handleDoAccept(item)">收货</van-button>
+                  <!--  非审核中不允许撤回 -->
+                  <van-button class="button-info" plain round type="info" v-if="item.takeStatus === '5'" @click.stop="recallClick(item)">撤回</van-button>
+                  <!--  未收货不能下载 -->
+                  <van-button class="button-info" round type="info" v-if="!['1', '5'].includes(item.takeStatus)" @click.stop="downLoadAcceptanceOrder(item)">下载验收单</van-button>
                 </div>
               </div>
             </van-list>
@@ -99,7 +103,7 @@ import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 import { materialCirculationTableRestSubmit } from '@/api/prodmgr-inv/materialCirculationTableRest'
-
+import { recall } from '@/api/prodmgr-inv/audit'
 
 export default {
   name: 'Acceptance',
@@ -307,6 +311,23 @@ export default {
         this.$refs.activitiAssignee.init('SH', item)
       })
     },
+    // 撤回
+    recallClick ({id}) {
+      this.$dialog.confirm({
+        title: '标题',
+        message: '是否确认撤回?',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then( () => {
+        return recall({ businessId:id, businessType:'SHLC' })
+      }).then(() => {
+        this.$toast("撤回成功")
+        this.getList()
+      })
+    },
+    // 下载验收单
+    downLoadAcceptanceOrder(item) {
+    }
   }
 }
 </script>
