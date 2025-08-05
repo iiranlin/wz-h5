@@ -19,10 +19,10 @@
           <span>供应商：</span>
           <span>{{ contractData.seller }}</span>
         </li>
-        <li class="li-item-overlength">
+        <!-- <li class="li-item-overlength">
           <span>计划金额比例：</span>
           <span class="li-span-click">{{ materialUsedRatio }}%</span>
-        </li>
+        </li> -->
       </ul>
       <!-- <div class="list-ul-button" v-if="queryType != 'update'">
         <van-tag type="primary" round size="medium" @click="selectClick">选择合同</van-tag>
