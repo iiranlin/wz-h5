@@ -223,7 +223,14 @@ export default {
     },
     //查看流程点击
     handleProcessClick(item) {
-      this.$router.push({ name: "MyProcess", params: { businessId: item.id, workflowId: item.storeMiddleId } })
+      this.$router.push({ 
+        name: "MyProcess", 
+        params: { 
+          businessId: item.id, 
+          workflowId: item.storeMiddleId,
+          businessType: 'RK',
+        } 
+      })
     },
     detailsClick(key, item) {
       const objKey = {
