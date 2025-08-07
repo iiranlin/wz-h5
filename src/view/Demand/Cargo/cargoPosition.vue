@@ -74,7 +74,10 @@ export default {
     }
   },
   methods: {
-    cancelDiaLog() {
+    cancelDiaLog(event) {
+      if (event) {
+        event.preventDefault()
+      }
       this.formKey++
       this.$router.push({path: '/Information'})
     },
