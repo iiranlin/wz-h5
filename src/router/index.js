@@ -344,6 +344,42 @@ export const routes = [
         meta: { title: '选择发货物资' },
       },
       {
+        path: 'ReceiptLists',
+        name: 'ReceiptLists',
+        meta: { title: '选择收货信息' },
+        component: () => import('@/view/Demand/SendGoods/ReceiptList.vue')
+      },
+      {
+        path: 'EditedMaterialGoods',
+        name: 'EditedMaterialGoods',
+        meta: { title: '编辑物资' },
+        component: () => import('@/view/Demand/SendGoods/EditedMaterials.vue')
+      },
+      {
+        path: 'ReceiptOperates',
+        name: 'ReceiptOperates',
+        component: () => import('@/view/Demand/SendGoods/ReceiptOperate.vue'),
+        beforeEnter(to, from, next) {
+          to.meta.title = `${typeName[to.query.type]}收货信息`,
+            next()
+        }
+      },
+      {
+        path: 'ReceiptListgoods',
+        name: 'ReceiptListgoods',
+        meta: { title: '选择收货信息' },
+        component: () => import('@/view/Demand/SendGoods/components/ReceiptList.vue')
+      },
+      {
+        path: 'ReceiptOperategoods',
+        name: 'ReceiptOperategoods',
+        component: () => import('@/view/Demand/SendGoods/components/ReceiptOperate.vue'),
+        beforeEnter(to, from, next) {
+          to.meta.title = `${typeName[to.query.type]}收货信息`,
+            next()
+        }
+      },
+      {
 
         path: '/finishGoods',
         component: () => import('@/view/Demand/SendGoods/finishGoods.vue'),
@@ -374,6 +410,14 @@ export const routes = [
         hidden: true,
         name: 'lookCargo',
         meta: { title: '物流查看' },
+      },
+      {
+
+        path: '/cargoPosition',
+        component: () => import('@/view/Demand/Cargo/cargoPosition.vue'),
+        hidden: true,
+        name: 'cargoPosition',
+        meta: { title: '新增货运位置' },
       },
       {
 

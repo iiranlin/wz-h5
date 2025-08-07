@@ -1,16 +1,39 @@
 <!-- <确认需求 -->
 <template>
   <div>
-    <van-form @submit="onSubmit">
-      <van-field readonly clickable required name="date" :value="params.date" label="预计发货时间" placeholder="请选择日期"
+    <van-form>
+      <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0;">
+        <template>
+          <div class="detail-title-content">
+          <img src="@/assets/img/Icon-invest.png" />
+          <span>预计发货时间</span>
+        </div>
+        <div>
+          <van-field readonly clickable required name="date" :value="params.date" label="选择时间" placeholder="请选择日期"
         @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" input-align="right" />
       <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-      <van-field v-model="params.remark" required type="textarea" name="remark" label="确认说明" placeholder="请输入确认情况"
-        :rules="[{ required: true, message: '请输入确认情况' }]" input-align="right" autosize/>
-      <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit">确认需求</van-button>
+        </div>
+        </template>
       </div>
+
+      <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0;">
+        <template>
+          <div class="detail-title-content">
+          <img src="@/assets/img/Icon_notarize.png" />
+          <span>确认说明</span>
+        </div>
+        <div>
+            <van-field class="detail-base-info-edited-textarea" v-model="params.remark" required type="textarea" name="remark" placeholder="请输入确认情况"
+            :rules="[{ required: true, message: '请输入确认情况' }]" autosize/>
+        </div>
+        </template>
+      </div>
+
     </van-form>
+    <div class="default-button-container">
+      <van-button class="button-info" round @click="onSubmit(false)">返回</van-button>
+      <van-button class="button-info" round type="info" @click="onSubmit(true)">确认需求</van-button>
+    </div>
   </div>
 </template>
 
@@ -51,17 +74,22 @@ export default {
       this.showCalendar = false;
     },
     onSubmit(values) {
-      let params={
-        confirmValidate:values.remark,
-        shippingDate:values.date,
-        id:this.id
-      }
-      demandSureSave(params).then((res)=>{
-        if(res.code==0){
-          Toast.success(res.message);
-          this.$router.push({ path: '/dashboard' })
+      if (values) {
+        let params={
+          confirmValidate:this.params.remark,
+          shippingDate:this.params.date,
+          id:this.id
         }
-      })
+        demandSureSave(params).then((res)=>{
+          if(res.code==0){
+            Toast.success(res.message);
+            this.$router.push({ path: '/dashboard' })
+          }
+        })
+      } else {
+        this.$router.push({ path: '/dashboard' })
+      }
+
       // Toast.success('保存成功');
       // this.$router.push({ path: '/dashboard' })
     }
@@ -69,4 +97,15 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="less" scoped>
+  ::v-deep .detail-base-info-edited-textarea .van-cell__value .van-field__body {
+    background-color: #f2f2f2 !important;
+  }
+
+  .default-button-container {
+    .button-info {
+      width: 169px;
+      height: 34px;
+    }
+  }
+</style>
