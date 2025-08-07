@@ -3,19 +3,19 @@
          <div class="detail-base-info">
              <div class="detail-title-content" style="padding-right: 1.5rem;">
                 <img src="/static/icon-xqjh.png">
-                    <span style="font-size: 0.32rem;">供应需求名称：</span>
-                    <span style="font-size: 0.32rem;overflow: hidden;text-overflow: ellipsis;">{{ result.planName }}</span>
+<!--                    <span style="font-size: 0.32rem;">供应需求名称：</span>-->
+                    <span style="font-weight: bold;font-size: 0.32rem;overflow: hidden;text-overflow: ellipsis;">{{ result.planName }}</span>
                 <div class="detail-title-status">
                     <img :src="checkAuditStatus(result.status)" />
                     <span>{{ checkStatusText(result.status) }}</span>
                 </div>
             </div>
-            <div>
-                <ul class="detail-ul">
+           <div class="detail-wrapper">
+             <ul class="detail-ul">
                     <li>
                       <span>建设项目：</span>
                       <span>{{ result.projectName }}</span>
-                    </li> 
+                    </li>
                     <li>
                         <span>标段项目：</span>
                         <span>{{  result.sectionName }}</span>
@@ -40,12 +40,13 @@
         <van-list>
             <div class="box-container" v-for="(item, index) in result.demandPlanDetailsGyDTOList" :key="index">
                 <div class="detail-list-title-content">
-                        <span class="font-weight" style="min-width: 1.6rem;">物资名称：</span>
+<!--                        <span class="font-weight" style="min-width: 1.6rem;">物资名称：</span>-->
+                        <span class="font-weight" style="min-width: 1.6rem;">{{index+1}}.</span>
                         <span class="font-weight">{{ item.materialName }}</span>
                     </div>
-                   <ul class="detail-list-ul" 
+                   <ul class="detail-list-ul"
                 style="margin: 0.2rem;background: #fff;border-radius: 16px;">
-                
+
                 <!-- <li class="save-materials-li" style="display: flex;justify-content:flex-start;">
                     <span class="font-weight dot-before">物资名称：</span>
                     <span class="font-weight">{{ item.materialName }}</span>
@@ -92,12 +93,12 @@
                 </li>
             </ul>
             </div>
-         
+
         </van-list>
         <div class="default-button-container" v-if="result.status == 2 || result.status == 4 || result.status == 3">
-            <van-button size="mini" type="info" round class="button-info" v-if="result.status == 2"
+            <van-button size="mini" type="info" round plain class="button-info" v-if="result.status == 2"
                 @click="handleConfirmClick(result.id)">确认需求</van-button>
-            <van-button size="mini" type="info" round class="button-info"
+            <van-button size="mini" type="info" round plain class="button-info"
                 v-if="btnStatus && (result.status == 4 || result.status == 3)"
                 @click="handleSendGoodsClick(result.id, 'add')">发货</van-button>
             <!-- 编辑里的选择发货物资传的是planId -->
@@ -216,13 +217,23 @@ export default {
             return `${year}-${month}-${day}`;
         },
             checkAuditStatus(status) {
-      if (status == '0') {
-        return '/static/icon-reject.png'
-      } else if (['5', '10'].includes(status)) {
-        return '/static/icon-return.png'
-      } else {
-        return '/static/icon-success.png'
-      }
+      // if (status == '0') {
+      //   return '/static/icon-reject.png'
+      // } else if (['5', '10'].includes(status)) {
+      //   return '/static/icon-return.png'
+      // } else {
+      //   return '/static/icon-success.png'
+      // }
+              console.log(status)
+              if ('2' == status) {
+                return '/static/icon-send-midway.png'
+              } else if ('3' == status) {
+                return '/static/icon-send-success.png'
+              } else {
+                return '/static/icon-send-wait.png'
+              }
+
+
     },
         checkStatusText(status) {
       let name = ''
@@ -254,7 +265,7 @@ export default {
     }
 
     span {
-      
+
       color: #134daa;
       font-size: 11px;
     }
@@ -290,7 +301,7 @@ li :nth-child(2) {
     // margin: 0 10px;
     border-radius: 15px;
     padding: 10px;
-   
+
 }
 
 .title {
@@ -311,4 +322,43 @@ li :nth-child(2) {
       overflow: hidden;
       text-overflow: ellipsis;
 }
+
+
+// ul 样式
+/* 外层容器 - 控制四周留白 */
+.detail-wrapper {
+  padding: 4px; /* 四周留白 */
+}
+
+/* 列表主体样式 */
+.detail-ul {
+  list-style: none;
+  padding: 12px 16px;
+  margin: 0;
+  background-color: #f5f5f5; /* 灰色背景 */
+  border-radius: 4px; /* 圆角 */
+}
+
+/* 列表项样式 */
+.detail-ul li {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.detail-ul li:last-child {
+  margin-bottom: 0; /* 最后一项去掉下边距 */
+}
+
+/* 文字样式 */
+.detail-label {
+  color: #666;
+  min-width: 80px; /* 固定标签宽度保持对齐 */
+}
+
+.detail-value {
+  color: #333;
+  font-weight: 500;
+}
+
+
 </style>

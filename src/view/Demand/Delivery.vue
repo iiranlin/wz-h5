@@ -23,8 +23,8 @@
                    <div v-for="(item, index) in listBySendData" :key="index" class="box-container"
                   @click="handleCarGoClick(item.id)">
                    <div class="list-title-content">
-                    <span>发货单号：</span>
-                    <span class="font-weight" style="color:#134daa;">{{ item.shipmentBatchNumber }}</span>
+                    <span style="color: gray;" >发货单号：</span>
+                    <span class="font-weight" style="color:gray;">{{ item.shipmentBatchNumber }}</span>
                     <div class="li-title-status">
                       <img :src="checkAuditStatus(item.status)" />
                       <span>{{ checkStatusText(item.status) }}</span>
@@ -32,8 +32,8 @@
                   </div>
                   <ul class="list-ul">
                     <li>
-                      <span>供应需求：</span>
-                      <span class="text">{{ item.planName }}</span>
+<!--                      <span>供应需求：</span>-->
+                      <span class="text" style="font-weight: bold;" >{{ item.planName }}</span>
                     </li>
                     <li>
                       <span>需求编号:</span>
@@ -44,7 +44,7 @@
                     <li>
                       <span>建设项目：</span>
                       <span>{{ item.projectName }}</span>
-                    </li> 
+                    </li>
                     <li>
                       <span>标段项目: </span>
                       <span>{{ item.sectionName }}</span>
@@ -77,28 +77,37 @@
                     </li>
                   </ul>
                   <div class="list-ul-button" v-if="item.status != 3">
-                    <van-button class="button-info" round type="info" @click.stop="handleSendGoodsClick(item.id)"
+                    <van-button class="button-info" plain round type="info" @click.stop="handleSendGoodsClick(item.id)"
                       v-if="item.status == 1">确认发货</van-button>
-                    <van-button class="button-info" plain round type="info"
+                    <van-button class="button-info"  plain round type="info"
+                                style="color: black; border-color: #d9d9d9; background-color: white;"
                       @click.stop="handleEditClick(item.id, 'edit',item.planId)" v-if="item.status == 1">编辑</van-button>
                     <van-button class="button-info" plain round type="danger" @click.stop="handleDelClick(item.id)"
-                      v-if="item.status == 1">删除</van-button>
-                    <van-button class="button-info" plain round type="info"
+                                style="color: black; border-color: #d9d9d9; background-color: white;"
+                                v-if="item.status == 1">删除</van-button>
+                    <van-button
+                        style="color: black; border-color: #d9d9d9; background-color: white;"
+                        class="button-info" plain round type="info"
                       @click.stop="handleLookClick(item.planId, item.shipmentBatchNumber, item.oddNumbers)"
                       v-if="item.status == 2">物流查看</van-button>
 
                     <!-- 增加货运位置是根据物流单号来显示的 -->
-                    <van-button class="button-info" plain round type="info" size="mini"
+                    <van-button
+                        style="color: black; border-color: #d9d9d9; background-color: white;"
+                        class="button-info" plain round type="info" size="mini"
                       @click.stop="handleUpload(item.id)" v-if="item.status == 2">修改附件</van-button>
-                    <van-button class="button-info" plain round type="info" @click.stop="handleCarGoClick(item.id)"
+                    <van-button
+                        style="color: black; border-color: #d9d9d9; background-color: white;"
+                        class="button-info" plain round type="info" @click.stop="handleCarGoClick(item.id)"
                       v-if="item.status == 2">货运详情</van-button>
-                    <van-button class="button-info" round type="info" size="mini"
-                      @click.stop="handleConfirmClick(item.shipmentBatchNumber)"
+                    <van-button class="button-info" plain round type="info" size="mini"
+                    @click.stop="createPosition(item.shipmentBatchNumber)"
                       v-if="item.oddNumbers == '' && item.status == 2">增加货运位置</van-button>
+<!--                    @click.stop="handleConfirmClick(item.shipmentBatchNumber)"-->
                   </div>
                 </div>
                 </div>
-               
+
               </van-list>
             </van-pull-refresh>
           </div>
@@ -109,6 +118,8 @@
 
       </van-tabs>
     </div>
+
+
     <!-- 增加货运位置 弹出框 -->
     <van-dialog v-model="freightLocationDiaLog" title="请填写货运当前位置" :show-cancel-button="false"
       :showConfirmButton="false">
@@ -166,7 +177,6 @@ export default {
   data() {
     return {
       formKey: 0,
-      positionInformation: '',
       menuActiveIndex: 0,
       showAction: false,
       formData: {
@@ -255,7 +265,7 @@ export default {
           this.$forceUpdate(); // 强制更新视图
           // this.listBySendData = res.data.list
         }
-      }).catch((err) => {
+      }).catch(() => {
         Toast.clear();
         Toast("网络错误，请重试");
       });
@@ -333,6 +343,24 @@ export default {
     handleCarGoClick(id) {
       this.$router.push({ path: '/cargoDetails', query: { id: id,btnEvent:false } })
     },
+    createPosition(number){
+
+      this.$router.push({ path: '/cargoPosition', query: { shipmentBatchNumber:number } })
+      // this.formKey++
+      // this.shipmentBatchNumber = number
+      // let params = {
+      //   shipmentBatchNumber: number
+      // }
+      // addList(params).then((res) => {
+      //   if (res.code == 0) {
+      //     this.cargoList = res.data.list
+      //     // this.freightLocationDiaLog = true
+      //
+      //   }
+      // })
+    },
+
+
     //增加货运位置
     handleConfirmClick(number) {
       this.formKey++
@@ -380,7 +408,7 @@ export default {
     },
     //编辑
     handleEditClick(id, title,planId) {
-      this.$router.push({ path: '/finishGoods', query: {goodData:JSON.stringify([]), id: id, text: title,planId:planId } })
+      this.$router.push({ path: '/SendGoods', query: {goodData:JSON.stringify([]), id: id, text: title,planId:planId } })
     },
     //文件修改
     handleUpload(id) {
@@ -435,13 +463,24 @@ export default {
       this.$refs.filePreview.init(fileName, filePath)
     },
      checkAuditStatus(status) {
-      if (status == '0') {
-        return '/static/icon-reject.png'
-      } else if (['5', '10'].includes(status)) {
-        return '/static/icon-return.png'
-      } else {
-        return '/static/icon-success.png'
-      }
+      console.log(status)
+      //   2货运中 3 完成
+      // if (status == '0') {
+      //   return '/static/icon-send-success.png'
+      // } else if (['5', '10'].includes(status)) {
+      //   return '/static/icon-return.png'
+      // } else {
+      //   return '/static/icon-send-success.png'
+      // }
+       if (status == '2') {
+         return '/static/icon-send-midway.png'
+       } else if ('3'== status) {
+         return '/static/icon-send-success.png'
+       } else {
+         return '/static/icon-send-wait.png'
+       }
+
+
     },
         checkStatusText(status) {
       let name = ''
@@ -474,7 +513,7 @@ export default {
     }
 
     span {
-      
+
       color: #134daa;
       font-size: 11px;
     }
