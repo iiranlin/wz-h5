@@ -90,7 +90,7 @@
             placeholder="发货地址"
             input-align="right"
             :rules="[{ required: true, message: '请填写发货地址' }]"
-          />
+          /> -->
           <van-field
             readonly
             clickable
@@ -105,7 +105,7 @@
             @click="showCalendar = true"
             :rules="[{ required: true, message: '请填写发货日期' }]"
           />
-          <van-calendar v-model="showCalendar" @confirm="onConfirm" /> -->
+          <van-calendar v-model="showCalendar" @confirm="onConfirm" />
           <van-field
             readonly
             clickable
@@ -142,6 +142,22 @@
       <file-upload-view :fileList="fileList || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
+    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png">
+        <span>装车照片</span>
+      </div>
+      <p class="box-container-p" v-if="!zczp.length">请选择文件上传，支持JPG格式</p>
+      <file-upload-view-type
+            :required="false"
+            class="outbound-field-uploader"
+            :fileList="zczp || []"
+            businessType="01"
+            accept=".jpg"
+            :maxCount="100"
+          />
+    </div>
+
     <div class="detail-floor-content">
       <div>
         <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '0' }"
@@ -161,15 +177,32 @@
             <img
               :src="item.manufactureDate && item.packagingFm ? editedStatus : editStatus" />
           </li>
-          <li>
+          <!-- <li>
             <span>供应商：</span>
             <span>{{ item.sellerName }}</span>
-          </li>
+          </li> -->
           <li>
             <span>规格型号：</span>
             <span>{{ item.specModel }}</span>
           </li>
           <li>
+            <span>本次计划数量：</span>
+            <span v-if="item.planAmount">{{ item.planAmount }}</span>
+            <span v-else class="li-span-grey">填写</span>
+          </li>
+          <li>
+            <span>本次需求未发货数量：</span>
+            <span>{{ item.ssendTotal }}</span>
+          </li>
+          <li>
+            <span>发货数量：</span>
+            <span class="li-span-click">{{ item.ssendTotal }}</span>
+          </li>
+          <li>
+            <span>收货人：</span>
+            <span>{{ item.receiver }}</span>
+          </li>
+          <!-- <li>
             <span>计量单位：</span>
             <span>{{ item.unit }}</span>
           </li>
@@ -184,11 +217,6 @@
             </span>
           </li>
           <li>
-            <span>本次计划数量：</span>
-            <span v-if="item.planAmount">{{ item.planAmount }}</span>
-            <span v-else class="li-span-grey">填写</span>
-          </li>
-          <li>
             <span>供应时间：</span>
             <span v-if="item.supplyDate">{{ item.supplyDate }}</span>
             <span v-else class="li-span-grey">填写</span>
@@ -197,7 +225,7 @@
             <span>收货人联系方式：</span>
             <span v-if="item.receiver">{{ item.receiver }}</span>
             <span v-else class="li-span-grey">填写</span>
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="list-ul-button">
@@ -342,8 +370,8 @@
         >
       </div> -->
     <history-list ref="historyList" @historyClick="historyClick"></history-list>
-    <edited-list ref="editedList" :editedData="materiaList" :editedMateriaList="editedMateriaList"
-      @editedClick="editedClick"></edited-list>
+    <!-- <edited-list ref="editedList" :editedData="materiaList" :editedMateriaList="editedMateriaList"
+      @editedClick="editedClick"></edited-list> -->
   </div>
 </template>
 <script>
@@ -364,6 +392,7 @@ import { detailBySendEdit,detailByUpdateSend, modifySendGoods} from "@/api/deman
 import keepPages from "@/view/mixins/keepPages";
 import historyList from "@/components/historyList";
 import FileUploadView from "@/components/FileUploadView.vue";
+import FileUploadViewType from "@/components/FileUploadViewType.vue";
 import { Toast } from "vant";
 import { Notify } from "vant";
 Vue.use(Notify);
@@ -374,7 +403,7 @@ Vue.use(Field);
 export default {
   name: "SendGoods",
   mixins: [keepPages],
-  components: { FileUploadView, historyList },
+  components: { FileUploadView, historyList, FileUploadViewType },
   data() {
     return {
       btnClickIndex: '0',
@@ -774,7 +803,7 @@ export default {
         item.planDetailId = item.id;
       });
 
-      let fileByList = JSON.stringify({ fhd: this.fileList, zczp: [] });
+      let fileByList = JSON.stringify({ fhd: this.fileList, zczp: this.zczp });
 
       let params = {
         ...this.params,

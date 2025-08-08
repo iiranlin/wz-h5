@@ -172,6 +172,9 @@ export default {
       ],
     };
   },
+  activated () {
+    this.getList();
+  },
   created() {
 
   },

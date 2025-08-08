@@ -69,10 +69,10 @@
               <span>规格型号：</span>
               <span>{{ item.specModel }}</span>
             </li>
-              <li>
+              <!-- <li>
               <span>计量单位：</span>
               <span>{{ item.unit }}</span>
-            </li>
+            </li> -->
              <li>
               <span>合同数量：</span>
               <span class="li-span-click">{{ item.amount }}</span>
@@ -85,7 +85,7 @@
               <span>本次计划数量：</span>
               <span class="li-span-click">{{ item.planAmount }}</span>
             </li>
-            <li>
+            <!-- <li>
               <span>供应时间:</span>
               <span>{{ item.supplyDate }}</span>
             </li>
@@ -112,7 +112,7 @@
              <li class="li-item-remark"> 
             <span>备注：</span>
             <div class="remark-detail">{{item.remark || '未填写'}}</div>
-          </li>
+          </li> -->
           <li style="color: red;">
               <span>本次需求未发货数量：</span>
               <span >{{ item.ssendTotal }}</span>
@@ -269,6 +269,7 @@ export default {
           dataList = dataList.filter((item, index, self) => {
           return self.findIndex(t => ((t.uniqueNumber || t.allocationUniqueNumber) === (item.uniqueNumber || item.allocationUniqueNumber))) === index;
         }).map(item => {
+          item.sendTotal = item.ssendTotal;
           let Obj = item
           data.map((val) => {
             if ((item.uniqueNumber || item.allocationUniqueNumber) == val.allocationUniqueNumber) {
@@ -314,6 +315,7 @@ export default {
           dataList = dataList.filter((item, index, self) => {
           return self.findIndex(t => ((t.uniqueNumber || t.allocationUniqueNumber) === (item.uniqueNumber || item.allocationUniqueNumber))) === index;
         }).map(item => {
+          item.sendTotal = item.ssendTotal;
           let Obj = item
           data.map((val) => {
             if ((item.uniqueNumber || item.allocationUniqueNumber) == val.allocationUniqueNumber) {
@@ -450,7 +452,7 @@ export default {
       }
     },
     openClick(item) {
-      this.$router.push({ name: 'MaterialDetailsView', query: { item: JSON.stringify(item) } })
+      this.$router.push({ name: 'MaterialDetailsGoodsView', query: { item: JSON.stringify(item) } })
     }
   }
 }

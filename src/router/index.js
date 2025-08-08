@@ -356,6 +356,12 @@ export const routes = [
         meta: { title: '选择发货物资' },
       },
       {
+        path: 'MaterialDetailsGoodsView',
+        name: 'MaterialDetailsGoodsView',
+        meta: { title: '物资详情' },
+        component: () => import('@/view/Demand/SendGoods/MaterialDetailsView.vue')
+      },
+      {
         path: 'ReceiptLists',
         name: 'ReceiptLists',
         meta: { title: '选择收货信息' },
