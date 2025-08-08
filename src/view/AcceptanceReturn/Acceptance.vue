@@ -87,7 +87,7 @@
                   <!--  非审核中不允许撤回 -->
                   <van-button class="button-info" plain round type="info" v-if="item.takeStatus === '5'" @click.stop="recallClick(item)">撤回</van-button>
                   <!--  未收货不能下载 -->
-                  <van-button class="button-info" round type="info" v-if="!['1', '5'].includes(item.takeStatus)" @click.stop="downLoadAcceptanceOrder(item)">下载验收单</van-button>
+                  <van-button class="button-info" round type="info" v-if="!['1', '5'].includes(item.takeStatus)" @click.stop="handleDonwload(item)">下载验收单</van-button>
                 </div>
               </div>
             </van-list>
@@ -103,7 +103,8 @@ import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 import { materialCirculationTableRestSubmit } from '@/api/prodmgr-inv/materialCirculationTableRest'
-import { recall, downloadHandoverAcceptanceForm } from '@/api/prodmgr-inv/audit'
+import { recall } from '@/api/prodmgr-inv/audit'
+import { downloadHandoverAcceptanceForm } from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'Acceptance',
@@ -308,7 +309,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$refs.activitiAssignee.init('SH', item)
+        this.$refs.activitiAssignee.init('SHLC', item)
       })
     },
     // 撤回
@@ -326,9 +327,13 @@ export default {
       })
     },
     // 下载验收单
-    downLoadAcceptanceOrder({id}) {
-      downloadHandoverAcceptanceForm({id})
-    }
+    async handleDonwload({id}) {
+      try {
+        await downloadHandoverAcceptanceForm({id});
+      } catch (error) {
+      } finally {
+      }
+    },
   }
 }
 </script>

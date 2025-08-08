@@ -74,6 +74,8 @@
                       v-if="item.status == 4 || item.status == 3">发货</van-button>
                     <van-button class="button-info" round type="info" v-if="item.status == 2"
                       @click.stop="handleConfirmClick(item.id)">确认需求</van-button>
+                    <van-button class="button-info" round type="info" v-if="item.status == '5'"
+                      @click.stop="handleDonwload(item.id)">下载结算单</van-button>
                   </div>
                 </div>
                 </div>
@@ -95,6 +97,7 @@
 import keepPages from '@/view/mixins/keepPages'
 import BackToTop from '@/components/BackToTop'
 import { demandManagementList, demandManagementLookPdf } from '@/api/demand/demandManagement'
+import { downloadSettlementList } from '@/api/prodmgr-inv/file'
 import FilePreview from "@/components/FilePreview.vue";
 import Vue from 'vue';
 import { Toast } from 'vant';
@@ -248,6 +251,14 @@ export default {
     //确认需求
     handleConfirmClick(id) {
       this.$router.push({ path: '/confirm', query: { id: id } })
+    },
+    //下载结算单
+    async handleDonwload(id) {
+      try {
+        await downloadSettlementList({id});
+      } catch (error) {
+      } finally {
+      }
     },
     //全部列表刷新
     allRefresh() {

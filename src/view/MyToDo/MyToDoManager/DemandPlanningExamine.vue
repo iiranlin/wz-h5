@@ -238,11 +238,12 @@ import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,wf
 import { materialDemandPlanRestDetailGyMx } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import MaterialDetails from '@/view/PlannedManagement/PlannedManagementChild/components/MaterialDetails'
+import FileDownloadView from "@/components/FileDownloadView.vue";
 
 export default {
     name: 'DemandPlanningExamine',
     mixins: [keepPages],
-    components: {BackToTop, MaterialDetails},
+    components: {BackToTop, MaterialDetails, FileDownloadView},
 
     data () {
         return {
@@ -332,6 +333,7 @@ export default {
                 message: "正在加载...",
                 forbidClick: true
             });
+            console.log("params", params)
             materialDemandPlanRestDetailGyMx(params).then(({data}) => {
                 this.detailInfo = data;
                 this.detailList = data.details;

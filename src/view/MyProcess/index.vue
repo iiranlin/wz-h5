@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     detailApi(){
-      return this.businessType === "RK" ? defaultTake : materialDemandPlanRestDetail
+      return this.businessType === "RKLC" ? defaultTake : materialDemandPlanRestDetail
     },
   },
   mounted() {

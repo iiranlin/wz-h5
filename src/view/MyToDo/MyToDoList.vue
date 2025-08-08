@@ -358,7 +358,7 @@ export default {
         checkTitle(item){
             if(item.businessType == 'YLXQ' || item.businessType == 'FBYLXQ'){
                 return '需求编号：'
-            }else if(item.businessType == 'RK'){
+            }else if(item.businessType == 'RKLC'){
                 return '入库单号：'
             }
         },

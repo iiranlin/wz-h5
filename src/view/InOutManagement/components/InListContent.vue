@@ -83,6 +83,8 @@
               v-if="item.storeStatus == '5'">撤回</van-button>
             <van-button class="button-info" round type="info" @click="submitStore(item)"
               v-if="item.storeStatus == '1' || item.storeStatus == '6'">提交报检材料</van-button>
+            <van-button class="button-info" round type="info" @click="handleDonwload(item)"
+              v-if="item.storeStatus == '3' || item.storeStatus == '2'">下载入库单</van-button>
           </div>
         </div>
       </van-list>
@@ -93,6 +95,8 @@
 import indexMixin from '@/view/mixins'
 import { listStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { recall } from '@/api/prodmgr-inv/audit'
+import { downloadStorageList } from '@/api/prodmgr-inv/file'
+
 export default {
   name: 'InListContent',
   mixins: [indexMixin],
@@ -209,6 +213,14 @@ export default {
     submitStore(item) {
       this.$router.push({ name: 'SubmitStore', query: { type: 'submit', id: item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
     },
+    // 下载入库单
+    async handleDonwload({id}) {
+      try {
+        await downloadStorageList({id});
+      } catch (error) {
+      } finally {
+      }
+    },
     withdrawClick(item) {
       this.$dialog.confirm({
         title: '标题',
@@ -216,7 +228,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        return recall({ businessId: item.id, businessType: 'RK' });
+        return recall({ businessId: item.id, businessType: 'RKLC' });
       }).then(() => {
         this.$toast('撤回成功');
       })
@@ -228,7 +240,7 @@ export default {
         params: { 
           businessId: item.id, 
           workflowId: item.storeMiddleId,
-          businessType: 'RK',
+          businessType: 'RKLC',
         } 
       })
     },

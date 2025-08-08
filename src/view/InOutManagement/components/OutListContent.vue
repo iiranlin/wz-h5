@@ -59,6 +59,10 @@
               <span>{{item.createUserName}}</span>
             </li>
           </ul>
+          <div class="list-ul-button">
+            <van-button class="button-info" round type="info" @click="handleDonwload(item)"
+              >下载出库单</van-button>
+          </div>
         </div>
       </van-list>
     </van-pull-refresh>
@@ -66,6 +70,7 @@
 </template>
 <script>
 import {materialSupplierOutRestList} from '@/api/prodmgr-inv/materialDemandPlanRest'
+import {downloadOutOfTheWarehouse} from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'OutListContent',
@@ -130,6 +135,14 @@ export default {
     },
     handeSearch(){
       this.allRefresh();
+    },
+    // 下载出库单
+    async handleDonwload({id}) {
+      try {
+        await downloadOutOfTheWarehouse({id});
+      } catch (error) {
+      } finally {
+      }
     },
   },
 };

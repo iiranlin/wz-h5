@@ -25,6 +25,7 @@ service.interceptors.request.use(
     const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
     if (getToken() && !isToken) {
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+      config.headers['Client-Type'] = "APP"
     }
     // get请求映射params参数
     if (config.method === 'get' && config.params) {
@@ -155,7 +156,7 @@ export function download(url, params, method = 'post') {
     message: "正在下载数据，请稍候",
     forbidClick: true
   });
-  return service({method: method, [method == 'post'?'data':'params']: params, url: url, responseType: 'blob', minioSm4R: true}).then(async (data) => {
+  return service({method: method, [method == 'post'?'data':'params']: params, url: url, responseType: 'blob', minioSm4: true}).then(async (data) => {
       const isLogin = await blobValidate(data.data);
       const headers = data.headers['content-disposition'] || data.headers['Content-Disposition']
       if (isLogin) {
