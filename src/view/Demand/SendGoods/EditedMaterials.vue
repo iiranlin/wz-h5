@@ -331,7 +331,7 @@ export default {
         }
         const data = this.$store.state.public.selectGoodData || []
         data.forEach((item, index) => {
-          if (item.uniqueNumber == this.sectionInfo.uniqueNumber || item.allocationUniqueNumber == this.sectionInfo.allocationUniqueNumber) {
+          if (item.id == this.sectionInfo.id) {
             this.$set(data, index, this.sectionInfo)
           }
         });

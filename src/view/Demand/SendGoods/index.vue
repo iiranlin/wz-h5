@@ -342,12 +342,15 @@
         >
       </div> -->
     <history-list ref="historyList" @historyClick="historyClick"></history-list>
+    <edited-list ref="editedList" :editedData="materiaList" :editedMateriaList="editedMateriaList"
+      @editedClick="editedClick"></edited-list>
   </div>
 </template>
 <script>
 import Vue from "vue";
 import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
+import editedList from './components/editedList'
 import { Form } from "vant";
 import { Field } from "vant";
 import {
