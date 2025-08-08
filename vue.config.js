@@ -46,7 +46,8 @@ module.exports = {
         // 开发
         // target: `http://10.59.248.226:8000/`,
         // target: `http://10.100.96.79:8000/`,
-        target: `http://39.107.57.20:38001/api/`,
+        // target: `http://39.107.57.20:38001/api/`,
+        target: `http://183.56.240.244:8081/api/`,
         changeOrigin: true,
         pathRewrite: {
           "^/api": "",
