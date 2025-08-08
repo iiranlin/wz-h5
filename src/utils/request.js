@@ -156,7 +156,7 @@ export function download(url, params, method = 'post') {
     message: "正在下载数据，请稍候",
     forbidClick: true
   });
-  return service({method: method, [method == 'post'?'data':'params']: params, url: url, responseType: 'blob', minioSm4R: true}).then(async (data) => {
+  return service({method: method, [method == 'post'?'data':'params']: params, url: url, responseType: 'blob', minioSm4: true}).then(async (data) => {
       const isLogin = await blobValidate(data.data);
       const headers = data.headers['content-disposition'] || data.headers['Content-Disposition']
       if (isLogin) {

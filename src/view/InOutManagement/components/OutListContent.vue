@@ -138,16 +138,10 @@ export default {
     },
     // 下载出库单
     async handleDonwload({id}) {
-      let toast = this.$toast.loading({
-        duration: 0,
-        message: "正在下载...",
-        forbidClick: true
-      })
       try {
         await downloadOutOfTheWarehouse({id});
       } catch (error) {
       } finally {
-        toast.clear()
       }
     },
   },

@@ -251,16 +251,10 @@ export default {
     },
     //下载结算单
     async handleDonwload(id) {
-      let toast = this.$toast.loading({
-        duration: 0,
-        message: "正在下载...",
-        forbidClick: true
-      })
       try {
         await downloadSettlementList({id});
       } catch (error) {
       } finally {
-        toast.clear()
       }
     },
     //全部列表刷新
