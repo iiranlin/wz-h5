@@ -69,6 +69,7 @@ import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfTodoList } from '@/api/myToDoList'
 import indexMixin from '@/view/mixins'
+import { FLOW_ROUTE } from '@/utils/constant'
 
 export default {
     name:'OverExaminList',
@@ -149,13 +150,20 @@ export default {
         },
         //列表条目点击
         handleItemClick(item){
-            this.$router.push({
-                name: "DemandPlanningExamine",
-                params: { 
-                    obj: JSON.stringify(item),
-                    type: '1',
-                },
-            });
+            const { businessType, businessId } = item
+            if( businessType === "RKLC"){
+                let name = FLOW_ROUTE[businessType]
+                this.$router.push({ name, query: { id: businessId }})
+            } else {
+                this.$router.push({
+                    name: "DemandPlanningExamine",
+                    params: { 
+                        obj: JSON.stringify(item),
+                        type: '1',
+                    },
+                });
+            }
+            
         },
         //搜索点击
         handeSearch(){

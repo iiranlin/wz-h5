@@ -220,6 +220,12 @@ export const routes = [
         meta: { title: '物资详情' },
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/MaterialDetailsView.vue')
       },
+      {
+        path: 'InboundMaterialDetails',
+        name: 'InboundMaterialDetails',
+        meta: { title: '入库-物资详情' },
+        component: () => import('@/view/PlannedManagement/PlannedManagementChild/InboundMaterialDetails.vue')
+      },
     ]
   },
   {
@@ -265,6 +271,12 @@ export const routes = [
           to.meta.title = to.query.type == 'view' ? `出库${typeName[to.query.type]}` : `物资出库`
           next()
         }
+      },
+      {
+        path: 'InboundDetails',
+        name: 'InboundDetails',
+        meta: { title: '入库详情' },
+        component: () => import('@/view/InOutManagement/InOutManagementChild/InboundDetails.vue'),
       },
       {
         path: 'OutboundDetails',
