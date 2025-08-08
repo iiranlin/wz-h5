@@ -39,7 +39,8 @@ export function demandSnedGoodsUpload(data) {
     data:data,
     headers: {
           'Content-Type': 'multipart/form-data'
-        }
+        },
+    timeout: 0, //无超时时间
   })
 }
 //选择发送物资  

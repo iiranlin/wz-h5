@@ -8,7 +8,8 @@ export const minioUpload = (data) => {
     url: `${VUE_APP_BASE_SERVER}/minio/upload`,
     method: 'post',
     data,
-    minioSm4: true //上传不需要加密
+    minioSm4: true, //上传不需要加密
+    timeout: 0, //无超时时间
   })
 }
 
