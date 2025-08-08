@@ -269,6 +269,7 @@ export default {
           dataList = dataList.filter((item, index, self) => {
           return self.findIndex(t => ((t.uniqueNumber || t.allocationUniqueNumber) === (item.uniqueNumber || item.allocationUniqueNumber))) === index;
         }).map(item => {
+          item.sendTotal = item.ssendTotal;
           let Obj = item
           data.map((val) => {
             if ((item.uniqueNumber || item.allocationUniqueNumber) == val.allocationUniqueNumber) {
@@ -314,6 +315,7 @@ export default {
           dataList = dataList.filter((item, index, self) => {
           return self.findIndex(t => ((t.uniqueNumber || t.allocationUniqueNumber) === (item.uniqueNumber || item.allocationUniqueNumber))) === index;
         }).map(item => {
+          item.sendTotal = item.ssendTotal;
           let Obj = item
           data.map((val) => {
             if ((item.uniqueNumber || item.allocationUniqueNumber) == val.allocationUniqueNumber) {
