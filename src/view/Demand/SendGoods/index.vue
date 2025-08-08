@@ -177,15 +177,32 @@
             <img
               :src="item.manufactureDate && item.packagingFm ? editedStatus : editStatus" />
           </li>
-          <li>
+          <!-- <li>
             <span>供应商：</span>
             <span>{{ item.sellerName }}</span>
-          </li>
+          </li> -->
           <li>
             <span>规格型号：</span>
             <span>{{ item.specModel }}</span>
           </li>
           <li>
+            <span>本次计划数量：</span>
+            <span v-if="item.planAmount">{{ item.planAmount }}</span>
+            <span v-else class="li-span-grey">填写</span>
+          </li>
+          <li>
+            <span>本次需求未发货数量：</span>
+            <span>{{ item.ssendTotal }}</span>
+          </li>
+          <li>
+            <span>发货数量：</span>
+            <span class="li-span-click">{{ item.ssendTotal }}</span>
+          </li>
+          <li>
+            <span>收货人：</span>
+            <span>{{ item.receiver }}</span>
+          </li>
+          <!-- <li>
             <span>计量单位：</span>
             <span>{{ item.unit }}</span>
           </li>
@@ -200,11 +217,6 @@
             </span>
           </li>
           <li>
-            <span>本次计划数量：</span>
-            <span v-if="item.planAmount">{{ item.planAmount }}</span>
-            <span v-else class="li-span-grey">填写</span>
-          </li>
-          <li>
             <span>供应时间：</span>
             <span v-if="item.supplyDate">{{ item.supplyDate }}</span>
             <span v-else class="li-span-grey">填写</span>
@@ -213,7 +225,7 @@
             <span>收货人联系方式：</span>
             <span v-if="item.receiver">{{ item.receiver }}</span>
             <span v-else class="li-span-grey">填写</span>
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="list-ul-button">
