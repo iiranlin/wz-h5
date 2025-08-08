@@ -358,8 +358,8 @@
         >
       </div> -->
     <history-list ref="historyList" @historyClick="historyClick"></history-list>
-    <edited-list ref="editedList" :editedData="materiaList" :editedMateriaList="editedMateriaList"
-      @editedClick="editedClick"></edited-list>
+    <!-- <edited-list ref="editedList" :editedData="materiaList" :editedMateriaList="editedMateriaList"
+      @editedClick="editedClick"></edited-list> -->
   </div>
 </template>
 <script>
