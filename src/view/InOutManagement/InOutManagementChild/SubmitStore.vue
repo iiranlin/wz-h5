@@ -405,7 +405,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$refs.activitiAssignee.init('RK', this.formData)
+        this.$refs.activitiAssignee.init('RKLC', this.formData)
       })
     },
     //选择审核人回调

@@ -228,7 +228,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        return recall({ businessId: item.id, businessType: 'RK' });
+        return recall({ businessId: item.id, businessType: 'RKLC' });
       }).then(() => {
         this.$toast('撤回成功');
       })
@@ -240,7 +240,7 @@ export default {
         params: { 
           businessId: item.id, 
           workflowId: item.storeMiddleId,
-          businessType: 'RK',
+          businessType: 'RKLC',
         } 
       })
     },

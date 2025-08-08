@@ -309,7 +309,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$refs.activitiAssignee.init('SH', item)
+        this.$refs.activitiAssignee.init('SHLC', item)
       })
     },
     // 撤回
