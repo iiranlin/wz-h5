@@ -90,7 +90,7 @@
             placeholder="发货地址"
             input-align="right"
             :rules="[{ required: true, message: '请填写发货地址' }]"
-          />
+          /> -->
           <van-field
             readonly
             clickable
@@ -105,7 +105,7 @@
             @click="showCalendar = true"
             :rules="[{ required: true, message: '请填写发货日期' }]"
           />
-          <van-calendar v-model="showCalendar" @confirm="onConfirm" /> -->
+          <van-calendar v-model="showCalendar" @confirm="onConfirm" />
           <van-field
             readonly
             clickable
@@ -140,6 +140,22 @@
       </div>
       <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
       <file-upload-view :fileList="fileList || []" businessType="01" class="outbound-field-uploader" />
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png">
+        <span>装车照片</span>
+      </div>
+      <p class="box-container-p" v-if="!zczp.length">请选择文件上传，支持JPG格式</p>
+      <file-upload-view-type
+            :required="false"
+            class="outbound-field-uploader"
+            :fileList="zczp || []"
+            businessType="01"
+            accept=".jpg"
+            :maxCount="100"
+          />
     </div>
 
     <div class="detail-floor-content">
@@ -364,6 +380,7 @@ import { detailBySendEdit,detailByUpdateSend, modifySendGoods} from "@/api/deman
 import keepPages from "@/view/mixins/keepPages";
 import historyList from "@/components/historyList";
 import FileUploadView from "@/components/FileUploadView.vue";
+import FileUploadViewType from "@/components/FileUploadViewType.vue";
 import { Toast } from "vant";
 import { Notify } from "vant";
 Vue.use(Notify);
@@ -374,7 +391,7 @@ Vue.use(Field);
 export default {
   name: "SendGoods",
   mixins: [keepPages],
-  components: { FileUploadView, historyList },
+  components: { FileUploadView, historyList, FileUploadViewType },
   data() {
     return {
       btnClickIndex: '0',
@@ -774,7 +791,7 @@ export default {
         item.planDetailId = item.id;
       });
 
-      let fileByList = JSON.stringify({ fhd: this.fileList, zczp: [] });
+      let fileByList = JSON.stringify({ fhd: this.fileList, zczp: this.zczp });
 
       let params = {
         ...this.params,
