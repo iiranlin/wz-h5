@@ -116,7 +116,7 @@ export default {
                     message: message
                 });
                 this.$router.push({
-                    name: "ReceiptList",
+                    name: "ReceiptLists",
                     params: {
                         refresh: true,
                     },
@@ -140,7 +140,7 @@ export default {
                     message: message
                 });
                 this.$router.push({
-                    name: "ReceiptList",
+                    name: "ReceiptLists",
                     params: {
                         refresh: true,
                     },
