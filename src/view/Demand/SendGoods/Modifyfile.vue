@@ -1,12 +1,18 @@
 <template>
     <div class="default-containers" ref="container" style="padding-bottom: 1.5rem;">
         <div class="detail-base-info">
+
+          <div class="detail-title-content">
+            <!--            <img src="/static/icon-xqjh.png">-->
+            <span style="color:#1989fa;" >发货单号：</span>
+<!--            <span>{{params.shipmentBatchNumber}}</span>-->
+          </div>
         <div class="detail-title-content">
-            <img src="/static/icon-xqjh.png">
-            <span>发货单号：</span>
+<!--            <img src="/static/icon-xqjh.png">-->
+<!--            <span>发货单号：</span>-->
             <span>{{params.shipmentBatchNumber}}</span>
         </div>
-        <div>
+          <div class="detail-wrapper">
             <ul class="detail-ul">
           <li>
             <span>发货时间：</span>
@@ -49,7 +55,7 @@
                                 <li>
                                   <span>建设项目：</span>
                                   <span>{{ params.projectName }}</span>
-                                </li> 
+                                </li>
                                 <li>
                                     <span>标段项目：</span>
                                     <span class="text">{{ params.sectionName }}</span>
@@ -69,7 +75,7 @@
                                 <li>
 
                                 </li>
-                                
+
                                 <li>
                                     <span>发货时间:</span>
                                     <span v-if="params.shippingDate">{{ formattedCreateDate(params.shippingDate)
@@ -105,7 +111,7 @@
                                     <span>操作时间: </span>
                                     <span v-if="params.createDate">{{ formatTimestamp(params.createDate) }}</span>
                                 </li>
-                                
+
                             </ul>
                             <div style="padding: 0 20px;">
                                  <file-upload-view style="padding-right: 0.5rem;margin-left: 0px;"  title="发货单附件" :fileList="fileList" businessType="01"/>
@@ -127,7 +133,7 @@
                                     <span class="font-weight" style="min-width: 1rem;">{{ item.materialName }}</span>
                                 </div>
                                 <ul class="detail-list-ul" >
-                                   
+
                                    <!-- <li class="save-materials-li">
                                         <span class="font-weight dot-before">物资名称:</span>
                                         <span class="font-weight">{{ item.materialName }}</span>
@@ -184,14 +190,22 @@
                                     <li>
                                         <span>投资比例:</span>
                                         <span>{{ item.field1 }}</span>
-                                    </li> 
+                                    </li>
                                       <li class="li-item-remark">
                                     <span>备注：</span>
                                     <div class="remark-detail">{{item.remark || '未填写'}}</div>
                                     </li>
                                 </ul>
-                                  <file-download-view class="outbound-field-uploader" style="width: 100%;" title="合格证附件:" :fileList="filterList(item.fileByList, 'hgz') || []"/>
-                                        <file-download-view class="outbound-field-uploader" style="width: 100%;" title="厂检报告附件:" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                              <div class="detail-title-contentA">
+                                <img src="/static/icon-file.png">
+                                <span>合格证附件</span>
+                              </div>
+                                  <file-download-view class="outbound-field-uploader" style="width: 100%;"  :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                              <div class="detail-title-contentA">
+                                <img src="/static/icon-file.png">
+                                <span>厂检报告附件</span>
+                              </div>
+                                        <file-download-view class="outbound-field-uploader" style="width: 100%;" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
                             </div>
                         </van-list>
                     </div>
@@ -364,7 +378,7 @@ export default {
                     //装车照片
                     let zczp = this.zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
                     let fileByList = JSON.stringify({ fhd, zczp });
-                    
+
                     let params = {
                         // ...this.params,
                         arrivalDate:this.params.arrivalDate,
@@ -443,5 +457,72 @@ export default {
   color: #1890ff;        /* 蓝色（可自定义） */
   margin-right: 5px;     /* 与文字的间距 */
   font-size: 1.2em;      /* 可选：调整圆点大小 */
+}
+
+
+
+.detail-title-contentA {
+  width: 100%;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding-left: 2px;
+  padding-right: 27px;
+  box-sizing: border-box;
+  border-top: 1px solid #f1f4f8;
+
+  img {
+    width: 25px;
+    height: 25px;
+  }
+
+  & span:nth-child(2) {
+    margin-left: 6px;
+    color: #151b3e;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  & span:nth-child(3) {
+    color: #151b3e;
+    font-size: 15px;
+    font-weight: 600;
+  }
+}
+
+// ul 样式
+/* 外层容器 - 控制四周留白 */
+.detail-wrapper {
+  padding: 4px; /* 四周留白 */
+}
+
+/* 列表主体样式 */
+.detail-ul {
+  list-style: none;
+  padding: 12px 16px;
+  margin: 0;
+  background-color: #f5f5f5; /* 灰色背景 */
+  border-radius: 4px; /* 圆角 */
+}
+
+/* 列表项样式 */
+.detail-ul li {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.detail-ul li:last-child {
+  margin-bottom: 0; /* 最后一项去掉下边距 */
+}
+
+/* 文字样式 */
+.detail-label {
+  color: #666;
+  min-width: 80px; /* 固定标签宽度保持对齐 */
+}
+
+.detail-value {
+  color: #333;
+  font-weight: 500;
 }
 </style>

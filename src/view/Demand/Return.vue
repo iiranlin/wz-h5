@@ -15,33 +15,37 @@
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad" >
           <div class="detail-base-info">
                 <div v-for="(item, index) in returnList" :key="index" class="box-container"
-            @click="handleDetailsItemClick(item.id)">
+                 @click="handleDetailsItemClick(item.id)">
             <div class="list-title-content">
-                    <span>退货单号：</span>
-                    <span class="font-weight" style="color:#134daa;">{{ item.issueType=='1'?item.backNumber:item.backQualNumber }}</span>
+                    <span class="li-span-grey">退货单号：</span>
+                    <span class="li-span-grey">{{ item.issueType=='1'?item.backNumber:item.backQualNumber }}</span>
                     <div class="li-title-status">
                       <img :src="checkAuditStatus(item.backNode)" />
                       <span>{{ checkStatusText(item.issueType) }}</span>
                     </div>
-                  </div>
+            </div>
             <ul class="list-ul">
 
               <!-- <li>
                 <span class="font-weight">退货单号:</span>
                 <span class="font-weight" style="color:#1989fa;">{{ item.backNumber }}</span>
               </li> -->
+
+
+              <span class="font-weight" style="color:#151b3eff;"> {{ item.planName }}</span>
+          
               <li>
-                <span style="min-width: 3rem;">供应需求ID：</span>
-                <span class="text" style="color:#1989fa;" @click.stop="handleSupplyClick(item.planId)">{{ item.planNumber }}</span>
+                <span style="min-width: 3rem;" @click.stop="handleSupplyClick(item.planId)">供应需求ID：</span>
+                <span class="text" style="color:#134daaff;">{{ item.planNumber }}</span>
               </li>
               <li>
                 <span>发货单号:</span>
-                <span class="text" style="color:#1989fa;" @click.stop="handleCarGoClick(item.id)">{{ item.shipmentBatchNumber }}</span>
+                <span class="text" style="color:#134daaff;" @click.stop="handleCarGoClick(item.id)">{{ item.shipmentBatchNumber }}</span>
               </li>
-              <li>
-                <span style="min-width: 2.4rem;">供应需求名称:</span>
+              <!-- <li>
+                <span style="min-width: 2.4rem;">需求项目:</span>
                 <span>{{ item.planName }}</span>
-              </li>
+              </li> -->
               <li>
                 <span>建设项目：</span>
                 <span>{{ item.projectName }}</span>
@@ -54,6 +58,23 @@
                 <span>退货时间:</span>
                 <span v-if="item.backDate != ''">{{ formattedCreateDate(item.backDate) }}</span>
               </li>
+
+
+
+
+          <li class="list-ul-button">
+            <van-button
+              class="button-info"
+              round
+              size="mini"
+              type="primary"
+              @click.stop="handleDetailsItemClick(item.id)"
+            >
+              查看
+            </van-button>
+          </li>
+
+
               <!-- <li class="li-status">
                 <van-tag type="primary" round size="medium" v-if="item.backNode==2">收货不通过</van-tag>
                 <van-tag type="primary" round size="medium" v-else>收货通过</van-tag>
@@ -211,6 +232,18 @@ components:{BackToTop},
     },
     //待审核列表刷新
 
+
+      handleViewClick(id) {
+        this.$router.push({
+          path: '/returnDetails',
+          query: { id: id }
+        });
+}
+
+
+
+
+
   },
 };
 </script>
@@ -234,7 +267,7 @@ components:{BackToTop},
 
     span {
       margin-left: 3px;
-      color: #134daa;
+      color: #151b3eff;
       font-size: 11px;
     }
   }
@@ -276,18 +309,34 @@ components:{BackToTop},
 
 .list-ul-button {
   display: flex;
+   justify-content: flex-end;
 }
 
 .button-info {
-  width: 85px;
-  font-size: 12px;
+  width: 60px; // 实际建议不要 22px 太小，适当放宽
+  height: 24px;
+  line-height: 24px;
+  font-size: 11px;
+  color: #1963d9ff;
+  font-family: 'PingFang SC', sans-serif;
+  font-weight: 400;
+  text-align: center;
+  border: 1px solid #1963d9ff;
+  background: transparent;
+  border-radius: 999px;
+  padding: 0;
+  box-shadow: none;
 }
+
 
 .li-status {
   .van-tag--primary {
-    color: #028bff;
+    color: #151b3eff;
     background: #edf4ff;
   }
+
+
+
 
   .van-tag--danger {
     color: #f83738;
@@ -298,5 +347,17 @@ components:{BackToTop},
     color: #6f6f6f;
     background: #ededed;
   }
+
+.list-ul-button {
+  span {
+    float: right;
+    background-color: #edf2ff;
+    border: 1px solid #289fec;
+    color: #1d93ff;
+  }
+}
+
+
+
 }
 </style>

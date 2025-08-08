@@ -1,19 +1,49 @@
 <template>
     <div class="default-containers" ref="container">
         <div class="detail-base-info">
-            <div class="detail-title-content">
+            <!-- <div class="detail-title-content">
                 <img src="/static/icon-xqjh.png">
-                <span>供应需求：</span>
+                <span>需求名称：</span>
                 <span>{{ params.planName }}</span>
+            </div> -->
+
+            <div class="detail-title-content-custom">
+                <span class="label">需求名称：</span>
+                <div class="title-bold">{{ params.planName }}</div>
             </div>
-            <div>
+
+
+            <div style="padding-left: 50px; margin-bottom: 10px; display: flex; align-items: center;">
+                <div>
+                    <span style="font-size: 25px; color: #151b3e;">需求编号：</span>
+                    <span style="font-size: 25px; color:#0861db;">{{ params.planNumber }}</span>
+                </div>
+            </div>
+
+
+
+            <!-- <div style="padding-left: 50px; margin-bottom: 10px; display: flex; align-items: center;">
+  <div>
+    <span style="font-size: 25px; color: #151b3e;">需求编号：</span>
+    <span style="font-size: 25px; color:#0861db;">{{ params.planNumber }}</span>
+  </div>
+
+     <div class="li-title-status">
+        <img :src="checkAuditStatus(params.backNode)" />
+        <span>{{ checkStatusText(params.issueType) }}</span>
+    </div>
+
+</div> -->
+
+
+            <div class="detail-ul-text">
                 <ul class="detail-list-ul">
-                    <li>
+                    <!-- <li>
                       <span>建设项目：</span>
                       <span>{{ params.projectName }}</span>
-                    </li> 
+                    </li>  -->
                     <li>
-                        <span>标段项目：</span>
+                        <span>需求项目：</span>
                         <span>{{ params.sectionName }}</span>
                     </li>
                     <li>
@@ -28,67 +58,89 @@
                         <span>使用地点：</span>
                         <span>{{ params.addr }}</span>
                     </li>
-                    <li>
+                    <!-- <li>
                         <span>退货环节：</span>
                         <span style="color:red;" v-if="params.backNode == 2">质检不通过</span>
                         <span style="color:red;" v-else>收货不通过</span>
-                    </li>
+                    </li> -->
                     <li>
                         <span>退货时间：</span>
                         <span>{{ formattedCreateDate(params.backDate) }}</span>
                     </li>
                 </ul>
             </div>
+
+
+            <div>
+                <ul class="detail-list-ul">
+
+                    <li style="font-size: 26px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>退货物资项目：</span>
+                        <span class="li-span-click">{{ params.materialCirculationDetailsTableDTOS ?
+                            params.materialCirculationDetailsTableDTOS.length : 0 }}项</span>
+                    </li>
+                </ul>
+            </div>
+
+
+
         </div>
 
-       <div class="detail-floor-content">
-      <img src="/static/icon-return.png"/>
-      <span>退货明细</span>
-    </div>
+
+        <div class="detail-floor-content">
+            <img src="/static/icon-return.png" />
+            <span>退货明细</span>
+        </div>
         <van-list>
-            <div class="box-container" v-for="(item, index) in params.materialCirculationDetailsTableDTOS"
-                    :key="index">
-                     <div class="detail-list-title-content">
-                        <span class="font-weight">物资名称：</span>
-                        <span class="font-weight">{{ item.materialName }}</span>
-                    </div>
-                <ul class="detail-list-ul" >
-                   
-                    <li style="color: rgb(224,70,70);">
-                        <span>退货数量:</span>
-                        <span style="color:red;">{{ item.refundTotal }}</span>
-                    </li>
+            <div class="box-container" v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
+                <div class="detail-list-title-content">
+                    <!-- <span class="font-weight">物资名称：</span> -->
+                    <span class="font-weight">{{ index + 1 }}.{{ item.materialName }}</span>
+                </div>
+
+                <ul class="detail-list-ul">
                     <li>
                         <span>规格型号: </span>
                         <span>{{ item.specModel }}</span>
                     </li>
-                    <li>
-                        <span>计量单位: </span>
-                        <span>{{ item.unit }}</span>
-                    </li>
+
                     <li>
                         <span>发货数量:</span>
-                        <span class="li-span-click">{{ item.sendTotal }}</span>
+                        <!-- <span class="li-span-click">{{ item.sendTotal }} 套</span> -->
+                        <span>{{ item.sendTotal }} 套</span>
                     </li>
-                        
+
+
+                    <li>
+                        <span>退货数量:</span>
+                        <span class="li-span-click">{{ item.refundTotal }} 套</span>
+                    </li>
+
+                    <li>
+                        <span>退货附件（数量）: </span>
+                        <span class="li-span-click">{{ }}</span>
+                    </li>
                 </ul>
-                 <file-download-view class="outbound-field-uploader"  style="width: 100%;" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/>
+
+            <!-- <file-download-view class="outbound-field-uploader"  style="width: 100%;" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/> -->
             </div>
         </van-list>
-         <div class="detail-floor-content">
-      <img src="/static/icon-return.png"/>
-      <span>初验信息</span>
-    </div>
+        <div class="detail-floor-content">
+            <img src="/static/icon-firstcheckdata.png" />
+            <span>初验信息</span>
+        </div>
         <div class="tabs">
             <van-list>
                 <div class="box-container">
-                   <file-download-view class="outbound-field-uploader" title="自检单：" :fileList="filterList(params.fileByList, 'zjd') || []"/>
-                        <file-download-view class="outbound-field-uploader" title="其他资料：" :fileList="filterList(params.fileByList, 'qtzl') || []"/>
+                    <file-download-view class="outbound-field-uploader" title="自检单："
+                        :fileList="filterList(params.fileByList, 'zjd') || []" />
+                    <file-download-view class="outbound-field-uploader" title="其他资料："
+                        :fileList="filterList(params.fileByList, 'qtzl') || []" />
                 </div>
             </van-list>
         </div>
         <file-preview ref="filePreview"></file-preview>
-         <back-to-top className=".default-container"></back-to-top>
+        <back-to-top className=".default-container"></back-to-top>
     </div>
 </template>
 <script>
@@ -107,8 +159,8 @@ Vue.use(Form);
 Vue.use(Field);
 export default {
     name: 'MyProcess',
-      mixins: [indexMixin],
-    components: { FilePreview, FileDownloadView,FileUploadView,BackToTop },
+    mixins: [indexMixin],
+    components: { FilePreview, FileDownloadView, FileUploadView, BackToTop },
     data() {
         return {
             username: '',
@@ -122,7 +174,15 @@ export default {
             list: [],
             orderId: '',
             params: {},
-            fileTHList:[],
+            fileTHList: [],
+
+
+            // statusArr: [
+            //     { text: '全部', value: '' },
+            //     { text: '质检不通过', value: '2' },
+            //     { text: '收货不通过', value: '1' }
+            // ],
+
         };
     },
     created() {
@@ -162,19 +222,46 @@ export default {
             this.$refs.filePreview.init(fileName, filePath)
         },
     },
+
+    // checkAuditStatus(status) {
+    //   if (status == '0') {
+    //     return '/static/icon-reject.png'
+    //   } else if (['1', '2'].includes(status)) {
+    //     return '/static/icon-return.png'
+    //   } else {
+    //     return '/static/icon-success.png'
+    //   }
+    // },
+    //     checkStatusText(status) {
+    //   let name = ''
+    //   this.statusArr.forEach(item => {
+    //     if (item.value === status) {
+    //       name = item.text
+    //     }
+    //   })
+    //   return name
+    // },
+
+
+    // }
+
+
 };
 </script>
 <style lang="less" scoped>
-.box-container{
+.box-container {
     padding: 0px !important;
 }
-.detail-list-ul{
+
+.detail-list-ul {
     margin: 0 !important;
 }
+
 .detail-title {
-  font-weight: bold;
-  margin: 0.2rem;
+    font-weight: bold;
+    margin: 0.2rem;
 }
+
 .default-container {
     padding-top: 10px;
 }
@@ -215,4 +302,40 @@ li :nth-child(2) {
     font-size: 1.2em;
     /* 可选：调整圆点大小 */
 }
+
+.detail-title-content-custom {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    padding-left: 20px;
+}
+
+.label {
+    font-size: 13px;
+    color: #3b7cff;
+    line-height: 1;
+}
+
+.title-bold {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin-top: 4px;
+    padding-left: 20px;
+}
+
+
+
+  .detail-ul-text{
+    margin: 10px;
+    background: #f2f2f2;
+    border-radius: 5px;
+    .detail-ul{
+      padding: 10px 12px;
+    }
+  }
+
+
+
+
 </style>

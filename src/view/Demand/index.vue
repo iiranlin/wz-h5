@@ -23,7 +23,7 @@
                   @click="handleSupplyClick(item.id)">
                   <div class="list-title-content">
                     <span>需求编号：</span>
-                    <span class="font-weight" style="color:#134daa;">{{ item.planNumber }}</span>
+                    <span class="font-weight" style="color:#8C8FA0;">{{ item.planNumber }}</span>
                     <div class="li-title-status">
                       <img :src="checkAuditStatus(item.status)" />
                       <span>{{ checkStatusText(item.status) }}</span>
@@ -159,13 +159,13 @@ export default {
       fileName: '',
       total: 0,
        statusArr: [
-        { text: '全部', value: '' },
+        { text: '全部', value: '', imgPath: '' },
 
-        { text: '未确认', value: '2' },
-        { text: '已确认', value: '3' },
-        { text: '供货中', value: '4' },
-        { text: '已验收', value: '5' },
-        { text: '已完成', value: '6' },
+        { text: '未确认', value: '2', imgPath: '/static/icon_unconfirmed.png' },
+        { text: '已确认', value: '3', imgPath: '/static/icon-success.png' },
+        { text: '供货中', value: '4', imgPath: '/static/icon_Supply.png' },
+        { text: '已验收', value: '5', imgPath: '/static/icon_NoCheckAndAccept.png' },
+        { text: '已完成', value: '6', imgPath: '/static/icon-checked.png' },
       ],
     };
   },
@@ -231,7 +231,8 @@ export default {
      },
     //发货
     handleSendGoodsClick(id, title) {
-      this.$router.push({ path: '/sendGoods', query: { id: id, title: title } })
+      // this.$router.push({ path: '/sendGoods', query: { id: id, title: title } })
+      this.$router.push({ path: '/selectGoods', query: { id: id, text: title } })
     },
     //查看物流
     handleLookClick(id, number, logisticsNumber) {
@@ -262,13 +263,12 @@ export default {
       this.$refs.filePreview.init(fileName, filePath)
     },
     checkAuditStatus(status) {
-      if (status == '0') {
-        return '/static/icon-reject.png'
-      } else if (['5', '10'].includes(status)) {
-        return '/static/icon-return.png'
-      } else {
-        return '/static/icon-success.png'
-      }
+      // 获取状态对应图片路径
+      let imgPath = this.statusArr.find(el => {
+        return el.value === status
+      })?.imgPath || "";
+
+      return imgPath;
     },
         checkStatusText(status) {
       let name = ''

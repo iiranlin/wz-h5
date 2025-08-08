@@ -1,13 +1,11 @@
 <template>
-  <div class="default-container" ref="container">
-    <div class="submit-store-view-mian">
+  <div class="save-materials" ref="container">
       <div class="detail-base-info">
-        <div class="detail-title-content">
-          <img src="/static/icon-xqjh.png" />
-          <span>需求编号：</span>
-          <span>{{ goodsMsg.planNumber }}</span>
+        <div class="detail-title-text">
+          <p>需求名称：</p>
+          <p>{{ goodsMsg.planName }}</p>
         </div>
-        <div>
+        <div class="detail-ul-text">
           <ul class="detail-ul">
             <li>
               <span>建设项目：</span>
@@ -19,12 +17,209 @@
             </li>
             <li>
               <span>合同名称：</span>
-              <span class="text">{{ goodsMsg.deptName }}</span>
+              <span>{{ goodsMsg.deptName }}</span>
             </li>
           </ul>
         </div>
       </div>
-      <div class="list-ul" style="margin-top: 26px; padding: 10px">
+
+      <div class="detail-base-info detail-base-info-edited">
+      <template v-if="params.receiver">
+        <div class="detail-title-content detail-title-edited-p">
+          <p>
+            <img src="@/assets/img/Icon-address.png" />
+            <span>发货信息</span>
+          </p>
+          <p @click="receiptClick">
+            <img src="@/assets/img/Icon-edit.png" />
+            <span>更改</span>
+          </p>
+        </div>
+        <div class="detail-ul-text">
+          <ul class="detail-ul">
+            <li>
+              <span>{{ params.receiver }} {{ params.phone }}</span>
+            </li>
+            <!-- <li>
+              <span>使用地点：</span>
+              <span>{{ params.addr }}</span>
+            </li> -->
+            <li>
+              <span>发货地址：</span>
+              <span>{{ params.shippingAddress }}</span>
+            </li>
+          </ul>
+        </div>
+      </template>
+      <template v-else>
+        <div class="detail-title-content">
+          <img src="@/assets/img/Icon-address.png" />
+          <span>发货信息</span>
+        </div>
+        <div class="detail-title-content-edited">
+          <span>还未完善发货信息，请点击下方按钮</span>
+        </div>
+        <div class="detail-title-content-edited detail-title-content-edited-button">
+          <van-button type="default" plain round @click="receiptClick">选择发货</van-button>
+          <van-button plain round type="info" @click="createClick"><img src="@/assets/img/Icon-plus.png"
+              class="detail-title-content-edited-add" />新建</van-button>
+        </div>
+      </template>
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0;">
+      <template>
+        <div class="detail-title-content">
+          <img src="@/assets/img/Icon-invest.png" />
+          <span>物流信息</span>
+        </div>
+        <div>
+                    <van-field
+            v-model="params.oddNumbers"
+            :disabled="fileDisabled"
+            label="物流单号"
+            placeholder="物流单号"
+            input-align="right"
+          />
+          <!-- <van-field
+            v-model="params.shippingAddress"
+            :disabled="fileDisabled"
+            @click.stop="fieldClick($event, 'shippingAddress')"
+            required
+            label="发货地址"
+            placeholder="发货地址"
+            input-align="right"
+            :rules="[{ required: true, message: '请填写发货地址' }]"
+          />
+          <van-field
+            readonly
+            clickable
+            name="calendar"
+            :disabled="fileDisabled"
+            required
+            v-model="params.shippingDate"
+            label="发货日期"
+            input-align="right"
+            :value="params.shippingDate"
+            placeholder="点击选择日期"
+            @click="showCalendar = true"
+            :rules="[{ required: true, message: '请填写发货日期' }]"
+          />
+          <van-calendar v-model="showCalendar" @confirm="onConfirm" /> -->
+          <van-field
+            readonly
+            clickable
+            name="calendar"
+            :disabled="fileDisabled"
+            required
+            :value="params.arrivalDate"
+            label="预计送到时间"
+            input-align="right"
+            placeholder="点击选择日期"
+            @click="sendStop = true"
+            :rules="[{ required: true, message: '请填写预计送达时间' }]"
+          />
+          <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
+          <van-field
+            v-model="params.carNumber"
+            label="车牌号"
+            @click.stop="fieldClick($event, 'carNumber')"
+            :disabled="fileDisabled"
+            type="text"
+            placeholder="车牌号"
+            input-align="right"
+          />
+        </div>
+      </template>
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png">
+        <span>发货单附件</span>
+      </div>
+      <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
+      <file-upload-view :fileList="fileList || []" businessType="01" class="outbound-field-uploader" />
+    </div>
+
+    <div class="detail-floor-content">
+      <div>
+        <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '0' }"
+          @click="btnClick('0')">全部物资</van-button>
+        <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '1' }"
+          @click="btnClick('1')">未完善物资</van-button>
+      </div>
+      <span @click="returnClick"><span class="detail-floor-content-add">+</span>添加物资</span>
+    </div>
+
+    <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList" :key="item.id"
+      :class="item.manufactureDate && item.packagingFm ? '' : 'box-container-unedited'">
+      <div class="div-child">
+        <ul class="detail-list-ul">
+          <li class="detail-list-ul-text">
+            <span class="font-weight">{{ index + 1 }}.{{ item.materialName }}</span>
+            <img
+              :src="item.manufactureDate && item.packagingFm ? editedStatus : editStatus" />
+          </li>
+          <li>
+            <span>供应商：</span>
+            <span>{{ item.sellerName }}</span>
+          </li>
+          <li>
+            <span>规格型号：</span>
+            <span>{{ item.specModel }}</span>
+          </li>
+          <li>
+            <span>计量单位：</span>
+            <span>{{ item.unit }}</span>
+          </li>
+          <li v-if="item.amount">
+            <span>合同数量：</span>
+            <span class="li-span-click">{{ item.amount }}</span>
+          </li>
+          <li class="li-item-overlength" v-if="item.cumulativeAmount">
+            <span>累计计划量（含本次）：</span>
+            <span class="li-span-click">
+              {{ item.cumulativeAmount }}
+            </span>
+          </li>
+          <li>
+            <span>本次计划数量：</span>
+            <span v-if="item.planAmount">{{ item.planAmount }}</span>
+            <span v-else class="li-span-grey">填写</span>
+          </li>
+          <li>
+            <span>供应时间：</span>
+            <span v-if="item.supplyDate">{{ item.supplyDate }}</span>
+            <span v-else class="li-span-grey">填写</span>
+          </li>
+          <li>
+            <span>收货人联系方式：</span>
+            <span v-if="item.receiver">{{ item.receiver }}</span>
+            <span v-else class="li-span-grey">填写</span>
+          </li>
+        </ul>
+      </div>
+      <div class="list-ul-button">
+        <van-button class="button-info" plain round type="info" native-type="button"
+          @click="editedClick(item, index)">编辑</van-button>
+        <van-button class="button-info" plain round native-type="button" @click="deleteClick(index)">删除</van-button>
+      </div>
+    </div>
+
+        <div class="default-button-container">
+      <div class="default-button-container-selected">
+        <span>已填写 <span class="li-span-click">{{ editedMateriaList.length }}</span><span>/{{ materiaList.length }}</span>
+        </span>
+      </div>
+      <div class="default-button-container-button">
+        <van-button v-if="isFlag" class="button-info" round type="info" @click="onSubmit">提交</van-button>
+
+        <p style="font-size: 12px;" v-else><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资发货信息</span></p>
+      </div>
+    </div>
+
+      <!-- <div class="list-ul" style="margin-top: 26px; padding: 10px">
         <van-form :key="formKey" ref="form">
           <van-field
             v-model="params.oddNumbers"
@@ -124,8 +319,9 @@
             :maxCount="100"
           />
         </div>
-      </div>
-      <div class="default-button-container">
+      </div> -->
+      <!-- 编辑里的选择发货物资传的是planId -->
+      <!-- <div class="default-button-container">
         <van-button
           size="mini"
           type="primary"
@@ -135,7 +331,6 @@
           v-if="this.text == 'add'"
           >选择发货物资</van-button
         >
-        <!-- 编辑里的选择发货物资传的是planId -->
         <van-button
           size="mini"
           type="primary"
@@ -145,13 +340,17 @@
           v-if="text == 'edit'"
           >选择发货物资</van-button
         >
-      </div>
-    </div>
+      </div> -->
     <history-list ref="historyList" @historyClick="historyClick"></history-list>
+    <edited-list ref="editedList" :editedData="materiaList" :editedMateriaList="editedMateriaList"
+      @editedClick="editedClick"></edited-list>
   </div>
 </template>
 <script>
 import Vue from "vue";
+import editedStatus from '@/assets/img/editedStatus.png'
+import editStatus from '@/assets/img/editStatus.png'
+import editedList from './components/editedList'
 import { Form } from "vant";
 import { Field } from "vant";
 import {
@@ -160,10 +359,11 @@ import {
   demandSaveSendGoods,
 } from "@/api/demand/demandManagement";
 import { minioUpload } from "@/api/blcd-base/minio";
-import { detailBySendEdit } from "@/api/demand/sendGoods";
+import { detailBySendEdit,detailByUpdateSend, modifySendGoods} from "@/api/demand/sendGoods";
+
 import keepPages from "@/view/mixins/keepPages";
 import historyList from "@/components/historyList";
-import FileUploadView from "@/components/FileUploadViewType.vue";
+import FileUploadView from "@/components/FileUploadView.vue";
 import { Toast } from "vant";
 import { Notify } from "vant";
 Vue.use(Notify);
@@ -177,6 +377,11 @@ export default {
   components: { FileUploadView, historyList },
   data() {
     return {
+      btnClickIndex: '0',
+      materiaList: [],
+      editMateriaList: [],
+      editedStatus,
+      editStatus,
       formKey: "",
       username: "",
       password: "",
@@ -201,10 +406,51 @@ export default {
       planId:''
     };
   },
+  computed: {
+    isFlag() {
+      const { receiver, arrivalDate } = this.params;
+
+      let flag = false;
+
+      this.materiaList.forEach(item => {
+        if (item.manufactureDate && item.packagingFm) {
+          flag = true;
+        } else {
+          flag = false;
+        }
+      })
+
+      return this.fileList?.length > 0 && receiver && arrivalDate && flag;
+    }
+  },
+  activated() {
+    const historyData = this.$store.state.public.historyData || {};
+    
+    if (JSON.stringify(historyData) === '{}') {
+      this.init()
+      return
+    }
+
+    historyData.shippingAddress = historyData.shippingAddress || historyData.receiveraddress
+    historyData.contacts = historyData.contacts || historyData.receiver
+    historyData.contactsPhone = historyData.contactsPhone || historyData.phone
+    
+    this.params = Object.assign({}, this.params, historyData)
+    this.$store.dispatch('public/setHistoryData', {})
+  },
   created() {
-    this.text = this.$route.query.title;
+    this.init();
+  },
+
+  methods: {
+    init() {
+    this.text = this.$route.query.text;
     this.goodsId = this.$route.query.id;
     this.planId = this.$route.query.planId;
+    
+    this.materiaList = this.historyCaches();
+    
+    this.$store.dispatch('public/setSelectGoodData', this.materiaList)
     //编辑
     if (this.text == "edit") {
       this.editDetails();
@@ -215,9 +461,25 @@ export default {
     }
     // 默认当前时间
     this.params.shippingDate = this.todayTime();
-  },
+    },
+    historyCaches() {
+      const data = this.$store.state.public.selectGoodData || []
+      
+      const finallyData = data.map((item) => Object.assign({}, item, {
+        supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
+        minDate: this.minDate,
+        showDatePicker: this.showDatePicker,
+        planAmount: item.planAmount || item.amount - item.cumulativeAmount,
+        allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber,
+        field2: item.field2 || item.deliveryLocation,
+      }))
 
-  methods: {
+
+      this.editedMateriaList = finallyData.filter(item => item.manufactureDate && item.packagingFm)
+      this.editMateriaList = finallyData.filter(item => !(item.manufactureDate && item.packagingFm))
+
+      return finallyData
+    },
     historyCache(obj, index, isDefault) {
       const data = this.$store.state.public.materiaList || [];
       const historyList = this.$store.state.public.historyList || {};
@@ -270,20 +532,49 @@ export default {
     },
     // 编辑回显
     editDetails() {
-      detailBySendEdit(this.goodsId).then((res) => {
+      detailByUpdateSend(this.goodsId).then((res) => {
         if (res.code == 0) {
           // Toast.clear()
-          const { planNumber, sectionName, contractName } = res.data;
-          this.goodsMsg.planNumber = planNumber;
-          this.goodsMsg.sectionName = sectionName;
-          this.goodsMsg.contractName = contractName;
+          // this.goodsMsg.planNumber = planNumber;
+          // this.goodsMsg.sectionName = sectionName;
+          // this.goodsMsg.contractName = contractName;
+
+          res.data.receiver = res.data.contacts;
+          res.data.phone = res.data.contactsPhone;
+
+          this.goodsMsg = res.data;
+
+          this.fileList = [];
+          
           let file = JSON.parse(res.data.fileByList);
+          
           this.params = res.data;
+
+          const data = this.$store.state.public.selectGoodData?.length > 0 ? this.$store.state.public.selectGoodData : res.data?.materialCirculationDetailsTableDTOS;          
+
+          const newData = data?.map(el => {
+            return {
+              ...el,
+              ...res.data,
+              manufactureDate:this.formatDate(el.manufactureDate),
+              supplyDate: this.formatDate(el.supplyDate),
+              expirationDate: el.expirationDate ? this.formatDate(el.expirationDate):el.expirationDate,
+              planDetailId: el.id,
+              sendTotal: el.sendTotal,
+              fileList01: el?.fileList01 ? el.fileList01 : this.fileLists(el.fileByList),
+              fileList02: el?.fileList02 ? el.fileList02 :this.fileListss(el.fileByList),
+            }
+          });
+
+          this.$store.dispatch('public/setSelectGoodData', newData);
+
+          this.materiaList = this.historyCaches();
+
           this.fileList.push({
             fileName: file.fhd[0].fileName,
             filePath: file.fhd[0].filePath,
           });
-          this.fileByList = file.fhd[0].fileName;
+          // this.fileByList = file.fhd[0].fileName;
           this.params.shippingDate = this.formattedCreateDate(
             res.data.shippingDate
           );
@@ -294,6 +585,26 @@ export default {
           this.zczp = file.zczp || []
         }
       });
+    },
+    // 用于编辑回显
+    fileLists(data) {
+      let imgUrl = JSON.parse(data)
+
+      let img = [{ fileName: imgUrl.hgz[0].fileName, filePath: imgUrl.hgz[0].filePath }]
+      return img
+    },
+    fileListss(data) {
+      let imgUrl = JSON.parse(data)
+
+      let img = [{ fileName: imgUrl.cjbg[0].fileName, filePath: imgUrl.cjbg[0].filePath }]
+      return img
+    },
+    formatDate(dateString){
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
+      const day = date.getDate().toString().padStart(2, '0'); // 日期加0（可选）
+      return `${year}-${month}-${day}`;
     },
     todayTime() {
       const now = new Date();
@@ -446,6 +757,86 @@ export default {
           //验证失败
         });
     },
+    onSubmit() {
+      // console.log(this.$store.state.public.sendGoods, "this.$store.state.public.sendGoods")
+      // console.log(this.params, this.fileList, this.materiaList, this.goodsMsg.sectionName, this.goodsMsg.planName, this.goodsMsg.id, "发货传参")
+
+      this.materiaList.forEach((item) => {
+        let fileByList = {};
+        //报验结果
+        if (item.fileList01.length > 0) {
+          this.$set(fileByList, "hgz", item.fileList01);
+        }
+        if (item.fileList02.length > 0) {
+          this.$set(fileByList, "cjbg", item.fileList02);
+        }
+        item.fileByList = JSON.stringify(fileByList);
+        item.planDetailId = item.id;
+      });
+
+      let fileByList = JSON.stringify({ fhd: this.fileList, zczp: [] });
+
+      let params = {
+        ...this.params,
+        fileList: this.fileList,
+        materialCirculationDetailsTableParamList: this.materiaList,
+        sectionName: this.goodsMsg.sectionName,
+        planName: this.goodsMsg.planName,
+        planId: this.goodsMsg.id,
+        contractName: this.goodsMsg.contractName,
+        fileByList: fileByList,
+      }
+
+      const { addr, receiveraddress, phone, receiver, ...rest } = params;
+
+
+      if (this.text == 'add') {
+        demandSaveSendGoods(rest).then((res) => {
+          if (res.code == 0) {
+            Toast.success(res.data);
+            this.$router.push({ path: "/Information" })
+          }
+        })
+      } else {
+        modifySendGoods(rest).then((res) => {
+          if (res.code == 0) {
+            Toast.success(res.data);
+            this.$router.push({ path: "/Information" })
+          }
+        })
+      }
+    },
+    btnClick(code) {
+      this.btnClickIndex = code
+    },
+    editedClick(item, index) {
+      this.$store.dispatch('public/setMateriaData', item)
+      // const query = this.text == 'edit' ? { contractId: this.contractId, type: this.text, id: this.queryId } : { contractId: this.contractId }
+      const query = { type: this.text, id: this.goodsId, planId: this.planId }
+      this.$router.push({ name: 'EditedMaterialGoods', query })
+    },
+    deleteClick(index) {
+      const row = this.materiaList[index]
+      const uniqueNumber = row.uniqueNumber || row.allocationUniqueNumber
+      this.editedMateriaList = this.editedMateriaList.filter(item => !(uniqueNumber === item.uniqueNumber || uniqueNumber === item.allocationUniqueNumber))
+      this.editMateriaList = this.editMateriaList.filter(item => !(uniqueNumber === item.uniqueNumber || uniqueNumber === item.allocationUniqueNumber))
+      this.materiaList.splice(index, 1)
+      this.$store.dispatch('public/setMateriaList', this.materiaList)
+    },
+    returnClick() {
+      // const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId, materialUsedRatio: this.materialUsedRatio } : { contractId: this.contractId, materialUsedRatio: this.materialUsedRatio }
+      const query = { planId: this.planId, text: this.text, id: this.goodsId };
+
+
+      this.$router.push({ name: 'selectGoods', query })
+    },
+    receiptClick() {
+      const {id, text, planId} = this.$route.query;
+      this.$router.push({ name: 'ReceiptLists', query: { planId, type: text, id } })
+    },
+    createClick() {
+      this.$router.push({ name: 'ReceiptOperates', query: { type: 'create' } })
+    },
     lookGoods(id) {
       this.formKey++;
       this.$router.push({ path: "/selectGoods", query: { id: id } });
@@ -507,6 +898,14 @@ export default {
             message: "上传失败",
           });
         });
+    },
+    scrollToSection() {
+      const element = document.getElementsByClassName('box-container-unedited')
+      if (element.length) {
+        element[0].scrollIntoView({ behavior: 'smooth' })
+        return false
+      }
+      return true
     },
     //附件上传前
     beforeRead(file) {
@@ -584,5 +983,325 @@ li :nth-child(2) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+
+
+.save-materials {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
+
+  .box-containerA{
+    margin-bottom: 0;
+    margin-top: 8px;
+  }
+
+    .detail-floor-content {
+    justify-content: space-between;
+    padding: 5px 12px 2px 12px;
+
+    span {
+      color: #151b3e;
+      font-weight: 400;
+    }
+
+    .van-button {
+      border-radius: 5px;
+      margin-right: 8px;
+      height: 30px;
+    }
+
+    .van-button-selected {
+      span {
+        color: #0861db;
+      }
+    }
+
+    .detail-floor-content-add {
+      color: #1189f6;
+      padding-right: 2px;
+      font-size: 16px;
+      vertical-align: middle;
+    }
+  }
+
+  .detail-base-info-edited {
+    width: auto;
+    box-sizing: border-box;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    background: #ffffff;
+    border-radius: 7px;
+    box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
+    position: relative;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+
+    .detail-title-content {
+      padding-left: 0;
+      padding-right: 0;
+
+      img {
+        width: 26px;
+        height: 26px;
+      }
+
+      span {
+        line-height: 26px;
+        margin-left: 0;
+      }
+    }
+
+    .box-container-p{
+      font-size: 11px;
+      color: #4a4a4a;
+      text-align: center;
+      margin-top: 22px;
+      margin-bottom: 13px;
+      span{
+        vertical-align: middle;
+      }
+    }
+
+    .detail-title-content-edited {
+      margin: 21px;
+      text-align: center;
+      font-size: 12px;
+
+      .van-button {
+        width: 110px;
+        height: 28px;
+        margin-right: 6px;
+        font-size: 12px;
+      }
+
+      .detail-title-content-edited-add {
+        width: 16px;
+        height: 16px;
+        vertical-align: sub;
+      }
+    }
+
+    .detail-title-content-edited-button {
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    .detail-list-ul-edited {
+      border-bottom: 1px solid #e3e3e3;
+    }
+
+    .detail-base-info-edited-all {
+      text-align: right;
+      font-size: 12px;
+      padding-top: 10px;
+      padding-right: 16px;
+
+      img {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+      }
+    }
+
+    .detail-title-content-field {
+      padding-left: 20px;
+      padding-right: 10px;
+      padding-bottom: 5px;
+
+      .detail-base-info-edited-textarea {
+        background: #f6f6f6;
+        border-radius: 10px;
+      }
+    }
+
+    .detail-ul-text {
+      margin-left: 5px;
+      margin-right: 5px;
+      margin-bottom: 10px;
+      background: #f2f2f2;
+      border-radius: 5px;
+
+      .detail-ul {
+        padding: 10px 12px;
+
+        li {
+          span {
+            text-align: left;
+          }
+        }
+      }
+    }
+
+    .detail-title-edited-p {
+      justify-content: space-between;
+
+      p {
+        img {
+          vertical-align: middle;
+        }
+
+        span {
+          vertical-align: middle;
+        }
+
+        &:nth-child(2) {
+          padding-right: 10px;
+
+          span {
+            font-weight: 400;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+  
+  .detail-title-contentA {
+    width: 100%;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    padding-left: 2px;
+    padding-right: 27px;
+    box-sizing: border-box;
+    border-top: 1px solid #f1f4f8;
+
+    img {
+      width: 25px;
+      height: 25px;
+    }
+
+    & span:nth-child(2) {
+      margin-left: 2px;
+      color: #151b3e;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    & span:nth-child(3) {
+      color: #151b3e;
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+
+  .detail-title-text {
+    padding: 0 12px;
+
+    p {
+      &:nth-child(1) {
+        font-size: 11px;
+        color: #1159cc;
+        padding-bottom: 5px;
+      }
+
+      &:nth-child(2) {
+        padding-left: 5px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .detail-ul-text {
+    margin: 10px;
+    background: #f2f2f2;
+    border-radius: 5px;
+
+    .detail-ul {
+      padding: 10px 8px;
+    }
+  }
+
+  .detail-floor-content {
+    justify-content: space-between;
+    padding: 5px 12px 2px 12px;
+
+    span {
+      color: #151b3e;
+      font-weight: 400;
+    }
+
+    .van-button {
+      border-radius: 5px;
+      margin-right: 8px;
+      height: 30px;
+    }
+
+    .van-button-selected {
+      span {
+        color: #0861db;
+      }
+    }
+
+    .detail-floor-content-add {
+      color: #1189f6;
+      padding-right: 2px;
+      font-size: 16px;
+      vertical-align: middle;
+    }
+  }
+
+  .detail-list-ul {
+    padding-left: 12px;
+
+    .detail-list-ul-text {
+      justify-content: space-between;
+
+      img {
+        width: 18px;
+        height: 18px;
+        flex: none;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  .default-button-container {
+    justify-content: space-between;
+    padding-left: 14px;
+    padding-right: 19px;
+    box-sizing: border-box;
+    box-shadow: 4px 0px 5px rgba(32, 30, 74, 0.1);
+
+    .default-button-container-selected {
+      font-size: 13px;
+
+      span {
+        vertical-align: middle;
+      }
+
+      img {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+      }
+
+      .default-button-container-selected-img {
+        transform: rotate(180deg)
+      }
+    }
+
+    .default-button-container-button{
+      display: flex;
+      .button-info{
+        margin-left: 10px;
+      }
+    }
+
+    .button-info {
+      width: 120px;
+      height: 34px;
+    }
+
+    ::v-deep .file-add{
+      margin: 0;
+      padding: 0;
+    }
+  }
 }
 </style>
