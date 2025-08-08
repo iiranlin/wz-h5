@@ -151,7 +151,7 @@
         <span>厂检报告附件</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.fileList02?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
-      <file-upload-view :fileList="sectionInfo.fileList02 || []" businessType="01" class="outbound-field-uploader" />
+      <file-upload-view :maxCount="99" :fileList="sectionInfo.fileList02 || []" businessType="01" class="outbound-field-uploader" />
     </div>
     <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
