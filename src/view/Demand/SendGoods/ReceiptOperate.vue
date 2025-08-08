@@ -6,7 +6,7 @@
         </div>
         <van-field v-model="formData.receiver" name="发货人" label="发货人：" placeholder="请输入发货人" required clearable
             input-align="right"/>
-        <van-field v-model="formData.phone" name="联系电话" label="联系电话：" placeholder="请输入联系电话" clearable maxlength="11"
+        <van-field v-model="formData.phone" name="联系电话" label="联系电话：" placeholder="请输入联系电话" required clearable maxlength="11"
             input-align="right"/>
         <div class="detail-floor-content">
             <img src="/static/icon-receipt-operate.png"/>
@@ -19,6 +19,7 @@
             maxlength="200"
             rows="2"
             autosize
+            required
             placeholder="请输入发货地址"
             show-word-limit/>
         <!-- <div class="detail-floor-content">
@@ -87,6 +88,20 @@ export default {
                 this.$notify({
                     type: 'warning',
                     message: '请填写发货人!',
+                });
+                return
+            }
+            if(!this.formData.phone){
+                this.$notify({
+                    type: 'warning',
+                    message: '请填写联系电话!',
+                });
+                return
+            }
+            if(!this.formData.receiveraddress){
+                this.$notify({
+                    type: 'warning',
+                    message: '请填写发货地址!',
                 });
                 return
             }
