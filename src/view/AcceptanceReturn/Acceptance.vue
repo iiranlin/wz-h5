@@ -103,7 +103,7 @@ import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 import { materialCirculationTableRestSubmit } from '@/api/prodmgr-inv/materialCirculationTableRest'
-import { recall } from '@/api/prodmgr-inv/audit'
+import { recall, downloadHandoverAcceptanceForm } from '@/api/prodmgr-inv/audit'
 
 export default {
   name: 'Acceptance',
@@ -326,7 +326,8 @@ export default {
       })
     },
     // 下载验收单
-    downLoadAcceptanceOrder(item) {
+    downLoadAcceptanceOrder({id}) {
+      downloadHandoverAcceptanceForm({id})
     }
   }
 }
