@@ -321,6 +321,12 @@ export const routes = [
         meta: { title: '退货详情' },
         component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/DoReturn.vue')
       },
+      {
+        path: 'ViewMaterialsReturnD',
+        name: 'ViewMaterialsReturnD',
+        meta: { title: '物资详情' },
+        component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/ViewMaterials.vue')
+      },
     ]
   },
   // 确认需求
