@@ -188,6 +188,7 @@ export default {
     }
   },
   activated() {
+    this.allRefresh();
     this.scrollPositionInit(this.className, this.allFinished)
     if (this.$route.params.refresh) {
       this.waitRefresh()
