@@ -303,7 +303,7 @@ export default {
     editDetails(){
         editSnedGoods(this.planId).then((res)=>{
         if(res.code==0){
-          const data = this.$store.state.public.selectGoodData || [];
+          const data = this.$store.state.public.selectGoodDataEdit || [];
 
 
           this.result = (data || []).map(item => item.uniqueNumber || item.allocationUniqueNumber);
@@ -408,7 +408,7 @@ export default {
     },
     editClick(text,id){
        if(this.selectArrayData.length>0){
-        this.$store.dispatch('public/setSelectGoodData', this.selectArrayData);
+        this.$store.dispatch('public/setSelectGoodDataEdit', this.selectArrayData);
 
         this.$router.push({ path: '/sendGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:id,text:text,planId:this.planId} })
       }else{

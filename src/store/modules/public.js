@@ -13,6 +13,7 @@ const state = {
   editGoods:{},
 
   selectGoodData: [],
+  selectGoodDataEdit: [],
 
   //滚动条回到原来位置
   scrollPosition: {}
@@ -27,6 +28,9 @@ const mutations = {
   },
   SET_SELECTGOODDATA: (state, selectGoodData) => {
     state.selectGoodData = selectGoodData;
+  },
+  SET_SELECTGOODDATA_EDIT: (state, selectGoodDataEdit) => {
+    state.selectGoodDataEdit = selectGoodDataEdit;
   },
   SET_GOODS_LIST:(state,goodsList)=>{
     state.sendGoods = goodsList
@@ -80,6 +84,9 @@ const actions = {
   },
   setSelectGoodData({ commit }, data) {
     commit('SET_SELECTGOODDATA', data)
+  },
+  setSelectGoodDataEdit({ commit }, data) {
+    commit('SET_SELECTGOODDATA_EDIT', data)
   },
   setInterfaceMateriaList({ commit }, data) {
     commit('SET_INTERFACE_MATERIA_LIST', data)

@@ -24,7 +24,7 @@
               <div v-for="(item,index) in dataList" :key="index" class="box-container"  @click="viewAcceptDetail(item)">
                 <div class="list-title-content">
                   <span>收货单号：</span>
-                  <span class="font-weight" style="color:#134daa;" >{{ item.takeNumber}}</span>
+                  <span class="font-weight" style="color:#8C8FA0;" >{{ item.takeNumber}}</span>
                   <div class="li-title-status">
                     <img :src="checkAuditStatus(item.takeStatus)"/>
                     <span :type="item.takeStatus | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.takeStatus == 4}">{{
@@ -281,13 +281,13 @@ export default {
     },
     checkAuditStatus(status){
       if(status == '1'){
-        return '/static/icon-xqjh.png'
+        return '/static/Icon_NoReceiving.png'
       }else if(status == '2'){
-        return '/static/icon-success.png'
+        return '/static/icon_NoCheckAndAccept.png'
       }else if(status == '3'){
-        return '/static/icon-xqjh.png'
+        return '/static/Icon_PartialReturn.png'
       }else if(status == '4'){
-        return '/static/icon-return.png'
+        return '/static/Icon_Returned.png'
       }
         
     },
