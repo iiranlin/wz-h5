@@ -225,7 +225,7 @@
       </div>
       <div class="default-button-container-button" v-if="!isView">
 
-        <van-button v-if="isFlag" class="button-info" round type="info" @click="addClick">确定收货</van-button>
+        <van-button v-if="isFlag" class="button-info" round type="info" @click="addClick">提交收货审核</van-button>
 
         <p style="font-size: 12px;" v-else><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资收货信息</span>
         </p>
@@ -250,6 +250,8 @@
 
     <file-preview ref="filePreview"></file-preview>
 
+    <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
+
     <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>
@@ -265,11 +267,14 @@ import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import activitiAssignee from '@/components/activitiAssignee'
+import { submitTodo } from "@/api/prodmgr-inv/receive"
+
 
 export default {
   name: 'DoAccept',
   mixins: [indexMixin,keepPages],
-  components: { FilePreview,FileUploadView ,FileDownloadView,BackToTop},
+  components: { FilePreview,FileUploadView ,FileDownloadView,BackToTop, activitiAssignee},
   props: {
     isView: {
       type: Boolean,
@@ -327,7 +332,8 @@ export default {
       editedMateriaList: [],
       editedStatus,
       editStatus,
-    }
+      backupParams: {},
+    } 
   },
   filters: {
     formatDate(value) {
@@ -509,13 +515,8 @@ export default {
           });
          return
       }
-
-      saveTake(params).then((res)=>{
-        if(res.success){
-          this.$toast('保存成功')
-          this.$router.push({path: '/AcceptanceReturn'})  
-        } 
-      })
+      this.backupParams = params
+      this.handleExamineClick(params)
       
     },
     checkClick(){
@@ -540,7 +541,25 @@ export default {
     },
     getFile(id){
       return  this.fileTHList.find(item=>item.id == id).value
-    }
+    },
+    //选择审核人回调
+    optionsSuccess(assignee, { id, planType }) {
+      submitTodo({ id, planType: planType, assignee, ...this.backupParams }).then(() => {
+        this.$toast('提交审核成功')
+        this.$router.push({path: '/AcceptanceReturn'})  
+      })
+    },
+    //去审核点击
+    handleExamineClick(item) {
+      this.$dialog.confirm({
+        title: '标题',
+        message: '确认要提交审核吗？',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.$refs.activitiAssignee.init('SHLC', item)
+      })
+    },
   },
   mounted() {
     this.from = this.$route.query.from

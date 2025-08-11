@@ -123,7 +123,7 @@ export default {
       this.$router.push({name: 'DoReturn',query:{id: item.id, backNode: '1'}})
     },
     detailsClick (item) {
-      this.$router.push({ name: 'DoAcceptDetail', query: {id: item.id}  })
+      this.$router.push({ name: 'DoAcceptDetail', query: {id: item.id, takeStatus: item.takeStatus}  })
     },
     handeSearchClick () {
       this.allRefresh()

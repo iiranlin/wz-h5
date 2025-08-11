@@ -254,7 +254,7 @@ export default {
           }
         },
         '2': () => {
-          this.$router.push({ name: 'DoAcceptDetail', query: { id: item.id } })
+          this.$router.push({ name: 'DoAcceptDetail', query: { id: item.id, takeStatus: item.takeStatus } })
         }
       }
       objKey && objKey[key]()

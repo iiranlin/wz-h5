@@ -151,9 +151,13 @@ export default {
         //列表条目点击
         handleItemClick(item){
             const { businessType, businessId } = item
-            if( businessType === "RKLC"){
+            if(Object.keys(FLOW_ROUTE).includes(businessType)){
                 let name = FLOW_ROUTE[businessType]
-                this.$router.push({ name, query: { id: businessId }})
+                let query = { 
+                    id: businessId,
+                    ...(businessType === "SHLC" && { takeStatus: item.takeStatus }) 
+                }
+                this.$router.push({ name, query })
             } else {
                 this.$router.push({
                     name: "DemandPlanningExamine",
