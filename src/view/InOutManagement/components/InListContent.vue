@@ -24,7 +24,7 @@
         <div v-for="(item, index) in dataList" :key="index" class="box-container">
           <div class="list-title-content">
             <span>入库单号：</span>
-            <span class="font-weight" style="color:#134daa;">{{ item.storeNumber }}</span>
+            <span class="font-weight" style="color:#8C8FA0;">{{ item.storeNumber }}</span>
             <div class="li-title-status">
               <img :src="checkAuditStatus(item.storeStatus)" />
               <span>{{ checkStatusText(item.storeStatus) }}</span>
@@ -112,13 +112,13 @@ export default {
         storeStatus: ''
       },
       statusArr: [
-        { value: '', text: '全部' },
-        { value: "1", text: "待检测" },
-        { value: "2", text: "部分退货" },
-        { value: "3", text: "已入库" },
-        { value: "4", text: "已退货" },
-        { value: "5", text: "审核中" },
-        { value: "6", text: "已驳回" }
+        { value: '', text: '全部', imgPath: '' },
+        { value: "1", text: "待检测", imgPath: '/static/Icon_checkPending.png' },
+        { value: "2", text: "部分退货", imgPath: '/static/Icon_PartialReturn.png' },
+        { value: "3", text: "已入库", imgPath: '/static/Icon_Storage.png' },
+        { value: "4", text: "已退货", imgPath: '/static/Icon_Returned.png' },
+        { value: "5", text: "审核中", imgPath: '/static/Icon_audit.png' },
+        { value: "6", text: "已驳回", imgPath: '/static/Icon_reject.png' }
       ],
       refreshLoading: false,
       loading: false,
@@ -148,15 +148,12 @@ export default {
       return name
     },
     checkAuditStatus(status) {
-      if (status == '6') {
-        return '/static/icon-reject.png'
-      } else if (['2', '4'].includes(status)) {
-        return '/static/icon-return.png'
-      } else if (['1'].includes(status)) {
-        return '/static/icon-xqjh.png'
-      } else {
-        return '/static/icon-success.png'
-      }
+      // 获取状态对应图片路径
+      let imgPath = this.statusArr.find(el => {
+        return el.value === status
+      })?.imgPath || "";
+
+      return imgPath;
     },
     handeSearch() {
       this.onRefresh()
