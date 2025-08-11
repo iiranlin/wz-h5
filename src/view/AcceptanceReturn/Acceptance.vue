@@ -263,6 +263,7 @@ export default {
         activeTab:this.menuActiveIndex
 
       })
+      this.$store.dispatch('public/setSelectGoodData', []);
       this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true,isLable:false, takeStatus: item.takeStatus}})
     },
 
