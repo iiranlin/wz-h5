@@ -296,8 +296,8 @@ export default {
           });
           return
         }
-        
-        if (this.boolExceptZero(this.sectionInfo.refundTotal) && this.sectionInfo.values.length == 0) {
+
+        if (+this.sectionInfo.refundTotal > 0 && this.sectionInfo.values.length == 0) {
           this.$notify({
             type: 'warning',
             message: '有退货数量，请上传退货附件!'
