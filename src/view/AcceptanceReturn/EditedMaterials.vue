@@ -219,7 +219,8 @@ export default {
       isView: false,
       id: '',
       tabs: true,
-      isLable: false
+      isLable: false,
+      takeStatus: '',
     }
   },
   activated() {
@@ -265,12 +266,13 @@ export default {
       }
     },
     init() {
-      const { id = '', tabs = true, isLable = false, isView = false } = this.$route.query
+      const { id = '', tabs = true, isLable = false, isView = false, takeStatus = ''} = this.$route.query
 
       this.id = id
       this.tabs = tabs == (true || 'true')
       this.isLable = isLable == (true || 'true')
       this.isView = JSON.parse(isView)
+      this.takeStatus = takeStatus
 
 
       const data = Object.assign({}, this.$store.state.public.materiaData || {})
@@ -313,7 +315,7 @@ export default {
         });
         this.$store.dispatch('public/setSelectGoodData', data)
       }
-      this.$router.push({ name: 'DoAccept', query: { id: this.id, tabs: this.tabs, isLable: this.isLable } })
+      this.$router.push({ name: 'DoAccept', query: { id: this.id, tabs: this.tabs, isLable: this.isLable, takeStatus: this.takeStatus } })
     },
   }
 }

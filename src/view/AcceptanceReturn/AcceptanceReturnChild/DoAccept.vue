@@ -380,7 +380,7 @@ export default {
     editedClick(item, index) {
       this.$store.dispatch('public/setMateriaData', item)
 
-      this.$router.push({ name: 'EditedMaterialDoAccept', query: {from: this.from, id: this.id, tabs: this.tabs, isLable: this.isLable, isView: this.isView}  })
+      this.$router.push({ name: 'EditedMaterialDoAccept', query: {from: this.from, id: this.id, tabs: this.tabs, isLable: this.isLable, isView: this.isView, takeStatus: this.takeStatus}  })
     },
     historyCaches() {
       const data = this.$store.state.public.selectGoodData || []
