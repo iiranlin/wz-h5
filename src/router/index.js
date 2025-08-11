@@ -459,6 +459,12 @@ export const routes = [
         name: 'returnDetails',
         meta: { title: '退货详情' },
       },
+      {
+        path: 'ViewMaterialsReturn',
+        name: 'ViewMaterialsReturn',
+        meta: { title: '物资详情' },
+        component: () => import('@/view/Demand/ReturnGoods/ViewMaterials.vue')
+      },
     ]
   }
 ];

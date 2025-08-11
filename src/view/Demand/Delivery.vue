@@ -408,6 +408,7 @@ export default {
     },
     //编辑
     handleEditClick(id, title,planId) {
+      this.$store.dispatch('public/setSelectGoodDataEdit', []);
       this.$router.push({ path: '/SendGoods', query: {goodData:JSON.stringify([]), id: id, text: title,planId:planId } })
     },
     //文件修改

@@ -238,6 +238,7 @@ export default {
     //发货
     handleSendGoodsClick(id, title) {
       // this.$router.push({ path: '/sendGoods', query: { id: id, title: title } })
+      this.$store.dispatch('public/setSelectGoodData', []);
       this.$router.push({ path: '/selectGoods', query: { id: id, text: title } })
     },
     //查看物流
