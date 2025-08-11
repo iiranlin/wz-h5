@@ -304,6 +304,12 @@ export const routes = [
         component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/DoAccept.vue')
       },
       {
+        path: 'EditedMaterialDoAccept',
+        name: 'EditedMaterialDoAccept',
+        meta: { title: '编辑物资' },
+        component: () => import('@/view/AcceptanceReturn/EditedMaterials.vue')
+      },
+      {
         path: 'DoAcceptDetail',
         name: 'DoAcceptDetail',
         meta: { title: '收货详情' },
