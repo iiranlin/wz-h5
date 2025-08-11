@@ -260,7 +260,7 @@ import editStatus from '@/assets/img/editStatus.png'
 import BackToTop from '@/components/BackToTop'
 import indexMixin from '@/view/mixins'
 import keepPages from "@/view/mixins/keepPages";
-import {saveTake,defaultTake} from '@/api/prodmgr-inv/AcceptanceReturn'
+import {saveTake,defaultTake, detailTakeBack} from '@/api/prodmgr-inv/AcceptanceReturn'
 import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
@@ -294,7 +294,10 @@ export default {
       })
 
       return takeDate && flag;
-    }
+    },
+    takeStatus(){
+      return this.$route.query?.takeStatus ;
+    },
   },
   data() {
     return {
@@ -397,7 +400,8 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-       defaultTake(this.id).then((res)=>{
+      const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : defaultTake;
+       getDetailApi(this.id).then((res)=>{
           if(res.success){
             this.dataList = res.data
 
