@@ -191,7 +191,7 @@
 import {parseTime} from '@/utils'
 import BackToTop from '@/components/BackToTop'
 import indexMixin from '@/view/mixins'
-import {saveTake,defaultTake} from '@/api/prodmgr-inv/AcceptanceReturn'
+import {saveTake,defaultTake, detailTakeBack} from '@/api/prodmgr-inv/AcceptanceReturn'
 import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
@@ -229,6 +229,11 @@ export default {
       menuActiveIndex: '0'
     }
   },
+  computed: {
+    takeStatus(){
+      return this.$route.query?.takeStatus ;
+    },
+  },
   filters: {
     formatDate(value) {
       if(value){
@@ -263,7 +268,8 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-       defaultTake(this.id).then((res)=>{
+      const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : defaultTake;
+       getDetailApi(this.id).then((res)=>{
           if(res.success){
             this.dataList = res.data
             this.dataList.takeDate = parseTime(this.currentTime, '{y}-{m}-{d}')

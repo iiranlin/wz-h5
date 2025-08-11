@@ -262,7 +262,7 @@ export default {
         activeTab:this.menuActiveIndex
 
       })
-      this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true,isLable:false}})
+      this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true,isLable:false, takeStatus: item.takeStatus}})
     },
 
     //搜索点击

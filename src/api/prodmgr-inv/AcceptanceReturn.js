@@ -16,6 +16,18 @@ export function defaultTake(id){
   })
 }
 
+/**
+ * 收货备份明细详情
+ * @param {*} params 
+ * @returns 
+ */
+export const detailTakeBack = (id) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialBackTableRest/detailByBack/${id}`,
+    method: 'get',
+  })
+}
+
 export function saveTake(data){
     return request({
     url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/saveTake`,
