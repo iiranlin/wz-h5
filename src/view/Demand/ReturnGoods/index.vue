@@ -1,48 +1,23 @@
 <template>
-    <div class="default-containers" ref="container">
-        <div class="detail-base-info">
-            <!-- <div class="detail-title-content">
-                <img src="/static/icon-xqjh.png">
-                <span>需求名称：</span>
-                <span>{{ params.planName }}</span>
-            </div> -->
-
-            <div class="detail-title-content-custom">
-                <span class="label">需求名称：</span>
-                <div class="title-bold">{{ params.planName }}</div>
+    <div class="requirement-details" ref="container">
+                 <div class="detail-base-info">
+            <div class="detail-title-text">
+        <p>需求名称：</p>
+        <p>{{ params.planName }}</p>
+        <div class="list-title-content">
+            <p style="color: #656980; font-size: 14px;">
+                <span>需求编号：</span>
+                <span class="font-weight" style="color:#3D83E2;">{{ params.planNumber }}</span>
+            </p>
+            <div class="li-title-status">
+                <img :src="checkAuditStatus(params.backNode)" />
+                <span style="color:#000; font-size: 13px;">{{ checkStatusText(params.issueType) }}</span>
             </div>
-
-
-            <div style="padding-left: 50px; margin-bottom: 10px; display: flex; align-items: center;">
-                <div>
-                    <span style="font-size: 25px; color: #151b3e;">需求编号：</span>
-                    <span style="font-size: 25px; color:#0861db;">{{ params.planNumber }}</span>
-                </div>
-            </div>
-
-
-
-            <!-- <div style="padding-left: 50px; margin-bottom: 10px; display: flex; align-items: center;">
-  <div>
-    <span style="font-size: 25px; color: #151b3e;">需求编号：</span>
-    <span style="font-size: 25px; color:#0861db;">{{ params.planNumber }}</span>
-  </div>
-
-     <div class="li-title-status">
-        <img :src="checkAuditStatus(params.backNode)" />
-        <span>{{ checkStatusText(params.issueType) }}</span>
-    </div>
-
-</div> -->
-
-
-            <div class="detail-ul-text">
-                <ul class="detail-list-ul">
-                    <!-- <li>
-                      <span>建设项目：</span>
-                      <span>{{ params.projectName }}</span>
-                    </li>  -->
-                    <li>
+        </div>
+      </div>
+      <div class="detail-ul-text">
+        <ul class="detail-ul">
+         <li>
                         <span>需求项目：</span>
                         <span>{{ params.sectionName }}</span>
                     </li>
@@ -58,87 +33,41 @@
                         <span>使用地点：</span>
                         <span>{{ params.addr }}</span>
                     </li>
-                    <!-- <li>
-                        <span>退货环节：</span>
-                        <span style="color:red;" v-if="params.backNode == 2">质检不通过</span>
-                        <span style="color:red;" v-else>收货不通过</span>
-                    </li> -->
                     <li>
                         <span>退货时间：</span>
                         <span>{{ formattedCreateDate(params.backDate) }}</span>
                     </li>
-                </ul>
-            </div>
-
-
-            <div>
-                <ul class="detail-list-ul">
-
-                    <li style="font-size: 26px; display: flex; justify-content: space-between; align-items: center;">
-                        <span>退货物资项目：</span>
-                        <span class="li-span-click">{{ params.materialCirculationDetailsTableDTOS ?
-                            params.materialCirculationDetailsTableDTOS.length : 0 }}项</span>
-                    </li>
-                </ul>
-            </div>
-
-
-
+        </ul>
+      </div>
+      <div class="detail-ul-bottom-text">
+        <ul class="detail-ul">
+          <li>
+            <span>退货物资项目：<span class="li-span-click">{{ params.materialCirculationDetailsTableDTOS ?
+                            params.materialCirculationDetailsTableDTOS.length : 0 }}</span> 项</span>
+          </li>
+        </ul>
+      </div>
         </div>
+    <div class="detail-base-info detail-base-info-edited">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>退货明细</span>
+      </div>
+          <material-details :list="params.materialCirculationDetailsTableDTOS" :planStatus="params.planStatus"></material-details>
+    </div>
 
-
-        <div class="detail-floor-content">
-            <img src="/static/icon-return.png" />
-            <span>退货明细</span>
-        </div>
-        <van-list>
-            <div class="box-container" v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
-                <div class="detail-list-title-content">
-                    <!-- <span class="font-weight">物资名称：</span> -->
-                    <span class="font-weight">{{ index + 1 }}.{{ item.materialName }}</span>
-                </div>
-
-                <ul class="detail-list-ul">
-                    <li>
-                        <span>规格型号: </span>
-                        <span>{{ item.specModel }}</span>
-                    </li>
-
-                    <li>
-                        <span>发货数量:</span>
-                        <!-- <span class="li-span-click">{{ item.sendTotal }} 套</span> -->
-                        <span>{{ item.sendTotal }} 套</span>
-                    </li>
-
-
-                    <li>
-                        <span>退货数量:</span>
-                        <span class="li-span-click">{{ item.refundTotal }} 套</span>
-                    </li>
-
-                    <li>
-                        <span>退货附件（数量）: </span>
-                        <span class="li-span-click">{{ }}</span>
-                    </li>
-                </ul>
-
-            <!-- <file-download-view class="outbound-field-uploader"  style="width: 100%;" title="退货附件：" :fileList="filterList(item.fileByList, 'thfj_sh') || []"/> -->
-            </div>
-        </van-list>
-        <div class="detail-floor-content">
-            <img src="/static/icon-firstcheckdata.png" />
-            <span>初验信息</span>
-        </div>
-        <div class="tabs">
-            <van-list>
-                <div class="box-container">
+        <div class="detail-base-info detail-base-info-edited">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>初验信息</span>
+      </div>
+               <!-- <div class="box-container"> -->
                     <file-download-view class="outbound-field-uploader" title="自检单："
                         :fileList="filterList(params.fileByList, 'zjd') || []" />
                     <file-download-view class="outbound-field-uploader" title="其他资料："
                         :fileList="filterList(params.fileByList, 'qtzl') || []" />
-                </div>
-            </van-list>
-        </div>
+                <!-- </div> -->
+    </div>
         <file-preview ref="filePreview"></file-preview>
         <back-to-top className=".default-container"></back-to-top>
     </div>
@@ -150,6 +79,7 @@ import { Field } from 'vant';
 import { Toast } from 'vant';
 import { returnGoodsDetails } from '@/api/demand/returnGoods'
 import indexMixin from '@/view/mixins'
+import MaterialDetails from './components/MaterialDetails.vue'
 import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
@@ -160,7 +90,7 @@ Vue.use(Field);
 export default {
     name: 'MyProcess',
     mixins: [indexMixin],
-    components: { FilePreview, FileDownloadView, FileUploadView, BackToTop },
+    components: { FilePreview, FileDownloadView, FileUploadView, BackToTop, MaterialDetails },
     data() {
         return {
             username: '',
@@ -177,11 +107,11 @@ export default {
             fileTHList: [],
 
 
-            // statusArr: [
-            //     { text: '全部', value: '' },
-            //     { text: '质检不通过', value: '2' },
-            //     { text: '收货不通过', value: '1' }
-            // ],
+            statusArr: [
+                { text: '全部', value: '' },
+                { text: '质检不通过', value: '2' },
+                { text: '收货不通过', value: '1' }
+            ],
 
         };
     },
@@ -221,27 +151,29 @@ export default {
         imgClick(fileName, filePath) {
             this.$refs.filePreview.init(fileName, filePath)
         },
+            checkAuditStatus(status) {
+      if (status == '0') {
+        return '/static/icon-reject.png'
+      } else if (['1', '2'].includes(status)) {
+        return '/static/Icon_noPass.png'
+      } else {
+        return '/static/Icon_noPass.png'
+      }
+    },
+        checkStatusText(status) {
+            if(status == '') {
+                return '收货不通过'
+            }
+      let name = ''
+      this.statusArr.forEach(item => {
+        if (item.value === status) {
+          name = item.text
+        }
+      })
+      return name
     },
 
-    // checkAuditStatus(status) {
-    //   if (status == '0') {
-    //     return '/static/icon-reject.png'
-    //   } else if (['1', '2'].includes(status)) {
-    //     return '/static/icon-return.png'
-    //   } else {
-    //     return '/static/icon-success.png'
-    //   }
-    // },
-    //     checkStatusText(status) {
-    //   let name = ''
-    //   this.statusArr.forEach(item => {
-    //     if (item.value === status) {
-    //       name = item.text
-    //     }
-    //   })
-    //   return name
-    // },
-
+    },
 
     // }
 
@@ -249,6 +181,214 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.requirement-details {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+
+  .list-title-content {
+    display: flex;
+    margin: 0 0 0 5px;
+  }
+
+  .li-title-status {
+    margin-right: 15px;
+  }
+
+  .detail-title-text {
+    padding: 0 12px;
+
+    p {
+      &:nth-child(1) {
+        font-size: 11px;
+        color: #1159cc;
+        padding-bottom: 5px;
+      }
+
+      &:nth-child(2) {
+        padding-left: 5px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .detail-ul-text {
+    margin: 10px;
+    background: #f2f2f2;
+    border-radius: 5px;
+
+    .detail-ul {
+      padding: 10px 8px;
+    }
+  }
+
+  .detail-ul-bottom-text {
+    padding-bottom: 10px;
+
+    .detail-ul {
+      padding: 0 22px;
+
+      .detail-ul-bottom-text-span,
+      img {
+        vertical-align: middle;
+      }
+
+      .detail-ul-bottom-text-log {
+        width: 13px;
+        height: 14px;
+      }
+    }
+  }
+
+  .detail-base-info-edited {
+    width: auto;
+    box-sizing: border-box;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-top: 8px;
+    background: #ffffff;
+    border-radius: 7px;
+    box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
+    position: relative;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    .detail-title-content {
+      padding-left: 5px;
+      padding-right: 5px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+
+      img {
+        width: 26px;
+        height: 26px;
+      }
+
+      span {
+        line-height: 26px;
+        margin-left: 0;
+        font-size: 13px;
+      }
+    }
+
+    .detail-list-ul {
+      margin-left: 5px;
+      margin-right: 5px;
+      margin-bottom: 8px;
+      border-radius: 5px;
+      padding-left: 17px;
+      padding-right: 12px;
+      background: #f0f2f6;
+    }
+
+    .detail-ul {
+      padding-left: 16px;
+      padding-right: 30px;
+      border-top: 0.5px solid #e3e3e3;
+
+      .detail-ul-p {
+        display: flex;
+        align-items: center;
+
+        & :nth-child(1) {
+          margin-right: 3px;
+        }
+
+        & :nth-child(2) {
+          margin-right: 3px;
+        }
+      }
+    }
+
+    .detail-base-info-edited-div {
+      justify-content: space-between;
+
+      .detail-base-info-edited-img {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .detail-ul-bottom-text-Arrow {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .select-materials-sticky {
+    ::v-deep .van-sticky {
+      background: #f2f4f8;
+    }
+  }
+
+  .select-materials-search {
+    display: flex;
+    justify-content: space-between;
+
+    .select-materials-search-p {
+      font-size: 14px;
+      padding-left: 13px;
+
+      .van-checkbox {
+        height: 100%;
+        margin-left: 2px;
+
+        ::v-deep .van-checkbox__icon {
+          font-size: 18px;
+
+          .van-icon {
+            border: 1px solid #1989fa;
+          }
+        }
+      }
+    }
+  }
+
+  .van-search {
+    width: 222px;
+
+    .van-search__content {
+      border-radius: 50px;
+      background: #fff;
+    }
+
+    .van-cell {
+      border-radius: 50px;
+      background: #fff;
+    }
+  }
+
+  .select-materials-search-switch {
+    display: flex;
+    align-items: center;
+    padding-right: 15px;
+
+    span {
+      margin-left: 5px;
+      font-size: 12px;
+    }
+
+    .van-switch {
+      width: 34px;
+      height: 18px;
+      font-size: inherit;
+
+      ::v-deep .van-switch__node {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  .default-button-container{
+    .button-info{
+      width: 169px;
+      img{
+        vertical-align: middle;
+      }
+    }
+  }
+}
 .box-container {
     padding: 0px !important;
 }
