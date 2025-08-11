@@ -19,12 +19,12 @@
         <div v-for="(item,index) in allOrderList" :key="index" class="box-container" @click="handleAllItemClick(item)">
           <div class="list-title-content">
           <span>退货单号：</span>
-          <span class="font-weight" style="color:#134daa;"  >{{item.backNumber}}</span>
+          <span class="font-weight" style="color:#8C8FA0;"  >{{item.backNumber}}</span>
         </div>
           <ul class="list-ul">
             <li>
               <span>发货单号：</span>
-              <span>{{item.shipmentBatchNumber}}</span>
+              <span style="color: #0689ff" @click.stop="viewDelivery(item)">{{item.shipmentBatchNumber}}</span>
             </li>
             <li class="li-item-overlength">
               <span>供应需求名称：</span>
@@ -56,7 +56,7 @@
             </li>
             <li>
               <span>操作人：</span>
-              <span>{{item.createUserName}}</span>
+              <span style="color: #0689ff">{{item.createUserName}}</span>
             </li>
           </ul>
         </div>
@@ -204,6 +204,9 @@ export default {
     onLoad() {
       this.allListQuery.pageNum ++
       this.getAllList()
+    },
+    viewDelivery(item){
+      this.$router.push({name: 'cargoDetails', query: {id:item.id,btnEvent:item.takeNumber?false:true}})
     },
     //获取订单状态字典
     getOrderStatusOptions() {
