@@ -329,13 +329,17 @@ export default {
           });
           return
         }
-        const data = this.$store.state.public.selectGoodData || []
+        const pathName = this.queryType == 'add' ? 'selectGoodData' : 'selectGoodDataEdit';
+
+        const data = this.$store.state.public[pathName] || []
         data.forEach((item, index) => {
           if (item.id == this.sectionInfo.id) {
             this.$set(data, index, this.sectionInfo)
           }
         });
-        this.$store.dispatch('public/setSelectGoodData', data)
+        const path = this.queryType == 'add' ? 'public/setSelectGoodData' : 'public/setSelectGoodDataEdit';
+
+        this.$store.dispatch(path, data)
       }
       this.$router.push({ name: 'SendGoods', query: { text: this.queryType, id: this.queryId, planId: this.planId } })
     },
@@ -346,7 +350,9 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        const data = this.$store.state.public.selectGoodData || []
+        const pathName = this.queryType == 'add' ? 'selectGoodData' : 'selectGoodDataEdit';
+
+        const data = this.$store.state.public[pathName] || []
         data.forEach((item, index) => {
           for (const key in obj) {
             if (Object.hasOwnProperty.call(obj, key)) {
@@ -354,7 +360,9 @@ export default {
             }
           }
         });
-        this.$store.dispatch('public/setSelectGoodData', data)
+        const path = this.queryType == 'add' ? 'public/setSelectGoodData' : 'public/setSelectGoodDataEdit';
+
+        this.$store.dispatch(path, data)
       })
     }
   }

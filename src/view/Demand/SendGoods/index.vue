@@ -196,7 +196,7 @@
           </li>
           <li>
             <span>发货数量：</span>
-            <span class="li-span-click">{{ item.ssendTotal }}</span>
+            <span class="li-span-click">{{ item.sendTotal }}</span>
           </li>
           <li>
             <span>收货人：</span>
@@ -409,6 +409,7 @@ export default {
       btnClickIndex: '0',
       materiaList: [],
       editMateriaList: [],
+      editedMateriaList: [],
       editedStatus,
       editStatus,
       formKey: "",
@@ -477,23 +478,24 @@ export default {
     this.goodsId = this.$route.query.id;
     this.planId = this.$route.query.planId;
     
-    this.materiaList = this.historyCaches();
-    
-    this.$store.dispatch('public/setSelectGoodData', this.materiaList)
+
     //编辑
     if (this.text == "edit") {
       this.editDetails();
     }
     // 增加
     if (this.text == "add") {
+      this.materiaList = this.historyCaches('selectGoodData');
+    
+      this.$store.dispatch('public/setSelectGoodData', this.materiaList)
+
       this.getSendGoods();
     }
     // 默认当前时间
     this.params.shippingDate = this.todayTime();
     },
-    historyCaches() {
-      const data = this.$store.state.public.selectGoodData || []
-      
+    historyCaches(dataFun) {
+      const data = this.$store.state.public?.[dataFun] || []
       const finallyData = data.map((item) => Object.assign({}, item, {
         supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
         minDate: this.minDate,
@@ -575,18 +577,16 @@ export default {
 
           this.fileList = [];
           
-          let file = JSON.parse(res.data.fileByList);
-          
           this.params = res.data;
 
-          const data = this.$store.state.public.selectGoodData?.length > 0 ? this.$store.state.public.selectGoodData : res.data?.materialCirculationDetailsTableDTOS;          
+          const data = this.$store.state.public.selectGoodDataEdit?.length > 0 ? this.$store.state.public.selectGoodDataEdit : res.data?.materialCirculationDetailsTableDTOS;     
 
           const newData = data?.map(el => {
             return {
               ...el,
               ...res.data,
-              manufactureDate:this.formatDate(el.manufactureDate),
-              supplyDate: this.formatDate(el.supplyDate),
+              manufactureDate:el?.manufactureDate ? this.formatDate(el.manufactureDate) : '',
+              supplyDate: el?.supplyDate ? this.formatDate(el.supplyDate) : '',
               expirationDate: el.expirationDate ? this.formatDate(el.expirationDate):el.expirationDate,
               planDetailId: el.id,
               sendTotal: el.sendTotal,
@@ -595,9 +595,11 @@ export default {
             }
           });
 
-          this.$store.dispatch('public/setSelectGoodData', newData);
+          this.$store.dispatch('public/setSelectGoodDataEdit', newData);
 
-          this.materiaList = this.historyCaches();
+          this.materiaList = this.historyCaches('selectGoodDataEdit');
+
+          let file = JSON.parse(res.data.fileByList);
 
           this.fileList.push({
             fileName: file.fhd[0].fileName,
@@ -617,16 +619,24 @@ export default {
     },
     // 用于编辑回显
     fileLists(data) {
-      let imgUrl = JSON.parse(data)
+      try {
+        let imgUrl = JSON.parse(data)
 
-      let img = [{ fileName: imgUrl.hgz[0].fileName, filePath: imgUrl.hgz[0].filePath }]
-      return img
+        let img = [{ fileName: imgUrl.hgz[0].fileName, filePath: imgUrl.hgz[0].filePath }]
+        return img
+      } catch (error) {
+        return []
+      }
     },
     fileListss(data) {
-      let imgUrl = JSON.parse(data)
+      try {
+        let imgUrl = JSON.parse(data)
 
-      let img = [{ fileName: imgUrl.cjbg[0].fileName, filePath: imgUrl.cjbg[0].filePath }]
-      return img
+        let img = [{ fileName: imgUrl.cjbg[0].fileName, filePath: imgUrl.cjbg[0].filePath }]
+        return img
+      } catch (error) {
+        return []
+      }
     },
     formatDate(dateString){
       const date = new Date(dateString);
@@ -850,7 +860,11 @@ export default {
       this.editedMateriaList = this.editedMateriaList.filter(item => !(uniqueNumber === item.uniqueNumber || uniqueNumber === item.allocationUniqueNumber))
       this.editMateriaList = this.editMateriaList.filter(item => !(uniqueNumber === item.uniqueNumber || uniqueNumber === item.allocationUniqueNumber))
       this.materiaList.splice(index, 1)
-      this.$store.dispatch('public/setMateriaList', this.materiaList)
+      if(this.text == 'add') {
+        this.$store.dispatch('public/setMateriaList', this.materiaList)
+      } else {
+        this.$store.dispatch('public/setSelectGoodDataEdit', this.materiaList)
+      }
     },
     returnClick() {
       // const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId, materialUsedRatio: this.materialUsedRatio } : { contractId: this.contractId, materialUsedRatio: this.materialUsedRatio }
