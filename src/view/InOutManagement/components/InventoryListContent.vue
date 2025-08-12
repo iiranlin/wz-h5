@@ -21,8 +21,8 @@
             <span>需求编号：</span>
             <span class="font-weight" style="color:#134daa;">{{item.planNumber}}</span>
             <div class="li-title-status">
-              <img :src="checkAuditStatus(item.status)"/>
-              <span>{{item.status == '5'?'已完成':'未完成'}}</span>
+              <img :src="checkAuditStatus(item.planCompleteStatus)"/>
+              <span>{{item.planCompleteStatus == '1'?'已完成':'未完成'}}</span>
             </div>
           </div>
           <ul class="list-ul" @click="detailsClick(item)">
