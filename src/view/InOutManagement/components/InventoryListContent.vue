@@ -155,10 +155,10 @@ export default {
       this.allRefresh();
     },
     checkAuditStatus(status){
-      if(status == '5'){
-        return '/static/icon-success.png'
+      if(status == '1'){
+        return '/static/icon-hasCompleted.png'
       }else
-        return '/static/icon-reject.png'
+        return '/static/icon-unfinished.png'
     },
   },
 };
