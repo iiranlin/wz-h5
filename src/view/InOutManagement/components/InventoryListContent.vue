@@ -18,8 +18,8 @@
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
         <div v-for="(item, index) in dataList" :key="index" class="box-container">
           <div class="list-title-content">
-            <span>需求编号：</span>
-            <span class="font-weight" style="color:#134daa;">{{item.planNumber}}</span>
+            <span style="color:rgba(21, 27, 62, 0.6)">需求编号：</span>
+            <span class="font-weight" style="color:rgba(21, 27, 62, 0.6)">{{item.planNumber}}</span>
             <div class="li-title-status">
               <img :src="checkAuditStatus(item.planCompleteStatus)"/>
               <span>{{item.planCompleteStatus == '1'?'已完成':'未完成'}}</span>
@@ -27,13 +27,10 @@
           </div>
           <ul class="list-ul" @click="detailsClick(item)">
             <li>
-              <span>当前库存：</span>
-              <span>{{item.relatedCount == 0?'无':'有'}}</span>
+              <!-- <span>需求名称：</span> -->
+              <span class="list-ul-title">{{item.planName}}</span>
             </li>
-            <li>
-              <span>需求名称：</span>
-              <span>{{item.planName}}</span>
-            </li>
+         
             <li>
               <span>物资名称：</span>
               <span>{{item.materialName}}</span>
@@ -53,6 +50,10 @@
             <li>
               <span>需求组织：</span>
               <span>{{item.deptName}}</span>
+            </li>
+            <li>
+              <span>当前库存：</span>
+              <span style="color:rgba(19, 77, 170, 1)">{{item.relatedCount == 0?'无':'有'}}</span>
             </li>
             <li>
               <span>提报人：</span>
@@ -181,6 +182,12 @@ export default {
 
     .van-search {
       flex: 1;
+    }
+  }
+  .list-ul{
+    .list-ul-title{
+      font-size: 0.375rem;
+      font-weight: 500;
     }
   }
 }
