@@ -19,7 +19,13 @@ const state = {
   selectGoodDataEdit: [],
 
   //滚动条回到原来位置
-  scrollPosition: {}
+  scrollPosition: {},
+
+  // 需求库存
+  outboundData:{},   // 物资存储数据
+  outboundFormData:{},  // 页面存储数据
+  outboundFileList:[] //页面上传的领料单
+  
 };
 
 const mutations = {
@@ -82,6 +88,17 @@ const mutations = {
   SET_MATERIA_DATA:(state, materiaData)=>{
     state.materiaData = materiaData
   },
+  SET_OUTBOUND_DATA:(state, outboundData)=>{
+    state.outboundData = outboundData
+  },
+  SET_OUTBOUND_FORM_DATA:(state, outboundFormData)=>{
+    state.outboundFormData = outboundFormData
+  },
+  SET_OUTBOUND_FILELIST:(state, outboundFileList)=>{
+    state.outboundFileList = outboundFileList
+  },
+  
+  
 };
 
 const actions = {
@@ -130,7 +147,17 @@ const actions = {
   },
   setMateriaData({commit}, data){
     commit('SET_MATERIA_DATA', data)
+  },
+  setOutboundData({commit}, data){
+    commit('SET_OUTBOUND_DATA', data)
+  },
+  setOutboundFormData({commit}, data){
+    commit('SET_OUTBOUND_FORM_DATA', data)
+  },
+  setoutboundFileList({commit}, data){
+    commit('SET_OUTBOUND_FILELIST', data)
   }
+  
 };
 
 export default {

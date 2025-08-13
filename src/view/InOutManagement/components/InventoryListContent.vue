@@ -8,7 +8,7 @@
           </template>
         </van-search>
       </div>
-      <van-tabs sticky v-model="formData.status" color="#0571ff" title-active-color="#0571ff"
+      <van-tabs sticky v-model="formData.planCompleteStatus" color="#0571ff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" @change="tabsChange">
         <van-tab v-for="item in option1" :title="item.text" :name="item.value" :key="item.value">
         </van-tab>
@@ -18,8 +18,8 @@
       <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
         <div v-for="(item, index) in dataList" :key="index" class="box-container">
           <div class="list-title-content">
-            <span style="color:rgba(21, 27, 62, 0.6)">需求编号：</span>
-            <span class="font-weight" style="color:rgba(21, 27, 62, 0.6)">{{item.planNumber}}</span>
+            <span style="color:#73768b">需求编号：</span>
+            <span style="color:#73768b">{{item.planNumber}}</span>
             <div class="li-title-status">
               <img :src="checkAuditStatus(item.planCompleteStatus)"/>
               <span>{{item.planCompleteStatus == '1'?'已完成':'未完成'}}</span>
@@ -27,7 +27,6 @@
           </div>
           <ul class="list-ul" @click="detailsClick(item)">
             <li>
-              <!-- <span>需求名称：</span> -->
               <span class="list-ul-title">{{item.planName}}</span>
             </li>
          
@@ -65,7 +64,7 @@
             </li>
           </ul>
           <div class="list-ul-button" v-if="item.relatedCount == '1'">
-            <van-button class="button-info" round type="info" @click="outboundClick(item)">出库</van-button>
+            <van-button class="button-info" plain round type="info" @click="outboundClick(item)">出库</van-button>
           </div>
         </div>
       </van-list>
@@ -82,14 +81,14 @@ export default {
     return {
       formData: {
         queryField: '',
-        status: '',
+        planCompleteStatus: '',
       },
       dataList:[],
       value1: 0,
       option1: [
         { text: '全部', value: '' },
-        { text: '未完成', value: '4' },
-        { text: '已完成', value: '5' },
+        { text: '未完成', value: '0' },
+        { text: '已完成', value: '1' },
       ],
       allRefreshLoading: false,
       allLoading: false,
@@ -103,7 +102,7 @@ export default {
   },
   created() {
     if(this.$route.meta.status){
-      this.formData.status = this.$route.meta.status
+      this.formData.planCompleteStatus = this.$route.meta.status
     }
   },
   activated() {
@@ -187,7 +186,7 @@ export default {
   .list-ul{
     .list-ul-title{
       font-size: 0.375rem;
-      font-weight: 500;
+      font-weight: 600;
     }
   }
 }
