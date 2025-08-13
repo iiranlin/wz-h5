@@ -23,7 +23,7 @@
                   @click="handleSupplyClick(item.id)">
                   <div class="list-title-content">
                     <span>需求编号：</span>
-                    <span class="font-weight" style="color:#8C8FA0;">{{ item.planNumber }}</span>
+                    <span class="font-weight li-span-grey">{{ item.planNumber }}</span>
                     <div class="li-title-status">
                       <img :src="checkAuditStatus(item.status)" />
                       <span>{{ checkStatusText(item.status) }}</span>
@@ -31,8 +31,8 @@
                   </div>
                   <ul class="list-ul">
                     <li>
-                      <span>需求名称：</span>
-                      <span class="text">{{ item.planName }}</span>
+                      <!-- <span>需求名称：</span> -->
+                      <span class="text" style="font-weight: bold; font-size: 16px;">{{ item.planName }}</span>
                     </li>
                     <li>
                       <span>建设项目：</span>

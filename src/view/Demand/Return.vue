@@ -30,9 +30,10 @@
                 <span class="font-weight">退货单号:</span>
                 <span class="font-weight" style="color:#1989fa;">{{ item.backNumber }}</span>
               </li> -->
+              <li>
+                <span class="text" style="font-weight: bold; font-size: 16px;"> {{ item.planName }}</span>
+              </li>
 
-
-              <span class="font-weight" style="color:#151b3eff;"> {{ item.planName }}</span>
           
               <li>
                 <span style="min-width: 3rem;" @click.stop="handleSupplyClick(item.planId)">供应需求ID：</span>
