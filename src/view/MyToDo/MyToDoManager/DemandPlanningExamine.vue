@@ -207,7 +207,7 @@
         <div class="default-button-container default-button-container-box" v-if="type == 0">
             <div class="default-button-container-div">
               <p @click="handleReject()"><img src="@/assets/img/Icon-detailInfo.png" alt=""><span>驳回</span></p>
-              <p @click="handleEditAdopt()"><img src="@/assets/img/Icon-modify-after.png" alt=""><span>修改后通过</span></p>
+              <p v-if="showEditAdop" @click="handleEditAdopt()"><img src="@/assets/img/Icon-modify-after.png" alt=""><span>修改后通过</span></p>
             </div>
             <!-- <van-button class="button-info" block type="info" round @click="handleReject()">驳回</van-button>
             <van-button class="button-info" block type="info" round @click="handleEditAdopt()">修改后通过</van-button> -->
@@ -276,7 +276,8 @@ export default {
             historyData: {},
             searchValue: '',
             showAction: false,
-            searchChecked: true
+            searchChecked: true,
+            showEditAdop: true,
         }
     },
     computed: {
@@ -292,6 +293,8 @@ export default {
     created() {
         this.listObj = JSON.parse(this.$route.params.obj);
         this.type = this.$route.params.type;
+        // ⼊库流程、收货流程不能操作修改后同意
+        this.showEditAdop = !["RKLC", "SHLC"].includes(this.listObj.businessType)
         
         //审核意见回调
         eventBus.$off('examineOpinionEdit');
