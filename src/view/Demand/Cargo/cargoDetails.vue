@@ -3,12 +3,12 @@
        :style="{ 'padding-bottom': (params.status == 1 || btnEvent==true) ? '1.3rem' : '0' }"
   >
     <div class="detail-base-info">
-      <div class="detail-title-content" style="padding-right: 1.5rem;color: #0571ff; ">
+      <div class="detail-title-content" style="padding-left: 0.5rem;color: #0571ff; ">
         <span>发货单号：</span>
       </div>
-      <div class="detail-title-content" style="padding-right: 1.5rem;">
+      <div class="detail-title-content" style="padding-left: 0.5rem;">
         <!--                <img src="/static/icon-xqjh.png">-->
-        <span>{{ params.shipmentBatchNumber }}</span>
+        <span style="font-size: 16px;font-weight: bold;">{{ params.shipmentBatchNumber }}</span>
         <div class="detail-title-status">
           <img :src="checkAuditStatus(params.status)"/>
           <span>{{ checkStatusText(params.status) }}</span>
@@ -18,7 +18,7 @@
       <ul class="detail-ul">
         <li>
           <span class="detail-label">发货时间：</span>
-          <span class="detail-value">{{ formattedCreateDate(params.shippingDate) }}</span>
+          <span class="detail-value">{{ params.shippingDate | formatDate }}</span>
         </li>
         <li>
           <span class="detail-label">操作人：</span>
@@ -70,9 +70,9 @@
                 <span>物流信息</span>
               </div>
               <ul class="detail-list-ul">
-                <li>
-                  <span><strong>发货地址:</strong></span>
-                </li>
+                <div class="file-download-title">
+                  <span class="title">发货地址:</span>
+                </div>
                 <li class="li-item-remark">
 
                   <!--                  <span  class="detail-ul">{{ params.shippingAddress }}</span>-->
@@ -87,13 +87,13 @@
                 <li>
                   <span>发货时间:</span>
                   <span v-if="params.shippingDate">{{
-                      formattedCreateDate(params.shippingDate)
+                      params.shippingDate | formatDate
                     }}</span>
                 </li>
                 <li>
                   <span style="min-width: 3rem;">预计到达时间:</span>
                   <span v-if="params.arrivalDate">{{
-                      formattedCreateDate(params.arrivalDate)
+                      params.arrivalDate | formatDate
                     }}</span>
                 </li>
 
@@ -143,14 +143,23 @@
                 <span>货运位置</span>
               </div>
               <div class="locationsteps">
-                <van-steps direction="vertical" active-color="#0086ff" :active="0">
+                <ul class="detail-list-ul" v-for="(item, index) in cargoList" :key="index">
+                  <div class="file-download-title">
+                    <span class="title">{{item.createDate | formatToDate}}</span>
+                  </div>
+                  <li class="li-item-remark">
+                    <div class="remark-detail">{{ item.positionInformation }}</div>
+                  </li>
+                </ul>
+                
+                <!-- <van-steps direction="vertical" active-color="#0086ff" :active="0">
                   <van-step v-for="(item, index) in cargoList" :key="index">
                     <h3>{{ item.positionInformation }}</h3>
-                    <p>{{ formattedCreateDate(item.createDate) }}</p>
+                    <p>{{ item.createDate | formatToDate }}</p>
                   </van-step>
-                </van-steps>
+                </van-steps> -->
               </div>
-              <van-button @click.stop="createPosition(params.shipmentBatchNumber )" icon="plus"  type="default" block round>添加货运位置</van-button>
+              <van-button @click.stop="createPosition(params.shipmentBatchNumber )" icon="plus"  type="info" plain block round>添加货运位置</van-button>
             </div>
 
 
@@ -160,99 +169,7 @@
         <van-tab title="发货物资明细" name="发货物资明细">
           <div
               v-if="params.materialCirculationDetailsTableDTOS && params.materialCirculationDetailsTableDTOS.length > 0">
-            <van-list>
-              <div class="box-container"
-                   v-for="(item, index) in params.materialCirculationDetailsTableDTOS" :key="index">
-                <div class="detail-list-title-content">
-                  <span class="font-weight" style="min-width: 1.6rem;">{{ index + 1 }}.</span>
-                  <span class="font-weight">{{ item.materialName }}</span>
-                </div>
-                <ul class="detail-list-ul">
-                  <li>
-                    <span>规格型号:</span>
-                    <span>{{ item.specModel }}</span>
-                  </li>
-                  <li>
-                    <span>包装形式:</span>
-                    <span>{{ item.packagingFm }}</span>
-                  </li>
-                  <li>
-                    <span>供应时间:</span>
-                    <span v-if="item.supplyDate">{{ formattedCreateDate(item.supplyDate) }}</span>
-                  </li>
-
-                  <li>
-                    <span style="min-width: 3rem;">收货人及联系方式:</span>
-                    <span>{{ item.receiver }}</span>
-                  </li>
-
-                  <li>
-                    <span style="min-width: 4rem;">本次计划数量:</span>
-                    <span class="li-span-click">{{ item.planAmount }}</span>
-                  </li>
-
-                  <li>
-                    <span>发货数量:</span>
-                    <span class="li-span-click">{{ item.sendTotal }}</span>
-                  </li>
-
-
-                  <li>
-                    <span>计量单位:</span>
-                    <span>{{ item.unit }}</span>
-                  </li>
-
-
-
-
-
-                  <li>
-                    <span>生产日期:</span>
-                    <span v-if="item.createDate">{{
-                        formattedCreateDate(item.manufactureDate)
-                      }}</span>
-                  </li>
-                  <li>
-                    <span style="min-width: 4rem;">有效期截止日期:</span>
-                    <span>{{ formattedCreateDate(item.expirationDate) }}</span>
-                  </li>
-                  <li>
-                    <span>收货地址:</span>
-                    <span>{{ item.field2 }}</span>
-                  </li>
-                  <li>
-                    <span>使用地点:</span>
-                    <span>{{ item.addr }}</span>
-                  </li>
-
-
-                  <li>
-                    <span>投资方:</span>
-                    <span>{{ item.field0 }}</span>
-                  </li>
-                  <li>
-                    <span>投资比例:</span>
-                    <span>{{ item.field1 }}</span>
-                  </li>
-                  <li class="li-item-remark">
-                    <span>备注：</span>
-                    <div class="remark-detail">{{ item.remark || '未填写' }}</div>
-                  </li>
-                </ul>
-                <div class="detail-title-contentA">
-                  <img src="/static/icon-file.png">
-                  <span>合格证附件</span>
-                </div>
-                <file-download-view class="outbound-field-uploader" style="width: 100% !important;"
-                                    :fileList="filterList(item.fileByList, 'hgz') || []"/>
-                <div class="detail-title-contentA">
-                  <img src="/static/icon-file.png">
-                  <span>厂检报告附件</span>
-                </div>
-                <file-download-view class="outbound-field-uploader" style="width: 100% !important;"
-                                    :fileList="filterList(item.fileByList, 'cjbg') || []"/>
-              </div>
-            </van-list>
+               <material-details :list="params.materialCirculationDetailsTableDTOS" :planStatus="params.planStatus"></material-details>
           </div>
           <div v-else>
             <van-empty description="暂无数据"/>
@@ -280,6 +197,7 @@ import BackToTop from '@/components/BackToTop'
 import {addList, detailBySend, snedGoodsSure} from '@/api/demand/sendGoods'
 import FilePreview from "@/components/FilePreview.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import MaterialDetails from './components/MaterialDetails.vue'
 import indexMixin from '@/view/mixins'
 import Vue from 'vue';
 import {Dialog, Toast} from 'vant';
@@ -289,7 +207,35 @@ Vue.use(Toast);
 export default {
   name: 'cargoDetails',
   mixins: [keepPages, indexMixin],
-  components: {FilePreview, FileDownloadView, BackToTop},
+  components: {FilePreview, FileDownloadView, BackToTop,MaterialDetails},
+    filters: {
+    formatDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }else{
+        return ""
+      }
+    },
+     formatToDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        const hh = (dt.getHours() + '').padStart(2, '0');
+        const mm = (dt.getMinutes() + '').padStart(2, '0');
+        const ss = (dt.getSeconds() + '').padStart(2, '0');
+        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+      }else{
+        return ""
+      }  
+    }
+
+  },
   data() {
     return {
       cargoList: "",
@@ -324,7 +270,6 @@ export default {
     };
   },
   created() {
-    console.log("1111")
     this.id = this.$route.query.id
     this.btnEvent = this.$route.query.btnEvent
     this.cargoDetails();
@@ -358,16 +303,7 @@ export default {
       //   }
       // })
     },
-    formattedCreateDate(timestamp) {
-      if (!timestamp) return ''; // 处理空值
-      const date = new Date(timestamp);
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
-      const day = date.getDate().toString().padStart(2, '0'); // 日期加0
-      return `${year}-${month}-${day}`;
-    },
     cargoDetails() {
-      console.log("走到cargoDetails了");
       detailBySend(this.id).then((res) => {
         if (res.code == 0) {
           this.params = res.data
@@ -474,6 +410,29 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.file-download-title {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .title {
+        font-size: 13px;
+        color: #1c1c1c;
+        font-weight: 600;
+    }
+    .title::after {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 25%;
+        background: #028bff;
+        position: absolute;
+        left: -10px;
+        top: 18px;
+    }
+}
+
 .detail-title-content {
   position: relative;
 
@@ -664,6 +623,7 @@ export default {
 .detail-ul-text {
   margin: 0; // 移除外部边距
   background: transparent; // 移除ul包装器的灰色背景
+  padding-bottom: 5px;
 }
 
 // 调整列表样式

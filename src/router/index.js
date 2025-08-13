@@ -464,6 +464,12 @@ export const routes = [
         meta: { title: '货运详情' },
       },
       {
+        path: 'ViewMaterialsCargo',
+        name: 'ViewMaterialsCargo',
+        meta: { title: '物资详情' },
+        component: () => import('@/view/Demand/Cargo/ViewMaterials.vue')
+      },
+      {
         path: '/cargoInfo',
         component: () => import('@/view/Demand/Cargo/cargoInfo.vue'),
         hidden: true,

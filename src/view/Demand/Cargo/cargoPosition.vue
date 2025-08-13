@@ -24,14 +24,22 @@
     <!-- 中间可滚动区域 -->
     <div class="scrollable-content">
       <div class="location-history">
-        <van-steps direction="vertical" active-color="#0086ff" :active="0">
+        <ul class="detail-list-ul" v-for="(item, index) in cargoList" :key="index">
+          <div class="file-download-title">
+            <span class="title">{{item.createDate | formatToDate}}</span>
+          </div>
+          <li class="li-item-remark">
+            <div class="remark-detail">{{ item.positionInformation }}</div>
+          </li>
+        </ul>
+        <!-- <van-steps direction="vertical" active-color="#0086ff" :active="0">
           <van-step v-for="(item, index) in cargoList" :key="index">
             <div class="location-item">
               <p class="time">{{ formattedCreateDate(item.createDate) }} {{ formatTime(item.createDate) }}</p>
               <p class="address">{{ item.positionInformation }}</p>
             </div>
           </van-step>
-        </van-steps>
+        </van-steps> -->
       </div>
     </div>
 
@@ -50,6 +58,35 @@ import { addFreightLocations, addList } from "@/api/demand/sendGoods";
 import { Toast } from "vant";
 
 export default {
+  filters: {
+    formatDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }else{
+        return ""
+      }
+    },
+     formatToDate(value) {
+      if(value){
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        const hh = (dt.getHours() + '').padStart(2, '0');
+        const mm = (dt.getMinutes() + '').padStart(2, '0');
+        const ss = (dt.getSeconds() + '').padStart(2, '0');
+        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+      }else{
+        return ""
+      }  
+    }
+
+  },
+  
   data() {
     return {
       cargoList: [],
@@ -121,6 +158,29 @@ export default {
 </script>
 
 <style scoped lang="less">
+.file-download-title {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .title {
+        font-size: 13px;
+        color: #1c1c1c;
+        font-weight: 600;
+    }
+    .title::after {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 25%;
+        background: #028bff;
+        position: absolute;
+        left: -10px;
+        top: 18px;
+    }
+}
+
 .cargo-position-container {
   display: flex;
   flex-direction: column;
