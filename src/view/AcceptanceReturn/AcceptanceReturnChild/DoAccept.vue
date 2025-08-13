@@ -418,7 +418,7 @@ export default {
 
             this.dataList.materialCirculationDetailsTableDTOS = data;
 
-            this.dataList.takeDate = parseTime(this.currentTime, '{y}-{m}-{d}')
+            this.dataList.takeDate = parseTime(this.dataList.takeDate, '{y}-{m}-{d}')
             if(this.isView==false){
               data.forEach(el => {
                 if (this.$store.state.public.selectGoodData?.length == 0) {
