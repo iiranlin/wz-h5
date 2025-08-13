@@ -263,6 +263,12 @@ export const routes = [
         }
       },
       {
+        path: 'EditedMaterialSubmitStore',
+        name: 'EditedMaterialSubmitStore',
+        meta: { title: '编辑物资' },
+        component: () => import('@/view/InOutManagement/EditedMaterials.vue')
+      },
+      {
         path: 'Outbound',
         name: 'Outbound',
         meta: { title: '物资出库' },

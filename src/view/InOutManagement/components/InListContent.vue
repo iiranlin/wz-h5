@@ -208,6 +208,9 @@ export default {
       })
     },
     submitStore(item) {
+      this.$store.dispatch('public/setInboundInformation', {});
+      this.$store.dispatch('public/setSelectStoreData', []);
+
       this.$router.push({ name: 'SubmitStore', query: { type: 'submit', id: item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
     },
     // 下载入库单
@@ -245,6 +248,10 @@ export default {
       const objKey = {
         '1': () => {
           if (item.storeNumber) {
+            this.$store.dispatch('public/setInboundInformation', {});
+            
+            this.$store.dispatch('public/setSelectStoreData', []);
+
             this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
           } else {
             this.$toast('入库完成才能查看详情');

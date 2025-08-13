@@ -1,18 +1,12 @@
 <template>
-  <div class="submit-store-view">
-    <van-form @submit="onSubmit" label-align="left">
-      <div class="submit-store-view-mian">
-        <div class="detail-base-info">
-          <div class="detail-title-content">
-            <img src="/static/icon-xqjh.png">
-            <span>入库单号：</span>
-            <span>{{ formData.storeNumber }}</span>
-            <div class="detail-title-status">
-              <img :src="checkAuditStatus(formData.storeStatus)" />
-              <span>{{ checkStatusText(formData.storeStatus) }}</span>
-            </div>
-          </div>
-          <ul class="detail-ul">
+  <div class="requirement-details">
+    <div class="detail-base-info">
+      <div class="detail-title-text">
+        <p>入库单号：</p>
+        <p>{{ formData.storeNumber }}</p>
+      </div>
+      <div class="detail-ul-text">
+        <ul class="detail-ul">
             <li>
               <span>需求名称：</span>
               <span>{{ formData.planName }}</span>
@@ -37,156 +31,91 @@
               <span>操作人：</span>
               <span>{{ formData.storeOperator }}</span>
             </li>
-            <!-- <li class="li-status">
-              <template v-for="row in statusArr">
-                <van-tag :class="{ 'li-status-completed': ['2', '3'].includes(row.value) }"
-                  :type="['6'].includes(row.value) ? 'danger' : 'primary'" round size="medium" :key="row.value"
-                  v-if="formData.storeStatus == row.value">{{ row.text }}</van-tag>
-              </template>
-</li> -->
-          </ul>
-        </div>
-        <!-- <div class="select-materials-search">
-          <p class="select-materials-search-p font-weight">收货明细（共{{ tableData.length }}项）
-          </p>
-        </div> -->
-        <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
-          title-inactive-color="#2e2e2e">
-          <van-tab :title="`收货明细（共${tableData.length}项）`" name="0" key="0">
-            <div class="box-container" v-for="(item, index) in tableData" :key="index">
-              <div class="div-child">
-                <div class="detail-list-title-content">
-                  <span>物资名称：</span>
-                  <span>{{ item.materialName }}</span>
-                </div>
-                <ul class="detail-list-ul">
-                  <li>
-                    <span>规格型号：</span>
-                    <span>{{ item.specModel }}</span>
-                  </li>
-                  <li>
-                    <span>计量单位：</span>
-                    <span>{{ item.unit }}</span>
-                  </li>
-                  <li>
-                    <span>需求数量：</span>
-                    <span class="li-span-click">{{ item.planAmount }}</span>
-                  </li>
-                  <li class="li-item-overlength">
-                    <span>本次实收数量：</span>
-                    <span class="li-span-click">{{ item.putTotal }}</span>
-                  </li>
-                  <li class="li-item-overlength">
-                    <span>生产日期：</span>
-                    <span>{{ item.manufactureDate ? parseTime(item.manufactureDate, '{y}-{m}-{d}') : '' }}</span>
-                  </li>
-                  <li class="li-item-overlength">
-                    <span>有效截止日期：</span>
-                    <span class="li-span-red">{{ item.expirationDate ? parseTime(item.expirationDate, '{y}-{m}-{d}') :
-      ''
-                      }}</span>
-                  </li>
-                  <li>
-                    <span>包装方式：</span>
-                    <span>{{ item.packagingFm }}</span>
-                  </li>
-                  <li>
-                    <span>使用地点：</span>
-                    <span>{{ item.addr }}</span>
-                  </li>
-                  <li>
-                    <span>收货地址：</span>
-                    <span>{{ item.field2 }}</span>
-                  </li>
-                  <li class="li-item-overlength">
-                    <span>收货人及联系方式：</span>
-                    <span>{{ item.receiver }}</span>
-                  </li>
-                  <li>
-                    <span>供应时间：</span>
-                    <span>{{ item.supplyDate ? parseTime(item.supplyDate, '{y}-{m}-{d}') : '' }}</span>
-                  </li>
-                  <li>
-                    <span>投资方：</span>
-                    <span>{{ item.field0 }}</span>
-                  </li>
-                  <li>
-                    <span>投资比例：</span>
-                    <span>{{ item.field1 }}</span>
-                  </li>
-                  <!-- <li class="li-item-overlength">
-                    <span>合格证附件：</span>
-                    <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'hgz')"
-                      :key="val.filePath">{{ val.fileName }}</span>
-                  </li> -->
-                  <!-- <li class="li-item-overlength">
-                    <span>厂检报告附件：</span>
-                    <span @click="imgClick(val)" class="li-span-click" v-for="val in filterList(item.fileByList, 'cjbg')"
-                      :key="val.filePath">{{ val.fileName }}</span>
-                  </li> -->
-                  <template v-if="queryType === 'submit'">
-                    <li class="detail-list-li-input">
-                      <van-field label="入库数量" placeholder="请输入入库数量" required clearable input-align="right">
-                        <template #input>
-                          <van-stepper v-model="item.storeTotal" :min="0" @change="putChange(item, index)" />
-                        </template>
-                      </van-field>
-                    </li>
-                    <li class="detail-list-li-input">
-                      <van-field label="退货数量" placeholder="请输入退货数量" required clearable input-align="right">
-                        <template #input>
-                          <van-stepper v-model="item.refundZjTotal" :min="0" @change="changeRefund(item, index)" />
-                        </template>
-                      </van-field>
-                    </li>
-                    <!-- <van-field v-model="item.storeTotal" type="number" name="入库数量" label="入库数量" placeholder="请输入入库数量"
-                      @blur="putChange(item, index)" input-align="right" required :rules="rules.storeTotal" />
-                    <van-field v-model="item.refundZjTotal" type="number" name="退货数量" label="退货数量" placeholder="请输入退货数量"
-                      @blur="changeRefund(item, index)" input-align="right" required :rules="rules.refundZjTotal" /> -->
-                  </template>
-                  <template v-else>
-                    <li>
-                      <span>入库数量：</span>
-                      <span class="li-span-click">{{ item.storeTotal }}</span>
-                    </li>
-                    <li>
-                      <span>退货数量：</span>
-                      <span class="li-span-red">{{ item.refundZjTotal }}</span>
-                    </li>
-                  </template>
-                  <li class="li-item-remark">
-                    <span>备注：</span>
-                    <div class="remark-detail">{{ item.remark || '未填写' }}</div>
-                  </li>
-                </ul>
-                <div class="detail-title-contentA">
-                  <img src="/static/icon-file.png">
-                  <span>附件</span>
-                </div>
-                <file-download-view class="outbound-field-uploader" title="合格证附件"
-                  :fileList="filterList(item.fileByList, 'hgz') || []" />
-                <file-download-view class="outbound-field-uploader" title="厂检报告附件"
-                  :fileList="filterList(item.fileByList, 'cjbg') || []" />
-                <file-upload-view class="outbound-field-uploader" v-if="queryType === 'submit'" title="退货附件"
-                  :fileList="item.fileList03 || []" businessType="01" />
-                <file-download-view class="outbound-field-uploader" v-else title="退货附件"
-                  :fileList="item.fileList03 || []" />
-              </div>
-            </div>
-          </van-tab>
-          <van-tab title="报检信息" name="1" key="1">
-            <div class="box-container">
-              <file-upload-view :maxCount="5" v-if="queryType === 'submit'" title="报检材料上传（支持多个）"
-                :fileList="formData.fileList01 || []" businessType="01" />
-              <file-download-view v-else title="报检材料上传（支持多个）" :fileList="formData.fileList01 || []" />
-            </div>
-          </van-tab>
-        </van-tabs>
+        </ul>
       </div>
-      <div class="default-button-container" v-if="queryType === 'submit'">
-        <van-button class="button-info" round type="info" native-type="submit">提交报检审核</van-button>
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>报检信息</span>
       </div>
-    </van-form>
+      <p class="box-container-p" v-if="!formData.fileList01?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
+      <file-upload-view :maxCount="5" v-if="queryType === 'submit'" :fileList="formData.fileList01 || []" businessType="01" />
+      <file-download-view v-else :fileList="formData.fileList01 || []" />
+    </div>
+
+    <div v-if="queryType === 'submit'" class="detail-floor-content">
+      <div>
+        <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '0' }"
+          @click="btnClick('0')">全部物资</van-button>
+        <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '1' }"
+          @click="btnClick('1')">未完善物资</van-button>
+      </div>
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited" v-else style="margin-bottom: 8px;">
+      <div class="detail-title-content">
+        <img src="@/assets/img/Icon-logistics.png" />
+        <span>物资明细</span>
+        <span style="text-align: right;">共 <span style="color: #134DAA;">{{ materiaList.length }}</span> 项</span>
+      </div>
+    </div>
+
+    <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList"
+      :key="item.id"
+      :class="boolExceptZero(item.putTotal) && boolExceptZero(item.refundTotal) ? '' : 'box-container-unedited'">
+      <div class="div-child">
+        <ul class="detail-list-ul">
+          <li class="detail-list-ul-text">
+            <span class="font-weight">{{ index + 1 }}.{{ item.materialName }}</span>
+            <img v-if="queryType === 'submit'" :src="boolExceptZero(item.putTotal) && boolExceptZero(item.refundTotal) ? editedStatus : editStatus" />
+          </li>
+          <li>
+            <span>规格型号：</span>
+            <span>{{ item.specModel }}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>有效期截止日期：</span>
+            <span>{{ item.expirationDate | formatToDate }}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>本次实收数量：</span>
+            <span class="li-span-click">{{ item.putTotal }}</span>
+          </li>
+          <li>
+            <span>入库数量：</span>
+            <span class="li-span-click">{{ item.storeTotal }}</span>
+          </li>
+          <li>
+            <span>退货数量：</span>
+            <span style="color: #e4393c;">{{ item.refundZjTotal }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="list-ul-button">
+        <van-button v-if="queryType === 'submit'" class="button-info" plain round type="info" native-type="button"
+          @click="editedClick(item, index)">{{ boolExceptZero(item.putTotal) && boolExceptZero(item.refundTotal) ? '编辑'
+          : '处理' }} </van-button>
+        <van-button v-else class="button-info" plain round type="info" native-type="button"
+          @click="editedClick(item, index)">查看</van-button>
+      </div>
+    </div>
+
+    <div class="default-button-container" v-if="queryType === 'submit'">
+      <div class="default-button-container-selected">
+        <span>已填写 <span class="li-span-click">{{ editedMateriaList.length }}</span><span>/{{ materiaList.length
+            }}</span>
+        </span>
+      </div>
+      <div class="default-button-container-button" v-if="queryType === 'submit'">
+
+        <van-button v-if="isFlag" class="button-info" round type="info" @click="onSubmit">提交报检审核</van-button>
+
+        <p style="font-size: 12px;" v-else><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资入库信息</span>
+        </p>
+      </div>
+    </div>
     <!-- 附件预览 -->
     <file-preview ref="filePreview"></file-preview>
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
@@ -194,6 +123,9 @@
   </div>
 </template>
 <script>
+import editedStatus from '@/assets/img/editedStatus.png'
+import editStatus from '@/assets/img/editStatus.png'
+import keepPages from "@/view/mixins/keepPages";
 import indexMixin from '@/view/mixins'
 import { detailByStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { materialStoreTableRestSubmit } from '@/api/prodmgr-inv/materialStoreTableRest'
@@ -204,11 +136,55 @@ import FileDownloadView from "@/components/FileDownloadView.vue"
 import BackToTop from '@/components/BackToTop'
 export default {
   name: 'SubmitStore',
-  mixins: [indexMixin],
+  mixins: [indexMixin, keepPages],
   components: { FilePreview, activitiAssignee, FileUploadView, FileDownloadView, BackToTop },
+  filters: {
+    formatDate(value) {
+      if (value) {
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        const hh = (dt.getHours() + '').padStart(2, '0');
+        const mm = (dt.getMinutes() + '').padStart(2, '0');
+        const ss = (dt.getSeconds() + '').padStart(2, '0');
+        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+      } else {
+        return ""
+      }
+    },
+    formatToDate(value) {
+      if (value) {
+        const dt = new Date(value);
+        const y = dt.getFullYear();
+        const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+        const d = (dt.getDate() + '').padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      } else {
+        return ""
+      }
+    }
+  },
+  computed: {
+    isFlag() {
+
+      let flag = false;
+
+      this.materiaList.forEach(item => {
+        if (this.boolExceptZero(item.putTotal) && this.boolExceptZero(item.refundTotal)) {
+          flag = true;
+        } else {
+          flag = false;
+        }
+      })
+
+      return flag;
+    }
+  },
   data() {
     return {
       queryType: '',
+      storeStatus: '',
       formData: {},
       tableData: [],
       rules: {
@@ -230,19 +206,45 @@ export default {
         { value: "5", text: "审核中" },
         { value: "6", text: "已驳回" }
       ],
-      menuActiveIndex: '0'
+      menuActiveIndex: '0',
+      btnClickIndex: '0',
+      materiaList: [],
+      editMateriaList: [],
+      editedMateriaList: [],
+      editedStatus,
+      editStatus,
     }
   },
   activated() {
+    const { type, id, storeStatus, supplyId } = this.$route.query
+    this.supplyId = supplyId
+    this.queryType = type
+    this.id = id
+    this.storeStatus = storeStatus
+    this.detailByStore(id, storeStatus)
   },
   mounted() {
     const { type, id, storeStatus, supplyId } = this.$route.query
     this.supplyId = supplyId
     this.queryType = type
     this.id = id
+    this.storeStatus = storeStatus
     this.detailByStore(id, storeStatus)
   },
   methods: {
+    btnClick(code) {
+      this.btnClickIndex = code
+    },
+    boolExceptZero(val) {
+      return val === 0 || Boolean(val);
+    },
+    editedClick(item, index) {
+      this.$store.dispatch('public/setMateriaData', item)
+
+      this.$store.dispatch('public/setInboundInformation', this.formData)
+
+      this.$router.push({ name: 'EditedMaterialSubmitStore', query: {queryType: this.queryType, id: this.id, supplyId: this.supplyId,storeStatus: this.storeStatus} })
+    },
     checkStatusText(status) {
       let name = ''
       this.statusArr.forEach(item => {
@@ -263,6 +265,24 @@ export default {
         return '/static/icon-success.png'
       }
     },
+    historyCaches() {
+      const data = this.$store.state.public.selectStoreData || []
+      
+      const finallyData = data.map((item) => Object.assign({}, item, {
+        supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
+        minDate: this.minDate,
+        showDatePicker: this.showDatePicker,
+        planAmount: item.planAmount || item.amount - item.cumulativeAmount,
+        allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber,
+        field2: item.field2 || item.deliveryLocation,
+      }))
+
+
+      this.editedMateriaList = finallyData.filter(item => this.boolExceptZero(item.putTotal) && this.boolExceptZero(item.refundTotal))
+      this.editMateriaList = finallyData.filter(item => !(this.boolExceptZero(item.putTotal) && this.boolExceptZero(item.refundTotal)))
+
+      return finallyData
+    },
     detailByStore(id, storeStatus) {
       const url = storeStatus == "5" || storeStatus == "6" ? detailStoreBack : detailByStore
       let toast = this.$toast.loading({
@@ -271,19 +291,46 @@ export default {
         forbidClick: true
       });
       url(id).then(({ data }) => {
-        this.formData = {
+        data.materialCirculationDetailsTableDTOS.forEach(item => {
+          item.storeTotal = this.queryType == "submit" ? item.putTotal : item.storeTotal; //新增默认入库数量=收货数量
+          item.defaultRadio = '1';
+        })
+
+        const selectStoreData = this.$store.state.public.selectStoreData || [];
+
+        const newData = selectStoreData?.length > 0 ? selectStoreData : data.materialCirculationDetailsTableDTOS;
+
+        const InboundInformation = this.$store.state.public.InboundInformation || {};
+
+        if (Object.keys(InboundInformation)?.length > 0) {
+                  this.formData = Object.assign({}, this.formData, InboundInformation);
+        } else {
+                  this.formData = {
           ...data,
           fileList01: data.fileByList ? JSON.parse(data.fileByList).jcbg || [] : [], //检测报告
           fileList02: data.fileByList ? JSON.parse(data.fileByList).zlzm || [] : [], //证明文件
           fileList03: data.fileByList ? JSON.parse(data.fileByList).byjg || [] : [], //报验结果
         }
-        this.tableData = data.materialCirculationDetailsTableDTOS.map((item) => ({
-          ...item,
-          storeTotal: this.queryType == "submit" ? item.putTotal : item.storeTotal, //新增默认入库数量=收货数量
-          fileList01: item.fileByList ? JSON.parse(item.fileByList).hgz || [] : [], //合格证
-          fileList02: item.fileByList ? JSON.parse(item.fileByList).cjbg || [] : [], //厂检报告
-          fileList03: item.fileByList ? JSON.parse(item.fileByList).thfj_im || [] : [], //退货附件
-        }))
+        }
+
+        if(selectStoreData?.length > 0) {
+          this.tableData = newData.map((item) => ({
+            ...item,
+          }))
+        } else {
+          this.tableData = newData.map((item) => ({
+            ...item,
+            // storeTotal: this.queryType == "submit" ? item.putTotal : item.storeTotal, //新增默认入库数量=收货数量
+            fileList01: item.fileByList ? JSON.parse(item.fileByList).hgz || [] : [], //合格证
+            fileList02: item.fileByList ? JSON.parse(item.fileByList).cjbg || [] : [], //厂检报告
+            fileList03: item.fileByList ? JSON.parse(item.fileByList).thfj_im || [] : [], //退货附件
+          }))
+        }
+
+        
+        this.$store.dispatch('public/setSelectStoreData', this.tableData);
+
+        this.materiaList = this.historyCaches();
       }).finally((err) => {
         toast.clear()
       })
@@ -423,102 +470,460 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.detail-list-li-input {
-
-  & :nth-child(2) {
-    text-align: center;
-  }
-
-  ::v-deep .van-cell__title {
-    color: #151b3e;
-  }
-
-  .van-stepper {
-    border: 1px solid #dbdbdb;
-    border-radius: 5px;
-
-    ::v-deep .van-stepper__input {
-      background: #fff;
-      width: 50px;
-    }
-  }
-}
-
-.submit-store-view-mian {
+.requirement-details {
   display: flex;
   flex-direction: column;
-  padding-bottom: 50px;
-}
+  margin-bottom: 50px;
 
-.detail-title-content {
-  position: relative;
+    .detail-info-ul {
+        padding: 5px 16px 5px 16px;
 
-  .detail-title-status {
-    position: absolute;
-    right: 10px;
-    top: 0;
-    display: flex;
-    align-items: center;
-    height: 100%;
+    li {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: #151b3e;
+        line-height: 26px;
 
-    img {
-      width: 16px;
-      height: 16px;
+        // & :nth-child(1){
+        //     min-width: 70px
+        // }
+        & :nth-child(2){
+            // width: calc(100% - 70px);
+            overflow: hidden;
+            text-align: right;
+            word-break: break-all;
+            flex: 1;
+        }
     }
+    // .li-item-overlength {
+    //     & :nth-child(1){
+    //         min-width: initial;
+    //         white-space: nowrap;
+    //     }
+    // }
+    .li-item-remark {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin-bottom: 5px;
+
+        .remark-detail {
+            box-sizing: border-box;
+            color: #272b31;
+            font-size: 13px;
+            line-height: 26px;
+            background: #f6f6f6;
+            border-radius: 3px;
+            width: 100%;
+            text-align: left;
+            padding: 8px 14px;
+            word-wrap:break-word;
+        }
+    }
+    .li-item-after::after {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 25%;
+        background: #028bff;
+        position: absolute;
+        left: -15px;
+        top: 10px;
+    }
+    .van-cell {
+        padding: 8px 0px;
+    }
+    .van-cell--required::before {
+        left: -15px;
+    }
+    .li-span-open{
+      justify-content: end;
+      padding-top: 5px;
+      i{
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .list-title-content {
+    display: flex;
+    margin: 0 0 0 5px;
+  }
+
+  .li-title-status {
+    margin-right: 15px;
+  }
+
+  .detail-title-text {
+    padding: 0 12px;
+
+    p {
+      &:nth-child(1) {
+        font-size: 11px;
+        color: #1159cc;
+        padding-bottom: 5px;
+      }
+
+      &:nth-child(2) {
+        padding-left: 5px;
+        font-weight: 600;
+      }
+    }
+  }
+
+      .detail-floor-content {
+    justify-content: space-between;
+    padding: 5px 12px;
 
     span {
-      margin-left: 3px;
-      color: #134daa;
+      color: #151b3e;
+      font-weight: 400;
+    }
+
+    .van-button {
+      border-radius: 5px;
+      margin-right: 8px;
+      height: 30px;
+    }
+
+    .van-button-selected {
+      span {
+        color: #0861db;
+      }
+    }
+
+    .detail-floor-content-add {
+      color: #1189f6;
+      padding-right: 2px;
+      font-size: 16px;
+      vertical-align: middle;
+    }
+  }
+
+  .detail-ul-text {
+    margin: 5px;
+    background: #f2f2f2;
+    border-radius: 5px;
+
+    .detail-ul {
+      padding: 10px 8px;
+    }
+  }
+
+  .detail-ul-bottom-text {
+    padding-bottom: 10px;
+
+    .detail-ul {
+      padding: 0 22px;
+
+      .detail-ul-bottom-text-span,
+      img {
+        vertical-align: middle;
+      }
+
+      .detail-ul-bottom-text-log {
+        width: 13px;
+        height: 14px;
+      }
+    }
+  }
+
+  .box-container-p{
       font-size: 11px;
+      color: #4a4a4a;
+      text-align: center;
+      margin-top: 22px;
+      margin-bottom: 13px;
+      span{
+        vertical-align: middle;
+      }
+    }
+
+      .detail-list-ul {
+    padding-left: 12px;
+
+    .detail-list-ul-text {
+      justify-content: space-between;
+
+      img {
+        width: 18px;
+        height: 18px;
+        flex: none;
+        margin-top: 4px;
+      }
     }
   }
 
-}
-
-.box-container {
-  padding: 0;
-}
-
-.outbound-field-uploader {
-  ::v-deep li {
-    display: block;
-  }
-
-  ::v-deep .file-info {
-    width: auto !important;
-
-    img {
-      min-width: auto !important;
-    }
-  }
-}
-
-.detail-title-contentA {
-  width: 100%;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  padding-left: 2px;
-  padding-right: 27px;
-  box-sizing: border-box;
-  border-top: 1px solid #f1f4f8;
-
-  img {
-    width: 25px;
-    height: 25px;
-  }
-
-  & span:nth-child(2) {
+  .detail-base-info-edited {
+    width: auto;
+    box-sizing: border-box;
     margin-left: 6px;
-    color: #151b3e;
-    font-size: 15px;
-    font-weight: 600;
+    margin-right: 6px;
+    margin-top: 8px;
+    background: #ffffff;
+    border-radius: 7px;
+    box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
+    position: relative;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    .detail-title-content {
+      padding-left: 5px;
+      padding-right: 5px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+
+      img {
+        width: 26px;
+        height: 26px;
+      }
+
+      span {
+        line-height: 26px;
+        margin-left: 0;
+        font-size: 13px;
+      }
+    }
+
+    .detail-ul {
+      padding-left: 16px;
+      padding-right: 30px;
+      border-top: 0.5px solid #e3e3e3;
+
+      .detail-ul-p {
+        display: flex;
+        align-items: center;
+
+        & :nth-child(1) {
+          margin-right: 3px;
+        }
+
+        & :nth-child(2) {
+          margin-right: 3px;
+        }
+      }
+    }
+
+    .detail-base-info-edited-div {
+      justify-content: space-between;
+
+      .detail-base-info-edited-img {
+        display: flex;
+        align-items: center;
+      }
+    }
   }
 
-  & span:nth-child(3) {
-    color: #151b3e;
-    font-size: 15px;
-    font-weight: 600;
+  .detail-ul-bottom-text-Arrow {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .select-materials-sticky {
+    ::v-deep .van-sticky {
+      background: #f2f4f8;
+    }
+  }
+
+  .select-materials-search {
+    display: flex;
+    justify-content: space-between;
+
+    .select-materials-search-p {
+      font-size: 14px;
+      padding-left: 13px;
+
+      .van-checkbox {
+        height: 100%;
+        margin-left: 2px;
+
+        ::v-deep .van-checkbox__icon {
+          font-size: 18px;
+
+          .van-icon {
+            border: 1px solid #1989fa;
+          }
+        }
+      }
+    }
+  }
+
+  .van-search {
+    width: 222px;
+
+    .van-search__content {
+      border-radius: 50px;
+      background: #fff;
+    }
+
+    .van-cell {
+      border-radius: 50px;
+      background: #fff;
+    }
+  }
+
+  .select-materials-search-switch {
+    display: flex;
+    align-items: center;
+    padding-right: 15px;
+
+    span {
+      margin-left: 5px;
+      font-size: 12px;
+    }
+
+    .van-switch {
+      width: 34px;
+      height: 18px;
+      font-size: inherit;
+
+      ::v-deep .van-switch__node {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  .default-button-container {
+    justify-content: space-between;
+    padding-left: 14px;
+    padding-right: 19px;
+    box-sizing: border-box;
+    box-shadow: 4px 0px 5px rgba(32, 30, 74, 0.1);
+
+    .default-button-container-selected {
+      font-size: 13px;
+
+      span {
+        vertical-align: middle;
+      }
+
+      img {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+      }
+
+      .default-button-container-selected-img {
+        transform: rotate(180deg)
+      }
+    }
+
+    .default-button-container-button{
+      display: flex;
+      .button-info{
+        margin-left: 10px;
+      }
+    }
+
+    .button-info {
+      width: 120px;
+      height: 34px;
+    }
+
+    ::v-deep .file-add{
+      margin: 0;
+      padding: 0;
+    }
   }
 }
+// .detail-list-li-input {
+
+//   & :nth-child(2) {
+//     text-align: center;
+//   }
+
+//   ::v-deep .van-cell__title {
+//     color: #151b3e;
+//   }
+
+//   .van-stepper {
+//     border: 1px solid #dbdbdb;
+//     border-radius: 5px;
+
+//     ::v-deep .van-stepper__input {
+//       background: #fff;
+//       width: 50px;
+//     }
+//   }
+// }
+
+// .submit-store-view-mian {
+//   display: flex;
+//   flex-direction: column;
+//   padding-bottom: 50px;
+// }
+
+// .detail-title-content {
+//   position: relative;
+
+//   .detail-title-status {
+//     position: absolute;
+//     right: 10px;
+//     top: 0;
+//     display: flex;
+//     align-items: center;
+//     height: 100%;
+
+//     img {
+//       width: 16px;
+//       height: 16px;
+//     }
+
+//     span {
+//       margin-left: 3px;
+//       color: #134daa;
+//       font-size: 11px;
+//     }
+//   }
+
+// }
+
+// .box-container {
+//   padding: 0;
+// }
+
+// .outbound-field-uploader {
+//   ::v-deep li {
+//     display: block;
+//   }
+
+//   ::v-deep .file-info {
+//     width: auto !important;
+
+//     img {
+//       min-width: auto !important;
+//     }
+//   }
+// }
+
+// .detail-title-contentA {
+//   width: 100%;
+//   height: 34px;
+//   display: flex;
+//   align-items: center;
+//   padding-left: 2px;
+//   padding-right: 27px;
+//   box-sizing: border-box;
+//   border-top: 1px solid #f1f4f8;
+
+//   img {
+//     width: 25px;
+//     height: 25px;
+//   }
+
+//   & span:nth-child(2) {
+//     margin-left: 6px;
+//     color: #151b3e;
+//     font-size: 15px;
+//     font-weight: 600;
+//   }
+
+//   & span:nth-child(3) {
+//     color: #151b3e;
+//     font-size: 15px;
+//     font-weight: 600;
+//   }
+// }
 </style>

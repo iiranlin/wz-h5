@@ -12,6 +12,9 @@ const state = {
   editSendGoods:{},
   editGoods:{},
 
+  InboundInformation: {},
+  selectStoreData: [],
+
   selectGoodData: [],
   selectGoodDataEdit: [],
 
@@ -20,6 +23,12 @@ const state = {
 };
 
 const mutations = {
+  SET_INBOUND_INFORMATION: (state, inboundInformation) => {
+    state.InboundInformation = inboundInformation;
+  },
+  SET_SELECTSTOREDATA: (state, selectStoreData) => {
+    state.selectStoreData = selectStoreData;
+  },
   SET_DEMAND_PLANNING_INFO: (state, demandPlanningInfo) => {
     state.demandPlanningInfo = demandPlanningInfo;
   },
@@ -76,11 +85,17 @@ const mutations = {
 };
 
 const actions = {
+  setInboundInformation({ commit }, data) {
+    commit('SET_INBOUND_INFORMATION', data)
+  },
   setDemandPlanningInfo({ commit }, data) {
     commit('SET_DEMAND_PLANNING_INFO', data)
   },
   setMateriaList({ commit }, data) {
     commit('SET_MATERIA_LIST', data)
+  },
+  setSelectStoreData({ commit }, data) {
+    commit('SET_SELECTSTOREDATA', data)
   },
   setSelectGoodData({ commit }, data) {
     commit('SET_SELECTGOODDATA', data)

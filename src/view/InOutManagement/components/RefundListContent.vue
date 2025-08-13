@@ -15,7 +15,7 @@
         <div v-for="(item, index) in dataList" :key="index" class="box-container" @click="handleWaitItemClick(item)">
            <div class="list-title-content">
             <span>退货单号：</span>
-            <span class="font-weight" style="color:#134daa;">{{ item.backQualNumber }}</span>
+            <span class="font-weight" style="color:#8C8FA0;">{{ item.backQualNumber }}</span>
           </div>
           <ul class="list-ul">
             <li>
@@ -48,7 +48,7 @@
             </li>
             <li>
               <span>操作人：</span>
-              <span>{{ item.createUserName }}</span>
+              <span class="li-span-click">{{ item.createUserName }}</span>
             </li>
           </ul>
         </div>
