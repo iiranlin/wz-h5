@@ -279,6 +279,12 @@ export const routes = [
         }
       },
       {
+        path: 'EditedOutbound',
+        name: 'EditedOutbound',
+        meta: { title: '编辑出库' },
+        component: () => import('@/view/InOutManagement/InOutManagementChild/EditedOutbound.vue')
+      },
+      {
         path: 'InboundDetails',
         name: 'InboundDetails',
         meta: { title: '入库详情' },
