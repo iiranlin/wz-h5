@@ -41,8 +41,8 @@
       <!-- <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input"> -->
       <van-radio-group v-model="sectionInfo.defaultRadio" direction="horizontal" style="justify-content: end;">
-        <van-radio name="1" shape="square" class="detail-radio"><img src="@/assets/img/Icon-time.png" />全部收货</van-radio>
-        <van-radio name="2" shape="square" class="detail-radio"><img src="@/assets/img/Icon-time.png" />全部退货</van-radio>
+        <van-radio name="1" shape="square" class="detail-radio"><img src="@/assets/img/Icon_Receiving.png" />全部收货</van-radio>
+        <van-radio name="2" shape="square" class="detail-radio"><img src="@/assets/img/Icon-modify-after.png" />全部退货</van-radio>
       </van-radio-group>
       <!-- <van-field label="入库数量" placeholder="请输入数量" required clearable input-align="right">
             <template #input>
