@@ -383,8 +383,8 @@ export default {
   text-overflow: ellipsis;
 }
 
-.button-info {
-  width: 85px;
-  font-size: 12px;
-}
+// .button-info {
+//   width: 85px;
+//   font-size: 12px;
+// }
 </style>
