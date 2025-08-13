@@ -31,7 +31,7 @@
                 <span class="font-weight" style="color:#1989fa;">{{ item.backNumber }}</span>
               </li> -->
               <li>
-                <span class="text" style="font-weight: bold; font-size: 16px;"> {{ item.planName }}</span>
+                <span class="font-weight"> {{ item.planName }}</span>
               </li>
 
           

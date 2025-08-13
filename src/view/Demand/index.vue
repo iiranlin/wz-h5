@@ -32,7 +32,7 @@
                   <ul class="list-ul">
                     <li>
                       <!-- <span>需求名称：</span> -->
-                      <span class="text" style="font-weight: bold; font-size: 16px;">{{ item.planName }}</span>
+                      <span class="font-weight">{{ item.planName }}</span>
                     </li>
                     <li>
                       <span>建设项目：</span>
