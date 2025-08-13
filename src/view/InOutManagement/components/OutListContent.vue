@@ -15,7 +15,7 @@
         <div v-for="(item, index) in dataList" :key="index" class="box-container" @click="outClick(item)">
            <div class="list-title-content">
             <span>出库单号：</span>
-            <span class="font-weight" style="color:#134daa;">{{item.outNumber}}</span>
+            <span class="font-weight" style="color:#8C8FA0;">{{item.outNumber}}</span>
           </div>
           <ul class="list-ul">
             <li>
@@ -48,7 +48,7 @@
             </li>
             <li>
               <span>领料人：</span>
-              <span>{{item.pickUserName}}</span>
+              <span class="li-span-click">{{item.pickUserName}}</span>
             </li>
             <li>
               <span>领用日期：</span>
