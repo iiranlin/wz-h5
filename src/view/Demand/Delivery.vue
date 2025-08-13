@@ -23,8 +23,12 @@
                    <div v-for="(item, index) in listBySendData" :key="index" class="box-container"
                   @click="handleCarGoClick(item.id)">
                    <div class="list-title-content">
-                    <span style="color: gray;" >发货单号：</span>
-                    <span class="font-weight" style="color:gray;">{{ item.shipmentBatchNumber }}</span>
+<!--                    <span style="color: gray;" >发货单号：</span>-->
+<!--                    <span class="font-weight" style="color:gray;">{{ item.shipmentBatchNumber }}</span>-->
+
+                                         <span style="color: gray;" >需求编号：</span>
+                                         <span class="font-weight" style="color:gray;">{{ item.planNumber }}</span>
+
                     <div class="li-title-status">
                       <img :src="checkAuditStatus(item.status)" />
                       <span>{{ checkStatusText(item.status) }}</span>
@@ -35,31 +39,47 @@
 <!--                      <span>供应需求：</span>-->
                       <span class="text" style="font-weight: bold;" >{{ item.planName }}</span>
                     </li>
-                    <li>
-                      <span>需求编号:</span>
-                      <span style="color:#1989fa;" @click.stop="requirementDetails(item.planId)">{{ item.planNumber
-                        }}</span>
-                    </li>
+<!--                    <li>-->
+<!--                      <span>需求编号:</span>-->
+<!--                      <span style="color:#1989fa;" @click.stop="requirementDetails(item.planId)">{{ item.planNumber-->
+<!--                        }}</span>-->
+<!--                    </li>-->
 
-                    <li>
-                      <span>建设项目：</span>
-                      <span>{{ item.projectName }}</span>
-                    </li>
-                    <li>
-                      <span>标段项目: </span>
-                      <span>{{ item.sectionName }}</span>
-                    </li>
+<!--                    <li>-->
+<!--                      <span>建设项目：</span>-->
+<!--                      <span>{{ item.projectName }}</span>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                      <span>标段项目: </span>-->
+<!--                      <span>{{ item.sectionName }}</span>-->
+<!--                    </li>-->
+
+                                        <li>
+                                          <span>需求项目: </span>
+                                          <span>{{ item.sectionName }}</span>
+                                        </li>
                     <li>
                       <span>发货时间: </span>
                       <span>{{ formattedCreateDate(item.shippingDate) }}</span>
                     </li>
+<!--                    <li>-->
+<!--                      <span>物流单号：</span>-->
+<!--                      <span style="color:#1989fa;" v-if="item.oddNumbers"-->
+<!--                        @click.stop="handleLookClick(item.planId, item.shipmentBatchNumber, item.oddNumbers)"-->
+<!--                      >{{-->
+<!--                        item.oddNumbers }}</span>-->
+<!--                      <span v-else style="color:#1989fa;">其他</span>-->
+<!--                    </li>-->
+
                     <li>
                       <span>物流单号：</span>
-                      <span style="color:#1989fa;" v-if="item.oddNumbers"
-                        @click.stop="handleLookClick(item.planId, item.shipmentBatchNumber, item.oddNumbers)">{{
-                        item.oddNumbers }}</span>
-                      <span v-else style="color:#1989fa;">其他</span>
+                      <span  v-if="item.oddNumbers"
+
+                      >{{
+                          item.oddNumbers }}</span>
+                      <span v-else >其他</span>
                     </li>
+
                     <li>
                       <span>操作人: </span>
                       <span>{{ item.createUserName }}</span>
@@ -68,13 +88,13 @@
                       <span>操作时间: </span>
                       <span>{{ formatTimestamp(item.createDate) }}</span>
                     </li>
-                    <li>
-                      <span style="width: 200px;">发货单附件:</span>
-                      <span style="color:#1989fa;"
-                        v-if="item.fileByList && item.fileByList.fhd && item.fileByList.fhd.length > 0"
-                        @click.stop="imgClick(item.fileByList.fhd[0].fileName, item.fileByList.fhd[0].filePath)">{{
-                          item.fileByList.fhd[0].fileName }}</span>
-                    </li>
+<!--                    <li>-->
+<!--                      <span style="width: 200px;">发货单附件:</span>-->
+<!--                      <span style="color:#1989fa;"-->
+<!--                        v-if="item.fileByList && item.fileByList.fhd && item.fileByList.fhd.length > 0"-->
+<!--                        @click.stop="imgClick(item.fileByList.fhd[0].fileName, item.fileByList.fhd[0].filePath)">{{-->
+<!--                          item.fileByList.fhd[0].fileName }}</span>-->
+<!--                    </li>-->
                   </ul>
                   <div class="list-ul-button" v-if="item.status != 3">
                     <van-button class="button-info" plain round type="info" @click.stop="handleSendGoodsClick(item.id)"
@@ -339,13 +359,13 @@ export default {
     requirementDetails(id) {
       this.$router.push({ path: '/supplyMsg', query: { id: id } })
     },
-    //货运详情
+    //货运详情分
     handleCarGoClick(id) {
       this.$router.push({ path: '/cargoDetails', query: { id: id,btnEvent:false } })
     },
     createPosition(number){
 
-      this.$router.push({ path: '/cargoPosition', query: { shipmentBatchNumber:number } })
+      this.$router.push({ path: '/cargoPosition', query: { shipmentBatchNumber:number,page:'/Information' } })
       // this.formKey++
       // this.shipmentBatchNumber = number
       // let params = {
@@ -496,6 +516,36 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+
+.detail-ul-text {
+  margin: 10px;
+  background: #f2f2f2;
+  border-radius: 5px;
+
+  .detail-ul {
+    padding: 10px 8px;
+  }
+}
+
+.detail-ul {
+  padding-left: 16px;
+  padding-right: 30px;
+  border-top: 0.5px solid #e3e3e3;
+
+  .detail-ul-p {
+    display: flex;
+    align-items: center;
+
+    & :nth-child(1) {
+      margin-right: 3px;
+    }
+
+    & :nth-child(2) {
+      margin-right: 3px;
+    }
+  }
+}
+
 .detail-title-content{
   padding: 0;
   border-bottom: 0.025rem solid #e3e3e3;

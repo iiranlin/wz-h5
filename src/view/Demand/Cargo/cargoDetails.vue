@@ -3,75 +3,85 @@
        :style="{ 'padding-bottom': (params.status == 1 || btnEvent==true) ? '1.3rem' : '0' }"
   >
     <div class="detail-base-info">
-
       <div class="detail-title-content" style="padding-right: 1.5rem;color: #0571ff; ">
         <span>发货单号：</span>
       </div>
       <div class="detail-title-content" style="padding-right: 1.5rem;">
         <!--                <img src="/static/icon-xqjh.png">-->
-
         <span>{{ params.shipmentBatchNumber }}</span>
         <div class="detail-title-status">
           <img :src="checkAuditStatus(params.status)"/>
           <span>{{ checkStatusText(params.status) }}</span>
         </div>
       </div>
-      <div class="detail-wrapper">
-        <ul class="detail-ul">
-          <li>
-            <span class="detail-label">发货时间：</span>
-            <span class="detail-value">{{ formattedCreateDate(params.shippingDate) }}</span>
-          </li>
-          <li>
-            <span class="detail-label">操作人：</span>
-            <span class="detail-value">{{ params.createUserName }}</span>
-          </li>
-          <li>
-            <span class="detail-label">操作时间：</span>
-            <span class="detail-value">{{ formatTimestamp(params.createDate) }}</span>
-          </li>
-        </ul>
-      </div>
+    <div class="detail-ul-text">
+      <ul class="detail-ul">
+        <li>
+          <span class="detail-label">发货时间：</span>
+          <span class="detail-value">{{ formattedCreateDate(params.shippingDate) }}</span>
+        </li>
+        <li>
+          <span class="detail-label">操作人：</span>
+          <span class="detail-value">{{ params.createUserName }}</span>
+        </li>
+        <li>
+          <span class="detail-label">操作时间：</span>
+          <span class="detail-value">{{ formatTimestamp(params.createDate) }}</span>
+        </li>
+        <li>
+          <span class="detail-label">操作时间：</span>
+          <span class="detail-value">{{ params.sectionName }}</span>
+        </li>
+
+      </ul>
+
     </div>
+
+    </div>
+
     <div class="tabs">
       <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
                 title-inactive-color="#2e2e2e">
         <van-tab title="发货基本信息" name="发货基本信息">
           <van-list>
+
             <div class="box-container">
-
-
+              <div class="detail-title-contentA">
+                <img src="/static/icon-file.png">
+                <span>发货单</span>
+              </div>
+              <file-download-view class="outbound-field-uploader" style="width: 100%;"
+                                  :fileList="filterList(params.fileByList, 'fhd') || []"/>
+            </div>
+            <div class="box-container">
               <!--              <div class="detail-content">-->
               <!--          -->
               <!--                <span>物流信息</span>-->
               <!--              </div>-->
-              <div class="detail-content">
-<!--                <img src="/static/icon-xqjh.png">-->
-                <span class="font-weight">供应需求名称：</span>
-                <span class="font-weight">{{ params.planName }}</span>
+              <!--              <div class="detail-content">-->
+              <!--&lt;!&ndash;                <img src="/static/icon-xqjh.png">&ndash;&gt;-->
+              <!--                <span class="font-weight">供应需求名称：</span>-->
+              <!--                <span class="font-weight">{{ params.planName }}</span>-->
+              <!--              </div>-->
+
+
+              <div class="detail-title-contentA">
+                <img src="/static/car.png">
+                <span>物流信息</span>
               </div>
               <ul class="detail-list-ul">
                 <li>
-                  <span>建设项目：</span>
-                  <span>{{ params.projectName }}</span>
+                  <span><strong>发货地址:</strong></span>
                 </li>
-                <li>
-                  <span>标段项目：</span>
-                  <span class="text">{{ params.sectionName }}</span>
+                <li class="li-item-remark">
+
+                  <!--                  <span  class="detail-ul">{{ params.shippingAddress }}</span>-->
+                  <div class="remark-detail">{{ params.shippingAddress }}</div>
                 </li>
-                <li>
-                  <span>发货单号:</span>
-                  <span>{{ params.shipmentBatchNumber }}</span>
-                </li>
+
                 <li>
                   <span>物流单号:</span>
-                  <span>{{ params.oddNumbers }}</span>
-                </li>
-
-
-                <li>
-                  <span>发货地址:</span>
-                  <span>{{ params.shippingAddress }}</span>
+                  <span>{{ !params.oddNumbers?'其它': params.oddNumbers}}</span>
                 </li>
 
                 <li>
@@ -86,10 +96,12 @@
                       formattedCreateDate(params.arrivalDate)
                     }}</span>
                 </li>
+
                 <li>
                   <span>车牌号:</span>
                   <span>{{ params.carNumber }}</span>
                 </li>
+
                 <li>
                   <span>联系人:</span>
                   <span>{{ params.contacts }}</span>
@@ -98,23 +110,52 @@
                   <span>联系电话:</span>
                   <span>{{ params.contactsPhone }}</span>
                 </li>
+
+
+                <!--                <li>-->
+                <!--                  <span>建设项目：</span>-->
+                <!--                  <span>{{ params.projectName }}</span>-->
+                <!--                </li>-->
+                <!--                <li>-->
+                <!--                  <span>标段项目：</span>-->
+                <!--                  <span class="text">{{ params.sectionName }}</span>-->
+                <!--                </li>-->
+                <!--                <li>-->
+                <!--                  <span>发货单号:</span>-->
+                <!--                  <span>{{ params.shipmentBatchNumber }}</span>-->
+                <!--                </li>-->
+
+
               </ul>
 
 
               <!--              <div class="detail-title-content">-->
               <!--                <img :src="checkAuditStatus(params.status)"/>-->
-              <div class="detail-title-contentA">
-                <img src="/static/icon-file.png">
-                <span>发货单</span>
-              </div>
-              <file-download-view class="outbound-field-uploader" style="width: 100%;"
-                                  :fileList="filterList(params.fileByList, 'fhd') || []"/>
 
 
               <!--              </div>-->
-
+              <van-button  @click.stop="openInfo"   type="default" block round>查看物流详情</van-button>
+              <!--              icon="plus"-->
             </div>
+            <div class="box-container">
+              <div class="detail-title-contentA">
+                <img src="/static/icon-address.png">
+                <span>货运位置</span>
+              </div>
+              <div class="locationsteps">
+                <van-steps direction="vertical" active-color="#0086ff" :active="0">
+                  <van-step v-for="(item, index) in cargoList" :key="index">
+                    <h3>{{ item.positionInformation }}</h3>
+                    <p>{{ formattedCreateDate(item.createDate) }}</p>
+                  </van-step>
+                </van-steps>
+              </div>
+              <van-button @click.stop="createPosition(params.shipmentBatchNumber )" icon="plus"  type="default" block round>添加货运位置</van-button>
+            </div>
+
+
           </van-list>
+
         </van-tab>
         <van-tab title="发货物资明细" name="发货物资明细">
           <div
@@ -132,21 +173,39 @@
                     <span>{{ item.specModel }}</span>
                   </li>
                   <li>
-                    <span>计量单位:</span>
-                    <span>{{ item.unit }}</span>
+                    <span>包装形式:</span>
+                    <span>{{ item.packagingFm }}</span>
                   </li>
                   <li>
-                    <span>发货数量:</span>
-                    <span class="li-span-click">{{ item.sendTotal }}</span>
+                    <span>供应时间:</span>
+                    <span v-if="item.supplyDate">{{ formattedCreateDate(item.supplyDate) }}</span>
                   </li>
+
+                  <li>
+                    <span style="min-width: 3rem;">收货人及联系方式:</span>
+                    <span>{{ item.receiver }}</span>
+                  </li>
+
                   <li>
                     <span style="min-width: 4rem;">本次计划数量:</span>
                     <span class="li-span-click">{{ item.planAmount }}</span>
                   </li>
+
                   <li>
-                    <span>包装形式:</span>
-                    <span>{{ item.packagingFm }}</span>
+                    <span>发货数量:</span>
+                    <span class="li-span-click">{{ item.sendTotal }}</span>
                   </li>
+
+
+                  <li>
+                    <span>计量单位:</span>
+                    <span>{{ item.unit }}</span>
+                  </li>
+
+
+
+
+
                   <li>
                     <span>生产日期:</span>
                     <span v-if="item.createDate">{{
@@ -165,14 +224,8 @@
                     <span>使用地点:</span>
                     <span>{{ item.addr }}</span>
                   </li>
-                  <li>
-                    <span>供应时间:</span>
-                    <span v-if="item.supplyDate">{{ formattedCreateDate(item.supplyDate) }}</span>
-                  </li>
-                  <li>
-                    <span style="min-width: 3rem;">收货人及联系方式:</span>
-                    <span>{{ item.receiver }}</span>
-                  </li>
+
+
                   <li>
                     <span>投资方:</span>
                     <span>{{ item.field0 }}</span>
@@ -197,7 +250,7 @@
                   <span>厂检报告附件</span>
                 </div>
                 <file-download-view class="outbound-field-uploader" style="width: 100% !important;"
-                                   :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                                    :fileList="filterList(item.fileByList, 'cjbg') || []"/>
               </div>
             </van-list>
           </div>
@@ -224,7 +277,7 @@
 <script>
 import keepPages from '@/view/mixins/keepPages'
 import BackToTop from '@/components/BackToTop'
-import {detailBySend, snedGoodsSure} from '@/api/demand/sendGoods'
+import {addList, detailBySend, snedGoodsSure} from '@/api/demand/sendGoods'
 import FilePreview from "@/components/FilePreview.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import indexMixin from '@/view/mixins'
@@ -239,6 +292,7 @@ export default {
   components: {FilePreview, FileDownloadView, BackToTop},
   data() {
     return {
+      cargoList: "",
       menuActiveIndex: 0,
 
       formData: {
@@ -270,12 +324,40 @@ export default {
     };
   },
   created() {
+    console.log("1111")
     this.id = this.$route.query.id
     this.btnEvent = this.$route.query.btnEvent
     this.cargoDetails();
     // this.getOrderStatusOptions();
   },
+  activated() {
+    this.id = this.$route.query.id
+    this.btnEvent = this.$route.query.btnEvent
+    this.cargoDetails();
+  },
   methods: {
+    openInfo(){
+      this.$router.push({ path: '/cargoInfo', query: { id:this.params.shipmentBatchNumber } })
+
+
+
+    },
+    createPosition(number){
+
+      this.$router.push({ path: '/cargoPosition', query: { shipmentBatchNumber:number,page:'/cargoDetails' } })
+      // this.formKey++
+      // this.shipmentBatchNumber = number
+      // let params = {
+      //   shipmentBatchNumber: number
+      // }
+      // addList(params).then((res) => {
+      //   if (res.code == 0) {
+      //     this.cargoList = res.data.list
+      //     // this.freightLocationDiaLog = true
+      //
+      //   }
+      // })
+    },
     formattedCreateDate(timestamp) {
       if (!timestamp) return ''; // 处理空值
       const date = new Date(timestamp);
@@ -285,6 +367,7 @@ export default {
       return `${year}-${month}-${day}`;
     },
     cargoDetails() {
+      console.log("走到cargoDetails了");
       detailBySend(this.id).then((res) => {
         if (res.code == 0) {
           this.params = res.data
@@ -293,6 +376,16 @@ export default {
             ...item,
             // fileByList: JSON.parse(item.fileByList)
           }))
+
+          let params = {
+            shipmentBatchNumber: this.params.shipmentBatchNumber,
+          }
+          addList(params).then((res) => {
+            if (res.code == 0) {
+              this.cargoList = res.data.list
+              this.freightLocationDiaLog = true
+            }
+          })
         }
       })
     },
@@ -439,7 +532,16 @@ export default {
 
 
 .box-container {
-  padding: 0px !important;
+  background: #fff; // 为每个容器设置白色背景
+  margin-bottom: 10px; // 容器之间添加间距
+  border-radius: 8px; // 添加圆角
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); // 添加轻微阴影增强分隔感
+  overflow: hidden; // 确保圆角显示正常
+
+  // 为连续的容器之间添加额外间距
+  & + .box-container {
+    margin-top: 10px;
+  }
 }
 
 .detail-list-ul {
@@ -492,6 +594,7 @@ export default {
   font-size: 1.2em;
   /* 可选：调整圆点大小 */
 }
+
 .detail-title-contentA {
   width: 100%;
   height: 34px;
@@ -557,5 +660,54 @@ export default {
   font-weight: 500;
 }
 
+// 调整列表容器的样式
+.detail-ul-text {
+  margin: 0; // 移除外部边距
+  background: transparent; // 移除ul包装器的灰色背景
+}
+
+// 调整列表样式
+.detail-ul {
+  background: #f8f8f8; // 使用稍浅的灰色背景
+  margin: 10px; // 添加内边距
+  border-radius: 4px; // 添加圆角
+}
+
+.detail-title-content {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+  img {
+    width: 26px;
+    height: 26px;
+  }
+
+  span {
+    line-height: 26px;
+    margin-left: 0;
+    font-size: 13px;
+  }
+}
+
+.detail-ul {
+  padding-left: 16px;
+  padding-right: 30px;
+  border-top: 0.5px solid #e3e3e3;
+
+  .detail-ul-p {
+    display: flex;
+    align-items: center;
+
+    & :nth-child(1) {
+      margin-right: 3px;
+    }
+
+    & :nth-child(2) {
+      margin-right: 3px;
+    }
+  }
+}
 
 </style>
