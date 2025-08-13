@@ -124,7 +124,8 @@ export default {
         {title: '未收货', status: '1'},
         {title: '已收货', status: '2'},
         {title: '部分退货', status: '3'},
-        {title: '已退货', status: '4'}
+        {title: '已退货', status: '4'},
+        {title: '审核中', status: '5'},
       ],
       dataList: [],
       allRefreshLoading: false,
@@ -150,7 +151,8 @@ export default {
         {status: '1', type: 'primary'},
         {status: '2', type: 'success'},
         {status: '3', type: 'danger'},
-        {status: '4', type: 'default'}
+        {status: '4', type: 'default'},
+        {status: '5', type: 'warning'},
       ]
       return statusMap.find(item => item.status === status).type
     },
@@ -290,6 +292,8 @@ export default {
         return '/static/Icon_PartialReturn.png'
       }else if(status == '4'){
         return '/static/Icon_Returned.png'
+      }else if(status == '5'){
+        return '/static/Icon_audit.png'
       }
         
     },
