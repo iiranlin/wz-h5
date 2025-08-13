@@ -123,6 +123,8 @@ export default {
       this.$router.push({name: 'DoReturn',query:{id: item.id, backNode: '1'}})
     },
     detailsClick (item) {
+      this.$store.dispatch('public/setSelectGoodData', []);
+
       this.$router.push({ name: 'DoAcceptDetail', query: {id: item.id, takeStatus: item.takeStatus}  })
     },
     handeSearchClick () {

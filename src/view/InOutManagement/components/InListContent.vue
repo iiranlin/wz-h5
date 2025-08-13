@@ -258,6 +258,8 @@ export default {
           }
         },
         '2': () => {
+          this.$store.dispatch('public/setSelectGoodData', []);
+          
           this.$router.push({ name: 'DoAcceptDetail', query: { id: item.id, takeStatus: item.takeStatus } })
         }
       }

@@ -250,6 +250,8 @@ export default {
      this.$store.dispatch('updateActiveTab', {
         activeTab:this.menuActiveIndex
       })
+      
+      this.$store.dispatch('public/setSelectGoodData', []);
       this.$router.push({name: 'DoAcceptDetail', query: {id:item.id,tabs:item.takeNumber?true:false,isLable:item.takeNumber?true:false, takeStatus: item.takeStatus}})
     },
     viewLogistic(item){
