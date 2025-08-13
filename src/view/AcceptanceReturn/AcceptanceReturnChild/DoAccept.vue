@@ -38,6 +38,13 @@
       </div>
       <file-download-view :fileList="filterList(dataList.fileByList, 'fhd') || []" />
     </div>
+    <div class="detail-base-info detail-base-info-edited" v-if="filterList(dataList.fileByList, 'zczp')?.length > 0">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>装车照片</span>
+      </div>
+      <file-download-view :fileList="filterList(dataList.fileByList, 'zczp') || []" />
+    </div>
 
         <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
       <div class="detail-title-content">

@@ -152,9 +152,14 @@ export default {
         //   title: '已验收',
         // },
         {
-          id: 6,
-          status: '6',
+          id: 5,
+          status: '5',
           title: '已完成',
+        },
+        {
+          id: 7,
+          status: '7',
+          title: '已撤回',
         }
       ],
       listGhsData: [],
@@ -163,12 +168,13 @@ export default {
       total: 0,
        statusArr: [
         { text: '全部', value: '', imgPath: '' },
-
+        { text: '未提交', value: '0', imgPath: '/static/icon_unconfirmed.png' },
         { text: '未确认', value: '2', imgPath: '/static/icon_unconfirmed.png' },
         { text: '已确认', value: '3', imgPath: '/static/icon-success.png' },
         { text: '供货中', value: '4', imgPath: '/static/icon_Supply.png' },
         { text: '已完成', value: '5', imgPath: '/static/icon_NoCheckAndAccept.png' },
         { text: '已完成', value: '6', imgPath: '/static/icon-checked.png' },
+        { text: '已撤回', value: '7', imgPath: '/static/icon-checked.png' },
       ],
     };
   },

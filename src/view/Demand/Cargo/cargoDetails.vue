@@ -109,6 +109,12 @@
               </div>
               <file-download-view class="outbound-field-uploader" style="width: 100%;"
                                   :fileList="filterList(params.fileByList, 'fhd') || []"/>
+              <div class="detail-title-contentA">
+                <img src="/static/icon-file.png">
+                <span>装车照片</span>
+              </div>
+              <file-download-view class="outbound-field-uploader" style="width: 100%;"
+                                  :fileList="filterList(params.fileByList, 'zczp') || []"/>
 
 
               <!--              </div>-->

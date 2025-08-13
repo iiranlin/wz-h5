@@ -286,7 +286,7 @@ export default {
       })
     },
     withdrawClick(item) {
-      this.handleWithdraw({ businessId: item.id, businessType: item.planType == 1 ? 'FBYLXQ' : 'YLXQ' })
+      this.handleWithdraw({ businessId: item.id, businessType: 'WZML' })
     },
     checkStatusText(status) {
       let name = ''
