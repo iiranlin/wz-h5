@@ -515,6 +515,16 @@ export default {
     
       this.$store.dispatch('public/setSelectGoodData', this.materiaList)
 
+      const shipmentsInfo = this.$store.state.public.shipmentsInfo || {};
+
+      if (Object.keys(shipmentsInfo).length > 0) {
+        this.params = Object.assign({}, this.params, shipmentsInfo);
+      } else {
+        this.params = {};
+        this.fileList = [];
+        this.zczp = [];
+      }
+
       this.getSendGoods();
     }
     // 默认当前时间
@@ -602,9 +612,15 @@ export default {
 
           this.goodsMsg = res.data;
 
-          this.fileList = [];
-          
-          this.params = res.data;
+          const shipmentsInfo = this.$store.state.public.shipmentsInfo || {};
+
+          if (Object.keys(shipmentsInfo).length > 0) {
+            this.params = Object.assign({}, this.params, shipmentsInfo);
+          } else {
+            this.params = res.data;
+            this.fileList = [];
+            this.zczp = [];
+          }
 
           const data = this.$store.state.public.selectGoodDataEdit?.length > 0 ? this.$store.state.public.selectGoodDataEdit : res.data?.materialCirculationDetailsTableDTOS;     
 
@@ -877,6 +893,8 @@ export default {
     },
     editedClick(item, index) {
       this.$store.dispatch('public/setMateriaData', item)
+
+      this.$store.dispatch('public/setShipmentsInfo', this.params)
       // const query = this.text == 'edit' ? { contractId: this.contractId, type: this.text, id: this.queryId } : { contractId: this.contractId }
       const query = { type: this.text, id: this.goodsId, planId: this.planId }
       this.$router.push({ name: 'EditedMaterialGoods', query })
@@ -895,16 +913,21 @@ export default {
     },
     returnClick() {
       // const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId, materialUsedRatio: this.materialUsedRatio } : { contractId: this.contractId, materialUsedRatio: this.materialUsedRatio }
+      this.$store.dispatch('public/setShipmentsInfo', this.params)
       const query = { planId: this.planId, text: this.text, id: this.goodsId };
 
 
       this.$router.push({ name: 'selectGoods', query })
     },
     receiptClick() {
+      this.$store.dispatch('public/setShipmentsInfo', this.params)
+
       const {id, text, planId} = this.$route.query;
       this.$router.push({ name: 'ReceiptLists', query: { planId, type: text, id } })
     },
     createClick() {
+      this.$store.dispatch('public/setShipmentsInfo', this.params)
+
       this.$router.push({ name: 'ReceiptOperates', query: { type: 'create' } })
     },
     lookGoods(id) {

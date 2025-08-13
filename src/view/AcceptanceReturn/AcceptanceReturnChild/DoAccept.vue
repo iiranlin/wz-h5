@@ -383,6 +383,8 @@ export default {
     editedClick(item, index) {
       this.$store.dispatch('public/setMateriaData', item)
 
+      this.$store.dispatch('public/setGoodsReceiptInfo', this.dataList)
+
       this.$router.push({ name: 'EditedMaterialDoAccept', query: {from: this.from, id: this.id, tabs: this.tabs, isLable: this.isLable, isView: this.isView, takeStatus: this.takeStatus}  })
     },
     historyCaches() {
@@ -412,7 +414,13 @@ export default {
       const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : defaultTake;
        getDetailApi(this.id).then((res)=>{
           if(res.success){
-            this.dataList = res.data
+            const GoodsReceiptInfo = this.$store.state.public.goodsReceiptInfo || {};
+
+            if (Object.keys(GoodsReceiptInfo).length > 0) {
+              this.dataList = Object.assign({}, this.dataList, GoodsReceiptInfo);
+            } else {
+              this.dataList = res.data
+            }
 
             const data = this.$store.state.public.selectGoodData?.length > 0 ? this.$store.state.public.selectGoodData : this.dataList.materialCirculationDetailsTableDTOS;
 

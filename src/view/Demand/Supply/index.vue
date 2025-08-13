@@ -199,6 +199,9 @@ export default {
         //发货
         handleSendGoodsClick(id, title) {
             this.$store.dispatch('public/setSelectGoodData', []);
+            
+            this.$store.dispatch('public/setShipmentsInfo', {})
+            
             this.$router.push({ path: '/selectGoods', query: { id: id, text: title } })
         },
         onLoad() {

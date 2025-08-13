@@ -250,6 +250,8 @@ export default {
      this.$store.dispatch('updateActiveTab', {
         activeTab:this.menuActiveIndex
       })
+
+      this.$store.dispatch('public/setGoodsReceiptInfo', {});
       
       this.$store.dispatch('public/setSelectGoodData', []);
       this.$router.push({name: 'DoAcceptDetail', query: {id:item.id,tabs:item.takeNumber?true:false,isLable:item.takeNumber?true:false, takeStatus: item.takeStatus}})
@@ -267,7 +269,10 @@ export default {
         activeTab:this.menuActiveIndex
 
       })
+
+      this.$store.dispatch('public/setGoodsReceiptInfo', {});
       this.$store.dispatch('public/setSelectGoodData', []);
+      
       this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true,isLable:false, takeStatus: item.takeStatus}})
     },
 

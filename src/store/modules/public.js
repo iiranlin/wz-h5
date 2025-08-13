@@ -15,6 +15,10 @@ const state = {
   InboundInformation: {},
   selectStoreData: [],
 
+  GoodsReceiptInfo: {},
+
+  shipmentsInfo: {},
+
   selectGoodData: [],
   selectGoodDataEdit: [],
 
@@ -25,6 +29,12 @@ const state = {
 const mutations = {
   SET_INBOUND_INFORMATION: (state, inboundInformation) => {
     state.InboundInformation = inboundInformation;
+  },
+  SET_GOODS_RECEIPT_INFO: (state, goodsReceiptInfo) => {
+    state.GoodsReceiptInfo = goodsReceiptInfo;
+  },
+  SET_SHIPMENTS_INFO: (state, shipmentsInfo) => {
+    state.shipmentsInfo = shipmentsInfo;
   },
   SET_SELECTSTOREDATA: (state, selectStoreData) => {
     state.selectStoreData = selectStoreData;
@@ -87,6 +97,12 @@ const mutations = {
 const actions = {
   setInboundInformation({ commit }, data) {
     commit('SET_INBOUND_INFORMATION', data)
+  },
+  setGoodsReceiptInfo({ commit }, data) {
+    commit('SET_GOODS_RECEIPT_INFO', data)
+  },
+  setShipmentsInfo({ commit }, data) {
+    commit('SET_SHIPMENTS_INFO', data)
   },
   setDemandPlanningInfo({ commit }, data) {
     commit('SET_DEMAND_PLANNING_INFO', data)
