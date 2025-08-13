@@ -54,6 +54,14 @@
                                   :fileList="filterList(params.fileByList, 'fhd') || []"/>
             </div>
             <div class="box-container">
+              <div class="detail-title-contentA">
+                <img src="/static/icon-file.png">
+                <span>装车照片</span>
+              </div>
+              <file-download-view class="outbound-field-uploader" style="width: 100%;"
+                                  :fileList="filterList(params.fileByList, 'zczp') || []"/>
+            </div>
+            <div class="box-container">
               <!--              <div class="detail-content">-->
               <!--          -->
               <!--                <span>物流信息</span>-->

@@ -47,7 +47,7 @@
     <div class="detail-base-info detail-base-info-edited" v-if="detail.fileList[0]?.fileList.length">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
-        <span>附件</span>
+        <span>计划附件</span>
       </div>
       <file-download-view :fileList="detail.fileList[0]?.fileList || []"></file-download-view>
     </div>

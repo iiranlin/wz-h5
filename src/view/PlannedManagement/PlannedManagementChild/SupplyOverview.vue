@@ -33,6 +33,13 @@
         </li>
       </ul>
     </div>
+    <div class="detail-base-info detail-base-info-edited" v-if="detailGyMx.fileList[0]?.fileList.length">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>计划附件</span>
+      </div>
+      <file-download-view :fileList="detailGyMx.fileList[0]?.fileList || []"></file-download-view>
+    </div>
     <div class="detail-floor-content">
       <img src="/static/icon-return.png"/>
       <span>供应信息</span>
@@ -98,9 +105,10 @@
 </template>
 <script>
 import { materialDemandPlanRestDetailGyMx } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import FileDownloadView from "@/components/FileDownloadView.vue"
 export default {
   name: 'SupplyOverview',
-  components: {},
+  components: {FileDownloadView},
   data() {
     return {
       detailGyMx: {}
@@ -159,4 +167,166 @@ export default {
     }
   }
 }
+  .detail-base-info-edited {
+    width: auto;
+    box-sizing: border-box;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    background: #ffffff;
+    border-radius: 7px;
+    box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
+    position: relative;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+
+    .detail-title-content {
+      padding-left: 0;
+      padding-right: 0;
+
+      img {
+        width: 26px;
+        height: 26px;
+      }
+
+      span {
+        line-height: 26px;
+        margin-left: 0;
+      }
+    }
+
+    .detail-title-content-edited {
+      margin: 21px;
+      text-align: center;
+      font-size: 12px;
+
+      .van-button {
+        width: 110px;
+        height: 28px;
+        margin-right: 6px;
+        font-size: 12px;
+      }
+
+      .detail-title-content-edited-add {
+        width: 16px;
+        height: 16px;
+        vertical-align: sub;
+      }
+    }
+
+    .detail-title-content-edited-button {
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    .detail-list-ul-edited {
+      border-bottom: 1px solid #e3e3e3;
+    }
+
+    .detail-base-info-edited-all {
+      text-align: right;
+      font-size: 12px;
+      padding-top: 10px;
+      padding-right: 16px;
+
+      img {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+      }
+    }
+
+    .detail-title-content-field {
+      padding-left: 20px;
+      padding-right: 10px;
+      padding-bottom: 5px;
+
+      .detail-base-info-edited-textarea {
+        background: #f6f6f6;
+        border-radius: 10px;
+      }
+    }
+
+    .detail-ul-text {
+      margin-left: 5px;
+      margin-right: 5px;
+      margin-bottom: 10px;
+      background: #f2f2f2;
+      border-radius: 5px;
+
+      .detail-ul {
+        padding: 10px 12px;
+
+        li {
+          span {
+            text-align: left;
+          }
+        }
+      }
+    }
+
+    .detail-ul-text2 {
+    width: 100%;
+    padding-top: 5px;
+    background: #ffffff;
+    padding: 10px 5px;
+
+    .detail-title-content {
+        width: 100%;
+        // height: 34px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        // align-items: center;
+        // padding-left: 9px;
+        // padding-right: 27px;
+        box-sizing: border-box;
+
+        img {
+            width: 18px;
+            height: 18px;
+        }
+        & span:nth-child(2){
+            margin-left: 6px;
+            color: #151b3e;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 20px;
+        }
+        & span:nth-child(3){
+            color: #151b3e;
+            font-size: 15px;
+            font-weight: 600;
+            flex: 1;
+            word-break: break-all;
+            line-height: 20px;
+        }
+    }
+    }
+
+    .detail-title-edited-p {
+      justify-content: space-between;
+
+      p {
+        img {
+          vertical-align: middle;
+        }
+
+        span {
+          vertical-align: middle;
+        }
+
+        &:nth-child(2) {
+          padding-right: 10px;
+
+          span {
+            font-weight: 400;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
 </style>

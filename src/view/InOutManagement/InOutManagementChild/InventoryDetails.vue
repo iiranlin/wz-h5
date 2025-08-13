@@ -31,6 +31,13 @@
         </ul>
       </div>
     </div>
+    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png">
+        <span>计划附件</span>
+      </div>
+      <file-download-view class="outbound-field-uploader" :fileList="fileList || []" />
+    </div>
     <div class="detail-floor-content">
       <img src="/static/icon-return.png"/>
       <span>物资明细（共{{detailList.length}}项）</span>
@@ -78,16 +85,18 @@
 <script>
 import {materialDemandPlanRestDetailGyMx} from '@/api/prodmgr-inv/materialDemandPlanRest'
 import BackToTop from '@/components/BackToTop'
+import FileDownloadView from "@/components/FileDownloadView.vue";
 
 export default {
   name: 'InventoryDetails',
-  components: {BackToTop},
+  components: {BackToTop, FileDownloadView},
   data() {
     return {
       id: '',
       detailInfo:{},
       detailList:[],
-      relatedCount: ''
+      relatedCount: '',
+      fileList: [],
     }
   },
   created() {
@@ -112,6 +121,8 @@ export default {
       materialDemandPlanRestDetailGyMx(params).then(({ data }) => {
         this.detailInfo = data;
         this.detailList = data.demandPlanDetailsGyDTOList;
+        // fileList回显
+        this.fileList = data.fileList[0]?.fileList || []
       }).catch((error) => {
 
       }).finally(() => {
@@ -160,4 +171,65 @@ export default {
   }
 
 }
+  .detail-base-info-edited {
+    width: auto;
+    box-sizing: border-box;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-top: 8px;
+    background: #ffffff;
+    border-radius: 7px;
+    box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
+    position: relative;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    .detail-title-content {
+      padding-left: 5px;
+      padding-right: 5px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+
+      img {
+        width: 26px;
+        height: 26px;
+      }
+
+      span {
+        line-height: 26px;
+        margin-left: 0;
+        font-size: 13px;
+      }
+    }
+
+    .detail-ul {
+      padding-left: 16px;
+      padding-right: 30px;
+      border-top: 0.5px solid #e3e3e3;
+
+      .detail-ul-p {
+        display: flex;
+        align-items: center;
+
+        & :nth-child(1) {
+          margin-right: 3px;
+        }
+
+        & :nth-child(2) {
+          margin-right: 3px;
+        }
+      }
+    }
+
+    .detail-base-info-edited-div {
+      justify-content: space-between;
+
+      .detail-base-info-edited-img {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
 </style>
