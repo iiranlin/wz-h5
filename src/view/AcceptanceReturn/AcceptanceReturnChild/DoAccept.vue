@@ -23,10 +23,6 @@
             <span>操作人：</span>
             <span>{{dataList.createUserName}}</span>
           </li>
-          <li v-if="isLable">
-            <span>收货时间：</span>
-            <span>{{dataList.takeDate |formatDate }}</span>
-          </li>
         </ul>
       </div>
     </div>
