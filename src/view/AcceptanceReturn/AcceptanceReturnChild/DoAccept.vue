@@ -124,9 +124,9 @@
       </div>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" v-if="isView" style="margin-bottom: 8px;">
+    <div class="detail-base-info detail-base-info-edited" v-if="isView" style="margin-bottom: 8px;background-color: #F2F4F8;">
       <div class="detail-title-content">
-        <img src="@/assets/img/Icon-logistics.png" />
+        <img src="@/assets/img/Icon-batch.png" />
         <span>物资明细</span>
         <span style="text-align: right;">共 <span style="color: #134DAA;">{{ materiaList.length }}</span> 项</span>
       </div>

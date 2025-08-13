@@ -35,14 +35,21 @@
       </div>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited">
+    <div class="detail-base-info detail-base-info-edited" v-if="queryType === 'submit'">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
         <span>报检信息</span>
       </div>
       <p class="box-container-p" v-if="!formData.fileList01?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
-      <file-upload-view :maxCount="5" v-if="queryType === 'submit'" :fileList="formData.fileList01 || []" businessType="01" />
-      <file-download-view v-else :fileList="formData.fileList01 || []" />
+      <file-upload-view :maxCount="5" :fileList="formData.fileList01 || []" businessType="01" />
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited" v-if="queryType != 'submit' && formData.fileList01?.length">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>报检信息</span>
+      </div>
+      <file-download-view :fileList="formData.fileList01 || []" />
     </div>
 
     <div v-if="queryType === 'submit'" class="detail-floor-content">
@@ -54,9 +61,9 @@
       </div>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" v-else style="margin-bottom: 8px;">
+    <div class="detail-base-info detail-base-info-edited" v-else style="margin-bottom: 8px; background-color: #F2F4F8;">
       <div class="detail-title-content">
-        <img src="@/assets/img/Icon-logistics.png" />
+        <img src="@/assets/img/Icon-batch.png" />
         <span>物资明细</span>
         <span style="text-align: right;">共 <span style="color: #134DAA;">{{ materiaList.length }}</span> 项</span>
       </div>
