@@ -24,13 +24,13 @@
       </div>
 
       <div class="detail-base-info detail-base-info-edited">
-      <template v-if="params.receiver">
+      <template v-if="params.receiver || status === '2'">
         <div class="detail-title-content detail-title-edited-p">
           <p>
             <img src="@/assets/img/Icon-address.png" />
             <span>发货信息</span>
           </p>
-          <p @click="receiptClick">
+          <p v-show="status !== '2'" @click="receiptClick">
             <img src="@/assets/img/Icon-edit.png" />
             <span>更改</span>
           </p>
@@ -73,7 +73,27 @@
           <img src="@/assets/img/Icon-invest.png" />
           <span>物流信息</span>
         </div>
-        <div>
+         <div class="detail-ul-text" v-if="status === '2'">
+          <ul class="detail-ul">
+            <li>
+              <span>物流单号：</span>
+              <span>{{ params.oddNumbers }}</span>
+            </li>
+            <li>
+              <span>发货日期：</span>
+              <span>{{ params.shippingDate }}</span>
+            </li>
+            <li>
+              <span>预计送到时间：</span>
+              <span>{{ params.arrivalDate }}</span>
+            </li>
+            <li>
+              <span>车牌号：</span>
+              <span>{{ params.carNumber }}</span>
+            </li>
+          </ul>
+        </div>
+        <div v-else>
                     <van-field
             v-model="params.oddNumbers"
             :disabled="fileDisabled"
@@ -158,14 +178,18 @@
           />
     </div>
 
-    <div class="detail-floor-content">
-      <div>
+    <div class="detail-floor-content" v-if="status !== '2'">
+      <div >
         <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '0' }"
           @click="btnClick('0')">全部物资</van-button>
         <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '1' }"
           @click="btnClick('1')">未完善物资</van-button>
       </div>
       <span @click="returnClick"><span class="detail-floor-content-add">+</span>添加物资</span>
+    </div>
+    <div v-else class="detail-floor-content detail-header">
+      <img src="/static/icon-return.png"/>
+      <span>物资明细（共{{btnClickIndex == '0' ? materiaList.length : editMateriaList.length}}项）</span>
     </div>
 
     <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList" :key="item.id"
@@ -228,7 +252,7 @@
           </li> -->
         </ul>
       </div>
-      <div class="list-ul-button">
+      <div class="list-ul-button" v-if="status !== '2'">
         <van-button class="button-info" plain round type="info" native-type="button"
           @click="editedClick(item, index)">编辑</van-button>
         <van-button class="button-info" plain round native-type="button" @click="deleteClick(index)">删除</van-button>
@@ -433,7 +457,9 @@ export default {
       text: "",
       fileDisabled: false,
       fileByList: "",
-      planId:''
+      planId:'',
+      // 1未发货 2货运中 3已完成 供应中的物资仅允许修改附件信息
+      status:'',
     };
   },
   computed: {
@@ -569,6 +595,7 @@ export default {
           // this.goodsMsg.planNumber = planNumber;
           // this.goodsMsg.sectionName = sectionName;
           // this.goodsMsg.contractName = contractName;
+          this.status = data.status
 
           res.data.receiver = res.data.contacts;
           res.data.phone = res.data.contactsPhone;
@@ -1287,6 +1314,9 @@ li :nth-child(2) {
       font-size: 16px;
       vertical-align: middle;
     }
+  }
+   .detail-floor-content.detail-header {
+    justify-content: flex-start;
   }
 
   .detail-list-ul {
