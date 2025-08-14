@@ -605,7 +605,7 @@ export default {
           // this.goodsMsg.planNumber = planNumber;
           // this.goodsMsg.sectionName = sectionName;
           // this.goodsMsg.contractName = contractName;
-          this.status = data.status
+          this.status = res.data.status
 
           res.data.receiver = res.data.contacts;
           res.data.phone = res.data.contactsPhone;
