@@ -1,20 +1,20 @@
 <template>
   <div class="acceptance-return in-out-management">
-     <van-tabs  v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
+     <van-tabs  v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff" @change="changeTab"
         title-inactive-color="#2e2e2e" class="in-out-management-tab">
       <van-tab title="收货管理">
         <div slot="title">
             <img src="@/assets/img/SHGL.png">
             <span class="in-out-management-tab-span">收货管理</span>
           </div>
-        <acceptance/>
+        <acceptance ref="acceptance"/>
       </van-tab>
       <van-tab title="退货管理">
           <div slot="title">
             <img src="@/assets/img/THGL.png">
             <span class="in-out-management-tab-span">退货管理</span>
           </div>
-        <return/>
+        <return ref="return"/>
       </van-tab>
     </van-tabs>
   </div>
@@ -51,6 +51,11 @@ export default {
   },
   methods: {
     changeTab(index) {
+      if (index === 0) {
+        this.$refs.acceptance.allRefresh()
+      } else if (index === 1) {
+        this.$refs.return.getAllList()
+      }
       this.menuActiveIndex = index
     }
   }
