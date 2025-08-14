@@ -296,8 +296,9 @@ export default {
 
     },
     createPosition(number){
+      let {shippingDate = "", shippingAddress = "" } = this.params
 
-      this.$router.push({ path: '/cargoPosition', query: { shipmentBatchNumber:number,page:'/cargoDetails' } })
+      this.$router.push({ path: '/cargoPosition', query: { shippingDate, shippingAddress, shipmentBatchNumber:number,page:'/cargoDetails' } })
       // this.formKey++
       // this.shipmentBatchNumber = number
       // let params = {

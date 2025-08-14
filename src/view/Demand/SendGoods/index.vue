@@ -17,7 +17,7 @@
             </li>
             <li>
               <span>合同名称：</span>
-              <span>{{ goodsMsg.deptName }}</span>
+              <span>{{ goodsMsg.contractName }}</span>
             </li>
           </ul>
         </div>
@@ -173,8 +173,9 @@
             class="outbound-field-uploader"
             :fileList="zczp || []"
             businessType="01"
-            accept=".jpg"
+            accept=".jpg,.png,.jpeg"
             :maxCount="100"
+            :isImgToPdf="true"
           />
     </div>
 

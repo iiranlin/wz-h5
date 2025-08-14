@@ -28,7 +28,7 @@
     </div>
 </template>
 <script>
-import {minioUpload} from '@/api/blcd-base/minio'
+import {minioUpload, minioImageToPdf} from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
 
 export default {
@@ -51,6 +51,7 @@ export default {
             type: Number,
             default: 1,
         },
+        // 多个,分割  accept=".doc,.txt,.pdf,.xls,.docx,.xlsx"
         accept:{
             type: String,
             default: '.pdf',
@@ -59,6 +60,10 @@ export default {
         required:{
             type: Boolean,
             default: true,
+        },
+        isImgToPdf:{
+            type: Boolean,
+            default: false,
         }
     },
     data() {
@@ -66,11 +71,16 @@ export default {
             
         }
     },
+    computed: {
+        uploadApi(){
+            return this.isImgToPdf ? minioImageToPdf : minioUpload 
+        }
+    },
     methods:{
         //附件上传前
         beforeRead(file){
-            const types = [this.accept];
-            const extensions = this.accept.substr(1).toUpperCase()// PDF
+            const types = this.accept.split(",");
+            const extensions = this.accept.replaceAll(".", "").toUpperCase()// PDF,JPG
             if (!types.includes(`.${file.name.split('.').pop().toLowerCase()}`)) {
               this.$notify({
                 type: 'warning',
@@ -112,7 +122,7 @@ export default {
               forbidClick: true,
             });
 
-            minioUpload(formData).then(({data}) => {
+            this.uploadApi(formData).then(({data}) => {
                 this.$notify({
                     type: 'success',
                     message: "上传成功"

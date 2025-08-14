@@ -37,6 +37,22 @@
                                 <span>{{item.startDeptName}}</span>
                             </li>
                             <li>
+                                <span>建设项目：</span>
+                                <span>{{item.projectName}}</span>
+                            </li>
+                            <li>
+                                <span>标段项目：</span>
+                                <span>{{item.sectionName}}</span>
+                            </li>
+                            <li>
+                                <span>合同名称：</span>
+                                <span>{{item.contractName}}</span>
+                            </li>
+                            <li>
+                                <span>物资名称：</span>
+                                <span>{{item.materialName}}</span>
+                            </li>
+                            <li>
                                 <span>提交人：</span>
                                 <span>{{item.startUserName}}</span>
                             </li>
@@ -60,6 +76,7 @@ import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfTodoList } from '@/api/myToDoList'
 import indexMixin from '@/view/mixins'
+import { FLOW_ROUTE } from '@/utils/constant'
 
 export default {
     name:'WaitExamineList',
@@ -132,23 +149,39 @@ export default {
         },
         //列表条目点击
         handleItemClick(item){
-            this.$router.push({
-                name: "DemandPlanningExamine",
-                params: { 
-                    obj: JSON.stringify(item),
-                    type: '0',
-                },
-            });
+            const { businessType, businessId, businessCode, taskId, procInstId } = item
+            const auditObj = { businessType, businessId, businessCode, taskId, procInstId }
+      
+            if(Object.keys(FLOW_ROUTE).includes(businessType)){
+                let name = FLOW_ROUTE[businessType]
+                let query = { 
+                    id: businessId,
+                    from: this.$route.name,
+                    ...(businessType === "SHLC" && { takeStatus: item.takeStatus }),
+                    // 审核参数
+                    ...auditObj,
+                }
+                this.$router.push({ name, query })
+            } else {
+                this.$router.push({
+                    name: "DemandPlanningExamine",
+                    params: { 
+                        obj: JSON.stringify(item),
+                        type: '0',
+                    },
+                });
+            }
         },
         //去审核点击
         handleExamineClick(item){
-            this.$router.push({
-                name: "DemandPlanningExamine",
-                params: { 
-                    obj: JSON.stringify(item),
-                    type: '0',
-                },
-            });
+            this.handleItemClick(item)
+            // this.$router.push({
+            //     name: "DemandPlanningExamine",
+            //     params: { 
+            //         obj: JSON.stringify(item),
+            //         type: '0',
+            //     },
+            // });
         },
         //搜索点击
         handeSearch(){

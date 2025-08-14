@@ -17,7 +17,7 @@
             </li>
             <li>
               <span>合同名称：</span>
-              <span class="text">{{ goodsMsg.deptName }}</span>
+              <span class="text">{{ goodsMsg.contractName }}</span>
             </li>
           </ul>
         </div>

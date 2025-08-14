@@ -33,6 +33,22 @@
                                 <span>{{item.businessType | orderTypeFilter(dict.flowBusinessType)}}</span>
                             </li>
                             <li>
+                                <span>建设项目：</span>
+                                <span>{{item.projectName}}</span>
+                            </li>
+                            <li>
+                                <span>标段项目：</span>
+                                <span>{{item.sectionName}}</span>
+                            </li>
+                            <li>
+                                <span>合同名称：</span>
+                                <span>{{item.contractName}}</span>
+                            </li>
+                            <li>
+                                <span>物资名称：</span>
+                                <span>{{item.materialName}}</span>
+                            </li>
+                            <li>
                                 <span>审核人：</span>
                                 <span>{{item.assignee}}</span>
                             </li>
