@@ -32,21 +32,21 @@
           </div>
           <ul class="list-ul" @click="detailsClick('1', item)">
             <li>
+              <!-- <span>需求名称：</span> -->
+              <span class="font-weight">{{ item.planName }}</span>
+            </li>
+            <li>
               <span>收货单号：</span>
               <span @click.stop="detailsClick('2', item)" class="li-span-click">{{ item.takeNumber }}</span>
             </li>
-            <li>
-              <span>需求名称：</span>
-              <span>{{ item.planName }}</span>
-            </li>
-            <li>
+            <!-- <li>
               <span>建设项目：</span>
               <span>{{ item.projectName }}</span>
             </li> 
             <li>
               <span>标段项目：</span>
               <span>{{ item.sectionName }}</span>
-            </li>
+            </li> -->
             <li>
               <span>需求组织：</span>
               <span>{{ item.deptName }}</span>

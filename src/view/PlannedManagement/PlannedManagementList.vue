@@ -118,18 +118,18 @@ export default {
       error: false,
       statusValue: '',
       statusArr: [
-        { text: '全部', value: '' },
-        { text: '已驳回', value: '0' },
-        { text: '未提交', value: '1' },
-        { text: '审核中', value: '2' },
-        { text: '已生效', value: '3' },
-        { text: '修改后同意', value: '4' },
-        { text: '已撤回', value: '5' },
-        { text: '供应中', value: '6' },
-        { text: '收货完成', value: '7' },
-        { text: '已入库', value: '8' },
-        { text: '已完成', value: '9' },
-        { text: '已退回', value: '10' },
+        { text: '全部', value: '', imgPath: '' },
+        { text: '已驳回', value: '0', imgPath: '/static/Icon_reject.png' },
+        { text: '未提交', value: '1', imgPath: '/static/Icon_notFiled.png' },
+        { text: '审核中', value: '2', imgPath: '/static/Icon_audit.png' },
+        { text: '已生效', value: '3', imgPath: '/static/Icon_tookEffect.png' },
+        { text: '修改后同意', value: '4', imgPath: '/static/Icon_AgreeAfterRevision.png' },
+        { text: '已撤回', value: '5', imgPath: '/static/Icon_revoke.png' },
+        { text: '供应中', value: '6', imgPath: '/static/Icon_InStock.png' },
+        { text: '收货完成', value: '7', imgPath: '/static/icon_NoCheckAndAccept.png' },
+        { text: '已入库', value: '8', imgPath: '/static/Icon_Storage.png' },
+        { text: '已完成', value: '9', imgPath: '/static/Icon_finish.png' },
+        { text: '已退回', value: '10', imgPath: '/static/Icon_return.png' },
       ],
       listQuery: {
         pageNum: 1,
@@ -298,15 +298,22 @@ export default {
       return name
     },
     checkAuditStatus(status) {
-      if (status == '0') {
-        return '/static/icon-reject.png'
-      } else if (['5', '10'].includes(status)) {
-        return '/static/icon-return.png'
-      } else if (['1', '2', '6'].includes(status)) {
-        return '/static/icon-xqjh.png'
-      } else {
-        return '/static/icon-success.png'
-      }
+      // 获取状态对应图片路径
+      let imgPath = this.statusArr.find(el => {
+        return el.value === status
+      })?.imgPath || "";
+
+      return imgPath;
+      // if (status == '0') {
+      //   return '/static/icon-reject.png'
+      // } else if (['5', '10'].includes(status)) {
+      //   return '/static/icon-return.png'
+      // } else if (['1', '2', '6'].includes(status)) {
+      //   return '/static/icon-xqjh.png'
+      // } else {
+      //   return '/static/icon-success.png'
+      // }
+
     },
   }
 }

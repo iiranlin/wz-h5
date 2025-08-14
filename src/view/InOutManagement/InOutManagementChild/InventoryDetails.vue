@@ -1,46 +1,46 @@
 <template>
   <div class="default-containerA">
     <div class="detail-base-info">
-       <div class="detail-title-content">
-        <img src="/static/icon-xqjh.png">
-        <span>需求编号：</span>
-        <span>{{detailInfo.planNumber}}</span>
-        <div class="detail-title-status">
-          <img :src="checkAuditStatus(detailInfo.status)" />
-          <span>{{ detailInfo.status == '5'?'已完成':'未完成' }}</span>
-        </div>
+    
+    <div class="detail-title-text">
+        <p>需求名称：</p>
+        <p>{{ detailInfo.planName }}</p>
       </div>
-      <div>
+      <div class="detail-ul-text">
         <ul class="detail-ul">
-          <li>
-            <span>需求名称：</span>
-            <span>{{detailInfo.planName}}</span>
-          </li>
           <li>
             <span>建设项目：</span>
             <span>{{ detailInfo.projectName }}</span>
-          </li> 
+          </li>
           <li>
             <span>标段项目：</span>
-            <span>{{detailInfo.sectionName}}</span>
+            <span>{{ detailInfo.sectionName }}</span>
           </li>
           <li>
             <span>需求组织：</span>
-            <span>{{detailInfo.deptName}}</span>
+            <span>{{ detailInfo.deptName }}</span>
           </li>
         </ul>
       </div>
     </div>
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0.2rem; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>计划附件</span>
       </div>
       <file-download-view class="outbound-field-uploader" :fileList="fileList || []" />
     </div>
-    <div class="detail-floor-content">
+    <!-- <div class="detail-floor-content">
       <img src="/static/icon-return.png"/>
       <span>物资明细（共{{detailList.length}}项）</span>
+    </div> -->
+
+     <div class="detail-base-info detail-base-info-edited" style="margin-bottom: 8px; background-color: #F2F4F8;">
+      <div class="detail-title-content">
+        <img src="@/assets/img/Icon-batch.png" />
+        <span>物资明细</span>
+        <span style="text-align: right;">共 <span style="color: #134DAA;">{{ detailList.length }}</span> 项</span>
+      </div>
     </div>
     <div class="box-container" v-for="(item,index) in detailList" :key="index">
       <div>
@@ -171,6 +171,35 @@ export default {
   }
 
 }
+.detail-base-info{
+  padding-bottom: 0.05rem;
+}
+  .detail-title-text {
+    padding: 0 12px;
+
+    p {
+      &:nth-child(1) {
+        font-size: 11px;
+        color: #1159cc;
+        padding-bottom: 5px;
+      }
+
+      &:nth-child(2) {
+        padding-left: 5px;
+        font-weight: 600;
+      }
+    }
+  }
+  .detail-ul-text {
+    margin: 10px;
+    background: #f2f2f2;
+    border-radius: 5px;
+    margin-bottom: 10px;
+
+    .detail-ul {
+      padding: 10px 12px;
+    }
+  }
   .detail-base-info-edited {
     width: auto;
     box-sizing: border-box;

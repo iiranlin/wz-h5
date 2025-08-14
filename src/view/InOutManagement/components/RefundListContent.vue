@@ -19,21 +19,22 @@
           </div>
           <ul class="list-ul">
             <li>
+              <!-- <span class="li-item-span-auto">供应需求名称：</span> -->
+              <span class="font-weight">{{ item.planName }}</span>
+            </li>
+            <li>
               <span>收货单号：</span>
               <span @click.stop="detailsClick(item)" class="li-span-click">{{ item.takeNumber }}</span>
             </li>
-            <li>
-              <span class="li-item-span-auto">供应需求名称：</span>
-              <span>{{ item.planName }}</span>
-            </li>
-            <li>
+
+            <!-- <li>
               <span>建设项目：</span>
               <span>{{ item.projectName }}</span>
             </li> 
             <li>
               <span>标段项目：</span>
               <span>{{ item.sectionName }}</span>
-            </li>
+            </li> -->
             <li>
               <span>需求组织：</span>
               <span>{{ item.deptName }}</span>
@@ -46,10 +47,10 @@
               <span>退货时间：</span>
               <span>{{  item.backNode == '2'?item.backDate && parseTime(item.backDate, '{y}-{m}-{d} {h}:{i}'):item.backQualDate && parseTime(item.backQualDate, '{y}-{m}-{d} {h}:{i}') }}</span>
             </li>
-            <li>
+            <!-- <li>
               <span>操作人：</span>
               <span class="li-span-click">{{ item.createUserName }}</span>
-            </li>
+            </li> -->
           </ul>
         </div>
       </van-list>

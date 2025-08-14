@@ -19,21 +19,21 @@
           </div>
           <ul class="list-ul">
             <li>
+              <!-- <span>需求名称：</span> -->
+              <span class="font-weight">{{item.planName}}</span>
+            </li>
+            <li>
               <span>需求编号：</span>
               <span>{{item.planNumber}}</span>
             </li>
-            <li>
-              <span>需求名称：</span>
-              <span>{{item.planName}}</span>
-            </li>
-            <li>
+            <!-- <li>
               <span>建设项目：</span>
               <span>{{ item.projectName }}</span>
             </li> 
             <li>
               <span>标段项目：</span>
               <span>{{ item.sectionName }}</span>
-            </li>
+            </li> -->
             <li>
               <span>需求组织：</span>
               <span>{{item.deptName}}</span>
@@ -54,10 +54,10 @@
               <span>领用日期：</span>
               <span>{{parseTime(item.pickDate,'{y}-{m}-{d}')}}</span>
             </li>
-            <li>
+            <!-- <li>
               <span>操作人：</span>
               <span>{{item.createUserName}}</span>
-            </li>
+            </li> -->
           </ul>
           <div class="list-ul-button">
             <van-button class="button-info" round type="info" @click="handleDonwload(item)"

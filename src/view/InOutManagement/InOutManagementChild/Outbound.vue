@@ -166,12 +166,6 @@
             </li>
           </ul>
         </div>
-        <!-- <div class="div-child" v-for="(childItem,childIndex) in item.childList" :key="childIndex">
-          <ul class="detail-list-ul" v-if="checkChild(childItem)">
-          
-          </ul>
-           
-        </div> -->
          <template v-if="queryType === 'submit'">
               <div class="list-ul-button">
                 <van-button class="button-info" plain round type="info" native-type="button"
@@ -183,7 +177,7 @@
     <div class="default-button-container">
       <div class="default-button-container-selected" @click="selectedClick" v-if="queryType === 'submit'">
         <img src="@/assets/img/Icon.png" />
-        <span>已填写 <span class="li-span-click">{{ 5-countEmptyProperties }}</span> 项</span>
+        <span>已填写 <span class="li-span-click">{{ 6-countEmptyProperties }}</span> 项</span>
       </div>
       <van-button class="button-info" round type="info" @click="previewClick('save')" v-if="queryType === 'submit'">预览</van-button>
       <van-button class="button-info" round type="info" @click="previewClick('submit')" v-if="queryType === 'save'">上一步</van-button>
@@ -224,8 +218,10 @@ export default {
       ); // 过滤匹配的数据项
     },
     countEmptyProperties() {
+      this.$set(this.formData,'fileList',this.fileList)
+      console.log(this.formData,"this.formData")
       return Object.keys(this.formData).reduce((count, key) => {
-        if (this.formData[key] === null || this.formData[key] === undefined || this.formData[key] === '') {
+        if (this.formData[key] === null || this.formData[key] === undefined || this.formData[key] === '' || this.formData[key].length === 0) {
           return count + 1;
         }
         return count;
@@ -532,7 +528,6 @@ export default {
       this.$store.dispatch('public/setOutboundFormData', this.formData)
       this.$store.dispatch('public/setoutboundFileList', this.fileList)
       this.$store.dispatch('public/setOutboundData', item)
-      console.log(index,"index2")
       const query = {type:'submit',id:this.id,index:index}
       this.$router.push({ name: 'EditedOutbound' ,query})
     },
