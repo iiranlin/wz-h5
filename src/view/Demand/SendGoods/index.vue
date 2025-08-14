@@ -483,7 +483,7 @@ export default {
     const historyData = this.$store.state.public.historyData || {};
     
     if (JSON.stringify(historyData) === '{}') {
-      this.init()
+      // this.init()
       return
     }
 
