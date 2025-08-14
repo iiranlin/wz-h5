@@ -76,32 +76,6 @@
       </ul>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" v-if="queryType == 'submit'">
-      <div class="detail-title-content">
-        <img src="@/assets/img/Icon-notes.png" />
-        <span>备注</span>
-      </div>
-      <div class="detail-title-content-field">
-        <van-field class="detail-base-info-edited-textarea" v-model="sectionInfo.remark" rows="3" autosize
-          type="textarea" placeholder="请输入备注信息" />
-      </div>
-    </div>
-
-    <div class="detail-base-info detail-base-info-edited" v-else>
-      <div class="detail-title-content">
-        <img src="@/assets/img/Icon-notes.png" />
-        <span>备注</span>
-      </div>
-      <div class="detail-ul-text">
-        <ul class="detail-ul">
-          <li>
-            <!-- <span>使用地点：</span> -->
-            <span class="remark-detail">{{ sectionInfo.remark || '未填写' }}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;" v-if="queryType == 'submit' && sectionInfo.defaultRadio == '2'">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
@@ -175,6 +149,32 @@
       </div>
       <file-download-view class="outbound-field-uploader"
         :fileList="sectionInfo.fileList02 || []" />
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited" v-if="queryType == 'submit'">
+      <div class="detail-title-content">
+        <img src="@/assets/img/Icon-notes.png" />
+        <span>备注</span>
+      </div>
+      <div class="detail-title-content-field">
+        <van-field class="detail-base-info-edited-textarea" v-model="sectionInfo.remark" rows="3" autosize
+          type="textarea" placeholder="请输入备注信息" />
+      </div>
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited" v-else>
+      <div class="detail-title-content">
+        <img src="@/assets/img/Icon-notes.png" />
+        <span>备注</span>
+      </div>
+      <div class="detail-ul-text">
+        <ul class="detail-ul">
+          <li>
+            <!-- <span>使用地点：</span> -->
+            <span class="remark-detail">{{ sectionInfo.remark || '未填写' }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div class="default-button-container" v-if="queryType == 'submit' && sectionInfo.defaultRadio">

@@ -484,7 +484,7 @@ export default {
     const historyData = this.$store.state.public.historyData || {};
     
     if (JSON.stringify(historyData) === '{}') {
-      this.init()
+      // this.init()
       return
     }
 
@@ -606,7 +606,7 @@ export default {
           // this.goodsMsg.planNumber = planNumber;
           // this.goodsMsg.sectionName = sectionName;
           // this.goodsMsg.contractName = contractName;
-          this.status = data.status
+          this.status = res.data.status
 
           res.data.receiver = res.data.contacts;
           res.data.phone = res.data.contactsPhone;
@@ -868,6 +868,7 @@ export default {
         planId: this.goodsMsg.id,
         contractName: this.goodsMsg.contractName,
         fileByList: fileByList,
+        oddNumbers: this.params?.oddNumbers || '',
       }
 
       const { addr, receiveraddress, phone, receiver, ...rest } = params;
