@@ -29,8 +29,10 @@
 </template>
 <script>
 import IndexDetail from './components/indexDetail'
-import { defaultTake } from '@/api/prodmgr-inv/AcceptanceReturn'
 import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { detailTakeBack, detailTake } from "@/api/prodmgr-inv/receive";
+import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
+
 export default {
   name: 'RequirementDetails',
   components: { IndexDetail, },
@@ -41,6 +43,7 @@ export default {
         details: []
       },
       businessType: "",
+      takeStatus: "",
     }
   },
   created() {
@@ -49,11 +52,20 @@ export default {
   },
   computed: {
     detailApi(){
-      return this.businessType === "RKLC" ? defaultTake : materialDemandPlanRestDetail
+      // 收货流程 
+      if(this.businessType === "SHLC"){
+        return this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : detailTake;
+      }
+      if(this.businessType === "RKLC"){
+        return detailStoreBack
+      }
+      
+      return materialDemandPlanRestDetail
     },
   },
   mounted() {
-    const { businessType, businessId: id } = this.$route.params
+    const { takeStatus, businessType, businessId: id } = this.$route.params
+    this.takeStatus = takeStatus
     this.businessType = businessType
     id && this.materialDemandPlanRestDetail(id)
   },
