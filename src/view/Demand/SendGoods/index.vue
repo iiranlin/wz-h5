@@ -173,7 +173,7 @@
             class="outbound-field-uploader"
             :fileList="zczp || []"
             businessType="01"
-            accept=".jpg"
+            accept=".jpg,.png,.jpeg"
             :maxCount="100"
             :isImgToPdf="true"
           />

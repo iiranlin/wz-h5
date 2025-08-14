@@ -117,7 +117,7 @@
                                  <file-upload-view style="padding-right: 0.5rem;margin-left: 0px;"  title="发货单附件" :fileList="fileList" businessType="01"/>
                             </div>
                             <div style="padding: 0 20px;">
-                                 <file-upload-view style="padding-right: 0.5rem;margin-left: 0px;"  title="装车照片" :fileList="zczp" businessType="01" :required="false" accept=".jpg" :maxCount="100" :isImgToPdf="true" />
+                                 <file-upload-view style="padding-right: 0.5rem;margin-left: 0px;"  title="装车照片" :fileList="zczp" businessType="01" :required="false" accept=".jpg,.png,.jpeg" :maxCount="100" :isImgToPdf="true" />
                             </div>
                         </div>
                     </van-list>

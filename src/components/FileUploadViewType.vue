@@ -51,6 +51,7 @@ export default {
             type: Number,
             default: 1,
         },
+        // 多个,分割  accept=".doc,.txt,.pdf,.xls,.docx,.xlsx"
         accept:{
             type: String,
             default: '.pdf',
@@ -78,8 +79,8 @@ export default {
     methods:{
         //附件上传前
         beforeRead(file){
-            const types = [this.accept];
-            const extensions = this.accept.substr(1).toUpperCase()// PDF
+            const types = this.accept.split(",");
+            const extensions = this.accept.replaceAll(".", "").toUpperCase()// PDF,JPG
             if (!types.includes(`.${file.name.split('.').pop().toLowerCase()}`)) {
               this.$notify({
                 type: 'warning',
