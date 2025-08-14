@@ -33,20 +33,11 @@
               <li>
                 <span class="font-weight"> {{ item.planName }}</span>
               </li>
-
-          
               <li>
-                <span style="min-width: 3rem;" @click.stop="handleSupplyClick(item.planId)">供应需求ID：</span>
+                <span style="min-width: 3rem;" @click.stop="handleSupplyClick(item.planId)">需求ID：</span>
                 <span class="text li-span-click">{{ item.planNumber }}</span>
               </li>
-              <li>
-                <span>发货单号:</span>
-                <span class="text li-span-click" @click.stop="handleCarGoClick(item.id)">{{ item.shipmentBatchNumber }}</span>
-              </li>
-              <!-- <li>
-                <span style="min-width: 2.4rem;">需求项目:</span>
-                <span>{{ item.planName }}</span>
-              </li> -->
+
               <li>
                 <span>建设项目：</span>
                 <span>{{ item.projectName }}</span>
@@ -55,6 +46,17 @@
                 <span>标段项目:</span>
                 <span>{{ item.sectionName }}</span>
               </li>
+
+          
+
+              <li>
+                <span>发货单号:</span>
+                <span class="text li-span-click" @click.stop="handleCarGoClick(item.id)">{{ item.shipmentBatchNumber }}</span>
+              </li>
+              <!-- <li>
+                <span style="min-width: 2.4rem;">需求项目:</span>
+                <span>{{ item.planName }}</span>
+              </li> -->
               <li>
                 <span>退货时间:</span>
                 <span v-if="item.backDate != ''">{{ formattedCreateDate(item.backDate) }}</span>

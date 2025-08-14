@@ -26,18 +26,18 @@
               <span>需求编号：</span>
               <span>{{item.planNumber}}</span>
             </li>
-            <!-- <li>
+            <li>
               <span>建设项目：</span>
               <span>{{ item.projectName }}</span>
             </li> 
             <li>
               <span>标段项目：</span>
               <span>{{ item.sectionName }}</span>
-            </li> -->
-            <li>
+            </li>
+            <!-- <li>
               <span>需求组织：</span>
               <span>{{item.deptName}}</span>
-            </li>
+            </li> -->
             <li>
               <span>领用单位：</span>
               <span>{{item.receiveDeptName}}</span>

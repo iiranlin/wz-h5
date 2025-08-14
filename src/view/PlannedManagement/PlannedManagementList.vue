@@ -39,20 +39,20 @@
                 <span class="font-weight">{{ item.planName }}</span>
               </li>
               <li>
-                <span>供应商：</span>
-                <span>{{ item.sellerName }}</span>
-              </li>
-              <li>
-                <span>物资名称：</span>
-                <span>{{ item.materialName }}</span>
-              </li>
-              <li>
                 <span>建设项目：</span>
                 <span>{{ item.projectName }}</span>
               </li> 
               <li>
                 <span>标段项目：</span>
                 <span>{{ item.sectionName }}</span>
+              </li>
+              <li>
+                <span>供应商：</span>
+                <span>{{ item.sellerName }}</span>
+              </li>
+              <li>
+                <span>物资名称：</span>
+                <span>{{ item.materialName }}</span>
               </li>
               <li>
                 <span>提报人：</span>
