@@ -92,7 +92,7 @@
           </li>
           <li>
             <span>入库数量：</span>
-            <span class="li-span-click">{{ item.storeTotal }}</span>
+            <span class="li-span-click">{{ item.putTotal }}</span>
           </li>
           <li>
             <span>退货数量：</span>
