@@ -34,6 +34,10 @@
               <span>收货单号：</span>
               <span @click.stop="detailsClick(item)" class="li-span-click">{{ item.takeNumber }}</span>
             </li>
+            <li>
+              <span>发货单号：</span>
+              <span>{{ item.shipmentBatchNumber }}</span>
+            </li>
 
             <!-- <li>
               <span>需求组织：</span>
