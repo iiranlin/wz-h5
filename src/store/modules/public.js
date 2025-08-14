@@ -28,7 +28,9 @@ const state = {
   // 需求库存
   outboundData:{},   // 物资存储数据
   outboundFormData:{},  // 页面存储数据
-  outboundFileList:[] //页面上传的领料单
+  outboundFileList:[], //页面上传的领料单
+  outboundList:[],
+  outboundInfo:{}
   
 };
 
@@ -107,6 +109,12 @@ const mutations = {
   SET_OUTBOUND_FILELIST:(state, outboundFileList)=>{
     state.outboundFileList = outboundFileList
   },
+  SET_OUTBOUND_LIST:(state, outboundList)=>{
+    state.outboundList = outboundList
+  },
+  SET_OUTBOUND_INFO:(state, outboundInfo)=>{
+    state.outboundInfo = outboundInfo
+  },
   
   
 };
@@ -172,6 +180,12 @@ const actions = {
   },
   setoutboundFileList({commit}, data){
     commit('SET_OUTBOUND_FILELIST', data)
+  },
+  setOutboundList({commit}, data){
+    commit('SET_OUTBOUND_LIST', data)
+  },
+  setOutboundInfo({commit}, data){
+    commit('SET_OUTBOUND_INFO', data)
   }
   
 };
