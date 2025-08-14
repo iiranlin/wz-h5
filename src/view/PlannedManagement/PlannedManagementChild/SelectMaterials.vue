@@ -60,10 +60,10 @@
                 <span>规格型号：</span>
                 <span>{{ item.specModel }}</span>
               </li>
-              <li>
+              <!-- <li>
                 <span>计量单位：</span>
                 <span>{{ item.unit }}</span>
-              </li>
+              </li> -->
               <li>
                 <span>合同数量：</span>
                 <span>{{ item.amount }}</span>
@@ -72,7 +72,7 @@
                 <span>已累计计划数量：</span>
                 <span class="li-span-click">{{ item.cumulativeAmount }}</span>
               </li>
-              <li v-if="item.deliveryDate">
+              <!-- <li v-if="item.deliveryDate">
                 <span>供应时间：</span>
                 <span>{{ item.deliveryDate }}</span>
               </li>
@@ -83,7 +83,7 @@
               <li v-if="item.deliveryLocation">
                 <span>交货地点：</span>
                 <span>{{ item.deliveryLocation }}</span>
-              </li>
+              </li> -->
               <li class="li-span-open">
                 <span class="li-span-grey" @click.stop="openClick(item)">查看详情<van-icon name="arrow" /></span>
               </li>
