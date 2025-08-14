@@ -93,6 +93,8 @@ export default {
       formKey: 0,
       positionInformation: "",
       shipmentBatchNumber: "",
+      
+      shippingInfo: null,
     };
   },
   created() {
@@ -102,6 +104,11 @@ export default {
 
     if (this.shipmentBatchNumber) {
       this.handleConfirmClick(this.shipmentBatchNumber);
+    }
+    // 发货信息
+    let { shippingDate, shippingAddress } = this.$route.query
+    if(shippingDate && shippingAddress){
+      this.cargoList = [{ createDate: +shippingDate,  positionInformation: shippingAddress }]
     }
   },
   methods: {
@@ -133,8 +140,8 @@ export default {
         shipmentBatchNumber: number,
       };
       addList(params).then((res) => {
-        if (res.code == 0) {
-          this.cargoList = res.data.list;
+        if (res.code == 0 && Array.isArray(res.data.list)) {
+          this.cargoList.unshift(...res.data.list)
         }
       });
     },

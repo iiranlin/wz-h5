@@ -28,7 +28,7 @@
     </div>
 </template>
 <script>
-import {minioUpload} from '@/api/blcd-base/minio'
+import {minioUpload, minioImageToPdf} from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
 
 export default {
@@ -59,11 +59,20 @@ export default {
         required:{
             type: Boolean,
             default: true,
+        },
+        isImgToPdf:{
+            type: Boolean,
+            default: false,
         }
     },
     data() {
         return {
             
+        }
+    },
+    computed: {
+        uploadApi(){
+            return this.isImgToPdf ? minioImageToPdf : minioUpload 
         }
     },
     methods:{
@@ -112,7 +121,7 @@ export default {
               forbidClick: true,
             });
 
-            minioUpload(formData).then(({data}) => {
+            this.uploadApi(formData).then(({data}) => {
                 this.$notify({
                     type: 'success',
                     message: "上传成功"

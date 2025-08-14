@@ -175,6 +175,7 @@
             businessType="01"
             accept=".jpg"
             :maxCount="100"
+            :isImgToPdf="true"
           />
     </div>
 
