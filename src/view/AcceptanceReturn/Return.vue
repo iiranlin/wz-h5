@@ -22,22 +22,22 @@
           <span class="font-weight" style="color:#8C8FA0;"  >{{item.backNumber}}</span>
         </div>
           <ul class="list-ul">
+            <li class="li-item-overlength">
+              <!-- <span>供应需求名称：</span> -->
+              <span class="font-weight">{{item.planName}}</span>
+            </li>
             <li>
               <span>发货单号：</span>
-              <span style="color: #0689ff" @click.stop="viewDelivery(item)">{{item.shipmentBatchNumber}}</span>
+              <span class="li-span-click" @click.stop="viewDelivery(item)">{{item.shipmentBatchNumber}}</span>
             </li>
-            <li class="li-item-overlength">
-              <span>供应需求名称：</span>
-              <span>{{item.planName}}</span>
-            </li>
-            <li>
+            <!-- <li>
               <span>建设项目：</span>
               <span>{{ item.projectName }}</span>
             </li> 
             <li>
               <span>标段项目：</span>
               <span>{{ item.sectionName }}</span>
-            </li>
+            </li> -->
             <li>
               <span>需求组织：</span>
               <span>{{item.deptName}}</span>
@@ -56,7 +56,7 @@
             </li>
             <li>
               <span>操作人：</span>
-              <span style="color: #0689ff">{{item.createUserName}}</span>
+              <span class="li-span-click">{{item.createUserName}}</span>
             </li>
           </ul>
         </div>

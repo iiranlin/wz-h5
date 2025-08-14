@@ -35,25 +35,25 @@
                 </div>
                 <ul class="list-ul" >
                   <li>
-                    <span>发货单号：</span>
-                    <span @click.stop="viewDelivery(item)" style="color: #0689ff">{{ item.shipmentBatchNumber }}</span>
+                    <!-- <span>需求名称：</span> -->
+                    <span class="font-weight">{{ item.planName }}</span>
                   </li>
                   <li>
-                    <span>需求名称：</span>
-                    <span>{{ item.planName }}</span>
+                    <span>发货单号：</span>
+                    <span @click.stop="viewDelivery(item)" class="li-span-click">{{ item.shipmentBatchNumber }}</span>
                   </li>
                   <li>
                     <span>物流单号：</span>
-                    <span @click.stop="viewLogistic(item)" style="color: #0689ff">{{ item.oddNumbers?item.oddNumbers:"其他" }}</span>
+                    <span @click.stop="viewLogistic(item)" class="li-span-click">{{ item.oddNumbers?item.oddNumbers:"其他" }}</span>
                   </li>
-                  <li>
+                  <!-- <li>
                     <span>建设项目：</span>
                     <span>{{ item.projectName }}</span>
                   </li> 
                   <li>
                     <span>标段项目：</span>
                     <span>{{ item.sectionName }}</span>
-                  </li>
+                  </li> -->
                   <li>
                     <span>需求组织：</span>
                     <span>{{ item.deptName }}</span>
@@ -66,14 +66,14 @@
                     <span>发货时间：</span>
                     <span>{{ item.shippingDate | formatDate}}</span>
                   </li>
-                  <li v-if="item.takeStatus === '2'">
+                  <!-- <li v-if="item.takeStatus === '2'">
                     <span>收货时间：</span>
                     <span>{{ item.takeDate | formatToDate}}</span>
                   </li>
                   <li  v-if="item.takeStatus === '2'">
                     <span>收货人：</span>
                     <span>{{ item.consigneeOperator}}</span>
-                  </li>
+                  </li> -->
                   <!-- <li class="li-status">
                     <van-tag :type="item.takeStatus | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.takeStatus == 4}">{{
                         item.takeStatus | statusFilter(tabList)
