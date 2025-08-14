@@ -54,10 +54,10 @@
               <span>退货时间：</span>
               <span>{{item.backDate | formatDate}}</span>
             </li>
-            <li>
+            <!-- <li>
               <span>操作人：</span>
               <span class="li-span-click">{{item.createUserName}}</span>
-            </li>
+            </li> -->
           </ul>
         </div>
       </van-list>
