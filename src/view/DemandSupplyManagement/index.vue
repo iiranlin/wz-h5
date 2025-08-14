@@ -108,7 +108,7 @@ export default {
         { text: '未确认', value: '2' },
         { text: '已确认', value: '3' },
         { text: '供货中', value: '4' },
-        { text: '已完成', value: '9' },
+        { text: '已完成', value: '5' },
       ],
       listQuery: {
         pageNum: 1,
@@ -217,7 +217,7 @@ export default {
     checkAuditStatus(status) {
       if (status == '0') {
         return '/static/icon-reject.png'
-      } else if (['5', '10'].includes(status)) {
+      } else if (['10'].includes(status)) {
         return '/static/icon-return.png'
       } else if (['1', '2', '6'].includes(status)) {
         return '/static/icon-xqjh.png'
