@@ -193,13 +193,13 @@
     </div>
 
     <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList" :key="item.id"
-      :class="item.manufactureDate && item.packagingFm ? '' : 'box-container-unedited'">
+      :class="item.manufactureDate && item.packagingFm && item.fileList01?.length > 0 ? '' : 'box-container-unedited'">
       <div class="div-child">
         <ul class="detail-list-ul">
           <li class="detail-list-ul-text">
             <span class="font-weight">{{ index + 1 }}.{{ item.materialName }}</span>
             <img
-              :src="item.manufactureDate && item.packagingFm ? editedStatus : editStatus" />
+              :src="item.manufactureDate && item.packagingFm && item.fileList01?.length > 0  ? editedStatus : editStatus" />
           </li>
           <!-- <li>
             <span>供应商：</span>
@@ -469,7 +469,7 @@ export default {
       let flag = false;
 
       this.materiaList.forEach(item => {
-        if (item.manufactureDate && item.packagingFm) {
+        if (item.manufactureDate && item.packagingFm && item.fileList01?.length > 0 ) {
           flag = true;
         } else {
           flag = false;
@@ -542,8 +542,8 @@ export default {
       }))
 
 
-      this.editedMateriaList = finallyData.filter(item => item.manufactureDate && item.packagingFm)
-      this.editMateriaList = finallyData.filter(item => !(item.manufactureDate && item.packagingFm))
+      this.editedMateriaList = finallyData.filter(item => item.manufactureDate && item.packagingFm && item.fileList01?.length > 0 )
+      this.editMateriaList = finallyData.filter(item => !(item.manufactureDate && item.packagingFm && item.fileList01?.length > 0 ))
 
       return finallyData
     },

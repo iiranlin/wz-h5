@@ -22,10 +22,10 @@
                             <span>收货地址：</span>
                             <span>{{item.receiveraddress}}</span>
                         </li>
-                        <li>
+                        <!-- <li>
                             <span>使用地点：</span>
                             <span>{{item.addr}}</span>
-                        </li>
+                        </li> -->
                     </ul>
                     <div class="single-list-ul-button">
                         <div @click="handleDeleteClick(index)">
@@ -172,7 +172,7 @@ export default {
             return
           }
           const data = this.dataList[this.currentIndex]
-          this.$store.dispatch('public/setHistoryData', {receiver: data.receiver, phone: data.phone, receiveraddress: data.receiveraddress, addr: data.addr})
+          this.$store.dispatch('public/setHistoryData', {receiver: data.receiver, phone: data.phone, receiveraddress: data.receiveraddress})
           const { uniqueNumber = null, contractId, type, id } = this.$route.query
           this.$router.push({name: 'EditedMaterialGoods', query: {uniqueNumber, contractId, type, id}})
         },
