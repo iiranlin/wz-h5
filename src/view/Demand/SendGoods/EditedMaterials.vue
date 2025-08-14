@@ -59,11 +59,6 @@
                 @click="showCalendars('end')" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <div class="detail-base-info-edited-all" style="padding-top: 0; margin: 5px 0;">
-            <p @click="applicationAllClick({packagingFm: '', expirationDate: '', manufactureDate: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
-          </div>
-        </li>
-        <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.field0" label="投资方" placeholder="投资方"
             input-align="right" />
         </li>
@@ -76,6 +71,9 @@
             input-align="right" />
         </li>
       </ul>
+      <div class="detail-base-info-edited-all" style="padding-top: 0; margin: 5px 0;">
+        <p @click="applicationAllClick({packagingFm: '', expirationDate: '', manufactureDate: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+      </div>
     </div>
     <div class="detail-base-info detail-base-info-edited">
       <template v-if="sectionInfo.receiver">
