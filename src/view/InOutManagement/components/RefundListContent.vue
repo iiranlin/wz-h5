@@ -23,22 +23,22 @@
               <span class="font-weight">{{ item.planName }}</span>
             </li>
             <li>
-              <span>收货单号：</span>
-              <span @click.stop="detailsClick(item)" class="li-span-click">{{ item.takeNumber }}</span>
-            </li>
-
-            <!-- <li>
               <span>建设项目：</span>
               <span>{{ item.projectName }}</span>
             </li> 
             <li>
               <span>标段项目：</span>
               <span>{{ item.sectionName }}</span>
-            </li> -->
+            </li>
             <li>
+              <span>收货单号：</span>
+              <span @click.stop="detailsClick(item)" class="li-span-click">{{ item.takeNumber }}</span>
+            </li>
+
+            <!-- <li>
               <span>需求组织：</span>
               <span>{{ item.deptName }}</span>
-            </li>
+            </li> -->
             <li>
               <span>供应商：</span>
               <span>{{ item.sellerName }}</span>

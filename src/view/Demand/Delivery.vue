@@ -23,8 +23,6 @@
                    <div v-for="(item, index) in listBySendData" :key="index" class="box-container"
                   @click="handleCarGoClick(item.id)">
                    <div class="list-title-content">
-<!--                    <span style="color: gray;" >发货单号：</span>-->
-<!--                    <span class="font-weight" style="color:gray;">{{ item.shipmentBatchNumber }}</span>-->
 
                                          <span style="color: gray;" >需求编号：</span>
                                          <span class="font-weight" style="color:gray;">{{ item.planNumber }}</span>
@@ -39,25 +37,30 @@
 <!--                      <span>供应需求：</span>-->
                       <span class="text" style="font-weight: bold;" >{{ item.planName }}</span>
                     </li>
-<!--                    <li>-->
+                   <!-- <li>-->
 <!--                      <span>需求编号:</span>-->
 <!--                      <span style="color:#1989fa;" @click.stop="requirementDetails(item.planId)">{{ item.planNumber-->
 <!--                        }}</span>-->
-<!--                    </li>-->
+<!--                    </li> -->
 
-<!--                    <li>-->
-<!--                      <span>建设项目：</span>-->
-<!--                      <span>{{ item.projectName }}</span>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                      <span>标段项目: </span>-->
-<!--                      <span>{{ item.sectionName }}</span>-->
-<!--                    </li>-->
+                   <li>
+                     <span>建设项目：</span>
+                     <span>{{ item.projectName }}</span>
+                   </li>
+                   <li>
+                     <span>标段项目: </span>
+                     <span>{{ item.sectionName }}</span>
+                   </li>
 
-                                        <li>
+                                        <!-- <li>
                                           <span>需求项目: </span>
                                           <span>{{ item.sectionName }}</span>
-                                        </li>
+                                        </li> -->
+                <li>
+                  <span>发货单号：</span>
+                   <span>{{ item.shipmentBatchNumber }}</span>
+                </li>
+
                     <li>
                       <span>发货时间: </span>
                       <span>{{ formattedCreateDate(item.shippingDate) }}</span>

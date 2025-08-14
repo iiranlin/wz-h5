@@ -260,8 +260,6 @@ export default {
     this.queryType = this.$route.query.type
     this.queryIndex = this.$route.query.index
     this.id = this.$route.query.id
-    this.fileList = this.$store.state.public.outboundFileList.length?this.$store.state.public.outboundFileList:[]
-    this.formData = Object.keys(this.$store.state.public.outboundFormData).length?this.$store.state.public.outboundFormData:this.formData
     this.getDetail();
   },
   activated() {
@@ -274,35 +272,42 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-      materialDemandPlanRestDetailOut(this.id).then(({ data }) => {
-        this.detailInfo = data;
-        this.detailList =data.details;
-
-        this.formData.planName = data.planName;
-        this.formData.sectionName =data.sectionName;
-        this.formData.deptName = data.deptName;
-
-        //获取子集
-        this.detailList.forEach((item) => {
-          if(item.stockStatus != '0'){
-            this.getChildDetail(item);
-          }
-        })
-
+      
+      if(this.queryIndex!=undefined){
+        this.fileList = this.$store.state.public.outboundFileList.length?this.$store.state.public.outboundFileList:[]
+        this.formData = Object.keys(this.$store.state.public.outboundFormData).length?this.$store.state.public.outboundFormData:this.formData
+        this.detailInfo = this.$store.state.public.outboundInfo
+        this.detailList = this.$store.state.public.outboundList
         if(Object.keys(this.$store.state.public.outboundData).length) {
-          this.detailList[this.queryIndex] = this.$store.state.public.outboundData
-          let sum=0 
-          this.detailList[this.queryIndex].childList.forEach(item=>{
-            sum = sum + item.outTotal
-          })
-          this.detailList[this.queryIndex].sumTotal = sum
-        }
-        
-      }).catch((error) => {
+            this.detailList[this.queryIndex] = this.$store.state.public.outboundData
+            let sum=0 
+            this.detailList[this.queryIndex].childList.forEach(item=>{
+              sum = sum + item.outTotal
+            })
+            this.detailList[this.queryIndex].sumTotal = sum
+          }
+         toast.clear();
+      }else{
+        materialDemandPlanRestDetailOut(this.id).then(({ data }) => {
+            this.detailInfo = data;
+            this.detailList =data.details;
+            this.formData.planName = data.planName;
+            this.formData.sectionName =data.sectionName;
+            this.formData.deptName = data.deptName;
 
-      }).finally(() => {
-        toast.clear();
-      });
+            //获取子集
+            this.detailList.forEach((item) => {
+              if(item.stockStatus != '0'){
+                this.getChildDetail(item);
+              } 
+            })
+          }).catch((error) => {
+
+          }).finally(() => {
+            toast.clear();
+          })
+        
+      }
     },
     //获取明细子集信息
     getChildDetail(item){
@@ -528,6 +533,9 @@ export default {
       this.$store.dispatch('public/setOutboundFormData', this.formData)
       this.$store.dispatch('public/setoutboundFileList', this.fileList)
       this.$store.dispatch('public/setOutboundData', item)
+      this.$store.dispatch('public/setOutboundList', this.detailList)
+      this.$store.dispatch('public/setOutboundInfo', this.detailInfo)
+      
       const query = {type:'submit',id:this.id,index:index}
       this.$router.push({ name: 'EditedOutbound' ,query})
     },

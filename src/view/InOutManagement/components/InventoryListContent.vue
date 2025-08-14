@@ -29,7 +29,14 @@
             <li>
               <span class="list-ul-title">{{item.planName}}</span>
             </li>
-         
+            <li>
+              <span>建设项目：</span>
+              <span>{{ item.projectName }}</span>
+            </li> 
+            <li>
+              <span>标段项目：</span>
+              <span>{{ item.sectionName }}</span>
+            </li>
             <li>
               <span>物资名称：</span>
               <span>{{item.materialName}}</span>
@@ -39,17 +46,9 @@
               <span>{{item.sellerName}}</span>
             </li>
             <!-- <li>
-              <span>建设项目：</span>
-              <span>{{ item.projectName }}</span>
-            </li> 
-            <li>
-              <span>标段项目：</span>
-              <span>{{ item.sectionName }}</span>
-            </li> -->
-            <li>
               <span>需求组织：</span>
               <span>{{item.deptName}}</span>
-            </li>
+            </li> -->
             <li>
               <span>当前库存：</span>
               <span style="color:rgba(19, 77, 170, 1)">{{item.relatedCount == 0?'无':'有'}}</span>

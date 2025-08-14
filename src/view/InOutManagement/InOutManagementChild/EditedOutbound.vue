@@ -122,6 +122,7 @@ export default {
               }
           })
         });
+        console.log(data,"data")
         this.$store.dispatch('public/setOutboundData', data)
       }
       this.$router.push({ name: 'Outbound', query: { type: this.queryType, id: this.queryId,index:this.queryIndex } })

@@ -71,6 +71,9 @@
             input-align="right" />
         </li>
       </ul>
+      <div class="detail-base-info-edited-all" style="padding-top: 0; margin: 5px 0;">
+        <p @click="applicationAllClick({packagingFm: '', expirationDate: '', manufactureDate: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+      </div>
     </div>
     <div class="detail-base-info detail-base-info-edited">
       <template v-if="sectionInfo.receiver">
@@ -89,10 +92,10 @@
             <li>
               <span>{{ sectionInfo.receiver }} {{ sectionInfo.phone }}</span>
             </li>
-            <li>
+            <!-- <li>
               <span>使用地点：</span>
               <span>{{ sectionInfo.addr }}</span>
-            </li>
+            </li> -->
             <li>
               <span>收货地址：</span>
               <span>{{ sectionInfo.field2 }}</span>
@@ -100,7 +103,7 @@
           </ul>
         </div>
         <div class="detail-base-info-edited-all" style="padding-top: 0;">
-          <p @click="applicationAllClick({receiver: '', addr: '', field2: '', phone: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+          <p @click="applicationAllClick({receiver: '', field2: '', phone: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
         </div>
       </template>
       <template v-else>
@@ -301,7 +304,7 @@ export default {
           });
           return
         }
-        if (!(this.sectionInfo.receiver && this.sectionInfo.addr && this.sectionInfo.field2)) {
+        if (!(this.sectionInfo.receiver && this.sectionInfo.field2)) {
           this.$notify({
             type: 'warning',
             message: '请完善收货信息!',

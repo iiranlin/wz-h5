@@ -25,7 +25,7 @@
             <img src="/static/icon-address.png"/>
             <span>使用地点</span>
         </div>
-        <van-field
+        <!-- <van-field
             class="van-edit"
             v-model="formData.addr"
             type="textarea"
@@ -33,7 +33,7 @@
             rows="2"
             autosize
             placeholder="请输入使用地点"
-            show-word-limit/>
+            show-word-limit/> -->
         <div class="default-button-container">
             <van-button class="button-info" block type="default" round @click="handleBack()">返回</van-button>
             <van-button class="button-info" block type="info" round @click="handleConfirm()">确定</van-button>
@@ -55,7 +55,7 @@ export default {
 
             formData: {
                 id:'',
-                addr: '',   //使用地点
+                // addr: '',   //使用地点
                 phone: '',  //联系电话
                 receiver: '',   //收货人
                 receiveraddress: '', //收货地址
@@ -70,7 +70,7 @@ export default {
             this.listObj = JSON.parse(this.$route.query.obj);
 
             this.formData.id = this.listObj.id;
-            this.formData.addr = this.listObj.addr;
+            // this.formData.addr = this.listObj.addr;
             this.formData.phone = this.listObj.phone;
             this.formData.receiver = this.listObj.receiver;
             this.formData.receiveraddress = this.listObj.receiveraddress;
