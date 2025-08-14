@@ -82,6 +82,8 @@
                   </li> -->
                 </ul>
                 <div class="list-ul-button">
+                  <van-button class="button-info" plain round type="info" @click.stop="handleProcessClick(item)"
+              v-if="item.takeStatus != '1'">查看流程</van-button>
                   <!-- 状态不是未收货，按钮全不能操作 -->
                   <van-button class="button-info" round type="info" v-if="item.takeStatus === '1'" @click.stop="handleDoAccept(item)">收货</van-button>
                   <!--  非审核中不允许撤回 -->
@@ -199,6 +201,15 @@ export default {
     this.$store.commit('removeThisPage', 'MyToDoDetail')
   },
   methods: {
+    //查看流程点击
+    handleProcessClick(item) {
+      this.$router.push({ name: "MyProcess", params: {           
+        businessId: item.id, 
+        workflowId: item.storeMiddleId,
+        businessType: 'RKLC', 
+        } 
+      })
+    },
     //收获列表
     getList(){
       let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,queryField:this.formData.keywords,takeStatus:this.menuActiveIndex?this.menuActiveIndex:''}
