@@ -98,7 +98,7 @@
         </div>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;" v-if="!isView">
+    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;" v-if="!isView && +sectionInfo.refundTotal > 0">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>退货附件</span>
