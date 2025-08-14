@@ -23,8 +23,6 @@
                    <div v-for="(item, index) in listBySendData" :key="index" class="box-container"
                   @click="handleCarGoClick(item.id)">
                    <div class="list-title-content">
-<!--                    <span style="color: gray;" >发货单号：</span>-->
-<!--                    <span class="font-weight" style="color:gray;">{{ item.shipmentBatchNumber }}</span>-->
 
                                          <span style="color: gray;" >需求编号：</span>
                                          <span class="font-weight" style="color:gray;">{{ item.planNumber }}</span>
@@ -58,6 +56,11 @@
                                           <span>需求项目: </span>
                                           <span>{{ item.sectionName }}</span>
                                         </li> -->
+                <li>
+                  <span>发货单号：</span>
+                   <span>{{ item.shipmentBatchNumber }}</span>
+                </li>
+
                     <li>
                       <span>发货时间: </span>
                       <span>{{ formattedCreateDate(item.shippingDate) }}</span>
