@@ -14,10 +14,10 @@
           <span>规格型号：</span>
           <span>{{ sectionInfo.specModel }}</span>
         </li>
-        <li>
+        <!-- <li>
           <span>计量单位：</span>
           <span>{{ sectionInfo.unit }}</span>
-        </li>
+        </li> -->
         <li>
           <span>合同数量：</span>
           <span>{{ sectionInfo.amount }}</span>
