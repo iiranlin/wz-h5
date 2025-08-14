@@ -68,6 +68,7 @@
                                     </li>
                                 </ul>
                                 <div class="list-ul-button">
+                                    <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
                                     <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">审核</van-button>
                                 </div>
                             </div>
@@ -122,6 +123,7 @@
                                     </li>
                                 </ul>
                                 <div class="list-ul-button">
+                                    <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
                                     <van-button class="button-info" round type="info" @click.stop="handleClick(item)">处理</van-button>
                                 </div>
                             </div>
@@ -280,6 +282,16 @@ export default {
       }
     },
     methods: {
+        //查看流程点击
+        handleProcessClick({ businessId, businessType }) {
+            this.$router.push({ 
+                name: "MyProcess", 
+                params: { 
+                    businessId,
+                    businessType,
+                } 
+            })
+        },
         //获取待审批的订单
         getWaitList(){
             let toast = this.$toast.loading({

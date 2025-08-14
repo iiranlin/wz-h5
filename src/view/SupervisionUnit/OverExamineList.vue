@@ -73,6 +73,9 @@
                                 <span>{{item.message}}</span>
                             </li>
                         </ul>
+                        <div class="list-ul-button">
+                            <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
+                        </div>
                     </div>
                 </van-list>
             </van-pull-refresh>
@@ -126,6 +129,16 @@ export default {
       this.scrollPositionInit(this.className, this.finished)
     },
     methods: {
+        //查看流程点击
+        handleProcessClick({ businessId, businessType, takeStatus }) {
+            this.$router.push({ 
+                name: "MyProcess", 
+                params: { 
+                    businessType,
+                    businessId,
+                } 
+            })
+        },
         //获取列表数据
         getList(){
             let toast = this.$toast.loading({
