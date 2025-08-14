@@ -57,8 +57,9 @@
         <van-tab title="物流信息" name="0" key="0">
           <logistics-information :detail="detail"></logistics-information>
         </van-tab>
-        <van-tab title="发货物资明细" name="1" key="1">
-          <delivery-material-details :materialCirculationDetailsTableDTOS="detail.materialCirculationDetailsTableDTOS"></delivery-material-details>
+        <van-tab style="background-color: #F2F4F8; padding-top: 3px;" title="发货物资明细" name="1" key="1">
+          <!-- <delivery-material-details :materialCirculationDetailsTableDTOS="detail.materialCirculationDetailsTableDTOS"></delivery-material-details> -->
+           <material-details :list="detail.materialCirculationDetailsTableDTOS" :planStatus="detail.planStatus"></material-details>
         </van-tab>
       </van-tabs>
     </div>
@@ -70,12 +71,13 @@
 import BackToTop from '@/components/BackToTop'
 import LogisticsInformation from '@/view/Demand/Cargo/components/LogisticsInformation'
 import DeliveryMaterialDetails from '@/view/Demand/Cargo/components/DeliveryMaterialDetails'
+import MaterialDetails from './components/MaterialDetails.vue'
 
 import {lookGoodsDetails, shippingOrderNumber} from '@/api/demand/returnGoods'
 import { listPc, detailWlgz } from '@/api/prodmgr-inv/materialCirculationTableRest'
 export default {
   name: 'LogisticsView',
-  components: { LogisticsInformation, DeliveryMaterialDetails, BackToTop },
+  components: { LogisticsInformation, DeliveryMaterialDetails, BackToTop,MaterialDetails },
   data() {
     return {
       activeKey: {},
