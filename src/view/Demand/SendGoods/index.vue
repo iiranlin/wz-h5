@@ -867,6 +867,7 @@ export default {
         planId: this.goodsMsg.id,
         contractName: this.goodsMsg.contractName,
         fileByList: fileByList,
+        oddNumbers: this.params?.oddNumbers || '',
       }
 
       const { addr, receiveraddress, phone, receiver, ...rest } = params;
