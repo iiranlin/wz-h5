@@ -29,7 +29,7 @@
           <span class="detail-value">{{ formatTimestamp(params.createDate) }}</span>
         </li>
         <li>
-          <span class="detail-label">操作时间：</span>
+          <span class="detail-label">标段项目：</span>
           <span class="detail-value">{{ params.sectionName }}</span>
         </li>
 
@@ -159,7 +159,7 @@
                     <div class="remark-detail">{{ item.positionInformation }}</div>
                   </li>
                 </ul>
-                
+
                 <!-- <van-steps direction="vertical" active-color="#0086ff" :active="0">
                   <van-step v-for="(item, index) in cargoList" :key="index">
                     <h3>{{ item.positionInformation }}</h3>
@@ -240,7 +240,7 @@ export default {
         return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
       }else{
         return ""
-      }  
+      }
     }
 
   },
