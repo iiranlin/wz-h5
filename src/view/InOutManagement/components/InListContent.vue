@@ -57,11 +57,11 @@
               <span>{{ item.sellerName }}</span>
             </li>
             <li>
-              <span>收货时间：</span>
+              <span>入库时间：</span>
               <span>{{ parseTime(item.takeDate, '{y}-{m}-{d} {h}:{i}') }}</span>
             </li>
             <li>
-              <span>入库时间：</span>
+              <span>填报时间：</span>
               <span>{{ item.storeDate ? parseTime(item.storeDate, '{y}-{m}-{d} {h}:{i}') : '' }}</span>
             </li>
             <!-- <li class="li-status">
@@ -242,6 +242,7 @@ export default {
           businessId: item.id, 
           workflowId: item.storeMiddleId,
           businessType: 'RKLC',
+          storeStatus: item.storeStatus,
         } 
       })
     },

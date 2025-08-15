@@ -32,6 +32,7 @@ import IndexDetail from './components/indexDetail'
 import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { detailTakeBack, detailTake } from "@/api/prodmgr-inv/receive";
 import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
+import {detailByStore} from '@/api/prodmgr-inv/materialCirculationTableRest'
 
 export default {
   name: 'RequirementDetails',
@@ -44,6 +45,8 @@ export default {
       },
       businessType: "",
       takeStatus: "",
+      form: "",
+      storeStatus: "",
     }
   },
   created() {
@@ -57,16 +60,19 @@ export default {
         return this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : detailTake;
       }
       if(this.businessType === "RKLC"){
-        return detailStoreBack
+        return this.form == "OverExamineList" || ["5", "6"].includes(this.storeStatus) ? detailStoreBack : detailByStore
       }
       
       return materialDemandPlanRestDetail
     },
   },
   mounted() {
-    const { takeStatus, businessType, businessId: id } = this.$route.params
+    const { takeStatus, businessType, businessId: id, form = "", storeStatus = "" } = this.$route.params
+
     this.takeStatus = takeStatus
     this.businessType = businessType
+    this.form = form
+    this.storeStatus = storeStatus
     id && this.materialDemandPlanRestDetail(id)
   },
   methods: {
