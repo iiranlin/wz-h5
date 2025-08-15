@@ -60,7 +60,7 @@
             </li> -->
           </ul>
           <div class="list-ul-button">
-            <van-button class="button-info" round type="info" @click="handleDonwload(item)"
+            <van-button class="button-info" round type="info" @click.stop="handleDonwload(item)"
               >下载出库单</van-button>
           </div>
         </div>
