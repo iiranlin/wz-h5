@@ -192,7 +192,7 @@
     </div>
     <div class="default-button-container" v-if="btnEvent==true">
       <van-button size="mini" type="info" round class="button-info"
-                  @click="handleDoAccept">初验收货
+                  @click="handleDoAccept(params)">初验收货
       </van-button>
     </div>
     <file-preview ref="filePreview"></file-preview>
@@ -385,7 +385,7 @@ export default {
           });
       // this.$router.push({path:'/sendGoods'})
     },
-    handleDoAccept() {
+    handleDoAccept(item) {
       this.$router.push({name: 'DoAccept', query: {id: this.id, tabs: true, takeStatus: item.takeStatus}})
     },
     checkAuditStatus(status) {

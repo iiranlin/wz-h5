@@ -103,7 +103,7 @@
         <img src="/static/icon-file.png">
         <span>退货附件</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo.values?.length">非必填，请选择文件上传，支持PDF格式</p>
+      <p class="box-container-p" v-if="!sectionInfo.values?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
       <file-upload-view :fileList="sectionInfo.values || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
