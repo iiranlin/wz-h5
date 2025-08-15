@@ -541,7 +541,7 @@ export default {
     },
 
     editedClick(item, index) {
-      this.$store.dispatch('public/setMateriaData', item)
+      this.$store.dispatch('public/setMateriaData', { ...item, sellerName: this.dataList?.sellerName || "" })
 
       this.$store.dispatch('public/setGoodsReceiptInfo', this.dataList)
 
