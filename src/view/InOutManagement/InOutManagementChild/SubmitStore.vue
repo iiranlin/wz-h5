@@ -24,7 +24,7 @@
               <span>{{ formData.deptName }}</span>
             </li>
             <li v-if="formData.storeDate">
-              <span>入库时间：</span>
+              <span>填报时间：</span>
               <span>{{ formData.storeDate ? parseTime(formData.storeDate, '{y}-{m}-{d} {h}:{i}') : '' }}</span>
             </li>
             <li v-if="formData.storeOperator">
@@ -91,11 +91,11 @@
             <span class="li-span-click">{{ item.putTotal }}</span>
           </li>
           <li>
-            <span>入库数量：</span>
-            <span class="li-span-click">{{ item.putTotal }}</span>
+            <span>报检通过：</span>
+            <span class="li-span-click">{{ item.storeTotal }}</span>
           </li>
           <li>
-            <span>退货数量：</span>
+            <span>报检退货：</span>
             <span style="color: #e4393c;">{{ item.refundZjTotal }}</span>
           </li>
         </ul>
