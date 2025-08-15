@@ -53,7 +53,7 @@
               <file-download-view class="outbound-field-uploader" style="width: 100%;"
                                   :fileList="filterList(params.fileByList, 'fhd') || []"/>
             </div>
-            <div class="box-container">
+            <div class="box-container" v-if="filterList(params.fileByList, 'zczp')?.length > 0">
               <div class="detail-title-contentA">
                 <img src="/static/icon-file.png">
                 <span>装车照片</span>
@@ -145,8 +145,8 @@
               <van-button  @click.stop="openInfo"   type="default" block round>查看物流详情</van-button>
               <!--              icon="plus"-->
             </div>
-            <div class="box-container">
-              <div class="detail-title-contentA">
+            <div class="box-container" v-if="cargoList?.length > 0">
+              <div class="detail-title-contentA" >
                 <img src="/static/icon-address.png">
                 <span>货运位置</span>
               </div>
@@ -167,8 +167,8 @@
                   </van-step>
                 </van-steps> -->
               </div>
-              <van-button v-if="params.oddNumbers == '' && params.status == 2" @click.stop="createPosition(params.shipmentBatchNumber )" icon="plus"  type="info" plain block round>添加货运位置</van-button>
             </div>
+              <van-button v-if="params.oddNumbers == '' && params.status == 2" @click.stop="createPosition(params.shipmentBatchNumber )" icon="plus"  type="info" plain block round>添加货运位置</van-button>
 
 
           </van-list>
