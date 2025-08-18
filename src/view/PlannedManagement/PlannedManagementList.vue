@@ -271,7 +271,6 @@ export default {
       });
     },
     deleteClick(item) {
-      console.log(item,"item")
       this.$dialog.confirm({
         message: '确认要删除吗？',
         confirmButtonText: '确认',
