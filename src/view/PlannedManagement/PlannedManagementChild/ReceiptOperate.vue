@@ -4,7 +4,7 @@
             <img src="/static/icon-receipt-operate.png"/>
             <span>收货信息</span>
         </div>
-        <van-field v-model="formData.receiver" name="收货人" label="收货人：" placeholder="请输入使用地点" required clearable
+        <van-field v-model="formData.receiver" name="收货人" label="收货人：" placeholder="请输入收货人" required clearable
             input-align="right"/>
         <van-field v-model="formData.phone" name="联系电话" label="联系电话：" placeholder="请输入联系电话" clearable maxlength="11"
             input-align="right"/>
