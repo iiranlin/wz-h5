@@ -190,11 +190,8 @@ export const routes = [
       {
         path: 'ReceiptOperate',
         name: 'ReceiptOperate',
+        meta: { title: '收货信息' },
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/ReceiptOperate.vue'),
-        beforeEnter(to, from, next) {
-          to.meta.title = `${typeName[to.query.type]}收货信息`,
-            next()
-        }
       },
       {
         path: 'EditedMaterials',
