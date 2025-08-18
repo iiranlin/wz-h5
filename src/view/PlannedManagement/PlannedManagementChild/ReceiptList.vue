@@ -134,7 +134,7 @@ export default {
         //删除点击
         handleDeleteClick(index){
             this.$dialog.confirm({
-                title: '标题',
+                title: '删除收货信息',
                 message: '是否确认删除？',
                 confirmButtonText: '确认',
                 cancelButtonText: '取消'
