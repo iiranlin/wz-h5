@@ -32,7 +32,7 @@
           <van-field label="本次计划数量" placeholder="请输入数量" required clearable
             input-align="right">
             <template #input>
-              <van-stepper v-model="sectionInfo.planAmount" :min="0" :max="+sectionInfo.amount - +sectionInfo.cumulativeAmount + +(sectionInfo.backPlanAmount || 0)" />
+              <van-stepper v-model="sectionInfo.planAmount" :min="0" :max="+sectionInfo.amount - +sectionInfo.cumulativeAmount + +(sectionInfo.backPlanAmount || 0)" :decimal-length="2" />
             </template>
           </van-field>
         </li>
