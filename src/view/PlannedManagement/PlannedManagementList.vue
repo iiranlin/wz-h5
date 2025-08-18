@@ -21,9 +21,9 @@
         </van-tabs>
       </van-sticky>
     </div>
-    <div class="planned-management-list">
+    <div class="planned-management-list" v-if="list.length > 0">
       <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error"
+        <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" :error.sync="error"
           error-text="请求失败，点击重新加载" @load="onLoad">
           <div v-for="(item, index) in list" :key="index" class="box-container">
             <div class="list-title-content">
@@ -87,6 +87,12 @@
         </van-list>
       </van-pull-refresh>
     </div>
+    <div v-if="list.length == 0">
+        <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
+          <van-empty description="暂无数据" />
+
+        </van-pull-refresh>
+      </div>
     <van-icon name="plus" @click="addClick()" v-if="isJL"/>
     <back-to-top :className="className"></back-to-top>
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
@@ -153,6 +159,7 @@ export default {
     }
   },
   mounted() {
+    this.getList();
   },
   methods: {
     onSearch() {

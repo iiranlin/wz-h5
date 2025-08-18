@@ -14,12 +14,13 @@
                 </van-search>
             </div>
         </van-sticky>
-        <div class="tabs">
+        <div class="tabs" v-if="dataList.length > 0">
             <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
                 <van-list 
                     v-model="loading" 
                     :finished="finished" 
                     finished-text="没有更多了..." 
+                    :immediate-check="false"
                     @load="getList">
 
                     <div v-for="(item,index) in dataList" :key="index" class="box-container" @click.stop="handleItemClick(item)">
@@ -80,6 +81,12 @@
                 </van-list>
             </van-pull-refresh>
         </div>
+                        <div v-if="dataList.length == 0" >
+                        <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
+            <van-empty description="暂无数据" />
+
+                        </van-pull-refresh>
+        </div>
         <back-to-top :className="className"></back-to-top>
     </div>  
 </template>
@@ -120,7 +127,7 @@ export default {
         };
     },
     mounted () {
-      
+      this.getList();
     },
     created () {
         
@@ -158,7 +165,7 @@ export default {
                 this.loading = false;
                 this.dataList = [...this.dataList, ...data.list];
 
-                if (data?.list?.length === 0) {
+                if (this.dataList?.length >= data?.total) {
                     this.finished = true;
                     return;
                 }
