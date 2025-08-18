@@ -86,7 +86,9 @@
             </van-pull-refresh>
           </div>
           <div v-if="total == 0">
-            <van-empty description="暂无数据" />
+            <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
+              <van-empty description="暂无数据" />
+            </van-pull-refresh>
           </div>
         </van-tab>
       </van-tabs>
