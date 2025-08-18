@@ -80,8 +80,8 @@
             <span v-else class="li-span-grey">填写</span>
           </li>
           <li>
-            <span>收货人联系方式：</span>
-            <span v-if="item.receiver">{{ item.receiver }}</span>
+            <span>收货人及联系方式：</span>
+            <span v-if="item.receiver">{{ item.receiver }} {{ item.phone?item.phone:'' }}</span>
             <span v-else class="li-span-grey">填写</span>
           </li>
         </ul>

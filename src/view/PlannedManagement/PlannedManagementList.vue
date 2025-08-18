@@ -279,7 +279,6 @@ export default {
     },
     deleteClick(item) {
       this.$dialog.confirm({
-        title: '标题',
         message: '确认要删除吗？',
         confirmButtonText: '确认',
         cancelButtonText: '取消'

@@ -61,7 +61,7 @@
             </li>
             <li>
               <span>收货地址：</span>
-              <span>{{ sectionInfo.field2 }}</span>
+              <span>{{ sectionInfo.receiveraddress }}</span>
             </li>
           </ul>
         </div>
