@@ -9,6 +9,7 @@
         </van-search>
     </div>
     </van-sticky>
+    <div v-if="allOrderList.length > 0">
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
       <van-list
         v-model="allLoading"
@@ -62,6 +63,13 @@
         </div>
       </van-list>
     </van-pull-refresh>
+    </div>
+
+    <div v-else>
+          <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
+            <van-empty description="暂无数据" />
+          </van-pull-refresh>
+    </div>
      <back-to-top className=".in-out-management"></back-to-top>
   </div>
 
