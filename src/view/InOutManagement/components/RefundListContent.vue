@@ -10,8 +10,9 @@
         </van-search>
       </div>
     </van-sticky>
+<div v-if="dataList.length > 0">
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-      <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
+      <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." :immediate-check="false" @load="getAllList">
         <div v-for="(item, index) in dataList" :key="index" class="box-container" @click="handleWaitItemClick(item)">
            <div class="list-title-content">
             <span>退货单号：</span>
@@ -59,6 +60,13 @@
         </div>
       </van-list>
     </van-pull-refresh>
+</div>
+
+<div v-else>
+      <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
+        <van-empty description="暂无数据" />
+      </van-pull-refresh>
+</div>
   </div>
 </template>
 <script>
@@ -85,6 +93,7 @@ export default {
     };
   },
   created() {
+    this.allRefresh()
   },
   activated() {
   },

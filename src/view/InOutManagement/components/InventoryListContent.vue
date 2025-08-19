@@ -14,8 +14,9 @@
         </van-tab>
       </van-tabs>
     </van-sticky>
+    <div v-if="dataList.length > 0">
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-      <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." @load="getAllList">
+      <van-list v-model="allLoading" :finished="allFinished" finished-text="没有更多了..." :immediate-check="false" @load="getAllList">
         <div v-for="(item, index) in dataList" :key="index" class="box-container">
           <div class="list-title-content">
             <span style="color:#73768b">需求编号：</span>
@@ -68,6 +69,14 @@
         </div>
       </van-list>
     </van-pull-refresh>
+    </div>
+
+    <div v-else>
+    <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
+      <van-empty description="暂无数据" />
+    </van-pull-refresh>
+    </div>
+
   </div>
 </template>
 <script>
@@ -100,6 +109,7 @@ export default {
     };
   },
   created() {
+    this.allRefresh();
     if(this.$route.meta.status){
       this.formData.planCompleteStatus = this.$route.meta.status
     }
