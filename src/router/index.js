@@ -385,7 +385,7 @@ export const routes = [
       {
         path: 'ReceiptLists',
         name: 'ReceiptLists',
-        meta: { title: '选择收货信息' },
+        meta: { title: '选择发货信息' },
         component: () => import('@/view/Demand/SendGoods/ReceiptList.vue')
       },
       {
