@@ -57,3 +57,11 @@ export function auditApprove(data) {
         data
     })
 }
+//需求计划审批-修改后通过
+export function auditEditApprove(data) {
+    return request({
+        url: `${VUE_APP_PRODMGR_INV}/audit/modify/approve`,
+        method: 'POST',
+        data
+    })
+}

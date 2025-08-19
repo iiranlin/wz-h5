@@ -33,7 +33,7 @@ export default {
         if(this.type == 'reject'){
             this.opinion = '不通过'
         }else if(this.type == 'editAdopt'){
-            this.opinion = '通过'
+            this.opinion = '修改后通过'
         }else if(this.type == 'adopt'){
             this.opinion = '通过'
         }

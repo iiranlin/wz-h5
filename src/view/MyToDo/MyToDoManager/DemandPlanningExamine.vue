@@ -234,7 +234,7 @@
 import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import eventBus from '@/utils/eventBus.js'
-import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,wfHistoryList } from '@/api/myToDoList'
+import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,auditEditApprove,wfHistoryList } from '@/api/myToDoList'
 import { materialDemandPlanRestDetailGyMx } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import MaterialDetails from '@/view/PlannedManagement/PlannedManagementChild/components/MaterialDetails'
@@ -394,7 +394,7 @@ export default {
         //审核意见回调
         examineOpinionEdit(opinion,type){
             this.opinion = opinion;
-
+            this.type = type
             if(type == 'reject'){
                 this.rejectRequest();
             }else if(type == 'editAdopt'){
@@ -415,7 +415,12 @@ export default {
                     this.assigneeList = data;
                     this.assigneePopupShow = true;
                 }else{
+                  if(this.type=='editAdopt'){
+                    this.approvalEditRequest()
+                  }else{
                     this.approvalRequest();
+                  }
+                    
                 }
             }).catch((error) => {
                 
@@ -445,7 +450,11 @@ export default {
         },
         //选择审核人提交
         handleAssigneeSubmit(){
-            this.approvalRequest();
+            if(this.type=='editAdopt'){
+              this.approvalEditRequest()
+            }else{
+              this.approvalRequest();
+            }
         },
         //通过请求
         approvalRequest(){
@@ -463,6 +472,33 @@ export default {
                 taskId: this.listObj.taskId
             }
             auditApprove(params).then(({ message }) => {
+                this.$notify({
+                    type: 'success',
+                    message: message
+                });
+                this.$router.back();
+            }).catch((error) => {
+                
+            }).finally(() => {
+                toast.clear();
+            });
+        },
+        approvalEditRequest(){
+            let toast = this.$toast.loading({
+                duration: 0,
+                message: "正在加载...",
+                forbidClick: true
+            });
+            let params = {
+                businessId: this.listObj.businessId,
+                businessType: this.listObj.businessType,
+                candidateUsers: this.candidateUser,
+                message: this.opinion,
+                procInstId: this.listObj.procInstId,
+                taskId: this.listObj.taskId,
+                modifyIds: this.listObj.businessId?[this.listObj.businessId]:[]
+            }
+            auditEditApprove(params).then(({ message }) => {
                 this.$notify({
                     type: 'success',
                     message: message
