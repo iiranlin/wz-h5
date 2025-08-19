@@ -135,7 +135,7 @@
       </div>
     </div>
 
-    <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList"
+    <div class="box-container" style="margin-bottom: 30px;" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList"
       :key="item.id"
       :class="boolExceptZero(item.putTotal) && boolExceptZero(item.refundTotal) ? '' : 'box-container-unedited'">
       <div class="div-child">
