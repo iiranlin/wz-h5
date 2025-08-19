@@ -51,11 +51,13 @@ export default {
   },
   methods: {
     changeTab(index) {
-      if (index === 0) {
-        this.$refs.acceptance.allRefresh()
-      } else if (index === 1) {
-        this.$refs.return.getAllList()
-      }
+      this.$nextTick(() => {
+        if (index === 0) {
+          this.$refs.acceptance.allRefresh()
+        } else if (index === 1) {
+          this.$refs.return.getAllList()
+        }
+      })
       this.menuActiveIndex = index
     }
   }
