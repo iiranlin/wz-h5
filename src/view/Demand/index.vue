@@ -71,9 +71,7 @@
                     <van-button class="button-info" plain round type="info" @click.stop="handleLookClick(item.id, item.shipmentBatchNumber, item.oddNumbers)"
                       v-if="item.status == 4 || item.status === 6">物流查看</van-button>
                     <van-button class="button-info" round type="info" @click.stop="handleSendGoodsClick(item.id, 'add')"
-                      v-if="item.status == 4 || item.status == 3">发货</van-button>
-                    <!-- <van-button class="button-info" round type="info" @click.stop="handleSendGoodsClick(item.id, 'add')"
-                      v-if="(item.status == 4 || item.status == 3) && item.remainTotal">发货</van-button> -->
+                      v-if="(item.status == 4 || item.status == 3) && item.remainTotal > 0">发货</van-button>
                     <van-button class="button-info" round type="info" v-if="item.status == 2"
                       @click.stop="handleConfirmClick(item.id)">确认需求</van-button>
                     <van-button class="button-info" round type="info" v-if="item.status == '5'"
