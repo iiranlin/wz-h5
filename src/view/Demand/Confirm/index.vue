@@ -10,7 +10,7 @@
         </div>
         <div>
           <van-field readonly clickable required name="date" :value="params.date" label="选择时间" placeholder="请选择日期"
-        @click="showCalendar = true" :rules="[{ required: true, message: '请填写发货日期' }]" input-align="right" />
+        @click="showCalendar = true" :rules="[{ required: true, message: '请填写预计发货日期' }]" input-align="right" />
       <van-calendar v-model="showCalendar" @confirm="onConfirm" />
         </div>
         </template>
@@ -75,6 +75,20 @@ export default {
     },
     onSubmit(values) {
       if (values) {
+        if (!this.params.date) {
+        this.$notify({
+          type: "warning",
+          message: "请填写预计发货日期!",
+        });
+        return;
+      }
+        if (!this.params.remark) {
+        this.$notify({
+          type: "warning",
+          message: "请输入确认情况!",
+        });
+        return;
+      }
         let params={
           confirmValidate:this.params.remark,
           shippingDate:this.params.date,
