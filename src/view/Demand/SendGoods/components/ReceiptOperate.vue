@@ -21,11 +21,11 @@
             autosize
             placeholder="请输入收货地址"
             show-word-limit/>
-        <div class="detail-floor-content">
+        <!-- <div class="detail-floor-content">
             <img src="/static/icon-address.png"/>
             <span>使用地点</span>
         </div>
-        <!-- <van-field
+        <van-field
             class="van-edit"
             v-model="formData.addr"
             type="textarea"
