@@ -109,7 +109,9 @@
         </div>
       </div>
     </van-sticky>
-    <material-details :list="filteredList" :planStatus="detail.planStatus" :searchChecked="searchChecked"></material-details>
+    <div style="padding-bottom: 55px;">
+      <material-details :list="filteredList" :planStatus="detail.planStatus" :searchChecked="searchChecked"></material-details>
+    </div>
     <div class="default-button-container" v-if="queryName === 'DemandSupplyManagement' && ['0'].includes(detail.status)">
       <van-button class="button-info" round @click="returnClick(detail)"><img src="@/assets/img/Icon-detailInfo.png"/>退回经办人</van-button>
       <van-button class="button-info" round type="info" @click="submitClick(detail)">提交供应商</van-button>
@@ -469,6 +471,8 @@ export default {
     .button-info{
       width: 169px;
       img{
+        width: 24px;
+        height: 24px;
         vertical-align: middle;
       }
     }
