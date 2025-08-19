@@ -245,7 +245,7 @@ export default {
 
       if (!isNaN(num) && num <= item.sendTotal) {
         this.sectionInfo.putTotal = num; 
-        this.sectionInfo.refundTotal =this.sectionInfo.sendTotal - this.sectionInfo.putTotal
+        this.sectionInfo.refundTotal =(this.sectionInfo.sendTotal - this.sectionInfo.putTotal).toFixed(2)
       } else {
         this.$toast('实收数量不能大于发货数量'); 
         this.sectionInfo.putTotal = 0; 
@@ -259,7 +259,7 @@ export default {
       const num = Number(item.refundTotal);
       if (!isNaN(num) && num <= item.sendTotal) {
         this.sectionInfo.refundTotal = num; 
-        this.sectionInfo.putTotal = this.sectionInfo.sendTotal - this.sectionInfo.refundTotal
+        this.sectionInfo.putTotal = (this.sectionInfo.sendTotal - this.sectionInfo.refundTotal).toFixed(2)
       } else {
         this.$toast('退货数量不能大于发货数量'); 
         this.sectionInfo.refundTotal=0 
