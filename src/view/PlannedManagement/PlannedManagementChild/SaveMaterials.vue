@@ -304,11 +304,9 @@ export default {
         fileList: [{ fileList: this.sectionInfo.fileList }],
         detailsModifyParams: this.materiaList.map(item => ({ ...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber }))
       }
-
       materialDemandPlanRestSaveModify(data, type).then(({ data, message }) => {
         id = data || id
         this.$toast(message)
-        // this.$router.push({ name: 'SaveSuccess', query: { id } })
         this.$router.push({ name: 'PlannedManagementList' })
       })
     },

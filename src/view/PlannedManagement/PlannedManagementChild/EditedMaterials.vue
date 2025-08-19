@@ -172,6 +172,7 @@ export default {
       this.queryType = type
       this.queryId = id
       this.sectionInfo = Object.assign({}, this.$store.state.public.materiaData || {})
+      console.log(this.sectionInfo,"sectionInfo")
     },
     cumulativeAmount(item) {
       return this.queryType == 'update' && !item.uniqueNumber ?  +item.cumulativeAmount - +item.backPlanAmount + +(item.planAmount || 0) : +(item.cumulativeAmount || 0) + +(item.planAmount || 0)
@@ -229,12 +230,18 @@ export default {
           return
         }
         const data = this.$store.state.public.materiaList || []
-        data.forEach((item, index) => {
-          if (item.uniqueNumber == this.sectionInfo.uniqueNumber || item.allocationUniqueNumber == this.sectionInfo.allocationUniqueNumber) {
-            this.$set(data, index, this.sectionInfo)
+        data.forEach((item,index)=>{
+          if(item.id == this.sectionInfo.id){
+             this.$set(data, index, this.sectionInfo)
           }
-        });
+        })
+        // data.forEach((item, index) => {
+        //   if (item.uniqueNumber == this.sectionInfo.uniqueNumber || item.allocationUniqueNumber == this.sectionInfo.allocationUniqueNumber) {
+        //     this.$set(data, index, this.sectionInfo)
+        //   }
+        // });
         this.$store.dispatch('public/setMateriaList', data)
+        
       }
       this.$router.push({ name: 'SaveMaterials', query: { contractId: this.contractId, type: this.queryType, id: this.queryId } })
     },
