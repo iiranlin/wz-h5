@@ -397,11 +397,8 @@ export const routes = [
       {
         path: 'ReceiptOperates',
         name: 'ReceiptOperates',
+        meta: { title: '收货信息' },
         component: () => import('@/view/Demand/SendGoods/ReceiptOperate.vue'),
-        beforeEnter(to, from, next) {
-          to.meta.title = `${typeName[to.query.type]}收货信息`,
-            next()
-        }
       },
       {
         path: 'ReceiptListgoods',
@@ -412,11 +409,8 @@ export const routes = [
       {
         path: 'ReceiptOperategoods',
         name: 'ReceiptOperategoods',
+        meta: { title: '收货信息' },
         component: () => import('@/view/Demand/SendGoods/components/ReceiptOperate.vue'),
-        beforeEnter(to, from, next) {
-          to.meta.title = `${typeName[to.query.type]}收货信息`,
-            next()
-        }
       },
       {
 
