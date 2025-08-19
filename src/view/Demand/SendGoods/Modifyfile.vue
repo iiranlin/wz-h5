@@ -225,7 +225,6 @@
     </div>
 </template>
 <script>
-import keepPages from '@/view/mixins/keepPages'
 import BackToTop from '@/components/BackToTop'
 import { detailBySend } from '@/api/demand/sendGoods'
 import { minioUpload } from '@/api/blcd-base/minio'
@@ -240,7 +239,7 @@ import { Toast } from 'vant';
 Vue.use(Uploader,Toast);
 export default {
     name: 'MyToDoList',
-    mixins: [keepPages,indexMixin],
+    mixins: [indexMixin],
     components: { FilePreview,FileUploadView,FileDownloadView,BackToTop },
     data() {
         return {
@@ -366,6 +365,13 @@ export default {
             })
         },
           chooseGoods(id, text) {
+            if(this.fileList.length == 0){
+                this.$notify({
+                    type: 'warning',
+                    message: '请上传发货单附件!',
+                });
+                return
+            }
             let fileList = []
                     let fhd = [];
                     if (this.fileList.length > 0) {
