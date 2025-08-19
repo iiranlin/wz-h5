@@ -278,7 +278,7 @@ export default {
             ...item,
             fileByList: item.fileByList ? JSON.parse(item.fileByList) : '', // 默认值设为 [] 避免 JSON.parse 报错
           }));
-          if (res.data.list.length < 1) {
+          if (this.params.pageNum === 1) {
             this.listBySendData = newData
           } else {
             this.listBySendData = this.listBySendData.concat(newData)
