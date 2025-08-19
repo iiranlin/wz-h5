@@ -122,6 +122,7 @@ export default {
         this.$store.commit('removeThisPage', 'DemandPlanningExamine')
     },
     activated () {
+      this.getList()
       this.scrollPositionInit(this.className, this.finished)
     },
     methods: {
