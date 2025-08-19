@@ -437,7 +437,7 @@ export default {
     //编辑
     handleEditClick(id, title,planId) {
       this.$store.dispatch('public/setShipmentsInfo', {})
-      
+
       this.$store.dispatch('public/setSelectGoodDataEdit', []);
       this.$router.push({ path: '/SendGoods', query: {goodData:JSON.stringify([]), id: id, text: title,planId:planId } })
     },
@@ -448,7 +448,6 @@ export default {
     //删除
     handleDelClick(id) {
       this.$dialog.confirm({
-        title: '标题',
         message: '确认要删除吗？',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
