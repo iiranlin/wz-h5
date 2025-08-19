@@ -623,12 +623,11 @@ export default {
             this.zczp = [];
           }
 
-          const data = this.$store.state.public.selectGoodDataEdit?.length > 0 ? this.$store.state.public.selectGoodDataEdit : res.data?.materialCirculationDetailsTableDTOS;     
+          const data = this.$store.state.public.selectGoodDataEdit?.length > 0 ? this.$store.state.public.selectGoodDataEdit : res.data?.materialCirculationDetailsTableDTOS;  
 
           const newData = data?.map(el => {
             return {
               ...el,
-              ...res.data,
               manufactureDate:el?.manufactureDate ? this.formatDate(el.manufactureDate) : '',
               supplyDate: el?.supplyDate ? this.formatDate(el.supplyDate) : '',
               expirationDate: el.expirationDate ? this.formatDate(el.expirationDate):el.expirationDate,
