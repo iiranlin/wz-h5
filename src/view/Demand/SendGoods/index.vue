@@ -645,10 +645,16 @@ export default {
 
           let file = JSON.parse(res.data.fileByList);
 
-          this.fileList.push({
-            fileName: file.fhd[0].fileName,
-            filePath: file.fhd[0].filePath,
-          });
+           if (!this.params?.fileList?.length) {
+            this.fileList.push({
+              fileName: file.fhd[0].fileName,
+              filePath: file.fhd[0].filePath,
+            });
+           } else {
+            this.fileList = this.params.fileList;
+           }
+
+
           // this.fileByList = file.fhd[0].fileName;
           this.params.shippingDate = this.formattedCreateDate(
             res.data.shippingDate
@@ -657,7 +663,12 @@ export default {
             res.data.arrivalDate
           );
           // 装车照片
-          this.zczp = file.zczp || []
+          if (!this.params?.zczp?.length) {
+              this.zczp = file.zczp || []
+           } else {
+            this.zczp = this.params.zczp;
+           }
+          
         }
       });
     },
@@ -896,7 +907,7 @@ export default {
     editedClick(item, index) {
       this.$store.dispatch('public/setMateriaData', item)
 
-      this.$store.dispatch('public/setShipmentsInfo', this.params)
+      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
       // const query = this.text == 'edit' ? { contractId: this.contractId, type: this.text, id: this.queryId } : { contractId: this.contractId }
       const query = { type: this.text, id: this.goodsId, planId: this.planId }
       this.$router.push({ name: 'EditedMaterialGoods', query })
@@ -915,20 +926,20 @@ export default {
     },
     returnClick() {
       // const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId, materialUsedRatio: this.materialUsedRatio } : { contractId: this.contractId, materialUsedRatio: this.materialUsedRatio }
-      this.$store.dispatch('public/setShipmentsInfo', this.params)
+      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
       const query = { planId: this.planId, text: this.text, id: this.goodsId };
 
 
       this.$router.push({ name: 'selectGoods', query })
     },
     receiptClick() {
-      this.$store.dispatch('public/setShipmentsInfo', this.params)
+      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
 
       const {id, text, planId} = this.$route.query;
       this.$router.push({ name: 'ReceiptLists', query: { planId, type: text, id } })
     },
     createClick() {
-      this.$store.dispatch('public/setShipmentsInfo', this.params)
+      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
 
       this.$router.push({ name: 'ReceiptOperates', query: { type: 'create' } })
     },
