@@ -11,11 +11,10 @@
         <van-field
             v-model="positionInformation"
             name="positionInformation"
-            label="当前位置"
             class="position-field"
-            placeholder="请输入新的位置"
-            input-align="right"
-            :rules="[{ required: true, message: '请填写当前位置' }]"
+            type="textarea"
+            rows="2"
+            placeholder="请输入新的货运位置"
             required
         />
       </van-form>
@@ -120,18 +119,23 @@ export default {
       this.$router.go(-1);
     },
     onSubmit(values) {
+      if(!values){
+        this.$notify({
+          type: 'warning',
+          message: '请输入新的货运位置!',
+        });
+        return
+      }
       let params = {
         shipmentBatchNumber: this.shipmentBatchNumber,
         positionInformation: values,
       };
-      this.$refs.form.validate().then(() => {
         addFreightLocations(params).then((res) => {
           if (res.code == 0) {
             Toast.success(res.message);
             this.$router.go(-1);
           }
         });
-      });
     },
     handleConfirmClick(number) {
       this.formKey++;
@@ -218,10 +222,17 @@ export default {
 }
 
 .position-field {
-  margin: 16px 0;
-  padding: 13px 16px;
-  background-color: #f7f8fa;
-  border-radius: 8px;
+  // margin: 16px 0;
+  // padding: 13px 16px;
+  // background-color: #f7f8fa;
+  // border-radius: 8px;
+  ::v-deep .van-field__value {
+        background: #f6f6f6;
+        border-radius: 5px;
+        padding: 7px 13px;
+        font-size: 13px;
+        margin-right: -10px;
+    }
 }
 
 .location-history {
