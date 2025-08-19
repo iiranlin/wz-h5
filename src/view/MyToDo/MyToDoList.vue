@@ -16,16 +16,19 @@
             <van-tabs 
                 sticky
                 v-model="menuActiveIndex" 
+                @change="changeTab"
                 color="#0571ff"
                 background="#ffffff"
                 title-active-color="#0571ff"
                 title-inactive-color="#2e2e2e">
                 <van-tab title="待审核">
+                    <div v-if="waitTotal != 0">
                     <van-pull-refresh v-model="waitRefreshLoading" @refresh="waitRefresh" success-text="刷新成功">
                         <van-list 
                             v-model="waitLoading" 
                             :finished="waitFinished" 
-                            finished-text="没有更多了..." 
+                            finished-text="没有更多了..."
+                            :immediate-check="false" 
                             @load="getWaitList">
 
                             <div v-for="(item,index) in waitOrderList" :key="index" class="box-container" @click.stop="handleWaitItemClick(item)">
@@ -74,13 +77,22 @@
                             </div>
                         </van-list>
                     </van-pull-refresh>
+                    </div>
+                    <div v-if="waitTotal == 0">
+                        <van-pull-refresh v-model="waitRefreshLoading" @refresh="waitRefresh" success-text="刷新成功">
+                            <van-empty description="暂无数据" />
+
+                        </van-pull-refresh>
+                    </div>
                 </van-tab>
                 <van-tab title="待处理">
+                    <div v-if="waitHandleTotal != 0">
                     <van-pull-refresh v-model="waitHandleRefreshLoading" @refresh="waitHandleRefresh" success-text="刷新成功">
                         <van-list 
                             v-model="waitHandleLoading" 
                             :finished="waitHandleFinished" 
-                            finished-text="没有更多了..." 
+                            finished-text="没有更多了..."
+                            :immediate-check="false" 
                             @load="getWaitHandleList">
 
                             <div v-for="(item,index) in waitHandleList" :key="index" class="box-container" @click.stop="handleWaitHandleItemClick(item)">
@@ -129,13 +141,22 @@
                             </div>
                         </van-list>
                     </van-pull-refresh>
+                    </div>
+                    <div v-if="waitHandleTotal == 0">
+                        <van-pull-refresh v-model="waitHandleRefreshLoading" @refresh="waitHandleRefresh" success-text="刷新成功">
+                            <van-empty description="暂无数据" />
+
+                        </van-pull-refresh>
+                    </div>
                 </van-tab>
                 <van-tab title="已审核">
+                    <div v-if="historyTotal != 0">
                     <van-pull-refresh v-model="historyRefreshLoading" @refresh="historyRefresh" success-text="刷新成功">
                         <van-list 
                             v-model="historyLoading" 
                             :finished="historyFinished" 
                             finished-text="没有更多了..." 
+                            :immediate-check="false"
                             @load="getHistoryList">
 
                             <div v-for="(item,index) in historyOrderList" :key="index" class="box-container" @click.stop="handleHistoryItemClick(item)">
@@ -196,6 +217,13 @@
                             </div>
                         </van-list>
                     </van-pull-refresh>
+                    </div>
+                    <div v-if="historyTotal == 0">
+                        <van-pull-refresh v-model="historyRefreshLoading" @refresh="historyRefresh" success-text="刷新成功">
+                            <van-empty description="暂无数据" />
+
+                        </van-pull-refresh>
+                    </div>
                 </van-tab>
             </van-tabs>
         </div>
@@ -235,6 +263,7 @@ export default {
             waitLoading:false,
             waitFinished:false,
 
+            waitTotal:0,
             waitListQuery: {
                 pageNum: 1,
                 pageSize: 10,
@@ -246,6 +275,7 @@ export default {
             waitHandleLoading:false,
             waitHandleFinished:false,
 
+            waitHandleTotal:0,
             waitHandleListQuery: {
                 pageNum: 1,
                 pageSize: 10,
@@ -257,6 +287,7 @@ export default {
             historyLoading:false,
             historyFinished:false,
 
+            historyTotal:0,
             historyListQuery: {
                 pageNum: 1,
                 pageSize: 10,
@@ -271,17 +302,41 @@ export default {
             this.menuActiveIndex = this.$route.meta.myToDoNavIndex;
         }
         this.$store.commit('removeThisPage', 'DemandPlanningExamine')
+
+        if(this.menuActiveIndex == '0'){
+            this.scrollPositionInit(this.className, this.waitFinished)
+            this.getWaitList();
+        }else if(this.menuActiveIndex == '1'){
+            this.scrollPositionInit(this.className, this.waitHandleFinished)
+            this.getWaitHandleList();
+        }else if(this.menuActiveIndex == '2'){
+            this.scrollPositionInit(this.className, this.historyFinished)
+            this.getHistoryList();
+        }
     },
     activated () {
       if(this.menuActiveIndex == '0'){
         this.scrollPositionInit(this.className, this.waitFinished)
+        this.waitRefresh();
       }else if(this.menuActiveIndex == '1'){
         this.scrollPositionInit(this.className, this.waitHandleFinished)
+        this.waitHandleRefresh();
       }else if(this.menuActiveIndex == '2'){
         this.scrollPositionInit(this.className, this.historyFinished)
+        this.historyRefresh();
       }
     },
     methods: {
+        changeTab(index) {
+            this.menuActiveIndex = index;
+            if(index == '0'){
+                this.getWaitList();
+            }else if(index == '1'){
+                this.getWaitHandleList();
+            }else if(index == '2'){
+                this.getHistoryList();
+            }
+        },
         //查看流程点击
         handleProcessClick({ businessId, businessType }) {
             this.$router.push({ 
@@ -309,8 +364,9 @@ export default {
                 }
                 this.waitLoading = false;
                 this.waitOrderList = [...this.waitOrderList, ...data.list];
+                this.waitTotal = data.total;
 
-                if (data?.list?.length === 0) {
+                if (this.waitOrderList?.length >= data?.total) {
                     this.waitFinished = true;
                     return;
                 }
@@ -337,8 +393,9 @@ export default {
                 }
                 this.waitHandleLoading = false;
                 this.waitHandleList = [...this.waitHandleList, ...data.list];
+                this.waitHandleTotal = data.total;
 
-                if (data?.list?.length === 0) {
+                if (this.waitHandleList?.length >= data?.total) {
                     this.waitHandleFinished = true;
                     return;
                 }
@@ -368,11 +425,13 @@ export default {
                 }
                 this.historyLoading = false;
                 this.historyOrderList = [...this.historyOrderList, ...data.list];
+                this.historyTotal = data.total;
 
-                if (data?.list?.length === 0) {
+                if (this.historyOrderList?.length >= data?.total) {
                     this.historyFinished = true;
                     return;
                 }
+
                 this.historyListQuery.pageNum = this.historyListQuery.pageNum + 1;
             }).catch((error) => {
                 this.historyLoading = false;
