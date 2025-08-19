@@ -135,7 +135,8 @@
       </div>
     </div>
 
-    <div class="box-container" style="margin-bottom: 30px;" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList"
+    <div style="margin-bottom: 30px;">    
+      <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList"
       :key="item.id"
       :class="boolExceptZero(item.putTotal) && boolExceptZero(item.refundTotal) ? '' : 'box-container-unedited'">
       <div class="div-child">
@@ -218,6 +219,7 @@
         <van-button v-if="isView" class="button-info" plain round type="info" native-type="button"
           @click="editedClick(item, index)">查看</van-button>
       </div>
+    </div>
     </div>
 
     <div class="default-button-container" v-if="!isView">
