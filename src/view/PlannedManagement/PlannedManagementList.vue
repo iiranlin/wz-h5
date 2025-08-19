@@ -253,7 +253,6 @@ export default {
     //去审核点击
     handleExamineClick(item) {
       this.$dialog.confirm({
-        title: '标题',
         message: '确认要提交审核吗？',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
@@ -292,7 +291,7 @@ export default {
       })
     },
     withdrawClick(item) {
-      this.handleWithdraw({ businessId: item.id, businessType: 'WZML' })
+      this.handleWithdraw({ businessId: item.id, businessType: 'YLXQ' })
     },
     checkStatusText(status) {
       let name = ''
