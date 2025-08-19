@@ -266,11 +266,16 @@ export default {
       this.$set(this.materiaList, index, Object.assign({}, item, { showDatePicker: false }))
     },
     deleteClick(index) {
-      const row = this.materiaList[index]
+      let row ={}
+      if(this.btnClickIndex=='1'){
+        row= this.editMateriaList[index]
+      }else{
+        row = this.materiaList[index]
+      }
       const uniqueNumber = row.uniqueNumber || row.allocationUniqueNumber
       this.editedMateriaList = this.editedMateriaList.filter(item => !(uniqueNumber === item.uniqueNumber || uniqueNumber === item.allocationUniqueNumber))
       this.editMateriaList = this.editMateriaList.filter(item => !(uniqueNumber === item.uniqueNumber || uniqueNumber === item.allocationUniqueNumber))
-      this.materiaList.splice(index, 1)
+      this.materiaList= this.materiaList.filter(item=>item.id!=row.id)
       this.$store.dispatch('public/setMateriaList', this.materiaList)
     },
     onSubmit() {
