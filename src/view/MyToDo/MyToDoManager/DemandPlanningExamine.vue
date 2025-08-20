@@ -79,7 +79,7 @@
                 <span v-if="historyData.status == '' && historyData.actId=='root'"  style="color:rgba(19, 77, 170, 1);font-weight: 600">发起</span>
                 <span v-if="historyData.status == '' && historyData.actId!='root'"  style="color:rgba(21, 27, 62, 0.5);font-weight: 400">未审批</span>
               </p>
-              <span>{{ historyData.endTime }}</span>
+              <span>{{ historyData.endTime?historyData.endTime.substr(0, 10):"" }}</span>
             </li>
           </ul>
         </div>
@@ -681,6 +681,11 @@ export default {
     .detail-ul-p {
       display: flex;
       align-items: center;
+      img{
+        width: 14px;
+        height: 14px;
+        margin-top: -2px;
+      }
 
       & :nth-child(1) {
         margin-right: 3px;
