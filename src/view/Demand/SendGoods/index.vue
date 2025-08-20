@@ -626,12 +626,20 @@ export default {
           const data = this.$store.state.public.selectGoodDataEdit?.length > 0 ? this.$store.state.public.selectGoodDataEdit : res.data?.materialCirculationDetailsTableDTOS;  
 
           const newData = data?.map(el => {
+            let oldplanDetailId;
+
+            if (this.text == "add") {
+              oldplanDetailId = el.id;
+            } else {
+              oldplanDetailId = el.planDetailId;
+            }
+
             return {
               ...el,
               manufactureDate:el?.manufactureDate ? this.formatDate(el.manufactureDate) : '',
               supplyDate: el?.supplyDate ? this.formatDate(el.supplyDate) : '',
               expirationDate: el.expirationDate ? this.formatDate(el.expirationDate):el.expirationDate,
-              planDetailId: el.id,
+              planDetailId: oldplanDetailId,
               sendTotal: el.sendTotal,
               fileList01: el?.fileList01 ? el.fileList01 : this.fileLists(el.fileByList),
               fileList02: el?.fileList02 ? el.fileList02 :this.fileListss(el.fileByList),
@@ -864,7 +872,11 @@ export default {
           this.$set(fileByList, "cjbg", item.fileList02);
         }
         item.fileByList = JSON.stringify(fileByList);
-        item.planDetailId = item.id;
+        if (this.text == "add") {
+          item.planDetailId = item.id;
+        } else {
+          item.planDetailId = item.planDetailId;
+        }
       });
 
       let fileByList = JSON.stringify({ fhd: this.fileList, zczp: this.zczp });
