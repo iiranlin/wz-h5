@@ -85,7 +85,7 @@
                 </ul>
                 <div class="list-ul-button">
 
-                  <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
+                  <van-button class="button-info" plain round type="info" v-if="item.takeStatus != 1"  @click.stop="handleProcessClick(item)">查看流程</van-button>
 
                   <!-- 状态不是未收货，按钮全不能操作 -->
                   <van-button class="button-info" round type="info" v-if="item.takeStatus === '1'" @click.stop="handleDoAccept(item)">收货</van-button>
@@ -218,9 +218,10 @@ export default {
       this.$router.push({ 
         name: "MyProcess", 
         params: { 
-          businessId: item.id,
+          businessId: item.backMiddleId,
           businessType: "SHLC",
-          takeStatus: item.takeStatus
+          takeStatus: item.takeStatus,
+          form: this.$route.name
         } 
       })
     },
