@@ -213,9 +213,9 @@
             <van-button class="button-info" block type="info" round @click="handleEditAdopt()">修改后通过</van-button> -->
             <van-button class="button-info button-info-container" block type="info" round @click="handleAdopt()">通过</van-button>
         </div>
-        <div class="default-button-container" v-if="listObj.nameType == 'handle'">
+        <!-- <div class="default-button-container" v-if="listObj.nameType == 'handle'">
           <van-button class="button-info button-info-container" round type="info" @click.stop="handleClick(listObj)">处理</van-button>
-        </div>
+        </div> -->
         <!--选择审批人弹框-->
         <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
             <div class="assignee-popup">

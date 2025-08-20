@@ -136,7 +136,7 @@
                                 </ul>
                                 <div class="list-ul-button">
                                     <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
-                                    <van-button class="button-info" round type="info" @click.stop="handleClick(item)">处理</van-button>
+                                    <!-- <van-button class="button-info" round type="info" @click.stop="handleClick(item)">处理</van-button> -->
                                 </div>
                             </div>
                         </van-list>
@@ -330,11 +330,11 @@ export default {
         changeTab(index) {
             this.menuActiveIndex = index;
             if(index == '0'){
-                this.getWaitList();
+                this.waitRefresh();
             }else if(index == '1'){
-                this.getWaitHandleList();
+                this.waitHandleRefresh();
             }else if(index == '2'){
-                this.getHistoryList();
+                this.historyRefresh();
             }
         },
         //查看流程点击
