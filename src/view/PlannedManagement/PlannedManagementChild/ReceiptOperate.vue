@@ -97,6 +97,23 @@ export default {
                 });
                 return
             }
+            if(!this.formData.receiveraddress){
+                this.$notify({
+                    type: 'warning',
+                    message: '请输入收货地址!',
+                });
+                return
+            }
+            if(!this.formData.addr){
+                this.$notify({
+                    type: 'warning',
+                    message: '请输入使用地点!',
+                });
+                return
+            }
+
+
+
             if(this.type == 'create'){
                 this.handleCreate();
             }else if(this.type == 'update'){
