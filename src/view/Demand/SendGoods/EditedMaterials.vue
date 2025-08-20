@@ -59,15 +59,15 @@
                 @click="showCalendars('end')" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.field0" label="投资方" placeholder="投资方"
+          <van-field v-model="sectionInfo.field0" label="投资方" placeholder="投资方" readonly 
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.field1" label="投资比例" placeholder="投资比例"
+          <van-field v-model="sectionInfo.field1" label="投资比例" placeholder="投资比例" readonly 
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.addr" label="使用地点" placeholder="使用地点"
+          <van-field v-model="sectionInfo.addr" label="使用地点" placeholder="使用地点" readonly 
             input-align="right" />
         </li>
       </ul>

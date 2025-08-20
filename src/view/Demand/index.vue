@@ -50,7 +50,7 @@
                       <span>提报时间：</span>
                       <span v-if="item.createDate">{{ formattedCreateDate(item.createDate) }}</span>
                     </li>
-                    <li style="display: flex !important;;justify-content: flex-start;">
+                    <!-- <li style="display: flex !important;;justify-content: flex-start;">
                       <span style="min-width: 2.1rem;">需求计划表:</span>
                       <span style="color:#0689ff;">
                         <template>
@@ -63,7 +63,7 @@
                           </div>
                         </template>
                       </span>
-                    </li>
+                    </li> -->
                   </ul>
                   <div class="list-ul-button">
                     <van-button class="button-info" plain round type="info" @click.stop="handleSupplyClick(item.id)"
