@@ -136,7 +136,7 @@
                                 </ul>
                                 <div class="list-ul-button">
                                     <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
-                                    <!-- <van-button class="button-info" round type="info" @click.stop="handleClick(item)">处理</van-button> -->
+                                    <van-button class="button-info" round type="info" v-if="item.businessType == 'YLXQ' || item.businessType == 'FBYLXQ'" @click.stop="handleClick(item)">处理</van-button>
                                 </div>
                             </div>
                         </van-list>
@@ -469,13 +469,20 @@ export default {
         },
         //待处理列表条目点击
         handleWaitHandleItemClick(item){
-           this.$router.push({
-                name: "DemandPlanningExamine",
-                params: { 
-                    obj: JSON.stringify({...item, nameType: 'handle'}),
-                    type: '1',
-                },
-            });
+            if (item.businessType == 'YLXQ' || item.businessType == 'FBYLXQ') {
+                this.$router.push({
+                    name: "DemandPlanningExamine",
+                    params: { 
+                        obj: JSON.stringify(item),
+                        type: '0',
+                    },
+                });
+            } else if (item.businessType == 'SHLC') {
+                this.$store.dispatch('public/setGoodsReceiptInfo', {});
+      
+                this.$store.dispatch('public/setSelectGoodData', []);
+                this.$router.push({name: 'DoAcceptDetail', query: {id:item.businessId,tabs:item.takeNumber?true:false,isLable:item.takeNumber?true:false, takeStatus: item.takeStatus}})
+            }
         },
         //已审核列表条目点击
         handleHistoryItemClick(item){
