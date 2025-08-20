@@ -91,7 +91,7 @@
       <div class="detail-ul-text">
         <ul class="detail-ul">
           <li>
-            <span>{{ sectionInfo.receiver }}</span>
+            <span>{{ sectionInfo.remark }}</span>
           </li>
         </ul>
       </div>
