@@ -447,6 +447,8 @@ export default {
                 return '需求编号：'
             }else if(item.businessType == 'RKLC'){
                 return '入库单号：'
+            }else if(item.businessType == 'SHLC'){
+                return '收货单号：'
             }
         },
         //已审核状态图标判断
@@ -482,6 +484,17 @@ export default {
       
                 this.$store.dispatch('public/setSelectGoodData', []);
                 this.$router.push({name: 'DoAcceptDetail', query: {id:item.businessId,tabs:item.takeNumber?true:false,isLable:item.takeNumber?true:false, takeStatus: item.takeStatus}})
+            } else if (item.businessType == 'RKLC') {
+                this.$store.dispatch('public/setInboundInformation', {});
+            
+                this.$store.dispatch('public/setSelectStoreData', []);
+
+                this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.businessId, supplyId: item.planId, storeStatus: item.storeStatus } })
+            } else {
+                this.$notify({
+                    type: 'warning',
+                    message: '系统异常，请联系管理员!',
+                });
             }
         },
         //已审核列表条目点击
