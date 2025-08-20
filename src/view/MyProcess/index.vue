@@ -60,7 +60,7 @@ export default {
         return this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : detailTake;
       }
       if(this.businessType === "RKLC"){
-        return this.form == "OverExamineList" || ["5", "6"].includes(this.storeStatus) ? detailStoreBack : detailByStore
+        return this.form == "OverExamineList" || this.form == "WaitExamineList" || ["5", "6"].includes(this.storeStatus) ? detailStoreBack : detailByStore
       }
       
       return materialDemandPlanRestDetail
