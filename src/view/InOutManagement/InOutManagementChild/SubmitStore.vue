@@ -130,11 +130,13 @@
   </div>
 </template>
 <script>
+import {parseTime} from '@/utils'
 import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
 import keepPages from "@/view/mixins/keepPages";
 import indexMixin from '@/view/mixins'
 import { detailByStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
+import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
 import { materialStoreTableRestSubmit } from '@/api/prodmgr-inv/materialStoreTableRest'
 import FilePreview from "@/components/FilePreview.vue";
 import activitiAssignee from '@/components/activitiAssignee'
