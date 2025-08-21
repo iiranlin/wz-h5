@@ -217,12 +217,14 @@ export default {
     checkAuditStatus(status) {
       if (status == '0') {
         return '/static/newIcon_notfiled.png'
-      } else if (['10'].includes(status)) {
-        return '/static/newIcon_Withdrawn.png'
-      } else if (['1', '2', '6'].includes(status)) {
-        return '/static/newIcon_unconfirmedT.png'
-      } else {
+      } else if (status == '2') {
+        return '/static/newIcon_unconfirmed.png'
+      } else if (status == '3') {
         return '/static/newIcon_confirmed.png'
+      } else if (status == '4') {
+        return '/static/newIcon_Supply.png'
+      } else {
+        return '/static/newIcon_done.png'
       }
     },
     recallClick ({id}) {
