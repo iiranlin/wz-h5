@@ -270,9 +270,9 @@ export default {
 
     //全部列表条目点击
     viewAcceptDetail(item) {
-      // if(!item.takeNumber){
-      //   return
-      // }
+      if(!item.takeNumber){
+        return
+      }
      this.$store.dispatch('updateActiveTab', {
         activeTab:this.menuActiveIndex
       })
