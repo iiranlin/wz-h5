@@ -61,12 +61,12 @@
             </li>
             <li>
               <span>收货地址：</span>
-              <span>{{ sectionInfo.receiveraddress }}</span>
+              <span>{{ sectionInfo.field2 }}</span>
             </li>
           </ul>
         </div>
         <div class="detail-base-info-edited-all" style="padding-top: 0;">
-          <p @click="applicationAllClick({receiver: '', addr: '', field2: '', phone: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+          <p @click="applicationAllClick({receiver: '', addr: '', field2: '', phone: '',})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
         </div>
       </template>
       <template v-else>

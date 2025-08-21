@@ -38,7 +38,7 @@
          
           <li class="li-item-overlength">
             <span>收货人及联系方式：</span>
-            <span>{{ item.receiver }}</span>
+            <span>{{ item.receiver }} {{ item.phone?item.phone:''}}</span>
           </li>
         </ul>
         <div class="detail-ul-text" v-if="searchChecked && ['6', '7', '8', '9'].includes(planStatus)">

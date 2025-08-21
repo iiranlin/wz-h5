@@ -123,6 +123,7 @@ export default {
       });
       materialDemandPlanDetailsDetail(id).then(({ data }) => {
         this.sectionInfo = data
+
       }).finally((err) => {
         toast.clear()
       })
