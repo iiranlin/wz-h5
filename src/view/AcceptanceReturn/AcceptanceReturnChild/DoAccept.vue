@@ -305,6 +305,11 @@ export default {
     }
   },
   activated() {
+    this.from = this.$route.query.from
+    this.id = this.$route.query.id
+    this.tabs = this.$route.query.tabs==(true||'true') 
+    this.isLable =this.$route.query.isLable==(true||'true')
+    this.getBatch(this.id)
     this.getDetailList();
   },
   computed: {
