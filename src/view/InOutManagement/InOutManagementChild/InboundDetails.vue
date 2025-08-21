@@ -33,9 +33,9 @@
     <div style="padding-bottom: 40px;">
     <div class="box-container" v-for="(item,index) in detailList" :key="index">
       <div @click="detailsClick(item)">
-        <div class="detail-list-title-content">
-            <span>物资名称：</span>
-            <span>{{item.materialName}}</span>
+        <div class="material-details-detail-list-title-content">
+            <span>{{ index + 1 }}.{{ item.materialName }}</span>
+            <img class="detail-ul-bottom-text-Arrow" src="@/assets/img/Arrow-R.png" />
         </div>
         <ul class="detail-list-ul">
           <!-- <li>
@@ -66,10 +66,10 @@
             <span>本次实收数量：</span>
             <span class="li-span-click">{{item.storeTotal}}</span>
           </li>
-          <li class="li-item-remark">
+          <!-- <li class="li-item-remark">
             <span>备注：</span>
             <div class="remark-detail">{{item.remark || '未填写'}}</div>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
@@ -321,6 +321,25 @@ export default {
 }
 .box-container {
   padding: 0px;
+
+    .material-details-detail-list-title-content {
+    box-sizing: border-box;
+    width: 100%;
+    line-height: 34px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #151b3e;
+    padding-left: 12px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .detail-ul-bottom-text-Arrow {
+      width: 14px !important;
+      height: 14px !important;
+    }
+  }
 }
 .default-button-container-box{
   justify-content: space-between;

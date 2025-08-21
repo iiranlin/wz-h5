@@ -11,8 +11,8 @@
           <span>{{ sectionInfo.specModel }}</span>
         </li>
         <li>
-          <span>需求数量：</span>
-          <span class="li-span-click">{{ sectionInfo.planAmount }}</span>
+          <span>包装方式：</span>
+          <span>{{ sectionInfo.packagingFm }}</span>
         </li>
         <li>
           <span>生产日期：</span>
@@ -23,15 +23,16 @@
           <span>有效截止日期：</span>
           <span>{{ sectionInfo.expirationDate  && parseTime(sectionInfo.expirationDate, '{y}-{m}-{d}') }}</span>
         </li>
+
         <li>
-          <span>包装方式：</span>
-          <span class="li-span-click">{{ sectionInfo.packagingFm }}</span>
+          <span>需求数量：</span>
+          <span class="li-span-click">{{ sectionInfo.planAmount }}</span>
         </li>
-  
+
         <li>
-          <span>本次收获数量：</span>
-          <!-- <span class="li-span-click">{{ sectionInfo.planAmount }}</span> -->
-        </li>
+            <span>本次实收数量：</span>
+            <span class="li-span-click">{{sectionInfo.storeTotal}}</span>
+          </li>
       </ul>
     </div>
     <div class="detail-base-info detail-base-info-edited">
@@ -53,19 +54,6 @@
           <li>
             <span>收货地址：</span>
             <span>{{ sectionInfo.field2 }}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-     <div class="detail-base-info detail-base-info-edited">
-      <div class="detail-title-content">
-        <img src="@/assets/img/Icon-notes.png" />
-        <span>备注</span>
-      </div>
-      <div class="detail-ul-text">
-        <ul class="detail-ul">
-          <li>
-            <span>{{ sectionInfo.receiver }}</span>
           </li>
         </ul>
       </div>
@@ -104,6 +92,19 @@
           </div>
           <file-download-view :fileList="fileList2 || []"></file-download-view>
         </div>
+        <div class="detail-base-info detail-base-info-edited">
+      <div class="detail-title-content">
+        <img src="@/assets/img/Icon-notes.png" />
+        <span>备注</span>
+      </div>
+      <div class="detail-ul-text">
+        <ul class="detail-ul">
+          <li>
+            <span>{{ sectionInfo.remark }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
    
   </div>
 </template>
