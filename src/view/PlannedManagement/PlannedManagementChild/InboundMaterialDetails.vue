@@ -100,7 +100,7 @@
       <div class="detail-ul-text">
         <ul class="detail-ul">
           <li>
-            <span>{{ sectionInfo.remark }}</span>
+            <span>{{ sectionInfo.remark || '未填写' }}</span>
           </li>
         </ul>
       </div>
