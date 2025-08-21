@@ -320,13 +320,13 @@ export default {
       if(status == '1'){
         return '/static/Icon_NoReceiving.png'
       }else if(status == '2'){
-        return '/static/icon_NoCheckAndAccept.png'
+        return '/static/newIcon_received.png'
       }else if(status == '3'){
-        return '/static/Icon_PartialReturn.png'
+        return '/static/newIcon_Partialreturns.png'
       }else if(status == '4'){
-        return '/static/Icon_Returned.png'
+        return '/static/newIcon_ReturnedGoods.png'
       }else if(status == '5'){
-        return '/static/Icon_audit.png'
+        return '/static/newIcon_audit.png'
       }
         
     },

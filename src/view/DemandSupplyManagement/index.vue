@@ -216,13 +216,13 @@ export default {
     },
     checkAuditStatus(status) {
       if (status == '0') {
-        return '/static/icon-reject.png'
+        return '/static/newIcon_notfiled.png'
       } else if (['10'].includes(status)) {
-        return '/static/icon-return.png'
+        return '/static/newIcon_Withdrawn.png'
       } else if (['1', '2', '6'].includes(status)) {
-        return '/static/icon-xqjh.png'
+        return '/static/newIcon_unconfirmedT.png'
       } else {
-        return '/static/icon-success.png'
+        return '/static/newIcon_confirmed.png'
       }
     },
     recallClick ({id}) {

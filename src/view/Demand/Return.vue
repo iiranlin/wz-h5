@@ -221,7 +221,7 @@ components:{BackToTop},
       if (status == '0') {
         return '/static/icon-reject.png'
       } else if (['1', '2'].includes(status)) {
-        return '/static/Icon_noPass.png'
+        return '/static/newIcon_InspectionFails.png'
       } else {
         return '/static/icon-success.png'
       }

@@ -171,13 +171,11 @@ export default {
       total: 0,
        statusArr: [
         { text: '全部', value: '', imgPath: '' },
-        { text: '未提交', value: '0', imgPath: '/static/icon_unconfirmed.png' },
-        { text: '未确认', value: '2', imgPath: '/static/icon_unconfirmed.png' },
-        { text: '已确认', value: '3', imgPath: '/static/icon-success.png' },
-        { text: '供货中', value: '4', imgPath: '/static/icon_Supply.png' },
-        { text: '已完成', value: '5', imgPath: '/static/icon_NoCheckAndAccept.png' },
-        { text: '已完成', value: '6', imgPath: '/static/icon-checked.png' },
-        { text: '已撤回', value: '7', imgPath: '/static/icon-checked.png' },
+        { text: '未确认', value: '2', imgPath: '/static/newIcon_unconfirmedT.png' },
+        { text: '已确认', value: '3', imgPath: '/static/newIcon_confirmed.png' },
+        { text: '供货中', value: '4', imgPath: '/static/newIcon_Supply.png' },
+        { text: '已完成', value: '5', imgPath: '/static/newIcon_done.png' },
+        { text: '已撤回', value: '7', imgPath: '/static/newIcon_Withdrawn.png' },
       ],
     };
   },

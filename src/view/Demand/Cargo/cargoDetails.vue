@@ -399,11 +399,11 @@ export default {
 
 
       if ('2' == status) {
-        return '/static/icon-send-midway.png'
+        return '/static/newIcon_freight.png'
       } else if ('3' == status) {
-        return '/static/icon-send-success.png'
+        return '/static/newIcon_done.png'
       } else {
-        return '/static/icon-send-wait.png'
+        return '/static/newIcon_unshipped.png'
       }
     },
     checkStatusText(status) {

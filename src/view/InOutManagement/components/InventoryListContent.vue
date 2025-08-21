@@ -165,9 +165,9 @@ export default {
     },
     checkAuditStatus(status){
       if(status == '1'){
-        return '/static/icon-hasCompleted.png'
+        return '/static/newIcon_done.png'
       }else
-        return '/static/icon-unfinished.png'
+        return '/static/newIcon_undone.png'
     },
   },
 };

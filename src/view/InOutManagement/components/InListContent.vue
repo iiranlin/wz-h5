@@ -123,11 +123,11 @@ export default {
       statusArr: [
         { value: '', text: '全部', imgPath: '' },
         { value: "1", text: "待检测", imgPath: '/static/Icon_checkPending.png' },
-        { value: "2", text: "部分退货", imgPath: '/static/Icon_PartialReturn.png' },
-        { value: "3", text: "已入库", imgPath: '/static/Icon_Storage.png' },
-        { value: "4", text: "已退货", imgPath: '/static/Icon_Returned.png' },
-        { value: "5", text: "审核中", imgPath: '/static/Icon_audit.png' },
-        { value: "6", text: "已驳回", imgPath: '/static/Icon_reject.png' }
+        { value: "2", text: "部分退货", imgPath: '/static/newIcon_Partialreturns.png' },
+        { value: "3", text: "已入库", imgPath: '/static/newIcon_Storage.png' },
+        { value: "4", text: "已退货", imgPath: '/static/newIcon_ReturnedGoods.png' },
+        { value: "5", text: "审核中", imgPath: '/static/newIcon_audit.png' },
+        { value: "6", text: "已驳回", imgPath: '/static/newIcon_Rejected.png' }
       ],
       refreshLoading: false,
       loading: false,
