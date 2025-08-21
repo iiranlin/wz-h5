@@ -596,7 +596,7 @@ export default {
             if (!this.isView) {
               this.dataList.takeDate = parseTime(this.currentTime, '{y}-{m}-{d}')
             } else {
-              this.dataList.takeDate = parseTime(this.dataList.takeDate, '{y}-{m}-{d}')
+              this.dataList.takeDate = this.dataList.takeDate ? parseTime(this.dataList.takeDate, '{y}-{m}-{d}') : ""
             }
 
             if(this.isView==false){
