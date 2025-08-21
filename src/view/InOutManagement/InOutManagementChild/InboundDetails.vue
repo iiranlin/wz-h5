@@ -30,6 +30,7 @@
       <img src="/static/icon-return.png"/>
       <span>物资明细（共{{detailList.length}}项）</span>
     </div>
+    <div style="padding-bottom: 40px;">
     <div class="box-container" v-for="(item,index) in detailList" :key="index">
       <div @click="detailsClick(item)">
         <div class="detail-list-title-content">
@@ -37,10 +38,10 @@
             <span>{{item.materialName}}</span>
         </div>
         <ul class="detail-list-ul">
-          <li>
+          <!-- <li>
             <span>供应商：</span>
             <span>{{item.sellerName}}</span>
-          </li>
+          </li> -->
           <li>
             <span>规格型号：</span>
             <span>{{item.specModel}}</span>
@@ -58,8 +59,12 @@
             <span>{{item.expirationDate && parseTime(item.expirationDate,'{y}-{m}-{d}')}}</span>
           </li>
           <li class="li-item-overlength">
-            <span>本次出库数量：</span>
-            <span class="li-span-click">{{item.outTotal}}</span>
+            <span>需求数量：</span>
+            <span class="li-span-click">{{item.planAmount}}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>本次实收数量：</span>
+            <span class="li-span-click">{{item.storeTotal}}</span>
           </li>
           <li class="li-item-remark">
             <span>备注：</span>
@@ -67,6 +72,7 @@
           </li>
         </ul>
       </div>
+    </div>
     </div>
 
     <div class="default-button-container default-button-container-box" v-if="from === 'WaitExamineList'">
@@ -289,6 +295,7 @@ export default {
       detailStoreBack(this.id).then(({ data }) => {
         this.detailInfo = data;
         this.detailList = data.materialCirculationDetailsTableDTOS;
+        console.log(this.detailList, "this.detailList");
         this.fileList = JSON.parse(data.fileByList).jcbg;
 
         // this.fileList = [...this.fileList,...this.fileList]
