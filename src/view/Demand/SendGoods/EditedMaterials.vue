@@ -90,7 +90,7 @@
         <div class="detail-ul-text">
           <ul class="detail-ul">
             <li>
-              <span>{{ sectionInfo.receiver }} {{ sectionInfo.phone }}</span>
+              <span>{{ sectionInfo.receiver }}</span>
             </li>
             <!-- <li>
               <span>使用地点：</span>

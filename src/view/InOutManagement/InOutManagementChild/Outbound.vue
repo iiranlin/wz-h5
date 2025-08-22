@@ -463,14 +463,13 @@ export default {
         for (let i = 0; i < this.detailList.length; i++) {
           let childList = this.detailList[i].childList
 
+          let outTotalSum = 0
+
           if(childList && childList.length> 0){
             for (let j = 0; j < childList.length; j++) {
-              if(!childList[j].outTotal){
-                this.$notify({
-                  type: 'warning',
-                  message: '出库数量不能为空!',
-                });
-                return
+              if(childList[j].outTotal){
+                
+                outTotalSum = outTotalSum + childList[j].outTotal
               }
               if(Number(childList[j].outTotal) > Number(childList[j].remainingStock)){
                 this.$notify({
@@ -479,6 +478,13 @@ export default {
                 });
                 return
               }
+            }
+            if(outTotalSum==0){
+              this.$notify({
+                  type: 'warning',
+                  message: '出库数量不能为空!',
+                });
+                return
             }
           }
         }

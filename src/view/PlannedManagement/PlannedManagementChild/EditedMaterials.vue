@@ -230,16 +230,12 @@ export default {
           return
         }
         const data = this.$store.state.public.materiaList || []
+        this.sectionInfo.receiver = this.sectionInfo.receiver + " " + this.sectionInfo.phone
         data.forEach((item,index)=>{
           if(item.id == this.sectionInfo.id){
              this.$set(data, index, this.sectionInfo)
           }
         })
-        // data.forEach((item, index) => {
-        //   if (item.uniqueNumber == this.sectionInfo.uniqueNumber || item.allocationUniqueNumber == this.sectionInfo.allocationUniqueNumber) {
-        //     this.$set(data, index, this.sectionInfo)
-        //   }
-        // });
         this.$store.dispatch('public/setMateriaList', data)
         
       }
