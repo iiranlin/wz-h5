@@ -23,7 +23,7 @@
             <span style="color:#73768b">{{item.planNumber}}</span>
             <div class="li-title-status">
               <img :src="checkAuditStatus(item.planCompleteStatus)"/>
-              <span>{{item.planCompleteStatus == '1'?'已完成':'未完成'}}</span>
+              <span :style="handlerTextColor(option1, 'value', item.planCompleteStatus)">{{item.planCompleteStatus == '1'?'已完成':'未完成'}}</span>
             </div>
           </div>
           <ul class="list-ul" @click="detailsClick(item)">
@@ -94,9 +94,9 @@ export default {
       dataList:[],
       value1: 0,
       option1: [
-        { text: '全部', value: '' },
-        { text: '未完成', value: '0' },
-        { text: '已完成', value: '1' },
+        { text: '全部', value: '', color: '' },
+        { text: '未完成', value: '0', color: '#134daa' },
+        { text: '已完成', value: '1', color: '#51CA40' },
       ],
       allRefreshLoading: false,
       allLoading: false,

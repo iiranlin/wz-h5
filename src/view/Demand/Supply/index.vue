@@ -11,7 +11,7 @@
             </p>
             <div class="li-title-status">
                 <img :src="checkAuditStatus(result.status)" />
-                <span style="color:#000; font-size: 14px;">{{ checkStatusText(result.status) }}</span>
+                <span :style="handlerTextColor(statusArr, 'value', result.status)" style="font-size: 14px;">{{ checkStatusText(result.status) }}</span>
             </div>
         </div>
       </div>
@@ -118,18 +118,18 @@ export default {
             allRefreshLoading: false,
             id: '',
             statusArr: [
-        { text: '全部', value: '', imgPath: '' },
-        { text: '已驳回', value: '0', imgPath: '/static/newIcon_Rejected.png' },
-        { text: '未提交', value: '1', imgPath: '/static/newIcon_notfiled.png' },
-        { text: '未确认', value: '2', imgPath: '/static/newIcon_unconfirmedT.png' },
-        { text: '已确认', value: '3', imgPath: '/static/newIcon_confirmed.png' },
-        { text: '供货中', value: '4', imgPath: '/static/newIcon_Supply.png' },
-        { text: '已撤回', value: '5', imgPath: '/static/newIcon_Withdrawn.png' },
-        { text: '已完成', value: '6', imgPath: '/static/newIcon_done.png' },
-        { text: '收货完成', value: '7', imgPath: '/static/newIcon_received.png' },
-        { text: '已入库', value: '8', imgPath: '/static/newIcon_Storage.png' },
-        { text: '已完成', value: '9', imgPath: '/static/newIcon_done.png' },
-        { text: '已退回', value: '10', imgPath: '/static/newIcon_Returned.png' },
+        { text: '全部', value: '', imgPath: '', color: '' },
+        { text: '已驳回', value: '0', imgPath: '/static/newIcon_Rejected.png', color: '#CE2320' },
+        { text: '未提交', value: '1', imgPath: '/static/newIcon_notfiled.png', color: '#134daa' },
+        { text: '未确认', value: '2', imgPath: '/static/newIcon_unconfirmedT.png', color: '#134daa' },
+        { text: '已确认', value: '3', imgPath: '/static/newIcon_confirmed.png', color: '#51CA40' },
+        { text: '供货中', value: '4', imgPath: '/static/newIcon_Supply.png', color: '#134daa' },
+        { text: '已撤回', value: '5', imgPath: '/static/newIcon_Withdrawn.png', color: '#5D7DAE' },
+        { text: '已完成', value: '6', imgPath: '/static/newIcon_done.png', color: '#51CA40' },
+        { text: '收货完成', value: '7', imgPath: '/static/newIcon_received.png', color: '#51CA40' },
+        { text: '已入库', value: '8', imgPath: '/static/newIcon_Storage.png', color: '#51CA40' },
+        { text: '已完成', value: '9', imgPath: '/static/newIcon_done.png', color: '#51CA40' },
+        { text: '已退回', value: '10', imgPath: '/static/newIcon_Returned.png', color: '#CE2320' },
       ],
         };
     },

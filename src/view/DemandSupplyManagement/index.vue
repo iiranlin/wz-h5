@@ -27,7 +27,7 @@
               <span class="li-span-grey">{{ item.planNumber }}</span>
               <div class="li-title-status">
                 <img v-if="checkStatusText(item.status)" :src="checkAuditStatus(item.status)" />
-                <span>{{ checkStatusText(item.status) }}</span>
+                <span :style="handlerTextColor(statusArr, 'value', item.status)">{{ checkStatusText(item.status) }}</span>
               </div>
             </div>
             <ul class="list-ul" @click="handleWaitItemClick(item)">
@@ -103,12 +103,12 @@ export default {
       error: false,
       statusValue: '',
       statusArr: [
-        { text: '全部', value: '' },
-        { text: '未提交', value: '0' },
-        { text: '未确认', value: '2' },
-        { text: '已确认', value: '3' },
-        { text: '供货中', value: '4' },
-        { text: '已完成', value: '5' },
+        { text: '全部', value: '', color: '' },
+        { text: '未提交', value: '0', color: '#134daa' },
+        { text: '未确认', value: '2', color: '#134daa' },
+        { text: '已确认', value: '3', color: '#51CA40' },
+        { text: '供货中', value: '4', color: '#134daa' },
+        { text: '已完成', value: '5', color: '#51CA40' },
       ],
       listQuery: {
         pageNum: 1,

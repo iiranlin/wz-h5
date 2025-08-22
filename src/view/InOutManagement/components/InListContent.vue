@@ -28,7 +28,7 @@
             <span class="font-weight" style="color:#8C8FA0;">{{ item.storeNumber }}</span>
             <div class="li-title-status">
               <img :src="checkAuditStatus(item.storeStatus)" />
-              <span>{{ checkStatusText(item.storeStatus) }}</span>
+              <span :style="handlerTextColor(statusArr, 'value', item.storeStatus)">{{ checkStatusText(item.storeStatus) }}</span>
             </div>
           </div>
           <ul class="list-ul" @click="detailsClick('1', item)">
@@ -121,13 +121,13 @@ export default {
         storeStatus: ''
       },
       statusArr: [
-        { value: '', text: '全部', imgPath: '' },
-        { value: "1", text: "待检测", imgPath: '/static/Icon_checkPending.png' },
-        { value: "2", text: "部分退货", imgPath: '/static/newIcon_Partialreturns.png' },
-        { value: "3", text: "检测通过", imgPath: '/static/newIcon_Storage.png' },
-        { value: "4", text: "已退货", imgPath: '/static/newIcon_ReturnedGoods.png' },
-        { value: "5", text: "审核中", imgPath: '/static/newIcon_audit.png' },
-        { value: "6", text: "已驳回", imgPath: '/static/newIcon_Rejected.png' }
+        { value: '', text: '全部', imgPath: '', color: '' },
+        { value: "1", text: "待检测", imgPath: '/static/Icon_checkPending.png', color: '#134daa' },
+        { value: "2", text: "部分退货", imgPath: '/static/newIcon_Partialreturns.png', color: '#FC5937' },
+        { value: "3", text: "检测通过", imgPath: '/static/newIcon_Storage.png', color: '#51CA40' },
+        { value: "4", text: "已退货", imgPath: '/static/newIcon_ReturnedGoods.png', color: '#CE2320' },
+        { value: "5", text: "审核中", imgPath: '/static/newIcon_audit.png', color: '#134daa' },
+        { value: "6", text: "已驳回", imgPath: '/static/newIcon_Rejected.png', color: '#CE2320' }
       ],
       refreshLoading: false,
       loading: false,

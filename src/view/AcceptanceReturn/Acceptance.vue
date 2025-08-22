@@ -29,7 +29,7 @@
                   <span class="font-weight" style="color:#8C8FA0;" >{{ item.takeNumber}}</span>
                   <div class="li-title-status">
                     <img :src="checkAuditStatus(item.takeStatus)"/>
-                    <span :type="item.takeStatus | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.takeStatus == 4}">{{
+                    <span :style="handlerTextColor(tabList, 'status', item.takeStatus)" :type="item.takeStatus | statusStyleFilter" round size="medium" :class="{'li-status-completed': item.takeStatus == 4}">{{
                         item.takeStatus | statusFilter(tabList)
                       }}
                     </span>
@@ -133,12 +133,12 @@ export default {
         keywords: ''
       },
       tabList: [
-        {title: '全部', status: ''},
-        {title: '未收货', status: '1'},
-        {title: '已收货', status: '2'},
-        {title: '部分退货', status: '3'},
-        {title: '已退货', status: '4'},
-        {title: '审核中', status: '5'},
+        {title: '全部', status: '', color: ''},
+        {title: '未收货', status: '1', color: '#134daa'},
+        {title: '已收货', status: '2', color: '#51CA40'},
+        {title: '部分退货', status: '3', color: '#FC5937'},
+        {title: '已退货', status: '4', color: '#CE2320'},
+        {title: '审核中', status: '5', color: '#134daa'},
       ],
       dataList: [],
       allRefreshLoading: false,

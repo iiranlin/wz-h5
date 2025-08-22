@@ -258,3 +258,9 @@ export function isAndroid() {
   let userAgent = navigator.userAgent
   return /Android|adr/gi.test(userAgent)
 }
+
+export function handlerTextColor(statusList, value, status) {
+  const textColor = statusList.find(item => item[value] === status)?.color;
+
+  return textColor ? { color: textColor + ' !important' } : {}
+}

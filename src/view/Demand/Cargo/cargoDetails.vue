@@ -11,7 +11,7 @@
         <span style="font-size: 16px;font-weight: bold;">{{ params.shipmentBatchNumber }}</span>
         <div class="detail-title-status">
           <img :src="checkAuditStatus(params.status)"/>
-          <span>{{ checkStatusText(params.status) }}</span>
+          <span :style="handlerTextColor(statusArr, 'value', params.status)">{{ checkStatusText(params.status) }}</span>
         </div>
       </div>
     <div class="detail-ul-text">
@@ -270,10 +270,10 @@ export default {
       allRefresh: false,
       btnEvent: false,
       statusArr: [
-        {text: '全部', value: ''},
-        {text: '未发货', value: '1'},
-        {text: '货运中', value: '2'},
-        {text: '已完成', value: '3'}
+        {text: '全部', value: '', color: ''},
+        {text: '未发货', value: '1', color: '#134daa'},
+        {text: '货运中', value: '2', color: '#134daa'},
+        {text: '已完成', value: '3', color: '#51CA40'}
       ],
     };
   },

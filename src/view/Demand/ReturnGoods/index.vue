@@ -11,7 +11,7 @@
             </p>
             <div class="li-title-status">
                 <img :src="checkAuditStatus(params.backNode)" />
-                <span style="color:#000; font-size: 13px;">{{ checkStatusText(params.issueType) }}</span>
+                <span :style="handlerTextColor(statusArr, 'value', params.issueType)" style="font-size: 13px;">{{ checkStatusText(params.issueType) }}</span>
             </div>
         </div>
       </div>
@@ -108,9 +108,9 @@ export default {
 
 
             statusArr: [
-                { text: '全部', value: '' },
-                { text: '质检不通过', value: '2' },
-                { text: '收货不通过', value: '1' }
+                { text: '全部', value: '', color: '' },
+                { text: '质检不通过', value: '2', color: '#FC5937' },
+                { text: '收货不通过', value: '1', color: '#FC5937' }
             ],
 
         };

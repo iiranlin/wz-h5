@@ -6,6 +6,7 @@ import store from "./store/index.js";
 import "vant/lib/index.css";
 import "./styles/index.less";
 import { parseTime } from "@/utils/index.js";
+import { handlerTextColor } from "@/utils/index.js";
 // import * as echarts from "echarts";
 // Vue.prototype.$echarts = echarts;
 import "./permission"; // permission control
@@ -129,6 +130,7 @@ Vue.use(Empty);
 Vue.use(Stepper);
 
 Vue.prototype.parseTime = parseTime;
+Vue.prototype.handlerTextColor = handlerTextColor;
 
 new Vue({
   store,

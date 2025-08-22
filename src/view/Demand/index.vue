@@ -26,7 +26,7 @@
                     <span class="font-weight li-span-grey">{{ item.planNumber }}</span>
                     <div class="li-title-status">
                       <img :src="checkAuditStatus(item.status)" />
-                      <span>{{ checkStatusText(item.status) }}</span>
+                      <span :style="handlerTextColor(statusArr, 'value', item.status)">{{ checkStatusText(item.status) }}</span>
                     </div>
                   </div>
                   <ul class="list-ul">
@@ -170,12 +170,12 @@ export default {
       fileName: '',
       total: 0,
        statusArr: [
-        { text: '全部', value: '', imgPath: '' },
-        { text: '未确认', value: '2', imgPath: '/static/newIcon_unconfirmedT.png' },
-        { text: '已确认', value: '3', imgPath: '/static/newIcon_confirmed.png' },
-        { text: '供货中', value: '4', imgPath: '/static/newIcon_Supply.png' },
-        { text: '已完成', value: '5', imgPath: '/static/newIcon_done.png' },
-        { text: '已撤回', value: '7', imgPath: '/static/newIcon_Withdrawn.png' },
+        { text: '全部', value: '', imgPath: '', color: '' },
+        { text: '未确认', value: '2', imgPath: '/static/newIcon_unconfirmedT.png', color: '#134daa' },
+        { text: '已确认', value: '3', imgPath: '/static/newIcon_confirmed.png', color: '#51CA40' },
+        { text: '供货中', value: '4', imgPath: '/static/newIcon_Supply.png', color: '#134daa' },
+        { text: '已完成', value: '5', imgPath: '/static/newIcon_done.png', color: '#51CA40' },
+        { text: '已撤回', value: '7', imgPath: '/static/newIcon_Withdrawn.png', color: '#5D7DAE' },
       ],
     };
   },

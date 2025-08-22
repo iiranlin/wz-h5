@@ -21,7 +21,7 @@
                     <span class="li-span-grey">{{ item.issueType=='1'?item.backNumber:item.backQualNumber }}</span>
                     <div class="li-title-status">
                       <img :src="checkAuditStatus(item.backNode)" />
-                      <span>{{ checkStatusText(item.issueType) }}</span>
+                      <span :style="handlerTextColor(statusArr, 'value', item.issueType)">{{ checkStatusText(item.issueType) }}</span>
                     </div>
             </div>
             <ul class="list-ul">
@@ -132,9 +132,9 @@ components:{BackToTop},
       returnList: [],
       total: 0,
       statusArr: [
-        { text: '全部', value: '' },
-        { text: '质检不通过', value: '2' },
-        { text: '收货不通过', value: '1' }
+        { text: '全部', value: '', color: '' },
+        { text: '质检不通过', value: '2', color: '#FC5937' },
+        { text: '收货不通过', value: '1', color: '#FC5937' }
       ],
     };
   },
