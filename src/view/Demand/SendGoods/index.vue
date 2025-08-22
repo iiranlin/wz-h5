@@ -224,7 +224,7 @@
             <span class="li-span-click">{{ item.sendTotal }}</span>
           </li>
           <li>
-            <span>收货人：</span>
+            <span>收货人及联系方式：</span>
             <span>{{ item.receiver }}</span>
           </li>
           <!-- <li>
