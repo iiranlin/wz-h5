@@ -862,6 +862,12 @@ export default {
       // console.log(this.$store.state.public.sendGoods, "this.$store.state.public.sendGoods")
       // console.log(this.params, this.fileList, this.materiaList, this.goodsMsg.sectionName, this.goodsMsg.planName, this.goodsMsg.id, "发货传参")
 
+      Toast.loading({
+        duration: 0,
+        message: '正在请求中...',
+        forbidClick: true,
+      });
+
       this.materiaList.forEach((item) => {
         let fileByList = {};
         //报验结果
@@ -902,14 +908,18 @@ export default {
             Toast.success(res.data);
             this.$router.push({ path: "/Information" })
           }
-        })
+        }).finally(() => {
+                Toast.clear()
+            })
       } else {
         modifySendGoods(rest).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);
             this.$router.push({ path: "/Information" })
           }
-        })
+        }).finally(() => {
+                Toast.clear()
+              })
       }
     },
     btnClick(code) {
