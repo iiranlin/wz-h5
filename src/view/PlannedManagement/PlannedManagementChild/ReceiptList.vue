@@ -171,7 +171,7 @@ export default {
             return
           }
           const data = this.dataList[this.currentIndex]
-          this.$store.dispatch('public/setHistoryData', {receiver: data.receiver, phone: data.phone, field2: data.receiveraddress, addr: data.addr})
+          this.$store.dispatch('public/setHistoryData', {receiver: data.receiver+" "+data.phone, field2: data.receiveraddress, addr: data.addr})
           const { uniqueNumber = null, contractId, type, id } = this.$route.query
           this.$router.push({name: 'EditedMaterials', query: {uniqueNumber, contractId, type, id}})
         },

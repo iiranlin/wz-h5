@@ -53,7 +53,7 @@
         <div class="detail-ul-text">
           <ul class="detail-ul">
             <li>
-              <span>{{ sectionInfo.receiver }} {{ sectionInfo.phone }}</span>
+              <span>{{ sectionInfo.receiver }}</span>
             </li>
             <li>
               <span>使用地点：</span>
@@ -66,7 +66,7 @@
           </ul>
         </div>
         <div class="detail-base-info-edited-all" style="padding-top: 0;">
-          <p @click="applicationAllClick({receiver: '', addr: '', field2: '', phone: '',})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+          <p @click="applicationAllClick({receiver: '', addr: '', field2: '',})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
         </div>
       </template>
       <template v-else>
@@ -230,7 +230,6 @@ export default {
           return
         }
         const data = this.$store.state.public.materiaList || []
-        this.sectionInfo.receiver = this.sectionInfo.receiver + " " + this.sectionInfo.phone
         data.forEach((item,index)=>{
           if(item.id == this.sectionInfo.id){
              this.$set(data, index, this.sectionInfo)
@@ -249,10 +248,12 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const data = this.$store.state.public.materiaList || []
+        console.log(data,"data")
         data.forEach((item, index) => {
           for (const key in obj) {
             if (Object.hasOwnProperty.call(obj, key)) {
               item[key] = this.sectionInfo[key]
+              console.log(item.key,"111")
             }
           }
         });

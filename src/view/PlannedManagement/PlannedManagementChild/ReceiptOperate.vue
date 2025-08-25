@@ -68,7 +68,6 @@ export default {
         if(this.type == 'update'){
             this.currentIndex = this.$route.query.position;
             this.listObj = JSON.parse(this.$route.query.obj);
-
             this.formData.id = this.listObj.id;
             this.formData.addr = this.listObj.addr;
             this.formData.phone = this.listObj.phone;
