@@ -481,6 +481,10 @@ export default {
     }
   },
   activated() {
+    this.text = this.$route.query.text;
+    this.goodsId = this.$route.query.id;
+    this.planId = this.$route.query.planId;
+    
     const historyData = this.$store.state.public.historyData || {};
     
     if (JSON.stringify(historyData) === '{}') {
@@ -492,7 +496,14 @@ export default {
     historyData.contacts = historyData.contacts || historyData.receiver
     historyData.contactsPhone = historyData.contactsPhone || historyData.phone
     
-    this.params = Object.assign({}, this.params, historyData)
+    const shipmentsInfo = this.$store.state.public.shipmentsInfo || {};
+
+    if (Object.keys(shipmentsInfo).length > 0) {
+      this.params = Object.assign({}, shipmentsInfo, historyData);
+    } else {
+      this.params = Object.assign({}, this.params, historyData)
+    }
+
     this.$store.dispatch('public/setHistoryData', {})
   },
   created() {
