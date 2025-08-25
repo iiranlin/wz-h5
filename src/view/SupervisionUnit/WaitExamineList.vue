@@ -171,6 +171,10 @@ export default {
         handleItemClick(item){
             const { businessType, businessId, businessCode, taskId, procInstId } = item
             const auditObj = { businessType, businessId, businessCode, taskId, procInstId }
+
+            this.$store.dispatch('public/setGoodsReceiptInfo', {});
+          
+            this.$store.dispatch('public/setSelectGoodData', []);
       
             if(Object.keys(FLOW_ROUTE).includes(businessType)){
                 let name = FLOW_ROUTE[businessType]
