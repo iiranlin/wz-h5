@@ -169,7 +169,7 @@
          <template v-if="queryType === 'submit'">
               <div class="list-ul-button">
                 <van-button class="button-info" plain round type="info" native-type="button"
-                  @click="editedClick(item, index)">编辑</van-button>
+                  @click="editedClick(item, index)" v-if="item.stockStatus">编辑</van-button>
               </div>
             </template>
       </div>
@@ -219,7 +219,6 @@ export default {
     },
     countEmptyProperties() {
       this.$set(this.formData,'fileList',this.fileList)
-      console.log(this.formData,"this.formData")
       return Object.keys(this.formData).reduce((count, key) => {
         if (this.formData[key] === null || this.formData[key] === undefined || this.formData[key] === '' || this.formData[key].length === 0) {
           return count + 1;
@@ -285,6 +284,7 @@ export default {
               sum = sum + item.outTotal
             })
             this.detailList[this.queryIndex].sumTotal = sum
+            
           }
          toast.clear();
       }else{
@@ -460,17 +460,12 @@ export default {
             });
             return
         }
+        let outTotalSum = 0
         for (let i = 0; i < this.detailList.length; i++) {
           let childList = this.detailList[i].childList
-
-          let outTotalSum = 0
-
+          outTotalSum = outTotalSum + (this.detailList[i].sumTotal?this.detailList[i].sumTotal:0)
           if(childList && childList.length> 0){
             for (let j = 0; j < childList.length; j++) {
-              if(childList[j].outTotal){
-                
-                outTotalSum = outTotalSum + childList[j].outTotal
-              }
               if(Number(childList[j].outTotal) > Number(childList[j].remainingStock)){
                 this.$notify({
                   type: 'warning',
@@ -479,14 +474,14 @@ export default {
                 return
               }
             }
-            if(outTotalSum==0){
-              this.$notify({
-                  type: 'warning',
-                  message: '出库数量不能为空!',
-                });
-                return
-            }
           }
+        }
+        if(outTotalSum==0){
+          this.$notify({
+              type: 'warning',
+              message: '出库数量不能为空!',
+            });
+            return
         }
       }
       this.queryType = type

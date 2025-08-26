@@ -112,17 +112,16 @@ export default {
       let that  = this 
       if (isData) {
         const data = this.$store.state.public.outboundData || []
-
-        
-
-        data.childList.forEach((item, index) => {
-          that.sectionInfo.childList.forEach((list,listIndex)=>{
-             if (item.id ==list.id) {
-                this.$set(data.childList, index, list)
-              }
-          })
-        });
-        console.log(data,"data")
+        if(data.childList&&data.childList.length){
+           data.childList.forEach((item, index) => {
+            that.sectionInfo.childList.forEach((list,listIndex)=>{
+              if (item.id ==list.id) {
+                  this.$set(data.childList, index, list)
+                }
+            })
+          });
+        }
+       
         this.$store.dispatch('public/setOutboundData', data)
       }
       this.$router.push({ name: 'Outbound', query: { type: this.queryType, id: this.queryId,index:this.queryIndex } })
