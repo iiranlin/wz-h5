@@ -138,6 +138,9 @@ components:{BackToTop},
       ],
     };
   },
+  activated() {
+    this.allRefresh();
+  },
   created() {
     this.getList();
   },

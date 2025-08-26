@@ -133,6 +133,7 @@ export default {
         
     },
     activated () {
+      this.onRefresh();
       this.scrollPositionInit(this.className, this.finished)
     },
     methods: {
