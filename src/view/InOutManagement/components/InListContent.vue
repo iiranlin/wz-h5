@@ -233,7 +233,6 @@ export default {
     },
     withdrawClick(item) {
       this.$dialog.confirm({
-        title: '标题',
         message: '确认要撤回吗？',
         confirmButtonText: '确认',
         cancelButtonText: '取消'

@@ -458,7 +458,6 @@ export default {
       this.formData.fileByList = JSON.stringify(fileByList);
 
       this.$dialog.confirm({
-        title: '标题',
         message: '是否确认提交入库审核?',
         confirmButtonText: '确认',
         cancelButtonText: '取消'

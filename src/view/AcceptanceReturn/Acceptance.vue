@@ -343,7 +343,6 @@ export default {
     //去审核点击
     handleExamineClick(item) {
       this.$dialog.confirm({
-        title: '标题',
         message: '确认要提交审核吗？',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
@@ -354,7 +353,6 @@ export default {
     // 撤回
     recallClick ({id}) {
       this.$dialog.confirm({
-        title: '标题',
         message: '是否确认撤回?',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
