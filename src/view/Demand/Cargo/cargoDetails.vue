@@ -192,7 +192,7 @@
     </div>
     <div class="default-button-container" v-if="btnEvent==true">
       <van-button size="mini" type="info" round class="button-info"
-                  @click="handleDoAccept(params)">初验收货
+                  @click="handleDoAccept(params)">收货
       </van-button>
     </div>
     <file-preview ref="filePreview"></file-preview>
