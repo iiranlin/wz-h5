@@ -28,6 +28,24 @@ export const routes = [
         component: () => import('@/view/MyToDo/MyToDoList.vue')
       },
       {
+        path: 'supplierPage',
+        name: 'supplierPage',
+        meta: { title: '供应商首页', isTabbar: true },
+        component: () => import('@/view/homePage/supplierPage.vue')
+      },
+      {
+        path: 'constructionUnitsPage',
+        name: 'constructionUnitsPage',
+        meta: { title: '施工单位首页', isTabbar: true },
+        component: () => import('@/view/homePage/constructionUnitsPage.vue')
+      },
+      {
+        path: 'supervisorPage',
+        name: 'supervisorPage',
+        meta: { title: '监理首页', isTabbar: true },
+        component: () => import('@/view/homePage/supervisorPage.vue')
+      },
+      {
         path: '/PlannedManagementList',
         name: 'PlannedManagementList',
         meta: { title: '计划管理', isTabbar: true },

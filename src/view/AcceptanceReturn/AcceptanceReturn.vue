@@ -43,9 +43,20 @@ export default {
       this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
       next();
   },
+
+  activated() {
+      if(this.$route.query?.tabIndex) {
+        this.changeTab(+this.$route.query?.tabIndex)
+      }
+  },
+
   created () {
       if(this.$route.meta.myToDoNavIndex){
         this.menuActiveIndex = this.$route.meta.myToDoNavIndex;
+      }
+
+      if(this.$route.query?.tabIndex) {
+        this.changeTab(+this.$route.query?.tabIndex)
       }
       
   },

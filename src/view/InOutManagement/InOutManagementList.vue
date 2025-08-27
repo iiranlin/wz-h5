@@ -1,7 +1,7 @@
 <template>
   <div class="in-out-management">
     <div class="tabs">
-      <van-tabs v-model="activeIndex" color="#0571ff" title-active-color="#0571ff"
+      <van-tabs v-model="activeIndex"  @change="changeTab" color="#0571ff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" class="in-out-management-tab">
         <van-tab title="入库列表">
           <div slot="title">
@@ -22,14 +22,14 @@
             <img src="@/assets/img/THLB.png">
             <span class="in-out-management-tab-span">退货单</span>
           </div>
-          <refund-list-content></refund-list-content>
+          <refund-list-content ref="RefundListContent"></refund-list-content>
         </van-tab>
         <van-tab title="出库列表">
           <div slot="title">
             <img src="@/assets/img/CKLB.png">
             <span class="in-out-management-tab-span">出库单</span>
           </div>
-          <out-list-content></out-list-content>
+          <out-list-content ref="OutListContent"></out-list-content>
         </van-tab>
       </van-tabs>
     </div>
@@ -63,10 +63,15 @@ export default {
     if(this.$route.meta.activeIndex){
       this.activeIndex = this.$route.meta.activeIndex
     }
-  },
-  activated() {
+
+    if(this.$route.query?.tabIndex) {
+        this.changeTab(+this.$route.query?.tabIndex)
+      }
   },
   methods: {
+    changeTab(index) {
+      this.activeIndex = index
+    }
   },
 };
 </script>

@@ -1,13 +1,13 @@
 <template>
 	<div class="app-wrapper">
-		<div :class="isTabbar && checkNavMenu().length > 1?'app-container':'default-container'">
+		<div :class="isTabbar && checkNavMenu()?.length > 1?'app-container':'default-container'">
 			<transition name="fade-transform" mode="out-in">
         <keep-alive :include="keepPages">
           <router-view :key="key" />
         </keep-alive>
 			</transition>
 		</div>
-		<div class="nav-container" v-show="isTabbar && checkNavMenu().length > 1">
+		<div class="nav-container" v-show="isTabbar && checkNavMenu()?.length > 1">
 			<navbar :navMenu="checkNavMenu()"/>
 		</div>
 	</div>
@@ -146,42 +146,54 @@ export default {
 		if (isAndroid()) {
 			Android.setWaterMark(this.userInfo.nickName);
 		}
+		
+		const code = this.checkDeptCode()
+
+		if (code != 'WZDL' && code != 'WD' && code != 'SN') {
+			this.checkNavMenu();
+		 }
 	},
 	methods: {
-		//判断角色菜单
-		checkNavMenu(){
-      const deptCode = this.userInfo.deptCode
-      const codeArr = ['FB', 'ZB', 'JL', 'GYS', 'GYS', 'WZDL']
+		//判断角色deptCode
+		checkDeptCode(){
+			const deptCode = this.userInfo.deptCode  
+      const codeArr = ['FB', 'ZB', 'JL', 'GYS', 'SN', 'WZDL', 'WD']
+
       let code = ''
       codeArr.forEach( (item) => {
         if(deptCode.startsWith(item)){
           code = item
         }
       })
-      if(code){
-        const obj = {
-          'FB': () => {
-            return this.constructionUnit
-          },
-          'ZB': () => {
-            return this.constructionUnit
-          },
-          'JL': () => {
-            return this.supervisionUnit
-          },
-          'GYS': () => {
-            return this.supplier
-          },
-          'SN': () => {
-            return this.supervisionUnitSN
-          },
-          'WZDL': () => {
-            return this.materialsAgent
-          }
-        }
-        return (obj[code] && obj[code]()) || this.constructionUnit
-      }
-      return this.constructionUnit
+
+			return code
+		},
+		//判断角色菜单
+		checkNavMenu(){
+			const keyMap = ['supplierPage', 'supervisorPage', 'constructionUnitsPage']
+			
+			const code = this.checkDeptCode()
+
+			if (!keyMap.includes(this.key) && this.key != '/' && code != 'WD' && code != 'WZDL' && code != 'SN') {
+				return;
+			}
+
+			if (code == 'FB' || code == 'ZB') {
+				// 跳转到施工单位首页
+				this.$router.push({ path: '/constructionUnitsPage' })
+			} else if (code == 'JL') {
+			  // 跳转到监理单位首页
+				this.$router.push({ path: '/supervisorPage' })
+			} else if (code == 'GYS') {
+			  // 跳转到供应商首页
+				this.$router.push({ path: '/supplierPage' })
+			} else if (code == 'SN') {
+			  return this.supervisionUnitSN
+			} else if (code == 'WZDL' || code == 'WD') {
+			  return this.materialsAgent
+			} else {
+			  return this.constructionUnit
+			}
 		},
 	},
 }

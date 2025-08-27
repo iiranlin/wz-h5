@@ -6,6 +6,7 @@
 	</div>
 </template>
 <script>
+import { getUserInfo } from '@/utils/user-info'
 export default {
   data() {
     return {
@@ -16,8 +17,48 @@ export default {
       this.handleResize()
       window.addEventListener('resize', this.handleResize)
     }
+
+    window.backToHomeClick = () => {
+      this.checkHomePage()
+    }
   },
   methods: {
+    //判断角色deptCode
+		checkDeptCode(){
+			const deptCode = getUserInfo().deptCode
+
+      const codeArr = ['FB', 'ZB', 'JL', 'GYS', 'SN', 'WZDL', 'WD']
+
+      let code = ''
+      codeArr.forEach( (item) => {
+        if(deptCode.startsWith(item)){
+          code = item
+        }
+      })
+
+			return code
+		},
+    //判断角色首页
+		checkHomePage(){
+			
+			const code = this.checkDeptCode()
+
+			if (code == 'FB' || code == 'ZB') {
+				// 跳转到施工单位首页
+				this.$router.push({ path: '/constructionUnitsPage' })
+			} else if (code == 'JL') {
+			  // 跳转到监理单位首页
+				this.$router.push({ path: '/supervisorPage' })
+			} else if (code == 'GYS') {
+			  // 跳转到供应商首页
+				this.$router.push({ path: '/supplierPage' })
+			} else {
+        this.$notify({
+          type: 'warning',
+          message: '您的账号暂无首页，请联系管理员',
+        });
+      }
+		},
     handleResize() {
       document.documentElement.style.fontSize = 42 + 'px'
       // if (window.innerWidth > window.innerHeight) {

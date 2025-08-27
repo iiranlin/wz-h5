@@ -362,10 +362,10 @@ export default {
   }
 }
 
-::v-deep .van-tabs__content {
-  height: calc(100vh - 162px);
-  overflow-y: scroll;
-}
+// ::v-deep .van-tabs__content {
+//   height: calc(100vh - 162px);
+//   overflow-y: scroll;
+// }
 /deep/ .van-tag--primary{
   background: #ffffff;
 }
