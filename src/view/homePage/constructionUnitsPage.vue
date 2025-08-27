@@ -92,8 +92,10 @@ export default {
   },
 
   activated() {
-    this.$refs.VideoArea?.$refs.videos?.play();
-    this.$refs.checkModule?.handlerTodoCount();
+    this.$nextTick(() => {
+      this.$refs.VideoArea?.$refs.videos?.play();
+      this.$refs.checkModule?.handlerTodoCount();
+    })
   },
 
   mounted() {
