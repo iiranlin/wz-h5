@@ -3,7 +3,7 @@
   <div class="my-to-do-list">
     <van-pull-refresh v-model="refreshLoading" @refresh="refreshCheck" success-text="刷新成功">
       <div>
-        <VideoArea></VideoArea>
+        <VideoArea ref="VideoArea"></VideoArea>
       </div>
 
       <div>
@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import keepPages from '@/view/mixins/keepPages'
+
 const Receiving = require('@/assets/img/Receiving.png');
 const returns = require('@/assets/img/returns.png');
 const warehousing = require('@/assets/img/warehousing.png');
@@ -70,6 +72,7 @@ import VideoArea from './components/VideoArea.vue';
 import CheckModule from './components/checkModule.vue';
 export default {
   name: 'constructionUnitsPage',
+  mixins: [keepPages],
 
   components: {
     VideoArea,
@@ -86,6 +89,11 @@ export default {
       CreditOrder,
       StockOut
     };
+  },
+
+  activated() {
+    this.$refs.VideoArea?.$refs.videos?.play();
+    this.$refs.checkModule?.handlerTodoCount();
   },
 
   mounted() {

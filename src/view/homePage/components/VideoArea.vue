@@ -2,7 +2,7 @@
 <template>
   <div>
     <div style="position: relative;">
-      <video class="videoModel" :src="videoUrl" autoplay loop muted playsinline></video>
+      <video ref="videos" class="videoModel" :src="videoUrl" autoplay loop muted playsinline></video>
 
       <div class="userInfo">
         <div>

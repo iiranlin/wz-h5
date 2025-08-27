@@ -3,7 +3,7 @@
   <div class="my-to-do-list">
     <van-pull-refresh v-model="refreshLoading" @refresh="refreshCheck" success-text="刷新成功">
       <div>
-        <VideoArea></VideoArea>
+        <VideoArea ref="VideoArea"></VideoArea>
       </div>
 
       <div style="margin: 10px 0;" @click="handleRouter('/WaitExamineList')">
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import keepPages from '@/view/mixins/keepPages'
+
 import { Toast } from 'vant';
 import Vue from 'vue';
 Vue.use(Toast);
@@ -35,9 +37,15 @@ import { getTodoCount } from './api/homePage.js'
 import VideoArea from './components/VideoArea.vue';
 export default {
   name: 'supervisorPage',
+  mixins: [keepPages],
 
   components: {
     VideoArea,
+  },
+  
+  activated() {
+    this.$refs.VideoArea?.$refs.videos?.play();
+    this.$refs.checkModule?.handlerTodoCount();
   },
 
   data() {
