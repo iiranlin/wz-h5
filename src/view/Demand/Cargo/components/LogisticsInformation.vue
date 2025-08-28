@@ -5,9 +5,13 @@
         <span>发货单号：</span>
         <span>{{ detailObj.shipmentBatchNumber }}</span>
       </li>
-      <li>
+      <!-- <li>
         <span>物流单号：</span>
         <span>{{ detailObj.oddNumbers }}</span>
+      </li> -->
+      <li>
+        <span>物流单号：</span>
+        <span v-if="detailObj.oddNumbers" class="wl-style" @click="hanldWL(detailObj.oddNumbers)">{{ detailObj.oddNumbers }}</span>
       </li>
       <li>
         <span>发货时间：</span>
@@ -34,7 +38,7 @@
         <span>{{ detailObj.contactsPhone }}</span>
       </li>
     </ul>
-    <template v-if="detailObj.oddNumbers">
+    <!-- <template v-if="detailObj.oddNumbers">
       <div class="Logistics-Information-dt">
         <wuliu :courierNumber="detailObj.oddNumbers" @expressDataFun="expressDataFun" />
       </div>
@@ -60,7 +64,21 @@
           <van-col>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</van-col>
         </van-row>
       </div>
-    </template>
+    </template> -->
+    <template v-if="!detailObj.oddNumbers">
+      <div class="tab-div">
+        <van-row class="th-row">
+          <van-col>操作人</van-col>
+          <van-col>货运位置</van-col>
+          <van-col>填写时间</van-col>
+        </van-row>
+        <van-row class="th-rows" v-for="item in detailObj.materialTrackMessageDTOS" :key="item.id">
+          <van-col>{{ item.createUserName }}</van-col>
+          <van-col>{{ item.positionInformation }}</van-col>
+          <van-col>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</van-col>
+        </van-row>
+      </div>
+    </template> 
   </div>
 </template>
 <script>
@@ -104,7 +122,11 @@ export default {
   methods: {
     expressDataFun (expressData) {
       this.expressData = expressData
+    },
+    hanldWL(item){
+      this.$router.push({ name: 'cargowlDetails' ,query:{courierNumber:item}})
     }
+
   },
 }
 </script>
@@ -125,7 +147,10 @@ export default {
       }
     }
   }
-
+ .wl-style{
+      color: #134daa;
+      cursor: pointer;
+    }
   .Logistics-Information-dt {
     width: 100%;
     height: 164px;

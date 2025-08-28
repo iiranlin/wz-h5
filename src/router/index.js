@@ -494,6 +494,12 @@ export const routes = [
         name: 'lookCargo',
         meta: { title: '物流查看' },
       },
+       {
+        path: 'cargowlDetails',
+        name: 'cargowlDetails',
+        meta: { title: '物流详情' },
+        component: () => import('@/view/Demand/Cargo/cargowlDetails.vue')
+      },
       {
 
         path: '/cargoPosition',
