@@ -869,9 +869,19 @@ export default {
           //验证失败
         });
     },
+    containsChinese(str) {
+      return /[\u4e00-\u9fa5]/.test(str);
+    },
     onSubmit() {
       // console.log(this.$store.state.public.sendGoods, "this.$store.state.public.sendGoods")
       // console.log(this.params, this.fileList, this.materiaList, this.goodsMsg.sectionName, this.goodsMsg.planName, this.goodsMsg.id, "发货传参")
+      if (this.containsChinese(this.params.oddNumbers)) {
+        this.$notify({
+          type: 'warning',
+          message: '[物流单号]不可输入中文字符!',
+        });
+        return
+      }
 
       Toast.loading({
         duration: 0,
