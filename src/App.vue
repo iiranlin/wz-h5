@@ -34,8 +34,10 @@ export default {
   },
   mounted() {
     if(this.isTablet()){
-      this.handleResize()
-      window.addEventListener('resize', this.handleResize)
+      setTimeout(() => {
+        this.handleResize()
+        window.addEventListener('resize', this.handleResize)
+      }, 500)
     }
 
     window.backToHomeClick = () => {
