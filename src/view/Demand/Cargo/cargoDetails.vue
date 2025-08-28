@@ -43,7 +43,7 @@
       <van-tabs v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
                 title-inactive-color="#2e2e2e">
         <van-tab title="发货基本信息" name="发货基本信息">
-          <van-list>
+          <van-list style="padding-bottom: 10px;">
 
             <div class="box-container">
               <div class="detail-title-contentA">
