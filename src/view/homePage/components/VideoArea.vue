@@ -67,6 +67,8 @@ export default {
         if (isAndroid()) {
           Android.startToLogin()
         }
+      }).catch(() => {
+        // on cancel
       })
     }
   },
