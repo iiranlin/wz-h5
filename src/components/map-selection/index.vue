@@ -21,9 +21,18 @@
       <div class="list-address">
         <ul>
           <li v-for="(item,index) in addrssList" :key="index" @click="handleAddrsss(item)">
-            <span v-if="index==0" style="color:#e4393c">{{item.name}}</span>
-            <span v-else>{{item.name}}</span>
-            <span v-if="item.distance">{{item.distance}}m</span>
+            <div>
+              <van-icon name="location-o"  color="#e4393c"  v-if="index==0" />
+              <span v-else class="icon-radio"></span>
+            </div>
+            <div>
+              <span v-if="index==0" style="color:#e4393c">{{item.name}}</span>
+              <span v-else>{{item.name}}</span>
+              <span>{{item.address}}</span>
+            </div>
+            <div>
+              <span v-if="item.distance">{{item.distance}}m</span>
+            </div> 
           </li>
         </ul>
       </div>
@@ -410,13 +419,37 @@ export default {
   padding-bottom: 1rem;
   ul{
     li{
-      height: 1rem;
-      padding: 5px 5%;
+      
+      padding: 10px 5%;
       display: flex;
-      span:nth-child(2){
-        margin-left: auto;
-        font-size:12px;
-        opacity: 0.5;
+      div:nth-child(1){
+        width:5%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-right: 5px;
+        .icon-radio{
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          border: 4px solid #ddd;
+        }
+      }
+      div:nth-child(2){
+        span{
+          display: block;
+        }
+        span:nth-child(2){
+          font-size:12px;
+          opacity: 0.5;
+        }
+      }
+      div:nth-child(3){
+         margin-left: auto;
+          span{
+            font-size:12px;
+            opacity: 0.5;
+          }
       }
     }
     li:first-child{

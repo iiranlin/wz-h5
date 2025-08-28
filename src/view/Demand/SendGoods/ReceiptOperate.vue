@@ -11,6 +11,7 @@
         <div class="detail-floor-content">
             <img src="/static/icon-receipt-operate.png"/>
             <span>发货地址</span>
+            <span class="select-point" style="margin-left:auto;padding-right: 0.475rem;" @click="hanldSelectPoint"><van-icon name="location-o"/>地图选址</span>
         </div>
         <van-field
             class="van-edit"
@@ -19,9 +20,10 @@
             maxlength="200"
             rows="2"
             autosize
-            required
+            required   
             placeholder="请输入发货地址"
             show-word-limit/>
+
         <!-- <div class="detail-floor-content">
             <img src="/static/icon-address.png"/>
             <span>使用地点</span>
@@ -65,7 +67,7 @@ export default {
     },
     created () {
         this.type = this.$route.query.type;
-
+        if(this.type=='create'){this.formData.receiveraddress = this.$route.query.addr}
         if(this.type == 'update'){
             this.currentIndex = this.$route.query.position;
             this.listObj = JSON.parse(this.$route.query.obj);
@@ -165,6 +167,14 @@ export default {
             }).finally(() => {
                 toast.clear();
             });
+        },
+        // 地图选点
+        hanldSelectPoint(){
+          if(this.type=='create'){
+            this.$router.push({ name: "ReceiptMapAddress",query:{type:this.type,addr:this.formData.receiveraddress} });
+          }else{
+            this.$router.push({ name: "ReceiptMapAddress",query:{type:this.type,position:this.$route.query.position,obj:this.$route.query.obj} });
+          }
         },
     },
 }
