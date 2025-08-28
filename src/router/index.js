@@ -212,6 +212,19 @@ export const routes = [
         meta: { title: '查看物流' },
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/LogisticsView.vue')
       },
+       {
+        path: 'LogisticsDetails',
+        name: 'LogisticsDetails',
+        meta: { title: '物流详情' },
+        component: () => import('@/view/PlannedManagement/PlannedManagementChild/LogisticsDetails.vue')
+      },
+       {
+        path: 'LogisticsMapAddress',
+        name: 'LogisticsMapAddress',
+        meta: { title: '地图选点' },
+        component: () => import('@/view/PlannedManagement/PlannedManagementChild/LogisticsMapAddress.vue')
+      },
+      
       {
         path: 'ReceiptList',
         name: 'ReceiptList',

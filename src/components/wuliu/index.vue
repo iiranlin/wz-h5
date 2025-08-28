@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="arcgis-container">
-      <el-amap ref="map" class="map" :vid="'amap'" :zoom="10" :center="center">
+      <el-amap ref="map" class="map" :vid="'amap'" :zoom="zoomNum" :center="center" style="height:100vh">
         <el-amap-marker :position="sendCenter" icon="/static/map/send_point.png" v-if="sendCenter.length > 0">
         </el-amap-marker>
         <el-amap-marker :label="endLabel" :position="endCenter" icon="/static/map/express_car.png"
@@ -34,7 +34,7 @@ import qs from "qs";
 let that;
 export default {
   name: "express",
-  props: ["courierNumber"],
+  props: ["courierNumber","zoomNum"],
   beforeCreate() {
     that = this;
   },
@@ -83,7 +83,6 @@ export default {
       },
       immediate: true
     },
-
   },
   created() {
     this.queryExpressCompanyList();
@@ -190,7 +189,6 @@ export default {
             this.expressData = res.data;
             this.routeDtos = this.expressData.routeDtos;
             this.$emit('expressDataFun', this.expressData)
-
             if (this.expressData.routeLatLngs.length < 2) {
               this.$toast.fail('当前暂无物流信息!');
               return;
@@ -214,6 +212,7 @@ export default {
         origin: startLatLng,
         destination: endLatLng,
       };
+      console.log(params,"params")
       axios
         .get("https://restapi.amap.com/v3/direction/driving?", { params: params })
         .then((res) => {
@@ -234,7 +233,6 @@ export default {
           this.sendCenter = sendPoint.split(",");
           //设置中心点
           this.center = sendPoint.split(",");
-
           //当前到达地
           let currentPoint = this.expressData.routeLatLngs[0].latAndLng;
           let currentName = this.expressData.routeLatLngs[0].location;

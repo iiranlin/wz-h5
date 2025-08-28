@@ -7,7 +7,7 @@
       </li>
       <li>
         <span>物流单号：</span>
-        <span>{{ detailObj.oddNumbers }}</span>
+        <span v-if="detailObj.oddNumbers" class="wl-style" @click="hanldWL(detailObj.oddNumbers)">{{ detailObj.oddNumbers }}</span>
       </li>
       <li>
         <span>发货时间：</span>
@@ -34,7 +34,7 @@
         <span>{{ detailObj.contactsPhone }}</span>
       </li>
     </ul>
-    <template v-if="detailObj.oddNumbers">
+    <!-- <template v-if="detailObj.oddNumbers">
       <div class="Logistics-Information-dt">
         <wuliu :courierNumber="detailObj.oddNumbers" @expressDataFun="expressDataFun" />
       </div>
@@ -60,7 +60,22 @@
           <van-col>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</van-col>
         </van-row>
       </div>
-    </template>
+    </template> -->
+    <template v-if="!detailObj.oddNumbers">
+      <div class="tab-div">
+        <van-row class="th-row">
+          <van-col>操作人</van-col>
+          <van-col>货运位置</van-col>
+          <van-col>填写时间</van-col>
+        </van-row>
+        <van-row class="th-rows" v-for="item in detailObj.materialTrackMessageDTOS" :key="item.id">
+          <van-col>{{ item.createUserName }}</van-col>
+          <van-col>{{ item.positionInformation }}</van-col>
+          <van-col>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</van-col>
+        </van-row>
+      </div>
+    </template> 
+
   </div>
 </template>
 <script>
@@ -104,6 +119,9 @@ export default {
   methods: {
     expressDataFun (expressData) {
       this.expressData = expressData
+    },
+    hanldWL(item){
+      this.$router.push({ name: 'LogisticsDetails' ,query:{courierNumber:item}})
     }
   },
 }
@@ -123,6 +141,10 @@ export default {
       .li-span-width {
        min-width: 100px !important;
       }
+    }
+    .wl-style{
+      color: #134daa;
+      cursor: pointer;
     }
   }
 

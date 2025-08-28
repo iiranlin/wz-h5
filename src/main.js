@@ -14,9 +14,23 @@ import "./permission"; // permission control
 import VueAMap from 'vue-amap';
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
-  key: '06541558d151d51375463a6fcb9192c2', // 替换为你的API Key
-  plugin: ['AMap.Geolocation'], // 根据需要添加插件
+  key: '7ee2b9f23eb1684964e11dd6126b0534', // 替换为你的API Key
+   plugin: [
+    'AMap.Scale',
+    'AMap.OverView',
+    'AMap.ToolBar',
+    'AMap.MapType',
+    'AMap.PlaceSearch',
+    "AMap.Autocomplete",
+    'AMap.Geolocation',
+    'AMap.Geocoder',
+    "AMap.AMapUI",// UI组件
+  ],
+
 });
+window._AMapSecurityConfig = {
+  securityJsCode:'7edcf69b8c9474e0c1bee349f2ac3460',
+}
 
 import dict from '@/utils/Dict'
 Vue.use(dict)

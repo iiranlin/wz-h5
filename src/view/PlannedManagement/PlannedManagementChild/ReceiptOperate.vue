@@ -8,9 +8,10 @@
             input-align="right"/>
         <van-field v-model="formData.phone" required name="联系电话" label="联系电话：" placeholder="请输入联系电话" clearable maxlength="11"
             input-align="right"/>
-        <div class="detail-floor-content">
+        <div class="detail-floor-content" style="display:flex;">
             <img src="/static/icon-receipt-operate.png"/>
             <span>收货地址</span>
+            <span class="select-point" style="margin-left:auto;padding-right: 0.475rem;" @click="hanldSelectPoint"><van-icon name="location-o"/>地图选点</span>
         </div>
         <van-field
             class="van-edit"
@@ -64,7 +65,8 @@ export default {
     },
     created () {
         this.type = this.$route.query.type;
-
+        
+        if(this.type=='create'){this.formData.receiveraddress = this.$route.query.addr}
         if(this.type == 'update'){
             this.currentIndex = this.$route.query.position;
             this.listObj = JSON.parse(this.$route.query.obj);
@@ -166,6 +168,15 @@ export default {
             }).finally(() => {
                 toast.clear();
             });
+        },
+        // 地图选点
+        hanldSelectPoint(){
+          if(this.type=='create'){
+            this.$router.push({ name: "LogisticsMapAddress",query:{type:this.type,addr:this.formData.receiveraddress} });
+          }else{
+            this.$router.push({ name: "LogisticsMapAddress",query:{type:this.type,position:this.$route.query.position,obj:this.$route.query.obj} });
+          }
+          
         },
     },
 }
