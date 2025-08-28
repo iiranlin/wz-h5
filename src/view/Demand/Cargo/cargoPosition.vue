@@ -5,6 +5,7 @@
       <div class="detail-title-contentA">
         <img src="/static/icon-address.png">
         <span class="title">新增货运位置</span>
+         <span class="select-point title" style="margin-left:auto;padding-right: 0.475rem;" @click="hanldSelectPoint"><van-icon name="location-o"/>地图选址</span>
       </div>
 
       <van-form @submit="onSubmit" ref="form" :key="formKey">
@@ -100,7 +101,7 @@ export default {
     this.shipmentBatchNumber =
         this.$route.params.shipmentBatchNumber ||
         this.$route.query.shipmentBatchNumber;
-
+    this.positionInformation = this.$route.query.addr?this.$route.query.addr:''
     if (this.shipmentBatchNumber) {
       this.handleConfirmClick(this.shipmentBatchNumber);
     }
@@ -116,7 +117,7 @@ export default {
         event.preventDefault();
       }
       this.formKey++;
-      this.$router.go(-1);
+      this.$router.push({ name: "Information" });
     },
     onSubmit(values) {
       if(!values){
@@ -133,7 +134,7 @@ export default {
         addFreightLocations(params).then((res) => {
           if (res.code == 0) {
             Toast.success(res.message);
-            this.$router.go(-1);
+            this.$router.push({ name: "Information" });
           }
         });
     },
@@ -163,6 +164,10 @@ export default {
       const hours = date.getHours().toString().padStart(2, "0");
       const minutes = date.getMinutes().toString().padStart(2, "0");
       return `${hours}:${minutes}`;
+    },
+    // 地图选点
+    hanldSelectPoint(){
+      this.$router.push({ name: "cargoMapAddress",query:this.$route.query });
     },
   },
 };

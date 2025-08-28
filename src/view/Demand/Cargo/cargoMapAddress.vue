@@ -9,58 +9,39 @@
 import mapSelection from '@/components/map-selection'
 
 export default {
-  name: 'LogisticsMapAddress',
+  name: 'cargoMapAddress',
   components: { mapSelection },
   data() {
     return {
       appid: "bjhzcZ1hF8rR5gF5mK9qW",
       appSecret: "4c18253ddba74d30b1b74a692aab6606",
       addrData:{},
-      addr:''
+      addr:'',
+      querys:{}
     }
   },
 	computed: {
 
 	},
   created() {
-    if(this.$route.query.type=='create'){
-      this.addr = this.$route.query.addr
-    }else{
-      this.addrData =JSON.parse(this.$route.query.obj)
-    }
-    
+    this.querys = this.$route.query
   },
   activated() {
   },
   watch:{
     
-  },
+  }, 
   mounted () {
    
   },
   methods: {
     updateLocation(address){
-        if(this.$route.query.type=='create'){
-           this.$router.push({
-                path: 'ReceiptOperate',
-                query: {
-                    type: 'create',
-                    addr:address
-                },
-            })
-
-        }else{
-          this.addrData.receiveraddress = address
+          this.querys.addr = address
           this.$router.push({
-              path: 'ReceiptOperate',
-              query: {
-                  type: this.$route.query.type,
-                  position: this.$route.query.position,
-                  obj: JSON.stringify(this.addrData) ,
-              },
+              path: '/cargoPosition',
+              query: this.querys
           })
 
-        }  
     },
   },
 }

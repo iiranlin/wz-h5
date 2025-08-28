@@ -221,7 +221,7 @@ export const routes = [
        {
         path: 'LogisticsMapAddress',
         name: 'LogisticsMapAddress',
-        meta: { title: '地图选点' },
+        meta: { title: '地图选址' },
         component: () => import('@/view/PlannedManagement/PlannedManagementChild/LogisticsMapAddress.vue')
       },
       
@@ -445,6 +445,12 @@ export const routes = [
         component: () => import('@/view/Demand/SendGoods/ReceiptOperate.vue'),
       },
       {
+        path: 'ReceiptMapAddress',
+        name: 'ReceiptMapAddress',
+        meta: { title: '地图选址' },
+        component: () => import('@/view/Demand/SendGoods//ReceiptMapAddress.vue')
+      },
+      {
         path: 'ReceiptListgoods',
         name: 'ReceiptListgoods',
         meta: { title: '选择收货信息' },
@@ -495,6 +501,12 @@ export const routes = [
         hidden: true,
         name: 'cargoPosition',
         meta: { title: '新增货运位置' },
+      },
+      {
+        path: 'cargoMapAddress',
+        name: 'cargoMapAddress',
+        meta: { title: '地图选点' },
+        component: () => import('@/view/Demand/Cargo/cargoMapAddress.vue')
       },
       {
 

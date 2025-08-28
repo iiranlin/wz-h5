@@ -11,7 +11,7 @@
         <div class="detail-floor-content" style="display:flex;">
             <img src="/static/icon-receipt-operate.png"/>
             <span>收货地址</span>
-            <span class="select-point" style="margin-left:auto;padding-right: 0.475rem;" @click="hanldSelectPoint"><van-icon name="location-o"/>地图选点</span>
+            <span class="select-point" style="margin-left:auto;padding-right: 0.475rem;" @click="hanldSelectPoint"><van-icon name="location-o"/>地图选址</span>
         </div>
         <van-field
             class="van-edit"

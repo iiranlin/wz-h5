@@ -9,7 +9,7 @@
 import mapSelection from '@/components/map-selection'
 
 export default {
-  name: 'LogisticsMapAddress',
+  name: 'ReceiptMapAddress',
   components: { mapSelection },
   data() {
     return {
@@ -42,7 +42,7 @@ export default {
     updateLocation(address){
         if(this.$route.query.type=='create'){
            this.$router.push({
-                path: 'ReceiptOperate',
+                path: 'ReceiptOperates',
                 query: {
                     type: 'create',
                     addr:address
@@ -52,7 +52,7 @@ export default {
         }else{
           this.addrData.receiveraddress = address
           this.$router.push({
-              path: 'ReceiptOperate',
+              path: 'ReceiptOperates',
               query: {
                   type: this.$route.query.type,
                   position: this.$route.query.position,
