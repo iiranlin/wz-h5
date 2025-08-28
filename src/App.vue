@@ -4,7 +4,7 @@
 			<router-view />
 		</transition>
     <!-- 设置字体入口 -->
-    <editIcon></editIcon>
+    <!-- <editIcon></editIcon> -->
 	</div>
 </template>
 <script>
