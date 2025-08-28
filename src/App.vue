@@ -3,14 +3,34 @@
 		<transition name="van-fade">
 			<router-view />
 		</transition>
+    <!-- 设置字体入口 -->
+    <editIcon></editIcon>
 	</div>
 </template>
 <script>
 import { getUserInfo } from '@/utils/user-info'
+import editIcon from './view/homePage/components/editIcon.vue';
+
 export default {
+  components: {
+    editIcon
+  },
   data() {
     return {
     };
+  },
+  computed: {
+    fontSizeNum() {
+      return this.$store.state.public.fontSizeSum
+    }
+  },
+  watch: {
+    fontSizeNum: {
+      handler(size) {
+        this.handleResize(size)
+      }
+    },
+    deep: true
   },
   mounted() {
     if(this.isTablet()){
@@ -59,8 +79,8 @@ export default {
         });
       }
 		},
-    handleResize() {
-      document.documentElement.style.fontSize = 42 + 'px'
+    handleResize(size = 42) {
+      document.documentElement.style.fontSize = size + 'px'
       // if (window.innerWidth > window.innerHeight) {
       //   document.documentElement.style.fontSize = 42 + 'px'
       // }else{

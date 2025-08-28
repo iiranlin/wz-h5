@@ -30,7 +30,9 @@ const state = {
   outboundFormData:{},  // 页面存储数据
   outboundFileList:[], //页面上传的领料单
   outboundList:[],
-  outboundInfo:{}
+  outboundInfo:{},
+
+  fontSizeSum: 42
   
 };
 
@@ -115,6 +117,9 @@ const mutations = {
   SET_OUTBOUND_INFO:(state, outboundInfo)=>{
     state.outboundInfo = outboundInfo
   },
+  SET_FONT_SIZE_SUM: (state, fontSizeSum) => {
+    state.fontSizeSum = fontSizeSum
+  }
   
   
 };
@@ -186,6 +191,10 @@ const actions = {
   },
   setOutboundInfo({commit}, data){
     commit('SET_OUTBOUND_INFO', data)
+  },
+  // 设置字体大小
+  SetFontSizeSum({ commit }, fontSizeSum) {
+    commit('SET_FONT_SIZE_SUM', fontSizeSum)
   }
   
 };

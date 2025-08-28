@@ -134,6 +134,19 @@ export const routes = [
     ]
   },
   {
+    path: '/editPage',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/editFontSize',
+        name: 'editFontSize',
+        meta: { title: '设置字体大小' },
+        component: () => import('@/view/homePage/components/editFontSize.vue')
+      },
+    ]
+  },
+  {
     path: '/MyProcess',
     component: Layout,
     hidden: true,
