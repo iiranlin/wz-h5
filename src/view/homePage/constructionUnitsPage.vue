@@ -141,7 +141,7 @@ export default {
   height: 100px;
   margin: 0 auto;
   border-radius: 8px;
-  line-height: 90px;
+  line-height: 100px;
   padding-left: 30px;
   font-size: 18px;
   font-weight: 600;
@@ -162,7 +162,7 @@ export default {
   height: 100px;
   margin: 0 auto;
   border-radius: 8px;
-  line-height: 90px;
+  line-height: 100px;
   text-align: center;
   font-size: 16px;
   background-color: #fff;
