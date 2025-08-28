@@ -4,7 +4,7 @@
     <div style="position: relative;">
       <video ref="videos" class="videoModel" :src="videoUrl" autoplay loop muted playsinline></video>
 
-      <div class="userInfo">
+      <div class="userInfo" @click="handlerLogOut">
         <div>
           <img src="@/assets/img/userVia.png" />
         </div>
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { isAndroid } from "@/utils";
 import videoUrl from '@/assets/video/Banner.mp4'
 import { getUserInfo } from '@/utils/user-info'
 export default {
@@ -56,7 +57,18 @@ export default {
   },
 
   methods: {
-
+    handlerLogOut() {
+      this.$dialog.confirm({
+        message: '是否确认退出系统？',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.$store.dispatch('LogOut');
+        if (isAndroid()) {
+          Android.startToLogin()
+        }
+      })
+    }
   },
 };
 </script>
