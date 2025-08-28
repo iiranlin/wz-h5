@@ -4,7 +4,7 @@
 			<router-view />
 		</transition>
     <!-- 设置字体入口 -->
-    <editIcon></editIcon>
+    <!-- <editIcon></editIcon> -->
 	</div>
 </template>
 <script>
@@ -19,19 +19,19 @@ export default {
     return {
     };
   },
-  computed: {
-    fontSizeNum() {
-      return this.$store.state.public.fontSizeSum
-    }
-  },
-  watch: {
-    fontSizeNum: {
-      handler(size) {
-        this.handleResize(size)
-      }
-    },
-    deep: true
-  },
+  // computed: {
+  //   fontSizeNum() {
+  //     return this.$store.state.public.fontSizeSum
+  //   }
+  // },
+  // watch: {
+  //   fontSizeNum: {
+  //     handler(size) {
+  //       this.handleResize(size)
+  //     }
+  //   },
+  //   deep: true
+  // },
   mounted() {
     if(this.isTablet()){
       setTimeout(() => {
