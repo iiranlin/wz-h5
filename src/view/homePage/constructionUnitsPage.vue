@@ -13,6 +13,7 @@
       <div style="margin: 10px 0;" @click="handleRouter('/PlannedManagementList')">
         <div class="demandInfo">
           计划管理
+          <van-icon name="plus" @click.stop="addClick()" />
         </div>
       </div>
 
@@ -103,6 +104,13 @@ export default {
   },
 
   methods: {
+    addClick() {
+      this.$store.dispatch('public/setMateriaList', [])
+      this.$store.dispatch('public/setInterfaceMateriaList', [])
+      this.$store.dispatch('public/setDemandPlanningInfo', {})
+
+      this.$router.push({ name: 'SelectContract' })
+    },
     handleRouterAndTab(path, tabIndex) {
       this.$router.push({ path: path, query: { tabIndex } })
     },
@@ -148,6 +156,22 @@ export default {
   background: linear-gradient(to right, white 0%, #BEDBF4 100%), url('../../assets/img/demand.png') no-repeat right top / 200px 100px;
   box-sizing: border-box;
   background-blend-mode: multiply;
+  position: relative;
+}
+
+.van-icon-plus {
+  position: absolute;
+  right: 10px;
+  bottom: 35%;
+  z-index: 999;
+  width: 30px;
+  height: 30px;
+  background: #1989fa;
+  border-radius: 30px;
+  border: 1px solid #1989fa;
+  text-align: center;
+  line-height: 30px;
+  color: #fff;
 }
 
 .lastModule {
