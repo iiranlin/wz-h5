@@ -4,7 +4,7 @@
 			<router-view />
 		</transition>
     <!-- 设置字体入口 -->
-    <!-- <editIcon></editIcon> -->
+    <editIcon></editIcon>
 	</div>
 </template>
 <script>
@@ -17,21 +17,23 @@ export default {
   },
   data() {
     return {
+      size:42
     };
   },
-  // computed: {
-  //   fontSizeNum() {
-  //     return this.$store.state.public.fontSizeSum
-  //   }
-  // },
-  // watch: {
-  //   fontSizeNum: {
-  //     handler(size) {
-  //       this.handleResize(size)
-  //     }
-  //   },
-  //   deep: true
-  // },
+  computed: {
+    fontSizeNum() {
+      return this.$store.state.public.fontSizeSum
+    }
+  },
+  watch: {
+    fontSizeNum: {
+      handler(size) {
+        this.size = size
+        this.handleResize()
+      }
+    },
+    deep: true
+  },
   mounted() {
     if(this.isTablet()){
       setTimeout(() => {
@@ -81,8 +83,8 @@ export default {
         });
       }
 		},
-    handleResize(size = 42) {
-      document.documentElement.style.fontSize = size + 'px'
+    handleResize() {
+      document.documentElement.style.fontSize = (this.size + 'px')
       // if (window.innerWidth > window.innerHeight) {
       //   document.documentElement.style.fontSize = 42 + 'px'
       // }else{
