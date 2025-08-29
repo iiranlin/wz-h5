@@ -58,10 +58,46 @@ export const routes = [
         component: () => import('@/view/AcceptanceReturn/AcceptanceReturn.vue')
       },
       {
+        path: '/Acceptance',
+        name: 'Acceptance',
+        meta: { title: '收货管理', isTabbar: true },
+        component: () => import('@/view/AcceptanceReturn/Acceptance.vue')
+      },
+      {
+        path: '/Return',
+        name: 'Return',
+        meta: { title: '退货管理', isTabbar: true },
+        component: () => import('@/view/AcceptanceReturn/Return.vue')
+      },
+      {
         path: '/InOutManagementList',
         name: 'InOutManagementList',
         meta: { title: '出入库管理', isTabbar: true },
         component: () => import('@/view/InOutManagement/InOutManagementList.vue')
+      },
+      {
+        path: '/InListContent',
+        name: 'InListContent',
+        meta: { title: '入库单', isTabbar: true },
+        component: () => import('@/view/InOutManagement/components/InListContent.vue')
+      },
+      {
+        path: '/InventoryListContent',
+        name: 'InventoryListContent',
+        meta: { title: '需求库存', isTabbar: true },
+        component: () => import('@/view/InOutManagement/components/InventoryListContent.vue')
+      },
+      {
+        path: '/RefundListContent',
+        name: 'RefundListContent',
+        meta: { title: '退货单', isTabbar: true },
+        component: () => import('@/view/InOutManagement/components/RefundListContent.vue')
+      },
+      {
+        path: '/OutListContent',
+        name: 'OutListContent',
+        meta: { title: '出库单', isTabbar: true },
+        component: () => import('@/view/InOutManagement/components/OutListContent.vue')
       },
       {
         path: '/WaitExamineList',

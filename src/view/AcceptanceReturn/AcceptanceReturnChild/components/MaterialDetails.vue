@@ -12,8 +12,16 @@
             <span>{{ item.specModel }}</span>
           </li>
           <li>
+            <span>需求数量：</span>
+            <span>{{ item.planAmount }}</span>
+          </li>
+          <li>
             <span>发货数量：</span>
             <span>{{ item.sendTotal }}</span>
+          </li>
+          <li>
+            <span>本次实收数量：</span>
+            <span class="li-span-click">{{ item.putTotal }}</span>
           </li>
           <li>
             <span>退货数量：</span>

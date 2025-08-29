@@ -19,13 +19,17 @@
           <span>{{ sectionInfo.unit }}</span>
         </li>
         <li>
-          <span>本次计划数量：</span>
+          <span>需求数量：</span>
           <span>{{ sectionInfo.planAmount }}</span>
         </li>
         <li>
+          <span>包装方式：</span>
+          <span>{{ sectionInfo.packagingFm }}</span>
+        </li>
+        <!-- <li>
           <span>本次需求未发货数量：</span>
           <span>{{ sectionInfo.ssendTotal }}</span>
-        </li>
+        </li> -->
         <li style="margin: 10px 0; padding: 10px 0 0; border-top: 1px solid #ebedf0;">
           <span>本次发货数量：</span>
           <span>{{ sectionInfo.sendTotal }}</span>

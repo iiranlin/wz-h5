@@ -145,6 +145,8 @@ export default {
     this.getAllList();
   },
   activated() {
+    this.getAllList();
+    
     if (this.$route.params.refresh) {
       this.waitRefresh()
       this.historyRefresh()

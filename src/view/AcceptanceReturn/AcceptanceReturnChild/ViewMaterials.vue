@@ -26,6 +26,10 @@
           <span>需求数量：</span>
           <span class="li-span-click">{{ sectionInfo.planAmount }}</span>
         </li>
+        <li>
+          <span>发货数量：</span>
+          <span class="li-span-click">{{ sectionInfo.sendTotal }}</span>
+        </li>
         <li class="li-item-overlength">
           <span>本次实收数量：</span>
           <span class="li-span-click">{{ sectionInfo.putTotal }}</span>

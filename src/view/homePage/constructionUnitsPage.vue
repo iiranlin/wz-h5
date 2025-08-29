@@ -19,11 +19,11 @@
 
       <div style="margin-bottom: 10px;">
         <div class="lastModule">
-          <div class="twoLines" @click="handleRouterAndTab('/AcceptanceReturn', 0)">
+          <div class="twoLines" @click="handleRouter('/Acceptance')">
             <img :src="Receiving">
             收货管理
           </div>
-          <div class="twoLines" style="margin-left: 10px;" @click="handleRouterAndTab('/AcceptanceReturn', 1)">
+          <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/Return')">
             <img :src="returns">
             退货管理
           </div>
@@ -32,11 +32,11 @@
 
       <div style="margin-bottom: 10px;">
         <div class="lastModule">
-          <div class="twoLines" @click="handleRouterAndTab('/InOutManagementList', 0)">
+          <div class="twoLines" @click="handleRouter('/InListContent')">
             <img :src="warehousing">
             入库单
           </div>
-          <div class="twoLines" style="margin-left: 10px;" @click="handleRouterAndTab('/InOutManagementList', 1)">
+          <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/InventoryListContent')">
             <img :src="DemandInventory">
             需求库存
           </div>
@@ -45,11 +45,11 @@
 
       <div style="margin-bottom: 20px;">
         <div class="lastModule">
-          <div class="twoLines" @click="handleRouterAndTab('/InOutManagementList', 2)">
+          <div class="twoLines" @click="handleRouter('/RefundListContent')">
             <img :src="CreditOrder">
             退货单
           </div>
-          <div class="twoLines" style="margin-left: 10px;" @click="handleRouterAndTab('/InOutManagementList', 3)">
+          <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/OutListContent')">
             <img :src="StockOut">
             出库单
           </div>
@@ -111,8 +111,8 @@ export default {
 
       this.$router.push({ name: 'SelectContract' })
     },
-    handleRouterAndTab(path, tabIndex) {
-      this.$router.push({ path: path, query: { tabIndex } })
+    handleRouterAndTab(path, tabIndex, flag) {
+      this.$router.push({ path: path, query: { tabIndex, flag } })
     },
     handleRouter(path) {
       this.$router.push({ path: path })
