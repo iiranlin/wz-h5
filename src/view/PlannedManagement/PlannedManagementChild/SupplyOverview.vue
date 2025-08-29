@@ -95,6 +95,12 @@
               <span class="li-span-click">{{ item.outCkTotal }}</span>
             </div>
           </li>
+          <li class="li-item-both">
+            <div class="li-item-right">
+              <span>已退回：</span>
+              <span class="li-span-click">{{ item.refundAllTotle }}</span>
+            </div>
+          </li>
         </ul>
       </div>
     </div>
