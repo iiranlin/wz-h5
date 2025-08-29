@@ -16,7 +16,8 @@ export default {
       appid: "bjhzcZ1hF8rR5gF5mK9qW",
       appSecret: "4c18253ddba74d30b1b74a692aab6606",
       addrData:{},
-      addr:''
+      addr:'',
+      createData:{}
     }
   },
 	computed: {
@@ -25,6 +26,7 @@ export default {
   created() {
     if(this.$route.query.type=='create'){
       this.addr = this.$route.query.addr
+      this.createData = this.$route.query.obj?JSON.parse(this.$route.query.obj):{}
     }else{
       this.addrData =JSON.parse(this.$route.query.obj)
     }
@@ -45,7 +47,8 @@ export default {
                 path: 'ReceiptOperates',
                 query: {
                     type: 'create',
-                    addr:address
+                    addr:address,
+                    obj: JSON.stringify(this.createData)
                 },
             })
 

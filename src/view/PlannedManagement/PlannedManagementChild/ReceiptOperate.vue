@@ -66,7 +66,15 @@ export default {
     created () {
         this.type = this.$route.query.type;
         
-        if(this.type=='create'){this.formData.receiveraddress = this.$route.query.addr}
+        if(this.type=='create'){
+           this.formData.receiveraddress = this.$route.query.addr
+           let tobj = this.$route.query.obj?JSON.parse(this.$route.query.obj):{}
+           if(this.$route.query.obj){
+                this.formData.addr = tobj.addr;
+                this.formData.phone = tobj.phone;
+                this.formData.receiver =tobj.receiver;
+           }
+        }
         if(this.type == 'update'){
             this.currentIndex = this.$route.query.position;
             this.listObj = JSON.parse(this.$route.query.obj);
@@ -172,7 +180,7 @@ export default {
         // 地图选点
         hanldSelectPoint(){
           if(this.type=='create'){
-            this.$router.push({ name: "LogisticsMapAddress",query:{type:this.type,addr:this.formData.receiveraddress} });
+            this.$router.push({ name: "LogisticsMapAddress",query:{type:this.type,addr:this.formData.receiveraddress,obj:JSON.stringify(this.formData)} });
           }else{
             this.$router.push({ name: "LogisticsMapAddress",query:{type:this.type,position:this.$route.query.position,obj:this.$route.query.obj} });
           }
