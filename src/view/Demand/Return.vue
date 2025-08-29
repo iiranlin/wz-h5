@@ -15,7 +15,7 @@
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="onLoad" >
           <div class="detail-base-info">
                 <div v-for="(item, index) in returnList" :key="index" class="box-container"
-                 @click="handleDetailsItemClick(item.id)">
+                 @click="handleDetailsItemClick(item)">
             <div class="list-title-content">
                     <span class="li-span-grey">退货单号：</span>
                     <span class="li-span-grey">{{ item.issueType=='1'?item.backNumber:item.backQualNumber }}</span>
@@ -34,8 +34,8 @@
                 <span class="font-weight"> {{ item.planName }}</span>
               </li>
               <li>
-                <span style="min-width: 3rem;" @click.stop="handleSupplyClick(item.planId)">需求ID：</span>
-                <span class="text li-span-click">{{ item.planNumber }}</span>
+                <span style="min-width: 3rem;">需求ID：</span>
+                <span class="text li-span-click"  @click.stop="handleSupplyClick(item.planId)">{{ item.planNumber }}</span>
               </li>
 
               <li>
@@ -71,7 +71,7 @@
               round
               size="mini"
               type="primary"
-              @click.stop="handleDetailsItemClick(item.id)"
+              @click.stop="handleDetailsItemClick(item)"
             >
               查看
             </van-button>
@@ -188,8 +188,8 @@ components:{BackToTop},
       return `${year}-${month}-${day}`;
     },
     //全部列表条目点击
-    handleDetailsItemClick(id) {
-      this.$router.push({ path: '/returnDetails', query: { id: id } })
+    handleDetailsItemClick(item) {
+      this.$router.push({ path: '/returnDetails', query: { id: item.id, issueType: item.issueType  } })
     },
     //全部列表刷新
     allRefresh() {

@@ -63,6 +63,12 @@
                 <span>{{ item.outCkTotal }}</span>
               </p>
             </li>
+            <li>
+              <p>
+                <span>已退回：</span>
+                <span>{{ item.refundAllTotle }}</span>
+              </p>
+            </li>
           </ul>
         </div>
       </div>

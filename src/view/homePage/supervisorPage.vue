@@ -46,7 +46,7 @@ export default {
   activated() {
     this.$nextTick(() => {
       this.$refs.VideoArea?.$refs.videos?.play();
-      this.$refs.checkModule?.handlerTodoCount();
+      this.handlerTodoCount();
     })
   },
 

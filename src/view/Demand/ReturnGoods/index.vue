@@ -11,7 +11,7 @@
             </p>
             <div class="li-title-status">
                 <img :src="checkAuditStatus(params.backNode)" />
-                <span :style="handlerTextColor(statusArr, 'value', params.issueType)" style="font-size: 13px;">{{ checkStatusText(params.issueType) }}</span>
+                <span :style="handlerTextColor(statusArr, 'value', params.issueType)" style="font-size: 13px;">{{ checkStatusText(this.issueType) }}</span>
             </div>
         </div>
       </div>
@@ -78,6 +78,7 @@ import { Form } from 'vant';
 import { Field } from 'vant';
 import { Toast } from 'vant';
 import { returnGoodsDetails } from '@/api/demand/returnGoods'
+import { detailBySBack } from '@/api/prodmgr-inv/AcceptanceReturn'
 import indexMixin from '@/view/mixins'
 import MaterialDetails from './components/MaterialDetails.vue'
 import FilePreview from "@/components/FilePreview.vue";
@@ -112,11 +113,14 @@ export default {
                 { text: '质检不通过', value: '2', color: '#FC5937' },
                 { text: '收货不通过', value: '1', color: '#FC5937' }
             ],
+            issueType: '',
 
         };
     },
     created() {
         this.orderId = this.$route.query.id
+        this.issueType = this.$route.query.issueType
+        console.log(this.issueType, 'issueType')
         this.getGoodsOrderDetails();
     },
     methods: {
@@ -134,7 +138,10 @@ export default {
                 message: '加载中...',
                 forbidClick: true,
             });
-            returnGoodsDetails(this.orderId).then((res) => {
+
+            const detailsFun = this.issueType == 2 ? detailBySBack : returnGoodsDetails
+            
+            detailsFun(this.orderId).then((res) => {
                 if (res.code == 0) {
                     Toast.clear()
                     this.params = {
@@ -161,9 +168,6 @@ export default {
       }
     },
         checkStatusText(status) {
-            if(status == '') {
-                return '收货不通过'
-            }
       let name = ''
       this.statusArr.forEach(item => {
         if (item.value === status) {
