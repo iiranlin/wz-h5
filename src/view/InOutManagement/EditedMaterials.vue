@@ -185,7 +185,7 @@
       </div>
 
       <div class="default-button-container-selected" v-if="sectionInfo.defaultRadio == '2'">
-        <span>确认退货： <span class="li-span-orange" style="font-size: 30px;line-height: 30px;">{{ sectionInfo.refundZjTotal }}</span> 套
+        <span>确认退货： <span class="li-span-orange" style="font-size: 30px;line-height: 30px;">{{ sectionInfo.refundZjTotal }}</span> 
         </span>
       </div>
 
