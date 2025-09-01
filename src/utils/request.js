@@ -25,11 +25,16 @@ service.interceptors.request.use(
     const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
     if (getToken() && !isToken) {
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-      config.headers['Client-Type'] = "APP"
+      // 根据环境设置不同的请求头
+      if (process.env.NODE_ENV === 'development') {
+        config.headers['Client-Type'] = "PC"
+      } else {
+        config.headers['Client-Type'] = "APP"
+      }
     }
     // get请求映射params参数
     if (config.method === 'get' && config.params) {
-      if (!config.minioSm4) {
+      if (!config.minioSm4 && process.env.NODE_ENV !== 'development') {
         for (const key in config.params) {
           if (Object.hasOwnProperty.call(config.params, key)) {
             const element = config.params[key] + ''
@@ -66,7 +71,7 @@ service.interceptors.request.use(
       }
     }
 
-    if (config.data && !config.minioSm4) {
+    if (config.data && !config.minioSm4 && process.env.NODE_ENV !== 'development') {
       config.data = encrypt(config.data, secretKey)
       config.headers['content-type'] = 'application/json'
     }
@@ -78,7 +83,7 @@ service.interceptors.request.use(
 );
 service.interceptors.response.use(
   (response) => {
-    if(!response.config.minioSm4 && !response.config.minioSm4R){
+    if(!response.config.minioSm4 && !response.config.minioSm4R && process.env.NODE_ENV !== 'development'){
       response.data = JSON.parse(decrypt(response.data, secretKey))
     }
     console.info(response.config.url, response.data)
@@ -96,7 +101,7 @@ service.interceptors.response.use(
       var backoff = new Promise(resolve => {
         resolve();
       });
-      return backoff.then(r => {
+      return backoff.then(() => {
         return service(response.config);
       });
     } else if (res.code === 401 || res.code === -10006) {
@@ -133,7 +138,7 @@ service.interceptors.response.use(
     } else if (message.includes("Request failed with status code")) {
       message = "系统异常，请稍后再试"
     } else if (message.includes("数据正在处理")) {
-
+      // 数据处理中，不需要额外处理
     } else {
       message = "系统异常，请稍后再试"
     }
