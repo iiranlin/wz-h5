@@ -105,7 +105,7 @@
       </div>
     </div>
     <div class="box-container" v-if="detailGyMx.demandPlanDetailsGyDTOList && detailGyMx.demandPlanDetailsGyDTOList.length == 0">
-      <van-empty description="暂无数据" />
+      <van-empty image="/empty-image-default.png" description="暂无数据" />
     </div>
   </div>
 </template>

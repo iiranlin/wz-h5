@@ -80,7 +80,7 @@
                     </div>
                     <div v-if="waitTotal == 0">
                         <van-pull-refresh v-model="waitRefreshLoading" @refresh="waitRefresh" success-text="刷新成功">
-                            <van-empty description="暂无数据" />
+                            <van-empty image="/empty-image-default.png" description="暂无数据" />
 
                         </van-pull-refresh>
                     </div>
@@ -144,7 +144,7 @@
                     </div>
                     <div v-if="waitHandleTotal == 0">
                         <van-pull-refresh v-model="waitHandleRefreshLoading" @refresh="waitHandleRefresh" success-text="刷新成功">
-                            <van-empty description="暂无数据" />
+                            <van-empty image="/empty-image-default.png" description="暂无数据" />
 
                         </van-pull-refresh>
                     </div>
@@ -220,7 +220,7 @@
                     </div>
                     <div v-if="historyTotal == 0">
                         <van-pull-refresh v-model="historyRefreshLoading" @refresh="historyRefresh" success-text="刷新成功">
-                            <van-empty description="暂无数据" />
+                            <van-empty image="/empty-image-default.png" description="暂无数据" />
 
                         </van-pull-refresh>
                     </div>

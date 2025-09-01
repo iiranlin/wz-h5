@@ -63,7 +63,7 @@
         </van-tab>
       </van-tabs>
     </div>
-    <van-empty v-else description="暂无数据" />
+    <van-empty image="/empty-image-default.png" v-else description="暂无数据" />
     <back-to-top className=".default-container"></back-to-top>
   </div>
 </template>

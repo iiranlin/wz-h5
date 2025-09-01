@@ -90,7 +90,7 @@
             </ul>
           </van-checkbox>
         </van-checkbox-group>
-        <van-empty v-else description="暂无数据" />
+        <van-empty image="/empty-image-default.png" v-else description="暂无数据" />
       </div>
     </div>
     <div class="default-button-container">

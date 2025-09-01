@@ -71,7 +71,7 @@
 
     <div v-else>
             <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
-            <van-empty description="暂无数据" />
+            <van-empty image="/empty-image-default.png" description="暂无数据" />
             </van-pull-refresh>
     </div>
   </div>

@@ -50,7 +50,7 @@
         </div>
       </div>
     </div>
-    <van-empty v-if="list.length === 0" description="暂无数据" />
+    <van-empty image="/empty-image-default.png" v-if="list.length === 0" description="暂无数据" />
   </div>
 </template>
 <script>

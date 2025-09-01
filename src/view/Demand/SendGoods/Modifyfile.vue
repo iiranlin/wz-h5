@@ -210,7 +210,7 @@
                         </van-list>
                     </div>
                     <div v-else>
-                        <van-empty description="暂无数据" />
+                        <van-empty image="/empty-image-default.png" description="暂无数据" />
                     </div>
                 </van-tab>
             </van-tabs>

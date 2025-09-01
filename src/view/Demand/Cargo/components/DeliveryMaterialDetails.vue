@@ -86,7 +86,7 @@
     <!-- 附件预览 -->
     <!-- <file-preview ref="filePreview"></file-preview> -->
   </div>
-  <van-empty v-else description="暂无数据" />
+  <van-empty image="/empty-image-default.png" v-else description="暂无数据" />
 </template>
 <script>
 import indexMixin from '@/view/mixins'
