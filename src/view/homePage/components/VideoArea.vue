@@ -29,7 +29,7 @@
 
         <div class="sidebar">
           <div class="user-info">
-            <div class="user-name">{{ newfirmInfo }}</div>
+            <div class="user-name">{{ userInfo.nickName }}</div>
             <div class="account">账号: {{ username }}</div>
             <!-- divider -->
             <div class="divider"></div>
