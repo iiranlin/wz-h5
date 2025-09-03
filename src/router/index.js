@@ -5,6 +5,8 @@ Vue.use(Router);
 import Layout from '@/layout'
 // import ItemHead from '@/components/itemHead'
 
+// 设备使用授权页面 - 不需要登录验证
+
 
 const typeName = {
   submit: '提交',
@@ -15,6 +17,12 @@ const typeName = {
 }
 
 export const routes = [
+  {
+    path: '/deviceDetail',
+    name: 'DeviceDetail',
+    meta: { title: '设备使用授权' },
+    component: () => import('@/view/deviceAuth/deviceDetail.vue')
+  },
   {
     path: '/',
     name: 'Layout',
