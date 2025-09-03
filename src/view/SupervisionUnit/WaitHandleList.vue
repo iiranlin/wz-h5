@@ -126,13 +126,14 @@ export default {
     },
     methods: {
         //查看流程点击
-        handleProcessClick({ id, businessType, takeStatus }) {
+        handleProcessClick({ businessId, businessType, takeStatus }) {
             this.$router.push({ 
                 name: "MyProcess", 
                 params: { 
                     businessType,
-                    takeStatus,
-                    businessId: id,
+                    // takeStatus,
+                    businessId,
+                    form: this.$route.name,
                 } 
             })
         },
@@ -174,7 +175,7 @@ export default {
             });
         },
         //处理点击
-        handleClick(){
+        handleClick(item){
             this.$router.push({
                 name: "SaveMaterials",
                 query: { 
