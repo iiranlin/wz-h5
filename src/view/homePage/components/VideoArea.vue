@@ -2,9 +2,10 @@
 <template>
   <div>
     <div style="position: relative;">
-      <video ref="videos" class="videoModel" controls poster="@/assets/img/Banner.png" :src="videoUrl" autoplay loop muted playsinline></video>
+      <video ref="videos" class="videoModel" controls poster="@/assets/img/Banner.png" :src="videoUrl" autoplay loop
+        muted playsinline></video>
 
-      <div class="userInfo" @click="handlerLogOut">
+      <div class="userInfo" @click="showPopup">
         <div>
           <img src="@/assets/img/userVia.png" />
         </div>
@@ -23,6 +24,30 @@
           {{ newfirmInfo }}
         </div>
       </div>
+
+      <van-popup v-model="show" position="right" get-container="body" :style="{ width: '200px', height: '100%' }">
+
+        <div class="sidebar">
+          <div class="user-info">
+            <div class="user-name">{{ newfirmInfo }}</div>
+            <div class="account">账号: {{ username }}</div>
+            <!-- divider -->
+            <div class="divider"></div>
+
+            <div class="login-out" @click="handlerLogOut">
+              <van-image width="26" height="26" :src="LoginOutIcon" />
+              退出登录
+            </div>
+
+             <div class="login-out" @click="$router.push({ path: '/editPassword' })">
+              <van-image width="26" height="26" :src="EditPasswordIcon" />
+              修改密码
+            </div>
+
+          </div>
+
+        </div>
+      </van-popup>
     </div>
 
     <div>
@@ -35,6 +60,8 @@
 import { isAndroid } from "@/utils";
 import videoUrl from '@/assets/video/Banner.mp4'
 import { getUserInfo } from '@/utils/user-info'
+import LoginOutIcon from '@/assets/img/退出登录.png';
+import EditPasswordIcon from '@/assets/img/修改密码.png';
 export default {
   name: 'VideoArea',
 
@@ -42,13 +69,19 @@ export default {
     // 如果单位名称和部门名称相同，则只显示单位名称
     newfirmInfo() {
       return this.userInfo.unitName == this.userInfo.deptName ? this.userInfo.unitName : this.userInfo.unitName + '/' + this.userInfo.deptName
+    },
+    username(){
+      return this.userInfo.username 
     }
   },
 
   data() {
     return {
       videoUrl,
-      userInfo: getUserInfo()
+      userInfo: getUserInfo(),
+      show: false,
+      LoginOutIcon,
+      EditPasswordIcon
     };
   },
 
@@ -57,6 +90,9 @@ export default {
   },
 
   methods: {
+    showPopup() {
+      this.show = true;
+    },
     handlerLogOut() {
       this.$dialog.confirm({
         message: '是否确认退出系统？',
@@ -137,36 +173,121 @@ export default {
 video::-webkit-media-controls-fullscreen-button {
   display: none;
 }
+
 //播放按钮
 video::-webkit-media-controls-play-button {
   display: none;
 }
+
 //进度条
 video::-webkit-media-controls-timeline {
   display: none;
 }
+
 //观看的当前时间
 video::-webkit-media-controls-current-time-display {
   display: none;
 }
+
 //剩余时间
 video::-webkit-media-controls-time-remaining-display {
   display: none;
 }
+
 //音量按钮
 video::-webkit-media-controls-mute-button {
   display: none;
 }
+
 // 画中画
 video::-webkit-media-controls-toggle-closed-captions-button {
   display: none;
 }
+
 //音量的控制条
 video::-webkit-media-controls-volume-slider {
   display: none;
 }
+
 //所有控件
 video::-webkit-media-controls-enclosure {
   display: none;
+}
+
+.sidebar {
+  background: linear-gradient(179deg, #1895FF 0%, #FFFFFF 100%);
+  height: 100%;
+  padding-top: 20px;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.user-info {
+  text-align: center;
+  margin-bottom: 20px;
+
+  .user-name {
+    margin-top: 114px;
+    font-family: PingFang SC, PingFang SC;
+    font-weight: 600;
+    font-size: 18px;
+    color: #FFFFFF;
+    text-align: center;
+    font-style: normal;
+    text-transform: none;
+  }
+
+  .account {
+    width: fit-content;
+    height: 20px;
+    border-radius: 15px;
+    border: 1px solid #FFFFFF;
+    margin: 10px auto;
+    padding: 5px 10px;
+    margin-bottom: 32px;
+
+
+    font-family: PingFang SC, PingFang SC;
+    font-weight: 400;
+    font-size: 12px;
+    color: #FFFFFF;
+    text-align: left;
+    font-style: normal;
+    text-transform: none;
+  }
+
+  .divider {
+    height: 0px;
+    border-radius: 0px 0px 0px 0px;
+    border: 1px solid #EAEAEA;
+  }
+
+  .login-out {
+    width: 120px;
+    height: 36px;
+    border-radius: 26px 26px 26px 26px;
+    border: 1px solid #FFFFFF;
+    width: fit-content;
+    height: 20px;
+    padding: 5px 8px;
+    margin: 31px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+
+    font-family: PingFang SC, PingFang SC;
+    font-weight: 400;
+    font-size: 16px;
+    color: #FFFFFF;
+    text-align: center;
+    font-style: normal;
+    text-transform: none;
+  }
+}
+
+.btn {
+  margin-top: 10px;
 }
 </style>

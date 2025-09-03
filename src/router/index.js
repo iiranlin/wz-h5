@@ -149,6 +149,13 @@ export const routes = [
         meta: { title: '需求供应管理', isTabbar: true },
         component: () => import('@/view/DemandSupplyManagement/index.vue')
       },
+      {
+        // 修改密码
+        path: '/editPassword',
+        name: 'editPassword',
+        meta: { title: '修改密码' },
+        component: () => import('@/view/homePage/components/editPassword.vue')
+      },
       
     ]
   },
