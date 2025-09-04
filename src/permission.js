@@ -4,7 +4,7 @@ import { getToken, setToken } from "@/utils/auth"
 import { isAndroid } from "@/utils"
 
 
-const whiteList = [""] // no redirect whitelist
+const whiteList = ["", "/deviceDetail"] // no redirect whitelist
 router.beforeEach(async (to, from, next) => {
   if(to.query.TokenKey){
     setToken(to.query.TokenKey)

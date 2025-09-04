@@ -25,12 +25,13 @@ service.interceptors.request.use(
     const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
     if (getToken() && !isToken) {
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-      // 根据环境设置不同的请求头
-      if (process.env.NODE_ENV === 'development') {
-        config.headers['Client-Type'] = "PC"
-      } else {
-        config.headers['Client-Type'] = "APP"
-      }
+    }
+
+    // 根据环境设置不同的请求头 - 无论是否有token都添加
+    if (process.env.NODE_ENV === 'development') {
+      config.headers['Client-Type'] = "PC"
+    } else {
+      config.headers['Client-Type'] = "APP"
     }
     // get请求映射params参数
     if (config.method === 'get' && config.params) {

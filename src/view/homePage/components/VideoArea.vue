@@ -29,20 +29,22 @@
 
         <div class="sidebar">
           <div class="user-info">
-            <div class="user-name">{{ newfirmInfo }}</div>
+            <div class="user-name">{{ userInfo.nickName }}</div>
             <div class="account">账号: {{ username }}</div>
             <!-- divider -->
             <div class="divider"></div>
+
+            <div class="login-out" @click="$router.push({ path: '/editPassword' })">
+              <van-image width="26" height="26" :src="EditPasswordIcon" />
+              修改密码
+            </div>
 
             <div class="login-out" @click="handlerLogOut">
               <van-image width="26" height="26" :src="LoginOutIcon" />
               退出登录
             </div>
 
-             <div class="login-out" @click="$router.push({ path: '/editPassword' })">
-              <van-image width="26" height="26" :src="EditPasswordIcon" />
-              修改密码
-            </div>
+
 
           </div>
 
@@ -70,8 +72,8 @@ export default {
     newfirmInfo() {
       return this.userInfo.unitName == this.userInfo.deptName ? this.userInfo.unitName : this.userInfo.unitName + '/' + this.userInfo.deptName
     },
-    username(){
-      return this.userInfo.username 
+    username() {
+      return this.userInfo.username
     }
   },
 
@@ -230,7 +232,7 @@ video::-webkit-media-controls-enclosure {
     margin-top: 114px;
     font-family: PingFang SC, PingFang SC;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 14px;
     color: #FFFFFF;
     text-align: center;
     font-style: normal;

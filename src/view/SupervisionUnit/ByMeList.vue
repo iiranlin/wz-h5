@@ -1,4 +1,4 @@
-<template>
+ <template>
     <div class="default-container" ref="container">
         <van-sticky>
             <div class="list-search-container">
@@ -14,7 +14,7 @@
                 </van-search>
             </div>
         </van-sticky>
-        <div class="tabs"  v-if="dataList.length > 0">
+        <div class="tabs" v-if="dataList.length > 0">
             <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
                 <van-list 
                     v-model="loading" 
@@ -27,6 +27,10 @@
                         <div class="list-title-content">
                             <span>业务编码：</span>
                             <span class="font-weight" style="color:#134daa;">{{item.businessCode}}</span>
+                            <div class="li-title-status">
+                                <img :src="checkAuditStatus(item.auditStatus)"/>
+                                <span>{{item.auditStatus | orderTypeFilter(dict.flowTaskStatus)}}</span>
+                            </div>
                         </div>
                         <ul class="list-ul">
                             <li>
@@ -34,43 +38,18 @@
                                 <span>{{item.businessType | orderTypeFilter(dict.flowBusinessType)}}</span>
                             </li>
                             <li>
-                                <span>建设项目：</span>
-                                <span>{{item.projectName}}</span>
-                            </li>
-                            <li>
-                                <span>标段项目：</span>
-                                <span>{{item.sectionName}}</span>
-                            </li>
-                            <li>
-                                <span>合同名称：</span>
-                                <span>{{item.contractName}}</span>
-                            </li>
-                            <li>
-                                <span>物资名称：</span>
-                                <span>{{item.materialName}}</span>
-                            </li>
-                            <li>
-                                <span>审核人：</span>
-                                <span>{{item.assignee}}</span>
-                            </li>
-                            <li>
-                                <span>审核日期：</span>
-                                <span>{{item.auditDate}}</span>
-                            </li>
-                            <li>
-                                <span>驳回原因：</span>
-                                <span>{{item.message}}</span>
+                                <span>审核提交时间：</span>
+                                <span>{{item.startTime | formatTime}}</span>
                             </li>
                         </ul>
                         <div class="list-ul-button">
-                            <van-button class="button-info" plain round type="info" @click.stop="handleClick(item)">处理</van-button>
                             <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
                         </div>
                     </div>
                 </van-list>
             </van-pull-refresh>
         </div>
-                <div v-if="dataList.length == 0" >
+                        <div v-if="dataList.length == 0" >
                         <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
             <van-empty image="/empty-image-default.png" description="暂无数据" />
 
@@ -82,17 +61,25 @@
 <script>
 import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
-import { wfHandleList } from '@/api/myToDoList'
+import { wfTodoList } from '@/api/myToDoList'
 import indexMixin from '@/view/mixins'
+import { FLOW_ROUTE } from '@/utils/constant'
+import dayjs from 'dayjs'
 
 export default {
-    name:'WaitHandleList',
-    mixins: [keepPages, indexMixin],
+    // 我发起的
+    name:'ByMeList',
+    mixins: [keepPages,indexMixin],
     components: {BackToTop},
-    dicts: ['flowBusinessType'],
+    dicts: ['flowBusinessType','flowTaskStatus'],
     beforeRouteLeave (to, from, next) {
       this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
       next();
+    },
+    filters: {
+        formatTime(val) {
+            return val ? dayjs(val).format('YYYY-MM-DD HH:mm') : ''
+        }
     },
 
     data() {
@@ -118,7 +105,7 @@ export default {
       this.getList();
     },
     created () {
-       
+        
     },
     activated () {
       this.onRefresh();
@@ -131,7 +118,6 @@ export default {
                 name: "MyProcess", 
                 params: { 
                     businessType,
-                    // takeStatus,
                     businessId,
                     form: this.$route.name,
                 } 
@@ -144,7 +130,8 @@ export default {
                 message: "正在加载...",
                 forbidClick: true
             });
-            wfHandleList(Object.assign({},this.listQuery,this.formData)).then(({ data }) => {
+         
+            wfTodoList(Object.assign({},this.listQuery,this.formData)).then(({ data }) => {
                 if(this.refreshLoading){
                     this.dataList = [];
                     this.refreshLoading = false;
@@ -164,29 +151,40 @@ export default {
                 toast.clear();
             });
         },
+         //已审核状态图标判断
+        checkAuditStatus(auditStatus){
+            if(auditStatus == '2'){
+                return '/static/icon-success.png'
+            }else if(auditStatus == '3'){
+                return '/static/icon-reject.png'
+            }
+            return '/static/icon-success.png'
+        },
         //列表条目点击
         handleItemClick(item){
-            this.$router.push({
-                name: "DemandPlanningExamine",
-                params: { 
-                    obj: JSON.stringify({...item, nameType: 'handle'}),
-                    type: '1',
-                },
-            });
-        },
-        //处理点击
-        handleClick(item){
-            this.$router.push({
-                name: "SaveMaterials",
-                query: { 
-                    id: item.businessId,
-                    type: 'update',
-                },
-            });
+            const { businessType, businessId } = item
+            if(Object.keys(FLOW_ROUTE).includes(businessType)){
+                let name = FLOW_ROUTE[businessType]
+                let query = { 
+                    id: businessId,
+                    from: this.$route.name,
+                    ...(businessType === "SHLC" && { takeStatus: item.takeStatus }) 
+                }
+                this.$router.push({ name, query })
+            } else {
+                this.$router.push({
+                    name: "DemandPlanningExamine",
+                    params: { 
+                        obj: JSON.stringify(item),
+                        type: '1',
+                    },
+                });
+            }
+            
         },
         //搜索点击
         handeSearch(){
-            this.onRefresh;
+            this.onRefresh();
         },
         //列表刷新
         onRefresh(){
