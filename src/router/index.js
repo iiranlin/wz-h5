@@ -1,628 +1,715 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import Vue from "vue";
+import Router from "vue-router";
 
 Vue.use(Router);
-import Layout from '@/layout'
+import Layout from "@/layout";
 // import ItemHead from '@/components/itemHead'
 
 // 设备使用授权页面 - 不需要登录验证
 
-
 const typeName = {
-  submit: '提交',
-  update: '修改',
-  view: '详情',
-  create: '新增',
-  update: '编辑',
-}
+  submit: "提交",
+  update: "修改",
+  view: "详情",
+  create: "新增",
+  update: "编辑",
+};
 
 export const routes = [
   {
-    path: '/deviceDetail',
-    name: 'DeviceDetail',
-    meta: { title: '设备使用授权' },
-    component: () => import('@/view/deviceAuth/deviceDetail.vue')
+    path: "/deviceDetail",
+    name: "DeviceDetail",
+    meta: { title: "设备使用授权" },
+    component: () => import("@/view/deviceAuth/deviceDetail.vue"),
   },
   {
-    path: '/',
-    name: 'Layout',
+    path: "/",
+    name: "Layout",
     component: Layout,
-    meta: { base_path: '/' },
+    meta: { base_path: "/" },
     children: [
       {
-        path: 'MyToDoList',
-        name: 'MyToDoList',
-        meta: { title: '我的待办', isTabbar: true },
-        component: () => import('@/view/MyToDo/MyToDoList.vue')
+        path: "MyToDoList",
+        name: "MyToDoList",
+        meta: { title: "我的待办", isTabbar: true },
+        component: () => import("@/view/MyToDo/MyToDoList.vue"),
       },
       {
-        path: 'supplierPage',
-        name: 'supplierPage',
-        meta: { title: '供应商首页', isTabbar: true },
-        component: () => import('@/view/homePage/supplierPage.vue')
+        path: "supplierPage",
+        name: "supplierPage",
+        meta: { title: "供应商首页", isTabbar: true },
+        component: () => import("@/view/homePage/supplierPage.vue"),
       },
       {
-        path: 'constructionUnitsPage',
-        name: 'constructionUnitsPage',
-        meta: { title: '施工单位首页', isTabbar: true },
-        component: () => import('@/view/homePage/constructionUnitsPage.vue')
+        path: "constructionUnitsPage",
+        name: "constructionUnitsPage",
+        meta: { title: "施工单位首页", isTabbar: true },
+        component: () => import("@/view/homePage/constructionUnitsPage.vue"),
       },
       {
-        path: 'supervisorPage',
-        name: 'supervisorPage',
-        meta: { title: '监理首页', isTabbar: true },
-        component: () => import('@/view/homePage/supervisorPage.vue')
+        path: "supervisorPage",
+        name: "supervisorPage",
+        meta: { title: "监理首页", isTabbar: true },
+        component: () => import("@/view/homePage/supervisorPage.vue"),
       },
       {
-        path: '/PlannedManagementList',
-        name: 'PlannedManagementList',
-        meta: { title: '计划管理', isTabbar: true },
-        component: () => import('@/view/PlannedManagement/PlannedManagementList.vue')
+        path: "/PlannedManagementList",
+        name: "PlannedManagementList",
+        meta: { title: "计划管理", isTabbar: true },
+        component: () =>
+          import("@/view/PlannedManagement/PlannedManagementList.vue"),
       },
       {
-        path: '/AcceptanceReturn',
-        name: 'AcceptanceReturn',
-        meta: { title: '验收管理', isTabbar: true },
-        component: () => import('@/view/AcceptanceReturn/AcceptanceReturn.vue')
+        path: "/AcceptanceReturn",
+        name: "AcceptanceReturn",
+        meta: { title: "验收管理", isTabbar: true },
+        component: () => import("@/view/AcceptanceReturn/AcceptanceReturn.vue"),
       },
       {
-        path: '/Acceptance',
-        name: 'Acceptance',
-        meta: { title: '收货管理', isTabbar: true },
-        component: () => import('@/view/AcceptanceReturn/Acceptance.vue')
+        path: "/Acceptance",
+        name: "Acceptance",
+        meta: { title: "收货管理", isTabbar: true },
+        component: () => import("@/view/AcceptanceReturn/Acceptance.vue"),
       },
       {
-        path: '/Return',
-        name: 'Return',
-        meta: { title: '退货管理', isTabbar: true },
-        component: () => import('@/view/AcceptanceReturn/Return.vue')
+        path: "/Return",
+        name: "Return",
+        meta: { title: "退货管理", isTabbar: true },
+        component: () => import("@/view/AcceptanceReturn/Return.vue"),
       },
       {
-        path: '/InOutManagementList',
-        name: 'InOutManagementList',
-        meta: { title: '出入库管理', isTabbar: true },
-        component: () => import('@/view/InOutManagement/InOutManagementList.vue')
+        path: "/InOutManagementList",
+        name: "InOutManagementList",
+        meta: { title: "出入库管理", isTabbar: true },
+        component: () =>
+          import("@/view/InOutManagement/InOutManagementList.vue"),
       },
       {
-        path: '/InListContent',
-        name: 'InListContent',
-        meta: { title: '入库单', isTabbar: true },
-        component: () => import('@/view/InOutManagement/components/InListContent.vue')
+        path: "/InListContent",
+        name: "InListContent",
+        meta: { title: "入库单", isTabbar: true },
+        component: () =>
+          import("@/view/InOutManagement/components/InListContent.vue"),
       },
       {
-        path: '/InventoryListContent',
-        name: 'InventoryListContent',
-        meta: { title: '需求库存', isTabbar: true },
-        component: () => import('@/view/InOutManagement/components/InventoryListContent.vue')
+        path: "/InventoryListContent",
+        name: "InventoryListContent",
+        meta: { title: "需求库存", isTabbar: true },
+        component: () =>
+          import("@/view/InOutManagement/components/InventoryListContent.vue"),
       },
       {
-        path: '/RefundListContent',
-        name: 'RefundListContent',
-        meta: { title: '退货单', isTabbar: true },
-        component: () => import('@/view/InOutManagement/components/RefundListContent.vue')
+        path: "/RefundListContent",
+        name: "RefundListContent",
+        meta: { title: "退货单", isTabbar: true },
+        component: () =>
+          import("@/view/InOutManagement/components/RefundListContent.vue"),
       },
       {
-        path: '/OutListContent',
-        name: 'OutListContent',
-        meta: { title: '出库单', isTabbar: true },
-        component: () => import('@/view/InOutManagement/components/OutListContent.vue')
+        path: "/OutListContent",
+        name: "OutListContent",
+        meta: { title: "出库单", isTabbar: true },
+        component: () =>
+          import("@/view/InOutManagement/components/OutListContent.vue"),
       },
       {
-        path: '/WaitExamineList',
-        name: 'WaitExamineList',
-        meta: { title: '待审核', isTabbar: true },
-        component: () => import('@/view/SupervisionUnit/WaitExamineList.vue')
+        path: "/WaitExamineList",
+        name: "WaitExamineList",
+        meta: { title: "待审核", isTabbar: true },
+        component: () => import("@/view/SupervisionUnit/WaitExamineList.vue"),
       },
       {
-        path: '/WaitHandleList',
-        name: 'WaitHandleList',
-        meta: { title: '待处理', isTabbar: true },
-        component: () => import('@/view/SupervisionUnit/WaitHandleList.vue')
+        path: "/WaitHandleList",
+        name: "WaitHandleList",
+        meta: { title: "待处理", isTabbar: true },
+        component: () => import("@/view/SupervisionUnit/WaitHandleList.vue"),
       },
       {
-        path: '/OverExamineList',
-        name: 'OverExamineList',
-        meta: { title: '已审核', isTabbar: true },
-        component: () => import('@/view/SupervisionUnit/OverExamineList.vue')
+        path: "/OverExamineList",
+        name: "OverExamineList",
+        meta: { title: "已审核", isTabbar: true },
+        component: () => import("@/view/SupervisionUnit/OverExamineList.vue"),
       },
       {
-        path: '/dashboard',
-        name: 'dashboard',
-        meta: { title: '需求管理', isTabbar: true },
-        component: () => import('@/view/Demand/index.vue')
+        path: "/ByMeList",
+        name: "ByMeList",
+        meta: { title: "我发起的", isTabbar: true },
+        component: () => import("@/view/SupervisionUnit/ByMeList.vue"),
       },
       {
-        path: '/Information',
-        name: 'Information',
-        meta: { title: '发货管理', isTabbar: true },
-        component: () => import('@/view/Demand/Delivery.vue')
+        path: "/dashboard",
+        name: "dashboard",
+        meta: { title: "需求管理", isTabbar: true },
+        component: () => import("@/view/Demand/index.vue"),
       },
       {
-        path: '/MyManager',
-        name: 'MyManager',
-        meta: { title: '退货管理', isTabbar: true },
-        component: () => import('@/view/Demand/Return.vue')
+        path: "/Information",
+        name: "Information",
+        meta: { title: "发货管理", isTabbar: true },
+        component: () => import("@/view/Demand/Delivery.vue"),
       },
       {
-        path: '/DemandSupplyManagement',
-        name: 'DemandSupplyManagement',
-        meta: { title: '需求供应管理', isTabbar: true },
-        component: () => import('@/view/DemandSupplyManagement/index.vue')
+        path: "/MyManager",
+        name: "MyManager",
+        meta: { title: "退货管理", isTabbar: true },
+        component: () => import("@/view/Demand/Return.vue"),
+      },
+      {
+        path: "/DemandSupplyManagement",
+        name: "DemandSupplyManagement",
+        meta: { title: "需求供应管理", isTabbar: true },
+        component: () => import("@/view/DemandSupplyManagement/index.vue"),
       },
       {
         // 修改密码
-        path: '/editPassword',
-        name: 'editPassword',
-        meta: { title: '修改密码' },
-        component: () => import('@/view/homePage/components/editPassword.vue')
+        path: "/editPassword",
+        name: "editPassword",
+        meta: { title: "修改密码" },
+        component: () => import("@/view/homePage/components/editPassword.vue"),
       },
-      
-    ]
+    ],
   },
   {
-    path: '/MyToDoManager',
+    path: "/MyToDoManager",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'DemandPlanningExamine/:obj/:type',
-        name: 'DemandPlanningExamine',
-        meta: { title: '需求计划-审核' },
-        component: () => import('@/view/MyToDo/MyToDoManager/DemandPlanningExamine.vue')
+        path: "DemandPlanningExamine/:obj/:type",
+        name: "DemandPlanningExamine",
+        meta: { title: "需求计划-审核" },
+        component: () =>
+          import("@/view/MyToDo/MyToDoManager/DemandPlanningExamine.vue"),
       },
       {
-        path: 'ExamineOpinionEdit/:type',
-        name: 'ExamineOpinionEdit',
-        meta: { title: '审核意见' },
-        component: () => import('@/view/MyToDo/MyToDoManager/ExamineOpinionEdit.vue')
+        path: "ExamineOpinionEdit/:type",
+        name: "ExamineOpinionEdit",
+        meta: { title: "审核意见" },
+        component: () =>
+          import("@/view/MyToDo/MyToDoManager/ExamineOpinionEdit.vue"),
       },
       {
-        path: 'ApproverChoice/:obj',
-        name: 'ApproverChoice',
-        meta: { title: '选择审批人' },
-        component: () => import('@/view/MyToDo/MyToDoManager/ApproverChoice.vue')
+        path: "ApproverChoice/:obj",
+        name: "ApproverChoice",
+        meta: { title: "选择审批人" },
+        component: () =>
+          import("@/view/MyToDo/MyToDoManager/ApproverChoice.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/editPage',
+    path: "/editPage",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: '/editFontSize',
-        name: 'editFontSize',
-        meta: { title: '设置字体大小' },
-        component: () => import('@/view/homePage/components/editFontSize.vue')
+        path: "/editFontSize",
+        name: "editFontSize",
+        meta: { title: "设置字体大小" },
+        component: () => import("@/view/homePage/components/editFontSize.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/MyProcess',
+    path: "/MyProcess",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: '/MyProcess/:businessId',
-        name: 'MyProcess',
-        meta: { title: '查看流程' },
-        component: () => import('@/view/MyProcess/index.vue')
+        path: "/MyProcess/:businessId",
+        name: "MyProcess",
+        meta: { title: "查看流程" },
+        component: () => import("@/view/MyProcess/index.vue"),
       },
-       {
-        path: '/viewLog/:logId',
-        name: 'viewLog',
-        meta: { title: '查看日志' },
-        component: () => import('@/view/MyProcess/log.vue')
+      {
+        path: "/viewLog/:logId",
+        name: "viewLog",
+        meta: { title: "查看日志" },
+        component: () => import("@/view/MyProcess/log.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/PlannedManagementChild',
+    path: "/PlannedManagementChild",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'RequirementFilling',
-        name: 'RequirementFilling',
-        meta: { title: '需求填报' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/RequirementFilling.vue')
+        path: "RequirementFilling",
+        name: "RequirementFilling",
+        meta: { title: "需求填报" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/RequirementFilling.vue"
+          ),
       },
       {
-        path: 'SelectContract',
-        name: 'SelectContract',
-        meta: { title: '选择合同' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/SelectContract.vue')
+        path: "SelectContract",
+        name: "SelectContract",
+        meta: { title: "选择合同" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/SelectContract.vue"
+          ),
       },
       {
-        path: 'SelectMaterials',
-        name: 'SelectMaterials',
-        meta: { title: '选择物资' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/SelectMaterials.vue')
+        path: "SelectMaterials",
+        name: "SelectMaterials",
+        meta: { title: "选择物资" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/SelectMaterials.vue"
+          ),
       },
       {
-        path: 'SaveMaterials',
-        name: 'SaveMaterials',
-        meta: { title: '设置物资需求信息' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/SaveMaterials.vue')
+        path: "SaveMaterials",
+        name: "SaveMaterials",
+        meta: { title: "设置物资需求信息" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/SaveMaterials.vue"
+          ),
       },
       {
-        path: 'RequirementDetails',
-        name: 'RequirementDetails',
-        meta: { title: '需求详情' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/RequirementDetails.vue')
+        path: "RequirementDetails",
+        name: "RequirementDetails",
+        meta: { title: "需求详情" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/RequirementDetails.vue"
+          ),
       },
       {
-        path: 'SupplyOverview',
-        name: 'SupplyOverview',
-        meta: { title: '供应概览' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/SupplyOverview.vue')
+        path: "SupplyOverview",
+        name: "SupplyOverview",
+        meta: { title: "供应概览" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/SupplyOverview.vue"
+          ),
       },
       {
-        path: 'LogisticsView',
-        name: 'LogisticsView',
-        meta: { title: '查看物流' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/LogisticsView.vue')
-      },
-       {
-        path: 'LogisticsDetails',
-        name: 'LogisticsDetails',
-        meta: { title: '物流详情' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/LogisticsDetails.vue')
-      },
-       {
-        path: 'LogisticsMapAddress',
-        name: 'LogisticsMapAddress',
-        meta: { title: '地图选址' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/LogisticsMapAddress.vue')
-      },
-      
-      {
-        path: 'ReceiptList',
-        name: 'ReceiptList',
-        meta: { title: '选择收货信息' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/ReceiptList.vue')
+        path: "LogisticsView",
+        name: "LogisticsView",
+        meta: { title: "查看物流" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/LogisticsView.vue"
+          ),
       },
       {
-        path: 'ReceiptOperate',
-        name: 'ReceiptOperate',
-        meta: { title: '收货信息' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/ReceiptOperate.vue'),
+        path: "LogisticsDetails",
+        name: "LogisticsDetails",
+        meta: { title: "物流详情" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/LogisticsDetails.vue"
+          ),
       },
       {
-        path: 'EditedMaterials',
-        name: 'EditedMaterials',
-        meta: { title: '编辑物资' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/EditedMaterials.vue')
+        path: "LogisticsMapAddress",
+        name: "LogisticsMapAddress",
+        meta: { title: "地图选址" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/LogisticsMapAddress.vue"
+          ),
+      },
+
+      {
+        path: "ReceiptList",
+        name: "ReceiptList",
+        meta: { title: "选择收货信息" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/ReceiptList.vue"
+          ),
       },
       {
-        path: 'ViewMaterials',
-        name: 'ViewMaterials',
-        meta: { title: '物资详情' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/ViewMaterials.vue')
+        path: "ReceiptOperate",
+        name: "ReceiptOperate",
+        meta: { title: "收货信息" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/ReceiptOperate.vue"
+          ),
       },
       {
-        path: 'SaveSuccess',
-        name: 'SaveSuccess',
-        meta: { title: '保存成功' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/SaveSuccess.vue')
+        path: "EditedMaterials",
+        name: "EditedMaterials",
+        meta: { title: "编辑物资" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/EditedMaterials.vue"
+          ),
       },
       {
-        path: 'MaterialDetailsView',
-        name: 'MaterialDetailsView',
-        meta: { title: '物资详情' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/MaterialDetailsView.vue')
+        path: "ViewMaterials",
+        name: "ViewMaterials",
+        meta: { title: "物资详情" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/ViewMaterials.vue"
+          ),
       },
       {
-        path: 'InboundMaterialDetails',
-        name: 'InboundMaterialDetails',
-        meta: { title: '入库-物资详情' },
-        component: () => import('@/view/PlannedManagement/PlannedManagementChild/InboundMaterialDetails.vue')
+        path: "SaveSuccess",
+        name: "SaveSuccess",
+        meta: { title: "保存成功" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/SaveSuccess.vue"
+          ),
       },
-    ]
+      {
+        path: "MaterialDetailsView",
+        name: "MaterialDetailsView",
+        meta: { title: "物资详情" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/MaterialDetailsView.vue"
+          ),
+      },
+      {
+        path: "InboundMaterialDetails",
+        name: "InboundMaterialDetails",
+        meta: { title: "入库-物资详情" },
+        component: () =>
+          import(
+            "@/view/PlannedManagement/PlannedManagementChild/InboundMaterialDetails.vue"
+          ),
+      },
+    ],
   },
   {
-    path: '/DemandSupplyManagementChild',
+    path: "/DemandSupplyManagementChild",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'SubmitSupplier',
-        name: 'SubmitSupplier',
-        meta: { title: '提交供应商' },
-        component: () => import('@/view/DemandSupplyManagement/DemandSupplyManagementChild/SubmitSupplier.vue')
+        path: "SubmitSupplier",
+        name: "SubmitSupplier",
+        meta: { title: "提交供应商" },
+        component: () =>
+          import(
+            "@/view/DemandSupplyManagement/DemandSupplyManagementChild/SubmitSupplier.vue"
+          ),
       },
       {
-        path: 'ReturnHandledBy',
-        name: 'ReturnHandledBy',
-        meta: { title: '退回经办人' },
-        component: () => import('@/view/DemandSupplyManagement/DemandSupplyManagementChild/ReturnHandledBy.vue')
-      }
-    ]
+        path: "ReturnHandledBy",
+        name: "ReturnHandledBy",
+        meta: { title: "退回经办人" },
+        component: () =>
+          import(
+            "@/view/DemandSupplyManagement/DemandSupplyManagementChild/ReturnHandledBy.vue"
+          ),
+      },
+    ],
   },
   {
-    path: '/InOutManagementChild',
+    path: "/InOutManagementChild",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'SubmitStore',
-        name: 'SubmitStore',
-        meta: { title: '提交报检材料' },
-        component: () => import('@/view/InOutManagement/InOutManagementChild/SubmitStore.vue'),
+        path: "SubmitStore",
+        name: "SubmitStore",
+        meta: { title: "提交报检材料" },
+        component: () =>
+          import("@/view/InOutManagement/InOutManagementChild/SubmitStore.vue"),
         beforeEnter(to, from, next) {
-          to.meta.title = to.query.type == 'view' ? `报检材料${typeName[to.query.type]}` : `${typeName[to.query.type]}报检材料`
-          next()
-        }
+          to.meta.title =
+            to.query.type == "view"
+              ? `报检材料${typeName[to.query.type]}`
+              : `${typeName[to.query.type]}报检材料`;
+          next();
+        },
       },
       {
-        path: 'EditedMaterialSubmitStore',
-        name: 'EditedMaterialSubmitStore',
-        meta: { title: '编辑物资' },
-        component: () => import('@/view/InOutManagement/EditedMaterials.vue')
+        path: "EditedMaterialSubmitStore",
+        name: "EditedMaterialSubmitStore",
+        meta: { title: "编辑物资" },
+        component: () => import("@/view/InOutManagement/EditedMaterials.vue"),
       },
       {
-        path: 'Outbound',
-        name: 'Outbound',
-        meta: { title: '物资出库' },
-        component: () => import('@/view/InOutManagement/InOutManagementChild/Outbound.vue'),
+        path: "Outbound",
+        name: "Outbound",
+        meta: { title: "物资出库" },
+        component: () =>
+          import("@/view/InOutManagement/InOutManagementChild/Outbound.vue"),
         beforeEnter(to, from, next) {
-          to.meta.title = to.query.type == 'view' ? `出库${typeName[to.query.type]}` : `物资出库`
-          next()
-        }
+          to.meta.title =
+            to.query.type == "view"
+              ? `出库${typeName[to.query.type]}`
+              : `物资出库`;
+          next();
+        },
       },
       {
-        path: 'EditedOutbound',
-        name: 'EditedOutbound',
-        meta: { title: '编辑出库' },
-        component: () => import('@/view/InOutManagement/InOutManagementChild/EditedOutbound.vue')
+        path: "EditedOutbound",
+        name: "EditedOutbound",
+        meta: { title: "编辑出库" },
+        component: () =>
+          import(
+            "@/view/InOutManagement/InOutManagementChild/EditedOutbound.vue"
+          ),
       },
       {
-        path: 'InboundDetails',
-        name: 'InboundDetails',
-        meta: { title: '入库详情' },
-        component: () => import('@/view/InOutManagement/InOutManagementChild/InboundDetails.vue'),
+        path: "InboundDetails",
+        name: "InboundDetails",
+        meta: { title: "入库详情" },
+        component: () =>
+          import(
+            "@/view/InOutManagement/InOutManagementChild/InboundDetails.vue"
+          ),
       },
       {
-        path: 'OutboundDetails',
-        name: 'OutboundDetails',
-        meta: { title: '出库详情' },
-        component: () => import('@/view/InOutManagement/InOutManagementChild/OutboundDetails.vue'),
+        path: "OutboundDetails",
+        name: "OutboundDetails",
+        meta: { title: "出库详情" },
+        component: () =>
+          import(
+            "@/view/InOutManagement/InOutManagementChild/OutboundDetails.vue"
+          ),
       },
       {
-        path: 'InventoryDetails',
-        name: 'InventoryDetails',
-        meta: { title: '库存详情' },
-        component: () => import('@/view/InOutManagement/InOutManagementChild/InventoryDetails.vue'),
-      }
-    ]
+        path: "InventoryDetails",
+        name: "InventoryDetails",
+        meta: { title: "库存详情" },
+        component: () =>
+          import(
+            "@/view/InOutManagement/InOutManagementChild/InventoryDetails.vue"
+          ),
+      },
+    ],
   },
   {
-    path: '/AcceptanceReturnChild',
+    path: "/AcceptanceReturnChild",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'DoAccept',
-        name: 'DoAccept',
-        meta: { title: '初验收货' },
-        component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/DoAccept.vue')
+        path: "DoAccept",
+        name: "DoAccept",
+        meta: { title: "初验收货" },
+        component: () =>
+          import("@/view/AcceptanceReturn/AcceptanceReturnChild/DoAccept.vue"),
       },
       {
-        path: 'EditedMaterialDoAccept',
-        name: 'EditedMaterialDoAccept',
-        meta: { title: '编辑物资' },
-        component: () => import('@/view/AcceptanceReturn/EditedMaterials.vue')
+        path: "EditedMaterialDoAccept",
+        name: "EditedMaterialDoAccept",
+        meta: { title: "编辑物资" },
+        component: () => import("@/view/AcceptanceReturn/EditedMaterials.vue"),
       },
       {
-        path: 'DoAcceptDetail',
-        name: 'DoAcceptDetail',
-        meta: { title: '收货详情' },
-        component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/DoAcceptDetail.vue')
+        path: "DoAcceptDetail",
+        name: "DoAcceptDetail",
+        meta: { title: "收货详情" },
+        component: () =>
+          import(
+            "@/view/AcceptanceReturn/AcceptanceReturnChild/DoAcceptDetail.vue"
+          ),
       },
       {
-        path: 'DoReturn',
-        name: 'DoReturn',
-        meta: { title: '退货详情' },
-        component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/DoReturn.vue')
+        path: "DoReturn",
+        name: "DoReturn",
+        meta: { title: "退货详情" },
+        component: () =>
+          import("@/view/AcceptanceReturn/AcceptanceReturnChild/DoReturn.vue"),
       },
       {
-        path: 'ViewMaterialsReturnD',
-        name: 'ViewMaterialsReturnD',
-        meta: { title: '物资详情' },
-        component: () => import('@/view/AcceptanceReturn/AcceptanceReturnChild/ViewMaterials.vue')
+        path: "ViewMaterialsReturnD",
+        name: "ViewMaterialsReturnD",
+        meta: { title: "物资详情" },
+        component: () =>
+          import(
+            "@/view/AcceptanceReturn/AcceptanceReturnChild/ViewMaterials.vue"
+          ),
       },
-    ]
+    ],
   },
   // 确认需求
   {
-    path: '/Demand',
+    path: "/Demand",
     component: Layout,
     hidden: true,
     children: [
       {
-
-        path: '/confirm',
-        component: () => import('@/view/Demand/Confirm/index.vue'),
+        path: "/confirm",
+        component: () => import("@/view/Demand/Confirm/index.vue"),
         hidden: true,
-        name: 'confirm',
-        meta: { title: '确认需求' },
+        name: "confirm",
+        meta: { title: "确认需求" },
       },
       {
-
-        path: '/sendGoods',
-        component: () => import('@/view/Demand/SendGoods/index.vue'),
+        path: "/sendGoods",
+        component: () => import("@/view/Demand/SendGoods/index.vue"),
         hidden: true,
-        name: 'SendGoods',
-        meta: { title: '发货' },
+        name: "SendGoods",
+        meta: { title: "发货" },
       },
       {
-
-        path: '/Modifyfile',
-        component: () => import('@/view/Demand/SendGoods/Modifyfile.vue'),
+        path: "/Modifyfile",
+        component: () => import("@/view/Demand/SendGoods/Modifyfile.vue"),
         hidden: true,
-        name: 'Modifyfile',
-        meta: { title: '修改附件' },
+        name: "Modifyfile",
+        meta: { title: "修改附件" },
       },
       {
-
-        path: '/selectGoods',
-        component: () => import('@/view/Demand/SendGoods/selectGoods.vue'),
+        path: "/selectGoods",
+        component: () => import("@/view/Demand/SendGoods/selectGoods.vue"),
         hidden: true,
-        name: 'selectGoods',
-        meta: { title: '选择发货物资' },
+        name: "selectGoods",
+        meta: { title: "选择发货物资" },
       },
       {
-        path: 'MaterialDetailsGoodsView',
-        name: 'MaterialDetailsGoodsView',
-        meta: { title: '物资详情' },
-        component: () => import('@/view/Demand/SendGoods/MaterialDetailsView.vue')
+        path: "MaterialDetailsGoodsView",
+        name: "MaterialDetailsGoodsView",
+        meta: { title: "物资详情" },
+        component: () =>
+          import("@/view/Demand/SendGoods/MaterialDetailsView.vue"),
       },
       {
-        path: 'ReceiptLists',
-        name: 'ReceiptLists',
-        meta: { title: '选择发货信息' },
-        component: () => import('@/view/Demand/SendGoods/ReceiptList.vue')
+        path: "ReceiptLists",
+        name: "ReceiptLists",
+        meta: { title: "选择发货信息" },
+        component: () => import("@/view/Demand/SendGoods/ReceiptList.vue"),
       },
       {
-        path: 'EditedMaterialGoods',
-        name: 'EditedMaterialGoods',
-        meta: { title: '编辑物资' },
-        component: () => import('@/view/Demand/SendGoods/EditedMaterials.vue')
+        path: "EditedMaterialGoods",
+        name: "EditedMaterialGoods",
+        meta: { title: "编辑物资" },
+        component: () => import("@/view/Demand/SendGoods/EditedMaterials.vue"),
       },
       {
-        path: 'ReceiptOperates',
-        name: 'ReceiptOperates',
-        meta: { title: '发货信息' },
-        component: () => import('@/view/Demand/SendGoods/ReceiptOperate.vue'),
+        path: "ReceiptOperates",
+        name: "ReceiptOperates",
+        meta: { title: "发货信息" },
+        component: () => import("@/view/Demand/SendGoods/ReceiptOperate.vue"),
       },
       {
-        path: 'ReceiptMapAddress',
-        name: 'ReceiptMapAddress',
-        meta: { title: '地图选址' },
-        component: () => import('@/view/Demand/SendGoods//ReceiptMapAddress.vue')
+        path: "ReceiptMapAddress",
+        name: "ReceiptMapAddress",
+        meta: { title: "地图选址" },
+        component: () =>
+          import("@/view/Demand/SendGoods//ReceiptMapAddress.vue"),
       },
       {
-        path: 'ReceiptListgoods',
-        name: 'ReceiptListgoods',
-        meta: { title: '选择收货信息' },
-        component: () => import('@/view/Demand/SendGoods/components/ReceiptList.vue')
+        path: "ReceiptListgoods",
+        name: "ReceiptListgoods",
+        meta: { title: "选择收货信息" },
+        component: () =>
+          import("@/view/Demand/SendGoods/components/ReceiptList.vue"),
       },
       {
-        path: 'ReceiptOperategoods',
-        name: 'ReceiptOperategoods',
-        meta: { title: '收货信息' },
-        component: () => import('@/view/Demand/SendGoods/components/ReceiptOperate.vue'),
+        path: "ReceiptOperategoods",
+        name: "ReceiptOperategoods",
+        meta: { title: "收货信息" },
+        component: () =>
+          import("@/view/Demand/SendGoods/components/ReceiptOperate.vue"),
       },
       {
-
-        path: '/finishGoods',
-        component: () => import('@/view/Demand/SendGoods/finishGoods.vue'),
+        path: "/finishGoods",
+        component: () => import("@/view/Demand/SendGoods/finishGoods.vue"),
         hidden: true,
-        name: 'finishGoods',
-        meta: { title: '设置发运物资信息' },
+        name: "finishGoods",
+        meta: { title: "设置发运物资信息" },
       },
       {
-
-        path: '/supplyMsg',
-        component: () => import('@/view/Demand/Supply/index.vue'),
+        path: "/supplyMsg",
+        component: () => import("@/view/Demand/Supply/index.vue"),
         hidden: true,
-        name: 'supplyMsg',
-        meta: { title: '供应信息' },
+        name: "supplyMsg",
+        meta: { title: "供应信息" },
       },
       {
-
-        path: '/lookUp',
-        component: () => import('@/view/Demand/LookUp/index.vue'),
+        path: "/lookUp",
+        component: () => import("@/view/Demand/LookUp/index.vue"),
         hidden: true,
-        name: 'lookUp',
-        meta: { title: '查看物流' },
+        name: "lookUp",
+        meta: { title: "查看物流" },
       },
       {
-
-        path: '/lookCargo',
-        component: () => import('@/view/Demand/Cargo/index.vue'),
+        path: "/lookCargo",
+        component: () => import("@/view/Demand/Cargo/index.vue"),
         hidden: true,
-        name: 'lookCargo',
-        meta: { title: '物流查看' },
-      },
-       {
-        path: 'cargowlDetails',
-        name: 'cargowlDetails',
-        meta: { title: '物流详情' },
-        component: () => import('@/view/Demand/Cargo/cargowlDetails.vue')
+        name: "lookCargo",
+        meta: { title: "物流查看" },
       },
       {
-
-        path: '/cargoPosition',
-        component: () => import('@/view/Demand/Cargo/cargoPosition.vue'),
+        path: "cargowlDetails",
+        name: "cargowlDetails",
+        meta: { title: "物流详情" },
+        component: () => import("@/view/Demand/Cargo/cargowlDetails.vue"),
+      },
+      {
+        path: "/cargoPosition",
+        component: () => import("@/view/Demand/Cargo/cargoPosition.vue"),
         hidden: true,
-        name: 'cargoPosition',
-        meta: { title: '新增货运位置' },
+        name: "cargoPosition",
+        meta: { title: "新增货运位置" },
       },
       {
-        path: 'cargoMapAddress',
-        name: 'cargoMapAddress',
-        meta: { title: '地图选点' },
-        component: () => import('@/view/Demand/Cargo/cargoMapAddress.vue')
+        path: "cargoMapAddress",
+        name: "cargoMapAddress",
+        meta: { title: "地图选点" },
+        component: () => import("@/view/Demand/Cargo/cargoMapAddress.vue"),
       },
       {
-
-        path: '/cargoDetails',
-        component: () => import('@/view/Demand/Cargo/cargoDetails.vue'),
+        path: "/cargoDetails",
+        component: () => import("@/view/Demand/Cargo/cargoDetails.vue"),
         hidden: true,
-        name: 'cargoDetails',
-        meta: { title: '货运详情' },
+        name: "cargoDetails",
+        meta: { title: "货运详情" },
       },
       {
-        path: 'ViewMaterialsCargo',
-        name: 'ViewMaterialsCargo',
-        meta: { title: '物资详情' },
-        component: () => import('@/view/Demand/Cargo/ViewMaterials.vue')
+        path: "ViewMaterialsCargo",
+        name: "ViewMaterialsCargo",
+        meta: { title: "物资详情" },
+        component: () => import("@/view/Demand/Cargo/ViewMaterials.vue"),
       },
       {
-        path: '/cargoInfo',
-        component: () => import('@/view/Demand/Cargo/cargoInfo.vue'),
+        path: "/cargoInfo",
+        component: () => import("@/view/Demand/Cargo/cargoInfo.vue"),
         hidden: true,
-        name: 'cargoInfo',
-        meta: { title: '物流详情' },
+        name: "cargoInfo",
+        meta: { title: "物流详情" },
       },
       {
-
-        path: '/returnDetails',
-        component: () => import('@/view/Demand/ReturnGoods/index.vue'),
+        path: "/returnDetails",
+        component: () => import("@/view/Demand/ReturnGoods/index.vue"),
         hidden: true,
-        name: 'returnDetails',
-        meta: { title: '退货详情' },
+        name: "returnDetails",
+        meta: { title: "退货详情" },
       },
       {
-        path: 'ViewMaterialsReturn',
-        name: 'ViewMaterialsReturn',
-        meta: { title: '物资详情' },
-        component: () => import('@/view/Demand/ReturnGoods/ViewMaterials.vue')
+        path: "ViewMaterialsReturn",
+        name: "ViewMaterialsReturn",
+        meta: { title: "物资详情" },
+        component: () => import("@/view/Demand/ReturnGoods/ViewMaterials.vue"),
       },
-    ]
-  }
+    ],
+  },
 ];
 
 // add route path
-routes.forEach(route => {
-  route.path = route.path || '/' + (route.title || '');
+routes.forEach((route) => {
+  route.path = route.path || "/" + (route.title || "");
 });
 
 const router = new Router({
-  mode: 'history',
+  mode: "history",
   routes,
   // fallback: true,
   scrollBehavior: function (to, from, savePostion) {
-    return savePostion ? savePostion : { y: 0 }
-  }
-
+    return savePostion ? savePostion : { y: 0 };
+  },
 });
 
 //解决重复导航报错
-const VueRouterPush = Router.prototype.push
+const VueRouterPush = Router.prototype.push;
 Router.prototype.push = function push(to) {
-  return VueRouterPush.call(this, to).catch(err => err)
-}
+  return VueRouterPush.call(this, to).catch((err) => err);
+};
 
 export default router;

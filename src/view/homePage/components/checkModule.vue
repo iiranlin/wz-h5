@@ -2,6 +2,10 @@
 <template>
   <div>
     <ul class="auditInfo">
+       <li  @click="handleRouter('/ByMeList')">
+        <div>{{ checkInfo.launchNum }}</div>
+        <div> <span class="title1">我的发起</span></div>
+      </li>
       <li  @click="handleRouter('/WaitExamineList')">
         <div>{{ checkInfo.auditNum }}</div>
         <div> <span class="title">待审核</span></div>
@@ -105,6 +109,11 @@ export default {
       .title::after {
         .dot();
         background: #F5A627;
+      }
+
+       .title1::after {
+        .dot();
+        background: #3cc4f6;
       }
 
       .title2::after {
