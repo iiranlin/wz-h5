@@ -74,7 +74,7 @@ export const routes = [
       {
         path: "/Return",
         name: "Return",
-        meta: { title: "退货管理", isTabbar: true },
+        meta: { title: "初验退货", isTabbar: true },
         component: () => import("@/view/AcceptanceReturn/Return.vue"),
       },
       {
@@ -101,7 +101,7 @@ export const routes = [
       {
         path: "/RefundListContent",
         name: "RefundListContent",
-        meta: { title: "退货单", isTabbar: true },
+        meta: { title: "质检退货", isTabbar: true },
         component: () =>
           import("@/view/InOutManagement/components/RefundListContent.vue"),
       },
