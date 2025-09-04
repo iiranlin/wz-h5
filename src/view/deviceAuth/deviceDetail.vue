@@ -95,7 +95,7 @@
       </div>
 
       <div v-if="status == '2'" class="buttom-tips" style=" color: #008CFFB2;">
-        <img src="@/assets/img/正在授权.png" /><span>正在授权中，请稍后......</span>
+        <img src="@/assets/img/正在授权.png" /><span>授权审核中，请稍后......</span>
       </div>
 
       <div v-if="status == '1'" class="buttom-tips" style=" color: #0DAA01;">
