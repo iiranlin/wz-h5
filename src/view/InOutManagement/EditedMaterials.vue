@@ -36,12 +36,12 @@
     <div class="detail-base-info detail-base-info-edited" v-if="queryType == 'submit'">
       <div class="detail-title-content">
         <img src="@/assets/img/Icon-time.png" />
-        <span>收货操作</span>
+        <span>质检情况</span>
       </div>
       <!-- <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input"> -->
       <van-radio-group v-model="sectionInfo.defaultRadio" direction="horizontal" style="justify-content: end;">
-        <van-radio name="1" shape="square" class="detail-radio"><img src="@/assets/img/Icon_Receiving.png" />全部收货</van-radio>
+        <van-radio name="1" shape="square" class="detail-radio"><img src="@/assets/img/Icon_Receiving.png" />全部通过</van-radio>
         <van-radio name="2" shape="square" class="detail-radio"><img src="@/assets/img/Icon-modify-after.png" />全部退货</van-radio>
       </van-radio-group>
       <!-- <van-field label="入库数量" placeholder="请输入数量" required clearable input-align="right">
