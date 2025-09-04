@@ -63,8 +63,9 @@
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
           <van-field readonly clickable required name="calendar" :value="dataList.takeDate" label="收货时间："
-            placeholder="点击选择日期" @click="showDatePicker = true" />
-          <van-calendar v-model="showDatePicker" @confirm="onDateConfirm" />
+            placeholder="点击选择日期" @click="handlerShowCalendar('calendar')" />
+          <!-- <van-calendar v-model="showDatePicker" @confirm="onDateConfirm" /> -->
+          <Calendar ref="calendar" @onConfirm="onDateConfirm" />
         </li>
       </ul>
     </div>
@@ -289,6 +290,7 @@ import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import Calendar from "@/layout/components/calendar.vue";
 import activitiAssignee from '@/components/activitiAssignee'
 import { submitTodo } from "@/api/prodmgr-inv/receive"
 import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,wfHistoryList } from '@/api/myToDoList'
@@ -297,7 +299,7 @@ import eventBus from '@/utils/eventBus.js'
 export default {
   name: 'DoAccept',
   mixins: [indexMixin,keepPages],
-  components: { FilePreview,FileUploadView ,FileDownloadView,BackToTop, activitiAssignee},
+  components: { FilePreview,FileUploadView ,FileDownloadView,BackToTop, activitiAssignee, Calendar},
   props: {
     isView: {
       type: Boolean,
@@ -405,6 +407,9 @@ export default {
     }
   },
   methods: {
+    handlerShowCalendar(elementName) {
+      this.$refs[elementName]?.handleCalendarShow();
+    },
     //通过请求
     approvalRequest(){
         let toast = this.$toast.loading({
@@ -640,7 +645,8 @@ export default {
     onDateConfirm(val) {
       this.currentTime = val
       this.dataList.takeDate = parseTime(val, '{y}-{m}-{d}')
-      this.showDatePicker = false
+      this.$forceUpdate();
+      // this.showDatePicker = false
     },
     addClick() {
       this.dataList.materialCirculationDetailsTableDTOS.forEach(item=>{
@@ -770,6 +776,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+/deep/.van-calendar__popup.van-popup--bottom, .van-calendar__popup.van-popup--top{
+    height: 94% !important;
+}
+
 .requirement-details {
   display: flex;
   flex-direction: column;

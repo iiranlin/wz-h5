@@ -190,18 +190,21 @@
       <van-button class="button-info" round type="info" @click="sureClick(true)">确定</van-button>
     </div>
     <!-- 生产日期 -->
-    <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date='minDate' :max-date="maxDate"/>
-    <van-calendar v-model="showCalendar" @confirm="createConfirm" />
+     <Calendar ref="calendar" @onConfirm="createConfirm" />
+     <Calendar ref="calendar2" @onConfirm="createConfirm" />
+    <!-- <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date='minDate' :max-date="maxDate"/>
+    <van-calendar v-model="showCalendar" @confirm="createConfirm" /> -->
   </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
 import { parseTime } from '@/utils/index'
 import FileUploadView from "@/components/FileUploadView.vue";
+import Calendar from "@/layout/components/calendar.vue";
 export default {
   name: 'EditedMaterials',
   mixins: [keepPages],
-  components: {FileUploadView},
+  components: {FileUploadView, Calendar},
   data() {
     const today = new Date();
     today.setHours(23, 59, 59, 999); // 设置为今天的最后一
@@ -232,6 +235,9 @@ export default {
     this.init()
   },
   methods: {
+    handlerShowCalendar(elementName, num = 0) {
+      this.$refs[elementName]?.handleCalendarShow(num);
+    },
     init() {
       const { type = '', contractId = '', id = '', planId = '' } = this.$route.query
       this.contractId = contractId
@@ -266,10 +272,12 @@ export default {
       //生产日期
       if (title == 'show') {
         // this.goodsData[index]
-        this.showCreateDates = true;
+        // this.showCreateDates = true;
+        this.handlerShowCalendar('calendar', 1);
       }
       if (title == 'end') {
-        this.showCalendar = true;
+        // this.showCalendar = true;
+        this.handlerShowCalendar('calendar2');
       }
       if (title == 'gong') {
         this.showCalendar = true;
@@ -290,16 +298,17 @@ export default {
       day = day.length === 1 ? `0${day}` : day;
       if (this.title == 'show') {
         this.sectionInfo.manufactureDate = `${year}-${month}-${day}`
-        this.showCreateDates = false;
+        // this.showCreateDates = false;
       }
       if (this.title == 'gong') {
         this.sectionInfo.supplyDate = `${year}-${month}-${day}`
-        this.showCalendar = false;
+        // this.showCalendar = false;
       }
       if (this.title == 'end') {
         this.sectionInfo.expirationDate = `${year}-${month}-${day}`
-        this.showCalendar = false;
+        // this.showCalendar = false;
       }
+      this.$forceUpdate();
     },
     sureClick(isData) {
       if (isData) {
@@ -577,6 +586,6 @@ export default {
 }
 
 /deep/.van-calendar__popup.van-popup--bottom, .van-calendar__popup.van-popup--top{
-    height: 92% !important;
+    height: 94% !important;
 }
 </style>

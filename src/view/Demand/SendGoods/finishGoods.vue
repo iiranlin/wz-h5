@@ -85,8 +85,10 @@
       <van-button class="button-info" round type="info" @click="save">保存</van-button>
     </div>
     <!-- 生产日期 -->
-    <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date='minDate' :max-date="maxDate"/>
-    <van-calendar v-model="showCalendar" @confirm="createConfirm" />
+     <Calendar ref="calendar2" @onConfirm="createConfirm" />
+     <Calendar ref="calendar2" @onConfirm="createConfirm" />
+    <!-- <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date='minDate' :max-date="maxDate"/>
+    <van-calendar v-model="showCalendar" @confirm="createConfirm" /> -->
     <history-list ref="historyList" @historyClick="historyClick"></history-list>
     <back-to-top className=".default-container"></back-to-top>
   </div>
@@ -106,6 +108,7 @@ import { modifySendGoods, detailBySendEdit, detailByUpdateSend} from '@/api/dema
 import { minioUpload } from '@/api/blcd-base/minio'
 import { Notify } from 'vant';
 import FileUploadView from "@/components/FileUploadViewType.vue";
+import Calendar from "@/layout/components/calendar.vue";
 Vue.use(Notify)
 Vue.use(DatetimePicker);
 Vue.use(Toast);
@@ -115,7 +118,8 @@ export default {
   components: {
     FileUploadView,
     historyList,
-    BackToTop
+    BackToTop,
+    Calendar
   },
   data() {
     const today = new Date();
@@ -308,15 +312,20 @@ export default {
       //生产日期
       if (title == 'show') {
         // this.goodsData[index]
-        this.showCreateDates = true;
+        // this.showCreateDates = true;
+        this.handlerShowCalendar('calendar', 1);
       }
       if (title == 'end') {
-        this.showCalendar = true;
+        // this.showCalendar = true;
+        this.handlerShowCalendar('calendar2');
       }
       if (title == 'gong') {
         this.showCalendar = true;
       }
 
+    },
+    handlerShowCalendar(elementName, num = 0) {
+      this.$refs[elementName]?.handleCalendarShow(num);
     },
     // // 日期格式化
     createConfirm(time) {
@@ -333,16 +342,17 @@ export default {
       day = day.length === 1 ? `0${day}` : day;
       if (this.title == 'show') {
         this.goodsData[this.isActive].manufactureDate = `${year}-${month}-${day}`
-        this.showCreateDates = false;
+        // this.showCreateDates = false;
       }
       if (this.title == 'gong') {
         this.goodsData[this.isActive].supplyDate = `${year}-${month}-${day}`
-        this.showCalendar = false;
+        // this.showCalendar = false;
       }
       if (this.title == 'end') {
         this.goodsData[this.isActive].expirationDate = `${year}-${month}-${day}`
-        this.showCalendar = false;
+        // this.showCalendar = false;
       }
+      his.$forceUpdate();
     },
     back() {
       window.history.back();
@@ -556,6 +566,6 @@ export default {
 //   height: 6px;
 //   width: 6px;
 /deep/.van-calendar__popup.van-popup--bottom, .van-calendar__popup.van-popup--top{
-    height: 92% !important;
+    height: 94% !important;
 }
 </style>

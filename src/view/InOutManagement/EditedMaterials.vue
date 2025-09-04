@@ -696,6 +696,6 @@ export default {
 
 /deep/.van-calendar__popup.van-popup--bottom,
 .van-calendar__popup.van-popup--top {
-  height: 92% !important;
+  height: 94% !important;
 }
 </style>

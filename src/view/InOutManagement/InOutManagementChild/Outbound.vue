@@ -41,7 +41,7 @@
               clickable 
               name="领料日期" 
               placeholder="请选择领料日期" 
-              @click="showsTimePop=true" />
+              @click="handlerShowCalendar('calendar')" />
             <van-field v-model="formData.issueUserName" name="发料人" label="发料人：" placeholder="请输入发料人" required clearable
               input-align="right"/>
         </template>
@@ -183,9 +183,10 @@
       <van-button class="button-info" round type="info" @click="previewClick('submit')" v-if="queryType === 'save'">上一步</van-button>
       <van-button class="button-info" round type="info" @click="outboundClick" v-if="queryType === 'save'">确定出库</van-button>
     </div>
-    <van-calendar v-model="showsTimePop" 
+    <!-- <van-calendar v-model="showsTimePop" 
       @confirm="timeConfirm">
-    </van-calendar>
+    </van-calendar> -->
+    <Calendar ref="calendar" @onConfirm="timeConfirm" />
     <!-- 附件预览 -->
     <file-preview ref="filePreview"></file-preview>
     <back-to-top className=".detail-button-container"></back-to-top>
@@ -201,12 +202,13 @@ import {minioUpload} from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import Calendar from "@/layout/components/calendar.vue";
 import { getUserInfo } from '@/utils/user-info'
 import BackToTop from '@/components/BackToTop'
 
 export default {
   name: 'Outbound',
-  components: {FilePreview,FileUploadView,FileDownloadView,BackToTop},
+  components: {FilePreview,FileUploadView,FileDownloadView,BackToTop, Calendar},
 
   computed: {
     filteredList() {
@@ -264,6 +266,9 @@ export default {
   activated() {
   },
   methods: {
+    handlerShowCalendar(elementName) {
+      this.$refs[elementName]?.handleCalendarShow();
+    },
     //获取详情信息
     getDetail(){
       let toast = this.$toast.loading({
@@ -333,7 +338,8 @@ export default {
     //领料日期选择回调
     timeConfirm(value){
       this.formData.pickDate = this.parseTime(value, '{y}-{m}-{d}');
-      this.showsTimePop = false;
+      this.$forceUpdate();
+      // this.showsTimePop = false;
     },
     //物资明细搜索
     onSearch(){
@@ -544,6 +550,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+/deep/.van-calendar__popup.van-popup--bottom, .van-calendar__popup.van-popup--top{
+    height: 94% !important;
+}
+
 .box-container {
   padding: 0px;
 }
