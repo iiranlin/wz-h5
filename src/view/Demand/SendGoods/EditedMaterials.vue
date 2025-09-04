@@ -76,7 +76,30 @@
       </div>
     </div>
     <div class="detail-base-info detail-base-info-edited">
-      <template v-if="sectionInfo.receiver">
+      <template>
+        <div class="detail-title-content">
+        <img src="@/assets/img/Icon-address.png" />
+        <span>收货信息</span>
+      </div>
+      <ul class="detail-list-ul-edited">
+        <li class="detail-list-li-input">
+          <van-field required v-model="sectionInfo.receiver" label="收货人" placeholder="请输入收货人"
+            input-align="right" />
+        </li>
+        <li class="detail-list-li-input">
+          <van-field required v-model="sectionInfo.phone" label="联系方式" placeholder="请输入联系方式"
+            input-align="right" />
+        </li>
+        <li class="detail-list-li-input">
+          <van-field required v-model="sectionInfo.field2" label="收货地址" placeholder="请输入收货地址"
+            input-align="right" />
+        </li>
+      </ul>
+      <div class="detail-base-info-edited-all" style="padding-top: 0; margin: 5px 0;">
+        <p @click="applicationAllClick({receiver: '', field2: '', phone: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+      </div>
+      </template>
+      <!-- <template v-if="sectionInfo.receiver">
         <div class="detail-title-content detail-title-edited-p">
           <p>
             <img src="@/assets/img/Icon-address.png" />
@@ -92,10 +115,6 @@
             <li>
               <span>{{ sectionInfo.receiver }}</span>
             </li>
-            <!-- <li>
-              <span>使用地点：</span>
-              <span>{{ sectionInfo.addr }}</span>
-            </li> -->
             <li>
               <span>收货地址：</span>
               <span>{{ sectionInfo.field2 }}</span>
@@ -119,7 +138,7 @@
           <van-button plain round type="info" @click="createClick"><img src="@/assets/img/Icon-plus.png"
               class="detail-title-content-edited-add" />新建</van-button>
         </div>
-      </template>
+      </template> -->
     </div>
     <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
@@ -187,6 +206,7 @@ export default {
     const today = new Date();
     today.setHours(23, 59, 59, 999); // 设置为今天的最后一
     return {
+      pattern: /^1[3456789]\d{9}$/,
       sectionInfo: {},
       queryType: '',
       contractId: '',
@@ -304,7 +324,14 @@ export default {
           });
           return
         }
-        if (!(this.sectionInfo.receiver && this.sectionInfo.field2)) {
+        if(!this.pattern.test(this.sectionInfo.phone)){
+          this.$notify({
+            type: 'warning',
+            message: '手机号格式不正确!',
+          });
+          return
+        }
+        if (!(this.sectionInfo.receiver && this.sectionInfo.field2 && this.sectionInfo.phone)) {
           this.$notify({
             type: 'warning',
             message: '请完善收货信息!',

@@ -181,12 +181,14 @@ export default {
   },
   activated () {
     this.getList();
+    this.$store.commit('removeThisPage', 'SendGoods')
   },
   created() {
 
   },
   mounted() {
     this.getList();
+    this.$store.commit('removeThisPage', 'SendGoods')
   },
   methods: {
     //初始化请求
