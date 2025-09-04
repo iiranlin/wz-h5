@@ -958,6 +958,8 @@ export default {
       this.btnClickIndex = code
     },
     editedClick(item, index) {
+      this.$store.dispatch('public/setHistoryData', {});
+
       this.$store.dispatch('public/setMateriaData', { ...item, phone: item.phone ? item.phone : item.receiver.split(" ")?.[1] || '', receiver: item.receiver.split(" ")?.[0] || '' })
 
       this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
@@ -978,6 +980,7 @@ export default {
       }
     },
     returnClick() {
+      this.$store.dispatch('public/setHistoryData', {})
       // const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId, materialUsedRatio: this.materialUsedRatio } : { contractId: this.contractId, materialUsedRatio: this.materialUsedRatio }
       this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
       const query = { planId: this.planId, text: this.text, id: this.goodsId };
