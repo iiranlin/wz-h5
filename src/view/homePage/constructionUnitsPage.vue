@@ -25,7 +25,7 @@
           </div>
           <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/Return')">
             <img :src="returns">
-            退货管理
+            初验退货
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
         <div class="lastModule">
           <div class="twoLines" @click="handleRouter('/RefundListContent')">
             <img :src="CreditOrder">
-            退货单
+            质检退货
           </div>
           <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/OutListContent')">
             <img :src="StockOut">
