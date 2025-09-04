@@ -225,7 +225,7 @@
           </li>
           <li>
             <span>收货人及联系方式：</span>
-            <span>{{ item.receiver }}</span>
+            <span>{{ item.phone ? item.receiver + " " + item.phone : item.receiver }}</span>
           </li>
           <!-- <li>
             <span>计量单位：</span>
@@ -481,9 +481,9 @@ export default {
     }
   },
   activated() {
-    this.text = this.$route.query.text;
-    this.goodsId = this.$route.query.id;
-    this.planId = this.$route.query.planId;
+    // this.text = this.$route.query.text;
+    // this.goodsId = this.$route.query.id;
+    // this.planId = this.$route.query.planId;
     
     const historyData = this.$store.state.public.historyData || {};
     
@@ -504,7 +504,7 @@ export default {
       this.params = Object.assign({}, this.params, historyData)
     }
 
-    this.$store.dispatch('public/setHistoryData', {})
+    // this.$store.dispatch('public/setHistoryData', {})
   },
   created() {
     this.init();
@@ -626,8 +626,18 @@ export default {
 
           const shipmentsInfo = this.$store.state.public.shipmentsInfo || {};
 
+          const historyData = this.$store.state.public.historyData || {};
+
           if (Object.keys(shipmentsInfo).length > 0) {
-            this.params = Object.assign({}, this.params, shipmentsInfo);
+            if (Object.keys(historyData).length > 0) {
+                  historyData.shippingAddress = historyData.shippingAddress || historyData.receiveraddress
+                  historyData.contacts = historyData.contacts || historyData.receiver
+                  historyData.contactsPhone = historyData.contactsPhone || historyData.phone
+
+                  this.params = Object.assign({}, this.params, shipmentsInfo, historyData);
+            } else {
+              this.params = Object.assign({}, this.params, shipmentsInfo);
+            }
           } else {
             this.params = res.data;
             this.fileList = [];
@@ -890,6 +900,7 @@ export default {
       });
 
       this.materiaList.forEach((item) => {
+        item.receiver = item.receiver + " " + item.phone;
         let fileByList = {};
         //报验结果
         if (item.fileList01.length > 0) {
@@ -947,7 +958,7 @@ export default {
       this.btnClickIndex = code
     },
     editedClick(item, index) {
-      this.$store.dispatch('public/setMateriaData', item)
+      this.$store.dispatch('public/setMateriaData', { ...item, phone: item.phone ? item.phone : item.receiver.split(" ")?.[1] || '', receiver: item.receiver.split(" ")?.[0] || '' })
 
       this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
       // const query = this.text == 'edit' ? { contractId: this.contractId, type: this.text, id: this.queryId } : { contractId: this.contractId }
@@ -975,12 +986,16 @@ export default {
       this.$router.push({ name: 'selectGoods', query })
     },
     receiptClick() {
+      this.$store.dispatch('public/setHistoryData', {})
+
       this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
 
       const {id, text, planId} = this.$route.query;
       this.$router.push({ name: 'ReceiptLists', query: { planId, type: text, id } })
     },
     createClick() {
+      this.$store.dispatch('public/setHistoryData', {})
+
       this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
 
       this.$router.push({ name: 'ReceiptOperates', query: { type: 'create' } })

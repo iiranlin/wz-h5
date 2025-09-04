@@ -452,6 +452,11 @@ export default {
       }
     },
     openClick(item) {
+      if (this.text == 'add') { 
+        this.$store.dispatch('public/setSelectGoodData', this.selectArrayData);
+      } else {
+        this.$store.dispatch('public/setSelectGoodDataEdit', this.selectArrayData);
+      }
       this.$router.push({ name: 'MaterialDetailsGoodsView', query: { item: JSON.stringify(item) } })
     }
   }

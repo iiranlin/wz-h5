@@ -259,9 +259,11 @@ export default {
   },
   created() {
     this.getList();
+    this.$store.commit('removeThisPage', 'SendGoods')
   },
   activated() {
     this.getList();
+    this.$store.commit('removeThisPage', 'SendGoods')
   },
   methods: {
     getList() {
