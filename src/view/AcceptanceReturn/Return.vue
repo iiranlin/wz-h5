@@ -216,7 +216,7 @@ export default {
       this.getAllList()
     },
     viewDelivery(item){
-      this.$router.push({name: 'cargoDetails', query: {id:item.id,btnEvent:item.takeNumber?false:true}})
+      this.$router.push({name: 'cargoDetails', query: {id:item.id,btnEvent:false}})
     },
     //获取订单状态字典
     getOrderStatusOptions() {
