@@ -10,8 +10,9 @@
         </div>
         <div>
           <van-field readonly clickable required name="date" :value="params.date" label="选择时间" placeholder="请选择日期"
-        @click="showCalendar = true" :rules="[{ required: true, message: '请填写预计发货日期' }]" input-align="right" />
-      <van-calendar v-model="showCalendar" @confirm="onConfirm" />
+        @click="handlerShowCalendar('calendar')" :rules="[{ required: true, message: '请填写预计发货日期' }]" input-align="right" />
+      <!-- <van-calendar v-model="showCalendar" @confirm="onConfirm" /> -->
+                <Calendar ref="calendar" @onConfirm="onConfirm" />
         </div>
         </template>
       </div>
@@ -42,11 +43,15 @@ import Vue from 'vue';
 import { Form } from 'vant';
 import { Field } from 'vant';
 import { Toast } from 'vant';
+import Calendar from "@/layout/components/calendar.vue";
 import {demandSureSave} from '@/api/demand/demandManagement'
 Vue.use(Toast);
 Vue.use(Form);
 Vue.use(Field);
 export default {
+  components: {
+   Calendar 
+  },
   data() {
     return {
       value: '',
@@ -63,6 +68,9 @@ export default {
     this.id = this.$route.query.id
   },
   methods: {
+    handlerShowCalendar(elementName) {
+      this.$refs[elementName]?.handleCalendarShow();
+    },
     onConfirm(date) {
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份加0
@@ -70,8 +78,9 @@ export default {
 
       // 组合成YYYY-MM-DD格式
       this.params.date = `${year}-${month}-${day}`;
+      this.$forceUpdate();
 
-      this.showCalendar = false;
+      // this.showCalendar = false;
     },
     onSubmit(values) {
       if (values) {
@@ -112,6 +121,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.van-calendar__popup.van-popup--bottom, .van-calendar__popup.van-popup--top{
+    height: 94% !important;
+}
+
   ::v-deep .detail-base-info-edited-textarea .van-cell__value .van-field__body {
     background-color: #f2f2f2 !important;
   }

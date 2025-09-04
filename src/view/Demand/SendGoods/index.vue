@@ -122,10 +122,11 @@
             input-align="right"
             :value="params.shippingDate"
             placeholder="点击选择日期"
-            @click="showCalendar = true"
+            @click="handlerShowCalendar('calendar')"
             :rules="[{ required: true, message: '请填写发货日期' }]"
           />
-          <van-calendar v-model="showCalendar" @confirm="onConfirm" />
+          <!-- <van-calendar v-model="showCalendar" @confirm="onConfirm" /> -->
+          <Calendar ref="calendar" @onConfirm="onConfirm" />
           <van-field
             readonly
             clickable
@@ -136,10 +137,11 @@
             label="预计送到时间"
             input-align="right"
             placeholder="点击选择日期"
-            @click="sendStop = true"
+            @click="handlerShowCalendar('calendar2')"
             :rules="[{ required: true, message: '请填写预计送达时间' }]"
           />
-          <van-calendar v-model="sendStop" @confirm="onStopConfirm" />
+          <!-- <van-calendar v-model="sendStop" @confirm="onStopConfirm" /> -->
+          <Calendar ref="calendar2" @onConfirm="onStopConfirm" />
           <van-field
             v-model="params.carNumber"
             label="车牌号"
@@ -225,7 +227,7 @@
           </li>
           <li>
             <span>收货人及联系方式：</span>
-            <span>{{ item.phone ? item.receiver + " " + item.phone : item.receiver }}</span>
+            <span>{{ item.receiver }}</span>
           </li>
           <!-- <li>
             <span>计量单位：</span>
@@ -418,6 +420,8 @@ import keepPages from "@/view/mixins/keepPages";
 import historyList from "@/components/historyList";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileUploadViewType from "@/components/FileUploadViewType.vue";
+import Calendar from "@/layout/components/calendar.vue";
+
 import { Toast } from "vant";
 import { Notify } from "vant";
 Vue.use(Notify);
@@ -428,7 +432,7 @@ Vue.use(Field);
 export default {
   name: "SendGoods",
   mixins: [keepPages],
-  components: { FileUploadView, historyList, FileUploadViewType },
+  components: { FileUploadView, historyList, FileUploadViewType, Calendar },
   data() {
     return {
       btnClickIndex: '0',
@@ -609,6 +613,9 @@ export default {
         }
       });
     },
+    handlerShowCalendar(elementName) {
+      this.$refs[elementName]?.handleCalendarShow();
+    },
     // 编辑回显
     editDetails() {
       detailByUpdateSend(this.goodsId).then((res) => {
@@ -752,7 +759,8 @@ export default {
       const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 月份加0
       const day = date.getDate().toString().padStart(2, "0"); // 日期加0（可选）
       this.params.shippingDate = `${year}-${month}-${day}`;
-      this.showCalendar = false;
+      this.$forceUpdate();
+      // this.showCalendar = false;
     },
     // 送达时间
     onStopConfirm(date) {
@@ -766,7 +774,8 @@ export default {
 
       // 组合成YYYY-MM-DD格式
       this.params.arrivalDate = `${year}-${month}-${day}`;
-      this.sendStop = false;
+      this.$forceUpdate();
+      // this.sendStop = false;
     },
     chooseGoods(id, text) {
       // this.formKey++
@@ -900,7 +909,6 @@ export default {
       });
 
       this.materiaList.forEach((item) => {
-        item.receiver = item.phone ? item.receiver + " " + item.phone : item.receiver;
         let fileByList = {};
         //报验结果
         if (item.fileList01.length > 0) {
@@ -960,7 +968,7 @@ export default {
     editedClick(item, index) {
       this.$store.dispatch('public/setHistoryData', {});
 
-      this.$store.dispatch('public/setMateriaData', { ...item, phone: item.phone ? item.phone : item.receiver.split(" ")?.[1] || '', receiver: item.receiver.split(" ")?.[0] || '' })
+      this.$store.dispatch('public/setMateriaData', { ...item, phone: '', receiver: item.receiver })
 
       this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
       // const query = this.text == 'edit' ? { contractId: this.contractId, type: this.text, id: this.queryId } : { contractId: this.contractId }
@@ -1098,6 +1106,10 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+/deep/.van-calendar__popup.van-popup--bottom, .van-calendar__popup.van-popup--top{
+    height: 94% !important;
+}
+
 .outbound-field-uploader {
   ::v-deep li {
     display: block;
