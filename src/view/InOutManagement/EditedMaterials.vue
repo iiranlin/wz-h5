@@ -180,7 +180,7 @@
     <div class="default-button-container" v-if="queryType == 'submit' && sectionInfo.defaultRadio">
 
       <div class="default-button-container-selected" v-if="sectionInfo.defaultRadio == '1'">
-        <span>确认收货： <span class="li-span-click" style="font-size: 30px;line-height: 30px;">{{ sectionInfo.storeTotal }}</span> 套
+        <span>确认通过： <span class="li-span-click" style="font-size: 30px;line-height: 30px;">{{ sectionInfo.storeTotal }}</span> 
         </span>
       </div>
 
