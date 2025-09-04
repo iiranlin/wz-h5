@@ -227,7 +227,7 @@
           </li>
           <li>
             <span>收货人及联系方式：</span>
-            <span>{{ item.phone ? item.receiver + " " + item.phone : item.receiver }}</span>
+            <span>{{ item.receiver }}</span>
           </li>
           <!-- <li>
             <span>计量单位：</span>
@@ -909,7 +909,6 @@ export default {
       });
 
       this.materiaList.forEach((item) => {
-        item.receiver = item.phone ? item.receiver + " " + item.phone : item.receiver;
         let fileByList = {};
         //报验结果
         if (item.fileList01.length > 0) {
@@ -969,7 +968,7 @@ export default {
     editedClick(item, index) {
       this.$store.dispatch('public/setHistoryData', {});
 
-      this.$store.dispatch('public/setMateriaData', { ...item, phone: item.phone ? item.phone : item.receiver.split(" ")?.[1] || '', receiver: item.receiver.split(" ")?.[0] || '' })
+      this.$store.dispatch('public/setMateriaData', { ...item, phone: '', receiver: item.receiver })
 
       this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp })
       // const query = this.text == 'edit' ? { contractId: this.contractId, type: this.text, id: this.queryId } : { contractId: this.contractId }

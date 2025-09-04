@@ -83,13 +83,13 @@
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field required v-model="sectionInfo.receiver" label="收货人" placeholder="请输入收货人"
+          <van-field required v-model="sectionInfo.receiver" label="收货人及联系方式" placeholder="请输入收货人及联系方式"
             input-align="right" />
         </li>
-        <li class="detail-list-li-input">
+        <!-- <li class="detail-list-li-input">
           <van-field required v-model="sectionInfo.phone" label="联系方式" placeholder="请输入联系方式"
             input-align="right" />
-        </li>
+        </li> -->
         <li class="detail-list-li-input">
           <van-field required v-model="sectionInfo.field2" label="收货地址" placeholder="请输入收货地址"
             input-align="right" />
@@ -333,14 +333,14 @@ export default {
           });
           return
         }
-        if(!this.pattern.test(this.sectionInfo.phone)){
-          this.$notify({
-            type: 'warning',
-            message: '手机号格式不正确!',
-          });
-          return
-        }
-        if (!(this.sectionInfo.receiver && this.sectionInfo.field2 && this.sectionInfo.phone)) {
+        // if(!this.pattern.test(this.sectionInfo.phone)){
+        //   this.$notify({
+        //     type: 'warning',
+        //     message: '手机号格式不正确!',
+        //   });
+        //   return
+        // }
+        if (!(this.sectionInfo.receiver && this.sectionInfo.field2)) {
           this.$notify({
             type: 'warning',
             message: '请完善收货信息!',
