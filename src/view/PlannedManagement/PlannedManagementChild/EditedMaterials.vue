@@ -111,15 +111,15 @@
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
           <van-field required v-model="sectionInfo.field0" label="投资方" placeholder="请输入投资方"
-            input-align="right" />
+            input-align="right" @blur="saveInvestmentCache" />
         </li>
         <li class="detail-list-li-input">
           <van-field required v-model="sectionInfo.field1" label="投资比例" placeholder="请输入投资比例"
-            input-align="right" />
+            input-align="right" @blur="saveInvestmentCache" />
         </li>
       </ul>
       <div class="detail-base-info-edited-all">
-        <p @click="applicationAllClick({field0: '', field1: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+        <p @click="applicationAllClick({field0: '', field1: ''}, true)"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
       </div>
     </div>
     <div class="detail-base-info detail-base-info-edited">
@@ -151,6 +151,8 @@ export default {
       queryType: '',
       contractId: '',
       queryId: '',
+      // 投资信息缓存的本地存储key
+      INVESTMENT_CACHE_KEY: 'investment_info_cache'
     }
   },
   activated() {
@@ -172,6 +174,10 @@ export default {
       this.queryType = type
       this.queryId = id
       this.sectionInfo = Object.assign({}, this.$store.state.public.materiaData || {})
+
+      // 从本地缓存加载投资信息
+      this.loadInvestmentCache()
+
       console.log(this.sectionInfo,"sectionInfo")
     },
     cumulativeAmount(item) {
@@ -236,11 +242,13 @@ export default {
           }
         })
         this.$store.dispatch('public/setMateriaList', data)
-        
+
+        // 保存投资信息到缓存
+        this.saveInvestmentCache()
       }
       this.$router.push({ name: 'SaveMaterials', query: { contractId: this.contractId, type: this.queryType, id: this.queryId } })
     },
-    applicationAllClick (obj) {
+    applicationAllClick (obj, isInvestment = false) {
       this.$dialog.confirm({
         title: '提示',
         message: '确认要应用到所有物资吗？',
@@ -249,7 +257,7 @@ export default {
       }).then(() => {
         const data = this.$store.state.public.materiaList || []
         console.log(data,"data")
-        data.forEach((item, index) => {
+        data.forEach((item) => {
           for (const key in obj) {
             if (Object.hasOwnProperty.call(obj, key)) {
               item[key] = this.sectionInfo[key]
@@ -258,7 +266,48 @@ export default {
           }
         });
         this.$store.dispatch('public/setMateriaList', data)
+
+        // 如果是投资信息的应用，同时保存到缓存
+        if (isInvestment) {
+          this.saveInvestmentCache()
+        }
       })
+    },
+
+    /**
+     * 从本地缓存加载投资信息
+     */
+    loadInvestmentCache() {
+      try {
+        const cachedData = localStorage.getItem(this.INVESTMENT_CACHE_KEY)
+        if (cachedData) {
+          const investmentInfo = JSON.parse(cachedData)
+          // 如果当前投资方和投资比例为空，则使用缓存值
+          if (!this.sectionInfo.field0 && investmentInfo.field0) {
+            this.sectionInfo.field0 = investmentInfo.field0
+          }
+          if (!this.sectionInfo.field1 && investmentInfo.field1) {
+            this.sectionInfo.field1 = investmentInfo.field1
+          }
+        }
+      } catch (error) {
+        console.error('加载投资信息缓存失败:', error)
+      }
+    },
+
+    /**
+     * 保存投资信息到本地缓存
+     */
+    saveInvestmentCache() {
+      try {
+        const investmentInfo = {
+          field0: this.sectionInfo.field0 || '',
+          field1: this.sectionInfo.field1 || ''
+        }
+        localStorage.setItem(this.INVESTMENT_CACHE_KEY, JSON.stringify(investmentInfo))
+      } catch (error) {
+        console.error('保存投资信息缓存失败:', error)
+      }
     }
   }
 }
