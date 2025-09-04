@@ -5,6 +5,8 @@ Vue.use(Router);
 import Layout from '@/layout'
 // import ItemHead from '@/components/itemHead'
 
+// 设备使用授权页面 - 不需要登录验证
+
 
 const typeName = {
   submit: '提交',
@@ -15,6 +17,12 @@ const typeName = {
 }
 
 export const routes = [
+  {
+    path: '/deviceDetail',
+    name: 'DeviceDetail',
+    meta: { title: '设备使用授权' },
+    component: () => import('@/view/deviceAuth/deviceDetail.vue')
+  },
   {
     path: '/',
     name: 'Layout',
@@ -140,6 +148,13 @@ export const routes = [
         name: 'DemandSupplyManagement',
         meta: { title: '需求供应管理', isTabbar: true },
         component: () => import('@/view/DemandSupplyManagement/index.vue')
+      },
+      {
+        // 修改密码
+        path: '/editPassword',
+        name: 'editPassword',
+        meta: { title: '修改密码' },
+        component: () => import('@/view/homePage/components/editPassword.vue')
       },
       
     ]
