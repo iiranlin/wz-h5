@@ -900,7 +900,7 @@ export default {
       });
 
       this.materiaList.forEach((item) => {
-        item.receiver = item.receiver + " " + item.phone;
+        item.receiver = item.phone ? item.receiver + " " + item.phone : item.receiver;
         let fileByList = {};
         //报验结果
         if (item.fileList01.length > 0) {
