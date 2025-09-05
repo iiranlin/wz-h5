@@ -7,25 +7,25 @@
         <div class="detail-base-info detail-base-info-edited">
           <ul class="detail-list-ul-edited">
             <li class="detail-list-li-input">
-              <van-field name="unitType" label="单位类型" label-width="80px" label-align="left" required
+              <van-field name="unitType" label="单位类型"   label-align="left" required
                 :rules="[{ required: true, message: '请选择单位类型' }]" readonly :value="formData.unitType" placeholder="请选择"
                 @click="showUnitTypePicker = true" is-link input-align="left" />
             </li>
             <li class="detail-list-li-input">
-              <van-field name="deviceType" label="设备类型" label-width="80px" label-align="left" required
+              <van-field name="deviceType" label="设备类型"   label-align="left" required
                 :rules="[{ required: true, message: '请选择设备类型' }]" readonly :value="formData.deviceType"
                 placeholder="请选择" @click="showDeviceTypePicker = true" is-link input-align="left" />
             </li>
             <li class="detail-list-li-input">
-              <van-field v-model="formData.unitName" name="unitName" label="单位名称" label-width="80px" label-align="left"
+              <van-field v-model="formData.unitName" name="unitName" label="单位名称"   label-align="left"
                 required placeholder="请输入" :rules="[{ required: true, message: '请填写单位名称' }]" input-align="left" />
             </li>
             <li class="detail-list-li-input">
-              <van-field v-model="formData.name" name="na'me" label="使用人" label-width="80px" label-align="left" required
+              <van-field v-model="formData.name" name="na'me" label="使用人"   label-align="left" required
                 placeholder="请输入" :rules="[{ required: true, message: '请填写使用人' }]" input-align="left" />
             </li>
             <li class="detail-list-li-input">
-              <van-field :value="deviceNum" readonly label="设备授权码" label-width="80px" label-align="left"
+              <van-field :value="deviceNum" readonly label="设备授权码"   label-align="left"
                 input-align="left" />
             </li>
           </ul>
