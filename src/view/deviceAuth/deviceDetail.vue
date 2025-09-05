@@ -135,7 +135,7 @@ export default {
       },
       showUnitTypePicker: false,
       showDeviceTypePicker: false,
-      unitTypeOptions: ['上海局集团公司', '枢纽指挥部','施工单位','监理单位','物代公司','供应商'],
+      unitTypeOptions: [ '施工单位','监理单位','供应商'],
       deviceTypeOptions: ['手机', '平板']
     };
   },
