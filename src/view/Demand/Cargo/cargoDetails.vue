@@ -22,7 +22,7 @@
         </li>
         <li>
           <span class="detail-label">操作人：</span>
-          <span class="detail-value">{{ params.createUserName }}</span>
+          <span class="detail-value">{{ params.consigneeOperator }}</span>
         </li>
         <li>
           <span class="detail-label">操作时间：</span>

@@ -32,11 +32,11 @@
         </li>
         <li>
           <span>生产日期：</span>
-          <span>{{ sectionInfo.manufactureDate }}</span>
+          <span>{{ sectionInfo.manufactureDate | formatDate }}</span>
         </li>
         <li>
           <span>有效期截止日期：</span>
-          <span>{{ sectionInfo.expirationDate }}</span>
+          <span>{{ sectionInfo.expirationDate | formatDate }}</span>
         </li>
         <li>
           <span>投资方：</span>
@@ -75,6 +75,7 @@
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import indexMixin from '@/view/mixins'
 import { materialDemandPlanDetailsDetail } from '@/api/prodmgr-inv/materialDemandPlanDetails'
+import dayjs from "dayjs";
 export default {
   name: 'ViewMaterials',
   components: {
@@ -86,6 +87,12 @@ export default {
       sectionInfo: {},
     }
   },
+  filters: {
+    formatDate(val) {
+      return val ? dayjs(val).format('YYYY年MM月DD日') : ''
+    }
+  },
+
   mounted() {
     this.init()
   },
