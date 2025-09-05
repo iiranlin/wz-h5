@@ -408,6 +408,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+::v-deep .van-field__label {
+  width: 120px !important;
+}
 .edited-materials {
   padding-bottom: 60px;
 
