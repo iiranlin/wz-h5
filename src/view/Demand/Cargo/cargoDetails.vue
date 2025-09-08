@@ -22,7 +22,8 @@
         </li>
         <li>
           <span class="detail-label">操作人：</span>
-          <span class="detail-value">{{ params.consigneeOperator }}</span>
+          <!-- 供应商：createUserName 施工单位FB  ZB ：consigneeOperator -->
+          <span class="detail-value">{{ operatorName }}</span>
         </li>
         <li>
           <span class="detail-label">操作时间：</span>
@@ -207,6 +208,7 @@ import FilePreview from "@/components/FilePreview.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import MaterialDetails from './components/MaterialDetails.vue'
 import indexMixin from '@/view/mixins'
+import { getUserInfo } from '@/utils/user-info'
 import Vue from 'vue';
 import {Dialog, Toast} from 'vant';
 
@@ -275,7 +277,27 @@ export default {
         {text: '货运中', value: '2', color: '#134daa'},
         {text: '已完成', value: '3', color: '#51CA40'}
       ],
+      userInfo: getUserInfo()
     };
+  },
+  computed: {
+    // 根据用户角色显示不同的操作人
+    operatorName() {
+      const deptCode = this.userInfo.deptCode || '';
+
+      // 供应商显示 createUserName
+      if (deptCode.startsWith('GYS')) {
+        return this.params.createUserName || '';
+      }
+
+      // 施工单位FB、ZB显示 consigneeOperator
+      if (deptCode.startsWith('FB') || deptCode.startsWith('ZB')) {
+        return this.params.consigneeOperator || '';
+      }
+
+      // 默认显示 createUserName
+      return this.params.createUserName || '';
+    }
   },
   created() {
     this.id = this.$route.query.id

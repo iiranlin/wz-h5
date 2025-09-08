@@ -51,7 +51,7 @@
                 dataList.materialCirculationDetailsTableDTOS.length : 0 }}</span> 项</span>
           </li>
           <li>
-            <span>操作人：<span class="li-span-click">{{dataList.storeOperator}}</span></span>
+            <span>操作人：<span class="li-span-click">{{dataList.consigneeOperator}}</span></span>
 
           </li>
         </ul>
