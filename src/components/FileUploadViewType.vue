@@ -60,20 +60,11 @@ export default {
         required:{
             type: Boolean,
             default: true,
-        },
-        isImgToPdf:{
-            type: Boolean,
-            default: false,
         }
     },
     data() {
         return {
             
-        }
-    },
-    computed: {
-        uploadApi(){
-            return this.isImgToPdf ? minioImageToPdf : minioUpload 
         }
     },
     methods:{
@@ -122,7 +113,12 @@ export default {
               forbidClick: true,
             });
 
-            this.uploadApi(formData).then(({data}) => {
+            const fileName = file.file.name;
+            const fileType = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
+            const imageTypes = ['jpg', 'jpeg', 'png', 'bmp'];
+            const isImage = imageTypes.includes(fileType);
+            const uploadApi = isImage ? minioImageToPdf : minioUpload;
+            uploadApi(formData).then(({data}) => {
                 this.$notify({
                     type: 'success',
                     message: "上传成功"

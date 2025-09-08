@@ -27,7 +27,7 @@
         <img src="/static/icon-file.png">
         <span>附件</span>
       </div>
-      <file-upload-view :fileList="sectionInfo.fileList || []" :maxCount="99" :isShowButton="false" businessType="01"></file-upload-view>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.fileList || []" :maxCount="99" :isShowButton="false" businessType="01"></file-upload-view>
     </div>
     <div class="detail-floor-content">
       <div>
@@ -100,7 +100,7 @@
           src="@/assets/img/Icon-slideup.png" />
       </div>
       <div class="default-button-container-button">
-        <file-upload-view :fileList="sectionInfo.fileList || []" :maxCount="99" :isFileList="false" businessType="01"></file-upload-view>
+        <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.fileList || []" :maxCount="99" :isFileList="false" businessType="01"></file-upload-view>
         <van-button class="button-info" round type="info" @click="onSubmit">保存</van-button>
       </div>
     </div>

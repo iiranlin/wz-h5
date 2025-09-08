@@ -161,7 +161,7 @@
         <span>发货单附件</span>
       </div>
       <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
-      <file-upload-view :fileList="fileList || []" businessType="01" class="outbound-field-uploader" />
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
@@ -175,9 +175,8 @@
             class="outbound-field-uploader"
             :fileList="zczp || []"
             businessType="01"
-            accept=".jpg,.png,.jpeg"
+            accept=".jpg,.png,.jpeg,.pdf"
             :maxCount="100"
-            :isImgToPdf="true"
           />
     </div>
 

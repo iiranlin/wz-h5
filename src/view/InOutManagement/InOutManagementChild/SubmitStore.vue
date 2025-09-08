@@ -41,7 +41,7 @@
         <span>报检信息</span>
       </div>
       <p class="box-container-p" v-if="!formData.fileList01?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
-      <file-upload-view :maxCount="5" :fileList="formData.fileList01 || []" businessType="01" />
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="5" :fileList="formData.fileList01 || []" businessType="01" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" v-if="queryType != 'submit' && formData.fileList01?.length">
