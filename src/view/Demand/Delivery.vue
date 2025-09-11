@@ -231,6 +231,16 @@ export default {
           status: 1
         },
         {
+          id: 4,
+          title: '审核中',
+          status: 8
+        },
+        {
+          id: 5,
+          title: '驳回',
+          status: 9
+        },
+        {
           id: 2,
           title: '货运中',
           status: 2
@@ -253,7 +263,9 @@ export default {
         { text: '全部', value: '', color: '' },
         { text: '未发货', value: '1', color: '#134daa' },
         { text: '货运中', value: '2', color: '#134daa' },
-        { text: '已完成', value: '3', color: '#51CA40' }
+        { text: '已完成', value: '3', color: '#51CA40' },
+        { text: '审核中', value: '8', color: '#134daa' },
+        { text: '驳回', value: '9', color: '#CE2320' }
       ],
     };
   },

@@ -3,4 +3,5 @@
 export const FLOW_ROUTE = {
     RKLC:'InboundDetails', // 入库
     SHLC:'DoAcceptDetail', // 收货
+    FHLC:'cargoDetails', // 发货
 }

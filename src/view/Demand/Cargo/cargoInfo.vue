@@ -110,7 +110,9 @@ export default {
         {text: '全部', value: ''},
         {text: '未发货', value: '1', color: '#134daa'},
         {text: '货运中', value: '2', color: '#134daa'},
-        {text: '已完成', value: '3', color: '#51CA40'}
+        {text: '已完成', value: '3', color: '#51CA40'},
+        {text: '审核中', value: '8', color: '#134daa'},
+        {text: '驳回', value: '9', color: '#CE2320'}
       ],
     }
   },
@@ -144,6 +146,10 @@ export default {
         return '/static/newIcon_freight.png'
       } else if ('3' == status) {
         return '/static/newIcon_done.png'
+      } else if ('8' == status) {
+        return '/static/newIcon_audit.png'
+      } else if ('9' == status) {
+        return '/static/newIcon_ReturnedGoods.png'
       } else {
         return '/static/newIcon_unshipped.png'
       }
