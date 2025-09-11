@@ -64,7 +64,13 @@
       </van-tabs>
     </div>
     <van-empty image="/empty-image-default.png" v-else description="暂无数据" />
+    <div class="van-hairline--top safe-area-inset-bottom default-button-container">
+      <van-button class="button-info" round type="info" v-if="detail.status === '1'" @click="handleExamineClick(detail)">提交审核</van-button>
+      <van-button class="button-info" plain round type="info" v-if="detail.status === '8'" @click.stop="recallClick(detail)">撤回</van-button>
+      <van-button class="button-info" round type="info" v-if="detail.status === '9'" @click.stop="rejectClick(detail)">驳回</van-button>
+    </div>
     <back-to-top className=".default-container"></back-to-top>
+    <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
   </div>
 </template>
 <script>
@@ -74,10 +80,12 @@ import DeliveryMaterialDetails from '@/view/Demand/Cargo/components/DeliveryMate
 import MaterialDetails from './components/MaterialDetails.vue'
 
 import {lookGoodsDetails, shippingOrderNumber} from '@/api/demand/returnGoods'
-import { listPc, detailWlgz } from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { listPc, detailWlgz, materialCirculationTableRestSubmit } from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { recall } from '@/api/prodmgr-inv/audit'
+import activitiAssignee from '@/components/activitiAssignee'
 export default {
   name: 'LogisticsView',
-  components: { LogisticsInformation, DeliveryMaterialDetails, BackToTop,MaterialDetails },
+  components: { LogisticsInformation, DeliveryMaterialDetails, BackToTop,MaterialDetails, activitiAssignee },
   data() {
     return {
       activeKey: {},
@@ -148,6 +156,40 @@ export default {
       const res = await detailWlgz(id)
       this.detail = res.data
       toast.clear()
+    },
+    //选择审核人回调
+    optionsSuccess(assignee, { id, planType }) {
+      materialCirculationTableRestSubmit({ ids: [id], planType: planType, assignee }).then(() => {
+        this.$toast('提交审核成功')
+        this.detailWlgz(this.activeKey.value)
+      })
+    },
+    //去审核点击
+    handleExamineClick(item) {
+      this.$dialog.confirm({
+        message: '确认要提交审核吗？',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.$refs.activitiAssignee.init('FHLC', item)
+      })
+    },
+    // 撤回
+    recallClick ({id}) {
+      this.$dialog.confirm({
+        message: '是否确认撤回?',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then( () => {
+        return recall({ businessId:id, businessType:'FHLC' })
+      }).then(() => {
+        this.$toast("撤回成功")
+        this.detailWlgz(this.activeKey.value)
+      })
+    },
+    // 驳回
+    rejectClick(item) {
+      this.$router.push({ name: 'ApprovalComments', query: { id: item.id, taskName: '发货', businessType: 'FHLC' } })
     }
   }
 }
