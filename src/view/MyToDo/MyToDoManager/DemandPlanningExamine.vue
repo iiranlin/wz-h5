@@ -294,7 +294,7 @@ export default {
         this.listObj = JSON.parse(this.$route.params.obj);
         this.type = this.$route.params.type;
         // ⼊库流程、收货流程不能操作修改后同意
-        this.showEditAdop = !["RKLC", "SHLC"].includes(this.listObj.businessType)
+        this.showEditAdop = !["RKLC", "SHLC","FHLC"].includes(this.listObj.businessType)
         
         //审核意见回调
         eventBus.$off('examineOpinionEdit');

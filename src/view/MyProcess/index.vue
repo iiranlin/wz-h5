@@ -31,6 +31,7 @@
 import IndexDetail from './components/indexDetail'
 import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { detailTakeBack, detailTake } from "@/api/prodmgr-inv/receive";
+import {detailBySend} from '@/api/demand/sendGoods'
 import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
 import {detailByStore} from '@/api/prodmgr-inv/materialCirculationTableRest'
 
@@ -61,6 +62,9 @@ export default {
       }
       if(this.businessType === "RKLC"){
         return this.form == "OverExamineList" || this.form == "WaitExamineList" || ["5", "6"].includes(this.storeStatus) ? detailStoreBack : detailByStore
+      }
+      if(this.businessType === "FHLC"){
+        return detailBySend
       }
       
       return materialDemandPlanRestDetail
