@@ -169,7 +169,7 @@
                 </van-steps> -->
               </div>
             </div>
-              <van-button v-if="params.oddNumbers == '' && params.status == 2" @click.stop="createPosition(params.shipmentBatchNumber )" icon="plus"  type="info" plain block round>添加货运位置</van-button>
+              <van-button v-if="params.oddNumbers == '' && params.status == 2 && userInfo.deptCode.startsWith('GYS')" @click.stop="createPosition(params.shipmentBatchNumber )" icon="plus"  type="info" plain block round>添加货运位置</van-button>
 
 
           </van-list>
