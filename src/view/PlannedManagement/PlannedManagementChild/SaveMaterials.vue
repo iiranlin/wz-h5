@@ -55,10 +55,10 @@
             <span>规格型号：</span>
             <span>{{ item.specModel }}</span>
           </li>
-          <!-- <li>
+          <li>
             <span>计量单位：</span>
             <span>{{ item.unit }}</span>
-          </li> -->
+          </li>
           <li>
             <span>合同数量：</span>
             <span class="li-span-click">{{ item.amount }}</span>

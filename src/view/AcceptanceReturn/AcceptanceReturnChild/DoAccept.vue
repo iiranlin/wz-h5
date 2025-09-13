@@ -150,6 +150,10 @@
             <span>规格型号：</span>
             <span>{{ item.specModel }}</span>
           </li>
+          <li>
+            <span>计量单位：</span>
+            <span>{{ item.unit }}</span>
+          </li>
           <!-- <li>
             <span>计量单位：</span>
             <span>{{ item.unit }}</span>
