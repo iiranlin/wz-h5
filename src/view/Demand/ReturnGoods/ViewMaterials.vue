@@ -20,7 +20,7 @@
         </li>
         <li>
           <span>退货数量：</span>
-          <span style="color: #e4393c;">{{ sectionInfo.refundTotal }}</span>
+          <span style="color: #e4393c;">{{ backNode=='1'?  sectionInfo.refundTotal:sectionInfo.refundZjTotal }}</span>
         </li>
         <li>
           <span>收货人及联系方式：</span>
@@ -28,7 +28,7 @@
         </li>
         <li>
           <span>供应时间：</span>
-          <span>{{ sectionInfo.supplyDate }}</span>
+          <span>{{ sectionInfo.supplyDate | formatDate }}</span>
         </li>
         <li>
           <span>生产日期：</span>
@@ -92,7 +92,11 @@ export default {
       return val ? dayjs(val).format('YYYY年MM月DD日') : ''
     }
   },
-
+  computed: {
+    backNode() {
+      return this.$route.query.backNode
+    }
+  },
   mounted() {
     this.init()
   },
