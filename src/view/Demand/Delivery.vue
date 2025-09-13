@@ -648,7 +648,7 @@ export default {
   display: none;
 }
 /* 按钮数量 ≤ 4 时右对齐 */
-.list-ul-button:has(> :nth-child(4):last-child),
+// .list-ul-button:has(> :nth-child(4):last-child),
 .list-ul-button:has(> :nth-child(3):last-child),
 .list-ul-button:has(> :nth-child(2):last-child),
 .list-ul-button:has(> :nth-child(1):last-child) {
