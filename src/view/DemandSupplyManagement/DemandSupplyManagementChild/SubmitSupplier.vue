@@ -19,7 +19,7 @@
         <img src="/static/icon-file.png">
         <span>需求计划表附件</span>
       </div>
-      <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持pdf、jpg、png、jpeg格式</p>
+      <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01" />
     </div>
     <div class="default-button-container">

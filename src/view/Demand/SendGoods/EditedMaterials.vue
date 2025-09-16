@@ -162,7 +162,7 @@
         <span>合格证附件</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.fileList01?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持pdf、jpg、png、jpeg格式</p>
+          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.fileList01 || []" businessType="01"
         class="outbound-field-uploader" />
     </div>
@@ -172,7 +172,7 @@
         <span>厂检报告附件</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.fileList02?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持pdf、jpg、png、jpeg格式</p>
+          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="sectionInfo.fileList02 || []"
         businessType="01" class="outbound-field-uploader" />
     </div>

@@ -1,29 +1,29 @@
 <template>
   <div class="save-materials" ref="container">
-      <div class="detail-base-info">
-        <div class="detail-title-text">
-          <p>需求名称：</p>
-          <p>{{ goodsMsg.planName }}</p>
-        </div>
-        <div class="detail-ul-text">
-          <ul class="detail-ul">
-            <li>
-              <span>建设项目：</span>
-              <span>{{ goodsMsg.projectName }}</span>
-            </li> 
-            <li>
-              <span>标段项目：</span>
-              <span>{{ goodsMsg.sectionName }}</span>
-            </li>
-            <li>
-              <span>合同名称：</span>
-              <span>{{ goodsMsg.contractName }}</span>
-            </li>
-          </ul>
-        </div>
+    <div class="detail-base-info">
+      <div class="detail-title-text">
+        <p>需求名称：</p>
+        <p>{{ goodsMsg.planName }}</p>
       </div>
+      <div class="detail-ul-text">
+        <ul class="detail-ul">
+          <li>
+            <span>建设项目：</span>
+            <span>{{ goodsMsg.projectName }}</span>
+          </li>
+          <li>
+            <span>标段项目：</span>
+            <span>{{ goodsMsg.sectionName }}</span>
+          </li>
+          <li>
+            <span>合同名称：</span>
+            <span>{{ goodsMsg.contractName }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-      <div class="detail-base-info detail-base-info-edited">
+    <div class="detail-base-info detail-base-info-edited">
       <template v-if="params.receiver || status === '2'">
         <div class="detail-title-content detail-title-edited-p">
           <p>
@@ -67,13 +67,13 @@
       </template>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0;">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0;">
       <template>
         <div class="detail-title-content">
           <img src="@/assets/img/Icon-invest.png" />
           <span>物流信息</span>
         </div>
-         <div class="detail-ul-text" v-if="status === '2'">
+        <div class="detail-ul-text" v-if="status === '2'">
           <ul class="detail-ul">
             <li>
               <span>物流单号：</span>
@@ -94,13 +94,8 @@
           </ul>
         </div>
         <div v-else>
-                    <van-field
-            v-model="params.oddNumbers"
-            :disabled="fileDisabled"
-            label="物流单号"
-            placeholder="物流单号"
-            input-align="right"
-          />
+          <van-field v-model="params.oddNumbers" :disabled="fileDisabled" label="物流单号" placeholder="物流单号"
+            input-align="right" />
           <!-- <van-field
             v-model="params.shippingAddress"
             :disabled="fileDisabled"
@@ -111,77 +106,45 @@
             input-align="right"
             :rules="[{ required: true, message: '请填写发货地址' }]"
           /> -->
-          <van-field
-            readonly
-            clickable
-            name="calendar"
-            :disabled="fileDisabled"
-            required
-            v-model="params.shippingDate"
-            label="发货日期"
-            input-align="right"
-            :value="params.shippingDate"
-            placeholder="点击选择日期"
-            @click="handlerShowCalendar('calendar')"
-            :rules="[{ required: true, message: '请填写发货日期' }]"
-          />
+          <van-field readonly clickable name="calendar" :disabled="fileDisabled" required v-model="params.shippingDate"
+            label="发货日期" input-align="right" :value="params.shippingDate" placeholder="点击选择日期"
+            @click="handlerShowCalendar('calendar')" :rules="[{ required: true, message: '请填写发货日期' }]" />
           <!-- <van-calendar v-model="showCalendar" @confirm="onConfirm" /> -->
           <Calendar ref="calendar" @onConfirm="onConfirm" />
-          <van-field
-            readonly
-            clickable
-            name="calendar"
-            :disabled="fileDisabled"
-            required
-            :value="params.arrivalDate"
-            label="预计送到时间"
-            input-align="right"
-            placeholder="点击选择日期"
-            @click="handlerShowCalendar('calendar2')"
-            :rules="[{ required: true, message: '请填写预计送达时间' }]"
-          />
+          <van-field readonly clickable name="calendar" :disabled="fileDisabled" required :value="params.arrivalDate"
+            label="预计送到时间" input-align="right" placeholder="点击选择日期" @click="handlerShowCalendar('calendar2')"
+            :rules="[{ required: true, message: '请填写预计送达时间' }]" />
           <!-- <van-calendar v-model="sendStop" @confirm="onStopConfirm" /> -->
           <Calendar ref="calendar2" @onConfirm="onStopConfirm" />
-          <van-field
-            v-model="params.carNumber"
-            label="车牌号"
-            @click.stop="fieldClick($event, 'carNumber')"
-            :disabled="fileDisabled"
-            type="text"
-            placeholder="车牌号"
-            input-align="right"
-          />
+          <van-field v-model="params.carNumber" label="车牌号" @click.stop="fieldClick($event, 'carNumber')"
+            :disabled="fileDisabled" type="text" placeholder="车牌号" input-align="right" />
         </div>
       </template>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>发货单附件</span>
       </div>
-      <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持pdf、jpg、png、jpeg格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01" class="outbound-field-uploader" />
+      <p class="box-container-p" v-if="!fileList.length"><span
+          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01"
+        class="outbound-field-uploader" />
     </div>
 
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>装车照片</span>
       </div>
-      <p class="box-container-p" v-if="!zczp.length">请选择文件上传，支持JPG格式</p>
-      <file-upload-view-type
-            :required="false"
-            class="outbound-field-uploader"
-            :fileList="zczp || []"
-            businessType="01"
-            accept=".jpg,.png,.jpeg,.pdf"
-            :maxCount="100"
-          />
+      <p class="box-container-p" v-if="!zczp.length">请选择文件上传，支持jpg、png、jpeg格式</p>
+      <file-upload-view-type :required="false" class="outbound-field-uploader" :fileList="zczp || []" businessType="01"
+        accept=".jpg,.png,.jpeg,.pdf" :maxCount="100" />
     </div>
 
     <div class="detail-floor-content" v-if="status !== '2'">
-      <div >
+      <div>
         <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '0' }"
           @click="btnClick('0')">全部物资</van-button>
         <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '1' }"
@@ -190,11 +153,12 @@
       <span @click="returnClick"><span class="detail-floor-content-add">+</span>添加物资</span>
     </div>
     <div v-else class="detail-floor-content detail-header">
-      <img src="/static/icon-return.png"/>
+      <img src="/static/icon-return.png" />
       <span>物资明细（共{{btnClickIndex == '0' ? materiaList.length : editMateriaList.length}}项）</span>
     </div>
 
-    <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList" :key="item.id"
+    <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList"
+      :key="item.id"
       :class="item.manufactureDate && item.packagingFm && item.fileList01?.length > 0 ? '' : 'box-container-unedited'">
       <div class="div-child">
         <ul class="detail-list-ul">
@@ -261,19 +225,21 @@
       </div>
     </div>
 
-        <div class="default-button-container">
+    <div class="default-button-container">
       <div class="default-button-container-selected">
-        <span>已填写 <span class="li-span-click">{{ editedMateriaList.length }}</span><span>/{{ materiaList.length }}</span>
+        <span>已填写 <span class="li-span-click">{{ editedMateriaList.length }}</span><span>/{{ materiaList.length
+            }}</span>
         </span>
       </div>
       <div class="default-button-container-button">
-        <van-button  :class="{'van-button--disabled': !isFlag}" class="button-info" round type="info" @click="onSubmit">保存</van-button>
-        
+        <van-button :class="{'van-button--disabled': !isFlag}" class="button-info" round type="info"
+          @click="onSubmit">保存</van-button>
+
         <!-- <p style="font-size: 12px;" v-if="!isFlag"><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资发货信息</span></p> -->
       </div>
     </div>
 
-      <!-- <div class="list-ul" style="margin-top: 26px; padding: 10px">
+    <!-- <div class="list-ul" style="margin-top: 26px; padding: 10px">
         <van-form :key="formKey" ref="form">
           <van-field
             v-model="params.oddNumbers"
@@ -374,8 +340,8 @@
           />
         </div>
       </div> -->
-      <!-- 编辑里的选择发货物资传的是planId -->
-      <!-- <div class="default-button-container">
+    <!-- 编辑里的选择发货物资传的是planId -->
+    <!-- <div class="default-button-container">
         <van-button
           size="mini"
           type="primary"
