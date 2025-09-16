@@ -267,7 +267,7 @@
         </span>
       </div>
       <div class="default-button-container-button">
-        <van-button v-if="isFlag" class="button-info" round type="info" @click="onSubmit">提交</van-button>
+        <van-button v-if="isFlag" class="button-info" round type="info" @click="onSubmit">保存</van-button>
 
         <p style="font-size: 12px;" v-else><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资发货信息</span></p>
       </div>

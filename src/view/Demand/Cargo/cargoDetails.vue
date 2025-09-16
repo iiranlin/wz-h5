@@ -188,7 +188,7 @@
     </div>
     <div class="default-button-container" v-if="params.status == 1">
       <van-button size="mini" type="info" round class="button-info"
-                  @click="handleSendGoodsClick(params.id)" v-if="params.status == 1">确认发货
+                  @click="handleSendGoodsClick(params.id)" v-if="params.status == 1">提交发货审核
       </van-button>
     </div>
     <div class="default-button-container" v-if="btnEvent==true">
@@ -431,7 +431,7 @@ export default {
     handleSendGoodsClick(id) {
       Dialog.confirm({
         title: '',
-        message: '确定已经发货？',
+        message: '确定提交发货审核？',
         confirmButtonColor: '#1989fa'
       })
           .then(() => {

@@ -101,10 +101,10 @@
                   </ul>
                   <div class="list-ul-button" v-if="item.status != 3">
                     <van-button class="button-info" plain round type="info" @click.stop="handleSendGoodsClick(item.id)"
-                      v-if="item.status == 1">确认发货</van-button>
+                      v-if="item.status == 1">提交发货审核</van-button>
                     <van-button class="button-info"  plain round type="info"
                                 style="color: black; border-color: #d9d9d9; background-color: white;"
-                      @click.stop="handleEditClick(item.id, 'edit',item.planId)" v-if="item.status == 1">编辑</van-button>
+                      @click.stop="handleEditClick(item.id, 'edit',item.planId)" v-if="item.status == 1 || item.status == 9">编辑</van-button>
                     <van-button class="button-info" plain round type="danger" @click.stop="handleDelClick(item.id)"
                                 style="color: black; border-color: #d9d9d9; background-color: white;"
                                 v-if="item.status == 1">删除</van-button>
@@ -125,7 +125,14 @@
                       v-if="item.status == 2">货运详情</van-button>
                     <van-button class="button-info" plain round type="info" size="mini"
                     @click.stop="createPosition(item.shipmentBatchNumber)"
-                      v-if="item.oddNumbers == '' && item.status == 2">增加货运位置</van-button>
+                      v-if="item.oddNumbers == '' && item.status == 2">+货运位置</van-button>
+
+                      <!-- 撤销审核 -->
+                      <van-button v-if="item.status == 8" class="button-info" plain round type="info" size="mini"
+                      @click.stop="handleCancelClick(item.id)"
+                      >撤销审核</van-button>
+
+                    <van-button v-if="item.status != 1" class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
 <!--                    @click.stop="handleConfirmClick(item.shipmentBatchNumber)"-->
                   </div>
                 </div>
@@ -187,6 +194,7 @@ import { Toast } from 'vant';
 import { Step, Steps } from 'vant';
 import FilePreview from "@/components/FilePreview.vue";
 import { snedGoodsList, snedGoodsSure, deleteGoods, addFreightLocations, addList } from '@/api/demand/sendGoods'
+import {recall} from '@/api/prodmgr-inv/audit'
 
 Vue.use(Step);
 Vue.use(Steps);
@@ -278,6 +286,17 @@ export default {
     this.$store.commit('removeThisPage', 'SendGoods')
   },
   methods: {
+        //查看流程点击
+   handleProcessClick({ id:businessId, takeStatus }) {
+      this.$router.push({ 
+                name: "MyProcess", 
+                params: { 
+                    businessType:'FHLC',
+                    businessId,
+                    form: this.$route.name
+                } 
+            })
+        },
     getList() {
       Toast.loading({
         message: '加载中...',
@@ -325,7 +344,7 @@ export default {
     handleSendGoodsClick(id) {
       Dialog.confirm({
         title: '',
-        message: '确定已经发货？',
+        message: '确定提交发货审核？',
         confirmButtonColor: '#1989fa'
       })
         .then(() => {
@@ -483,6 +502,25 @@ export default {
       }).catch(() => {
       });
     },
+    // 撤销审核
+    handleCancelClick(id) {
+      this.$dialog.confirm({
+        message: '确认要撤销审核吗？',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        
+        recall({ businessId:id,businessType:'FHLC' }).then((res) => {
+          if (res.code == 0) {
+            Toast.success(res.message);
+            this.allRefreshLoading = true
+            this.finished = false
+            this.params.pageNum = 1
+            this.getList();
+          }
+        })
+      })
+    },
     // 取消
     cancelDiaLog() {
       this.formKey++
@@ -599,9 +637,23 @@ export default {
 }
 .list-ul-button {
   display: flex;
+  flex-wrap: nowrap;     /* 不换行 */
+  overflow-x: auto;      /* 允许横向滚动 */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch; /* 移动端平滑滚动 */
+  gap: 8px;              /* 按钮之间留点间距 */
+}
+/* 隐藏滚动条（可选） */
+.list-ul-button::-webkit-scrollbar {
+  display: none;
+}
+/* 按钮数量 ≤ 4 时右对齐 */
+// .list-ul-button:has(> :nth-child(4):last-child),
+.list-ul-button:has(> :nth-child(3):last-child),
+.list-ul-button:has(> :nth-child(2):last-child),
+.list-ul-button:has(> :nth-child(1):last-child) {
   justify-content: flex-end;
 }
-
 .locationsteps {
   height: 200px;
   padding: 10px;

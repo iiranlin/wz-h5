@@ -53,7 +53,7 @@
         <img src="/static/icon-file.png" />
         <span>退货明细</span>
       </div>
-          <material-details :list="params.materialCirculationDetailsTableDTOS" :planStatus="params.planStatus"></material-details>
+          <material-details :backNode="params.issueType" :list="params.materialCirculationDetailsTableDTOS" :planStatus="params.planStatus"></material-details>
     </div>
 
         <div class="detail-base-info detail-base-info-edited">

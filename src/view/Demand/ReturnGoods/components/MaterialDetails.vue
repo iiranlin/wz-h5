@@ -17,7 +17,7 @@
           </li>
           <li>
             <span>退货数量：</span>
-            <span class="li-span-click">{{ item.refundTotal }}</span>
+            <span class="li-span-click">{{backNode=='1' ? item.refundTotal : item.refundZjTotal }}</span>
           </li>
           <li>
             <span>退货附件（数量）：</span>
@@ -81,6 +81,11 @@ export default {
       finished: false,
     }
   },
+  computed: {
+    backNode () {
+      return this.$route.query.issueType
+    }
+  },
   created() {
   },
   activated() {
@@ -89,7 +94,7 @@ export default {
   },
   methods: {
     detailsClick (item) {
-      this.$router.push({name: 'ViewMaterialsReturn', query: {data: JSON.stringify(item)}})
+      this.$router.push({name: 'ViewMaterialsReturn', query: {backNode: this.backNode, data: JSON.stringify(item)}})
     }
   },
 }
