@@ -233,7 +233,7 @@
       </div>
       <div class="default-button-container-button">
         <van-button :class="{'van-button--disabled': !isFlag}" class="button-info" round type="info"
-          @click="onSubmit">保存</van-button>
+          @click="onSubmit">保存发货单</van-button>
 
         <!-- <p style="font-size: 12px;" v-if="!isFlag"><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资发货信息</span></p> -->
       </div>
