@@ -101,7 +101,16 @@ export default {
             return true;
         },
         //校验附件上传
-     async   afterReadTransfer(file) {
+        async afterReadTransfer (file) {
+
+            file.status = 'uploading';
+            file.message = '上传中...';
+            const Toast = this.$toast.loading({
+                message: '上传中...',
+                duration: 0,
+                forbidClick: true,
+            });
+            
             const fileName = file.file.name;
             const fileType = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
             const imageTypes = ['jpg', 'jpeg', 'png', 'bmp'];
@@ -125,13 +134,7 @@ export default {
             formData.append("businessType", this.businessType);
             formData.append("key", processedFile.name);
 
-            file.status = 'uploading';
-            file.message = '上传中...';
-            const Toast = this.$toast.loading({
-                message: '上传中...',
-                duration: 0,
-                forbidClick: true,
-            });
+           
 
             const uploadApi = imageTypes.includes(fileType) ? minioImageToPdf : minioUpload;
 
