@@ -267,9 +267,9 @@
         </span>
       </div>
       <div class="default-button-container-button">
-        <van-button v-if="isFlag" class="button-info" round type="info" @click="onSubmit">保存</van-button>
-
-        <p style="font-size: 12px;" v-else><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资发货信息</span></p>
+        <van-button  :class="{'van-button--disabled': !isFlag}" class="button-info" round type="info" @click="onSubmit">保存</van-button>
+        
+        <!-- <p style="font-size: 12px;" v-if="!isFlag"><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资发货信息</span></p> -->
       </div>
     </div>
 
@@ -891,12 +891,21 @@ export default {
       return /[\u4e00-\u9fa5]/.test(str);
     },
     onSubmit() {
+     
       // console.log(this.$store.state.public.sendGoods, "this.$store.state.public.sendGoods")
       // console.log(this.params, this.fileList, this.materiaList, this.goodsMsg.sectionName, this.goodsMsg.planName, this.goodsMsg.id, "发货传参")
       if (this.containsChinese(this.params.oddNumbers)) {
         this.$notify({
           type: 'warning',
           message: '[物流单号]不可输入中文字符!',
+        });
+        return
+      }
+
+      if(!this.isFlag){
+        this.$notify({
+          type: 'warning',
+          message: '请完善发货信息',
         });
         return
       }
@@ -1468,6 +1477,7 @@ li :nth-child(2) {
 
     .default-button-container-button{
       display: flex;
+      flex-direction: column;
       .button-info{
         margin-left: 10px;
       }
