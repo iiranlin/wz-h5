@@ -180,6 +180,7 @@ export default {
         });
 
         const submitData = {
+          ...this.formData,
           unitType: this.formData.unitType,
           deviceType: this.formData.deviceType,
           unitName: this.formData.unitName,
