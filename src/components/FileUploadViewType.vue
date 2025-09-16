@@ -30,6 +30,7 @@
 <script>
 import {minioUpload, minioImageToPdf} from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
+import { compressPDF, compressImage } from "@/utils/index.js";
 
 export default {
     components: {FilePreview},
@@ -99,43 +100,49 @@ export default {
             return true;
         },
         //校验附件上传
-        afterReadTransfer(file){
-            let formData = new FormData();
-            formData.append("file", file.file);
-            formData.append("businessType",this.businessType);
-            formData.append("key",file.file.name);
-            
-            file.status = 'uploading';
-            file.message = '上传中...';
-            const Toast = this.$toast.loading({
-              message: '上传中...',
-              duration: 0,
-              forbidClick: true,
-            });
-
+        async afterReadTransfer (file) {
             const fileName = file.file.name;
             const fileType = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
             const imageTypes = ['jpg', 'jpeg', 'png', 'bmp'];
-            const isImage = imageTypes.includes(fileType);
-            const uploadApi = isImage ? minioImageToPdf : minioUpload;
-            uploadApi(formData).then(({data}) => {
-                this.$notify({
-                    type: 'success',
-                    message: "上传成功"
-                });
-                let file = {
-                    fileName: data.fileName,
-                    filePath: data.filePath,
-                }
+
+            // 压缩配置
+            const compressConfig = {
+                limitSizeMB: 0,  // >20MB 才压缩, 设置 0 表示所有文件都压缩
+                quality: 0.1      // 压缩比 80%
+            };
+
+            let processedFile = file.file;
+            if (imageTypes.includes(fileType)) {
+                processedFile = await compressImage(file.file, compressConfig);
+            }
+            // else if (fileType === 'pdf') {
+            //     processedFile = await compressPDF(file.file, compressConfig);
+            // }
+
+            let formData = new FormData();
+            formData.append("file", processedFile);
+            formData.append("businessType", this.businessType);
+            formData.append("key", processedFile.name);
+
+            file.status = 'uploading';
+            file.message = '上传中...';
+            const Toast = this.$toast.loading({
+                message: '上传中...',
+                duration: 0,
+                forbidClick: true,
+            });
+
+            const uploadApi = imageTypes.includes(fileType) ? minioImageToPdf : minioUpload;
+
+            uploadApi(formData).then(({ data }) => {
+                this.$notify({ type: 'success', message: "上传成功" });
+                let file = { fileName: data.fileName, filePath: data.filePath };
                 this.fileList.push(file);
-            }).catch((err) => {
-                this.$notify({
-                    type: 'warning',
-                    message: "上传失败"
-                });
-            }).finally( () => {
-              Toast.clear();
-            })
+            }).catch(() => {
+                this.$notify({ type: 'warning', message: "上传失败" });
+            }).finally(() => {
+                Toast.clear();
+            });
         },
          //匹配附件图标
         checkFileImage(fileName){

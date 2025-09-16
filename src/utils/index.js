@@ -264,3 +264,54 @@ export function handlerTextColor(statusList, value, status) {
 
   return textColor ? { color: textColor + ' !important' } : {}
 }
+
+
+import imageCompression from 'browser-image-compression';
+
+export async function compressImage (file, { limitSizeMB = 20, quality = 0.8 } = {}) {
+  const fileSizeMB = file.size / 1024 / 1024;
+  const needCompress = limitSizeMB === 0 || fileSizeMB > limitSizeMB;
+
+  if (!needCompress) return file;
+
+  try {
+    const compressedBlob = await imageCompression(file, {
+      maxSizeMB: fileSizeMB * quality,
+      initialQuality: quality,
+      useWebWorker: true
+    });
+
+    // 转成 File 并保留原始文件名
+    return new File([compressedBlob], file.name, { type: file.type });
+  } catch (error) {
+    console.error("图片压缩失败:", error);
+    return file;
+  }
+}
+
+
+import { PDFDocument } from 'pdf-lib';
+
+export async function compressPDF (file, { limitSizeMB = 20, quality = 0.8 } = {}) {
+  const fileSizeMB = file.size / 1024 / 1024;
+  const needCompress = limitSizeMB === 0 || fileSizeMB > limitSizeMB;
+
+  if (!needCompress) return file;
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+
+    const pages = pdfDoc.getPages();
+    for (let page of pages) {
+      const { width, height } = page.getSize();
+      page.setSize(width * quality, height * quality);
+    }
+
+    const compressedPdfBytes = await pdfDoc.save({ useObjectStreams: false });
+    return new File([compressedPdfBytes], file.name, { type: 'application/pdf' });
+  } catch (error) {
+    console.error("PDF 压缩失败:", error);
+    return file;
+  }
+}
