@@ -29,8 +29,7 @@
       </ul>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field label="发货数量" placeholder="请输入发货数量" required clearable
-            input-align="right">
+          <van-field label="发货数量" placeholder="请输入发货数量" required clearable input-align="right">
             <template #input>
               <van-stepper v-model="sectionInfo.sendTotal" :min="0" :max="sectionInfo.ssendTotal" />
             </template>
@@ -50,54 +49,52 @@
         </li>
         <li class="detail-list-li-input">
           <van-field readonly clickable v-model="sectionInfo.manufactureDate" required name="datetimePicker"
-                :value="sectionInfo.manufactureDate" label="生产日期" placeholder="点击选择日期"
-                @click="showCalendars('show')" input-align="right" />
+            :value="sectionInfo.manufactureDate" label="生产日期" placeholder="点击选择日期" @click="showCalendars('show')"
+            input-align="right" />
         </li>
         <li class="detail-list-li-input">
           <van-field readonly clickable v-model="sectionInfo.expirationDate" name="datetimePicker"
-                :value="sectionInfo.expirationDate" label="有效截止日期" placeholder="有效截止日期"
-                @click="showCalendars('end')" input-align="right" />
-        </li>
-        <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.field0" label="投资方" placeholder="投资方" readonly 
+            :value="sectionInfo.expirationDate" label="有效截止日期" placeholder="有效截止日期" @click="showCalendars('end')"
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.field1" label="投资比例" placeholder="投资比例" readonly 
-            input-align="right" />
+          <van-field v-model="sectionInfo.field0" label="投资方" placeholder="投资方" readonly input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.addr" label="使用地点" placeholder="使用地点" readonly 
-            input-align="right" />
+          <van-field v-model="sectionInfo.field1" label="投资比例" placeholder="投资比例" readonly input-align="right" />
+        </li>
+        <li class="detail-list-li-input">
+          <van-field v-model="sectionInfo.addr" label="使用地点" placeholder="使用地点" readonly input-align="right" />
         </li>
       </ul>
       <div class="detail-base-info-edited-all" style="padding-top: 0; margin: 5px 0;">
-        <p @click="applicationAllClick({packagingFm: '', expirationDate: '', manufactureDate: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+        <p @click="applicationAllClick({packagingFm: '', expirationDate: '', manufactureDate: ''})"><img
+            src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
       </div>
     </div>
     <div class="detail-base-info detail-base-info-edited">
       <template>
         <div class="detail-title-content">
-        <img src="@/assets/img/Icon-address.png" />
-        <span>收货信息</span>
-      </div>
-      <ul class="detail-list-ul-edited">
-        <li class="detail-list-li-input">
-          <van-field required v-model="sectionInfo.receiver" label="收货人及联系方式" placeholder="请输入收货人及联系方式"
-            input-align="right" />
-        </li>
-        <!-- <li class="detail-list-li-input">
+          <img src="@/assets/img/Icon-address.png" />
+          <span>收货信息</span>
+        </div>
+        <ul class="detail-list-ul-edited">
+          <li class="detail-list-li-input">
+            <van-field required v-model="sectionInfo.receiver" label="收货人及联系方式" placeholder="请输入收货人及联系方式"
+              input-align="right" />
+          </li>
+          <!-- <li class="detail-list-li-input">
           <van-field required v-model="sectionInfo.phone" label="联系方式" placeholder="请输入联系方式"
             input-align="right" />
         </li> -->
-        <li class="detail-list-li-input">
-          <van-field required v-model="sectionInfo.field2" label="收货地址" placeholder="请输入收货地址"
-            input-align="right" />
-        </li>
-      </ul>
-      <div class="detail-base-info-edited-all" style="padding-top: 0; margin: 5px 0;">
-        <p @click="applicationAllClick({receiver: '', field2: '', phone: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
-      </div>
+          <li class="detail-list-li-input">
+            <van-field required v-model="sectionInfo.field2" label="收货地址" placeholder="请输入收货地址" input-align="right" />
+          </li>
+        </ul>
+        <div class="detail-base-info-edited-all" style="padding-top: 0; margin: 5px 0;">
+          <p @click="applicationAllClick({receiver: '', field2: '', phone: ''})"><img
+              src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+        </div>
       </template>
       <!-- <template v-if="sectionInfo.receiver">
         <div class="detail-title-content detail-title-edited-p">
@@ -159,21 +156,25 @@
         <p @click="applicationAllClick({supplyDate: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
       </div>
     </div>
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>合格证附件</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.fileList01?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.fileList01 || []" businessType="01" class="outbound-field-uploader" />
+      <p class="box-container-p" v-if="!sectionInfo?.fileList01?.length"><span
+          class="li-span-red">*</span>必填项，请选择文件上传，支持pdf、jpg、png、jpeg格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.fileList01 || []" businessType="01"
+        class="outbound-field-uploader" />
     </div>
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>厂检报告附件</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.fileList02?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="sectionInfo.fileList02 || []" businessType="01" class="outbound-field-uploader" />
+      <p class="box-container-p" v-if="!sectionInfo?.fileList02?.length"><span
+          class="li-span-red">*</span>必填项，请选择文件上传，支持pdf、jpg、png、jpeg格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="sectionInfo.fileList02 || []"
+        businessType="01" class="outbound-field-uploader" />
     </div>
     <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
@@ -190,8 +191,8 @@
       <van-button class="button-info" round type="info" @click="sureClick(true)">确定</van-button>
     </div>
     <!-- 生产日期 -->
-     <Calendar ref="calendar" @onConfirm="createConfirm" />
-     <Calendar ref="calendar2" @onConfirm="createConfirm" />
+    <Calendar ref="calendar" @onConfirm="createConfirm" />
+    <Calendar ref="calendar2" @onConfirm="createConfirm" />
     <!-- <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date='minDate' :max-date="maxDate"/>
     <van-calendar v-model="showCalendar" @confirm="createConfirm" /> -->
   </div>

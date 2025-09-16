@@ -88,7 +88,7 @@
         <img src="/static/icon-file.png">
         <span>自检单</span>
       </div>
-      <p class="box-container-p" v-if="!fileZjdList?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
+      <p class="box-container-p" v-if="!fileZjdList?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持pdf、jpg、png、jpeg格式</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="fileZjdList" businessType="01" />
     </div>
 
@@ -97,7 +97,7 @@
         <img src="/static/icon-file.png">
         <span>其他资料</span>
       </div>
-      <p class="box-container-p" v-if="!fileQtzlList?.length">非必填，请选择文件上传，支持PDF格式</p>
+      <p class="box-container-p" v-if="!fileQtzlList?.length">非必填，请选择文件上传，支持pdf、jpg、png、jpeg格式</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="fileQtzlList" businessType="01" />
     </div>
 

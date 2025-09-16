@@ -160,7 +160,7 @@
         <img src="/static/icon-file.png">
         <span>发货单附件</span>
       </div>
-      <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持PDF格式</p>
+      <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持pdf、jpg、png、jpeg格式</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
