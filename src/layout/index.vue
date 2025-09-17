@@ -86,12 +86,6 @@ export default {
 					link: '/WaitExamineList'
 				},
 				{
-					title: '待处理',
-					activeIcon: '/static/DCL_A.png',
-					normalIcon: '/static/DCL_B.png',
-					link: '/WaitHandleList'
-				},
-				{
 					title: '已审核',
 					activeIcon: '/static/YSH_A.png',
 					normalIcon: '/static/YSH_B.png',
@@ -149,9 +143,7 @@ export default {
 		
 		const code = this.checkDeptCode()
 
-		if (code != 'WZDL' && code != 'WD' && code != 'SN') {
-			this.checkNavMenu();
-		 }
+		this.checkNavMenu();
 	},
 	methods: {
 		//判断角色deptCode
@@ -182,15 +174,25 @@ export default {
 				// 跳转到施工单位首页
 				this.$router.push({ path: '/constructionUnitsPage' })
 			} else if (code == 'JL') {
-			  // 跳转到监理单位首页
-				this.$router.push({ path: '/supervisorPage' })
+				// 跳转到监理单位首页
+				if (this.$route.path === '/') {
+					this.$router.push({ path: '/supervisorPage' });
+				}
+				// supervisorPage should not have tabbar
+				if (this.$route.path !== '/supervisorPage') {
+					return this.supervisionUnit;
+				}
 			} else if (code == 'GYS') {
 			  // 跳转到供应商首页
 				this.$router.push({ path: '/supplierPage' })
-			} else if (code == 'SN') {
-			  return this.supervisionUnitSN
-			} else if (code == 'WZDL' || code == 'WD') {
-			  return this.materialsAgent
+			} else if (code == 'SN' || code == 'WZDL' || code == 'WD') {
+				if (this.$route.path === '/') {
+					this.$router.push({ path: '/supervisorPage' });
+				}
+				// supervisorPage should not have tabbar
+				if (this.$route.path !== '/supervisorPage') {
+					return this.supervisionUnitSN;
+				}
 			} else {
 			  return this.constructionUnit
 			}
