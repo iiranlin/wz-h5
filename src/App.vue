@@ -70,7 +70,7 @@ export default {
 			if (code == 'FB' || code == 'ZB') {
 				// 跳转到施工单位首页
 				this.$router.push({ path: '/constructionUnitsPage' })
-			} else if (code == 'JL') {
+			} else if (code == 'JL' || code == 'SN' || code == 'WZDL' || code == 'WD') {
 			  // 跳转到监理单位首页
 				this.$router.push({ path: '/supervisorPage' })
 			} else if (code == 'GYS') {
