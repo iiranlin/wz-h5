@@ -24,11 +24,11 @@
         </li>
         <li>
           <span>本次计划数量：</span>
-          <span>{{ sectionInfo.planAmount }}</span>
+          <span>{{ sectionInfo.planAmount }} {{ sectionInfo.unit }}</span>
         </li>
         <li>
           <span>发货数量：</span>
-          <span>{{ sectionInfo.sendTotal }}</span>
+          <span>{{ sectionInfo.sendTotal }} {{ sectionInfo.unit }}</span>
         </li>
         <li>
           <span>计量单位：</span>

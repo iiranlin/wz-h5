@@ -177,16 +177,16 @@
           </li>
           <li>
             <span>本次计划数量：</span>
-            <span v-if="item.planAmount">{{ item.planAmount }}</span>
+            <span v-if="item.planAmount">{{ item.planAmount }} {{ item.unit }}</span>
             <span v-else class="li-span-grey">填写</span>
           </li>
           <li>
             <span>本次需求未发货数量：</span>
-            <span>{{ item.ssendTotal }}</span>
+            <span>{{ item.ssendTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>发货数量：</span>
-            <span class="li-span-click">{{ item.sendTotal }}</span>
+            <span class="li-span-click">{{ item.sendTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>收货人及联系方式：</span>

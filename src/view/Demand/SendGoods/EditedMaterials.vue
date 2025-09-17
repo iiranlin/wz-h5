@@ -20,11 +20,11 @@
         </li>
         <li>
           <span>本次计划数量：</span>
-          <span>{{ sectionInfo.planAmount }}</span>
+          <span>{{ sectionInfo.planAmount }} {{ sectionInfo.unit }}</span>
         </li>
         <li>
           <span>本次需求未发货数量：</span>
-          <span>{{ sectionInfo.ssendTotal }}</span>
+          <span>{{ sectionInfo.ssendTotal }} {{ sectionInfo.unit }}</span>
         </li>
       </ul>
       <ul class="detail-list-ul-edited">

@@ -21,15 +21,15 @@
           </li>
           <li>
             <span>合同数量：</span>
-            <span class="li-span-click">{{ item.amount }}</span>
+            <span class="li-span-click">{{ item.amount }} {{ item.unit }}</span>
           </li>
           <li class="li-item-overlength">
             <span>累计计划量(含本次)：</span>
-            <span class="li-span-click">{{ item.cumulativeAmount }}</span>
+            <span class="li-span-click">{{ item.cumulativeAmount }} {{ item.unit }}</span>
           </li>
           <li class="li-item-overlength">
             <span>本次计划数量：</span>
-            <span class="li-span-click">{{ item.planAmount }}</span>
+            <span class="li-span-click">{{ item.planAmount }} {{ item.unit }}</span>
           </li>
           <li>
             <span>供应时间：</span>

@@ -64,15 +64,15 @@
         </li>
         <li class="li-item-overlength">
           <span>本次计划数量：</span>
-          <span>{{item.planAmount}}</span>
+          <span>{{item.planAmount}} {{item.unit}}</span>
         </li>
         <li class="li-item-overlength">
           <span>累计入库数量：</span>
-          <span>{{item.storeTotal}}</span>
+          <span>{{item.storeTotal}} {{item.unit}}</span>
         </li>
         <li>
           <span>当前库存：</span>
-          <span>{{item.stockStatus}}</span>
+          <span>{{item.stockStatus}} {{item.unit}}</span>
         </li>
       </ul>
     </div>

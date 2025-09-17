@@ -13,11 +13,11 @@
           </li>
           <li>
             <span>发货数量：</span>
-            <span>{{ item.sendTotal }}</span>
+            <span>{{ item.sendTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>退货数量：</span>
-            <span class="li-span-click">{{backNode=='1' ? item.refundTotal : item.refundZjTotal }}</span>
+            <span class="li-span-click">{{backNode=='1' ? item.refundTotal : item.refundZjTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>退货附件（数量）：</span>

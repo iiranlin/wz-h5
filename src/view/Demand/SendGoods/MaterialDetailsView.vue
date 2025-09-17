@@ -17,15 +17,15 @@
             </li>
              <li>
               <span>合同数量：</span>
-              <span class="li-span-click">{{ detailInfo.amount }}</span>
+              <span class="li-span-click">{{ detailInfo.amount }} {{ detailInfo.unit }}</span>
             </li>
             <li>
               <span>累计计划量(含本次)：</span>
-              <span class="li-span-click">{{ detailInfo.cumulativeAmount }}</span>
+              <span class="li-span-click">{{ detailInfo.cumulativeAmount }} {{ detailInfo.unit }}</span>
             </li>
             <li>
               <span>本次计划数量：</span>
-              <span class="li-span-click">{{ detailInfo.planAmount }}</span>
+              <span class="li-span-click">{{ detailInfo.planAmount }} {{ detailInfo.unit }}</span>
             </li>
             <li>
               <span>供应时间:</span>
@@ -57,7 +57,7 @@
           </li>
           <li style="color: red;">
               <span>本次需求未发货数量：</span>
-              <span >{{ detailInfo.ssendTotal }}</span>
+              <span >{{ detailInfo.ssendTotal }} {{ detailInfo.unit }}</span>
             </li>
         <!-- <li>
           <span>规格型号：</span>

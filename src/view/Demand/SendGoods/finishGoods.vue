@@ -25,11 +25,11 @@
                 </li>
                 <li>
                   <span style="min-width: 2rem;">本次计划数量：</span>
-                  <span>{{ item.planAmount }}</span>
+                  <span>{{ item.planAmount }} {{ item.unit }}</span>
                 </li>
                 <li style="color: red;">
                   <span style="min-width: 4rem;">本次需求未发货数量：</span>
-                  <span>{{ item.ssendTotal }}</span>
+                  <span>{{ item.ssendTotal }} {{ item.unit }}</span>
                 </li>
               </ul>
             </div>

@@ -8,19 +8,19 @@
       <ul class="detail-list-ul">
         <li>
           <span>规格型号：</span>
-          <span>{{ sectionInfo.specModel }}</span>
+          <span>{{ sectionInfo.specModel }} {{ sectionInfo.unit }}</span>
         </li>
         <li>
           <span>需求数量：</span>
-          <span>{{ sectionInfo.planAmount }}</span>
+          <span>{{ sectionInfo.planAmount }} {{ sectionInfo.unit }}</span>
         </li>
         <li>
           <span>发货数量：</span>
-          <span>{{ sectionInfo.sendTotal }}</span>
+          <span>{{ sectionInfo.sendTotal }} {{ sectionInfo.unit }}</span>
         </li>
         <li>
           <span>退货数量：</span>
-          <span style="color: #e4393c;">{{ backNode=='1'?  sectionInfo.refundTotal:sectionInfo.refundZjTotal }}</span>
+          <span style="color: #e4393c;">{{ backNode=='1'?  sectionInfo.refundTotal:sectionInfo.refundZjTotal }} {{ sectionInfo.unit }}</span>
         </li>
         <li>
           <span>收货人及联系方式：</span>

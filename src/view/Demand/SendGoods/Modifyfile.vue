@@ -148,11 +148,11 @@
                                     </li>
                                      <li>
                                         <span>发货数量:</span>
-                                        <span class="li-span-click">{{ item.sendTotal }}</span>
+                                        <span class="li-span-click">{{ item.sendTotal }} {{ item.unit }}</span>
                                     </li>
                                     <li>
                                         <span style="min-width: 3rem;">本次计划数量:</span>
-                                        <span class="li-span-click">{{ item.planAmount }}</span>
+                                        <span class="li-span-click">{{ item.planAmount }} {{ item.unit }}</span>
                                     </li>
                                     <li>
                                         <span>包装形式:</span>

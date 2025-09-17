@@ -24,15 +24,15 @@
         </li>
         <li>
           <span>需求数量：</span>
-          <span class="li-span-click">{{ sectionInfo.planAmount }}</span>
+          <span class="li-span-click">{{ sectionInfo.planAmount }} {{ sectionInfo.unit }}</span>
         </li>
         <li>
           <span>发货数量：</span>
-          <span class="li-span-click">{{ sectionInfo.sendTotal }}</span>
+          <span class="li-span-click">{{ sectionInfo.sendTotal }} {{ sectionInfo.unit }}</span>
         </li>
         <li class="li-item-overlength">
           <span>本次实收数量：</span>
-          <span class="li-span-click">{{ sectionInfo.putTotal }}</span>
+          <span class="li-span-click">{{ sectionInfo.putTotal }} {{ sectionInfo.unit }}</span>
         </li>
         <li>
           <span>生产日期：</span>

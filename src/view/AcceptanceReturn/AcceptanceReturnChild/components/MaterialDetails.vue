@@ -13,23 +13,23 @@
           </li>
           <li>
             <span>需求数量：</span>
-            <span>{{ item.planAmount }}</span>
+            <span>{{ item.planAmount }} {{ item.unit }}</span>
           </li>
           <li>
             <span>发货数量：</span>
-            <span>{{ item.sendTotal }}</span>
+            <span>{{ item.sendTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>本次实收数量：</span>
-            <span class="li-span-click">{{ item.putTotal }}</span>
+            <span class="li-span-click">{{ item.putTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>退货数量：</span>
-            <span class="li-span-click">{{ item.refundTotal }}</span>
+            <span class="li-span-click">{{ item.refundTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>退货附件（数量）：</span>
-            <span class="li-span-click">{{ filterList(item.fileByList, 'thfj_sh')?.length }}</span>
+            <span class="li-span-click">{{ filterList(item.fileByList, 'thfj_sh')?.length }} {{ item.unit }}</span>
           </li>
         </ul>
         <div class="detail-ul-text" v-if="searchChecked && ['6', '7', '8', '9'].includes(planStatus)">
