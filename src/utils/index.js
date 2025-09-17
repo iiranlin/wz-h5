@@ -315,3 +315,30 @@ export async function compressPDF (file, { limitSizeMB = 20, quality = 0.8 } = {
     return file;
   }
 }
+
+// 合并 actId 相同的项，合并 assigneeName
+export function mergeByActId(data) {
+  const map = new Map();
+
+  data.forEach(item => {
+    if (!map.has(item.actId)) {
+      // 首次遇到这个 actId，直接放进去
+      map.set(item.actId, {
+        ...item,
+        assigneeName: item.assigneeName ? [item.assigneeName] : [] // 用数组存储
+      });
+    } else {
+      // 已存在这个 actId，合并 assigneeName
+      const exist = map.get(item.actId);
+      if (item.assigneeName && !exist.assigneeName.includes(item.assigneeName)) {
+        exist.assigneeName.push(item.assigneeName);
+      }
+    }
+  });
+
+  // 把 assigneeName 数组转成字符串
+  return Array.from(map.values()).map(item => ({
+    ...item,
+    assigneeName: item.assigneeName.join("、") // 用顿号拼接
+  }));
+}

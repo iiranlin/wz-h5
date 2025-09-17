@@ -133,6 +133,7 @@ import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { wfHistoryList } from '@/api/myToDoList'
 import FileDownloadView from "@/components/FileDownloadView.vue"
 import { getUserInfo } from '@/utils/user-info'
+import { mergeByActId } from '@/utils/index.js'
 export default {
   name: 'RequirementDetails',
   components: { MaterialDetails, LogRecording, activitiAssignee, BackToTop, FileDownloadView },
@@ -203,8 +204,8 @@ export default {
     wfHistoryList(id) {
       wfHistoryList(id).then(({ data }) => {
         if(data.recordList.length){
-          this.recordList = data.recordList
-          this.historyData = data.recordList[0];
+          this.recordList = mergeByActId(data.recordList)
+          this.historyData = mergeByActId(data.recordList)[0];
         }
       })
     },

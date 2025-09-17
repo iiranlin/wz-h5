@@ -41,6 +41,7 @@
 </template>
 <script>
 import { wfHistoryList } from '@/api/myToDoList'
+import { mergeByActId } from '@/utils/index.js'
 
 export default {
     name:'MyProcess',
@@ -67,7 +68,7 @@ export default {
                 forbidClick: true
             });
             wfHistoryList(this.businessId).then(({ data }) => {
-                this.dataList = data.recordList;
+              this.dataList = mergeByActId(data.recordList);
                 this.loading = false;
                 this.finished = true;
             }).catch((error) => {
@@ -76,7 +77,7 @@ export default {
             }).finally(() => {
                 toast.clear();
             });
-        },
+      },
     },
 };
 </script>

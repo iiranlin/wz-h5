@@ -239,6 +239,7 @@ import { materialDemandPlanRestDetailGyMx } from '@/api/prodmgr-inv/materialDema
 import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import MaterialDetails from '@/view/PlannedManagement/PlannedManagementChild/components/MaterialDetails'
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import { mergeByActId } from '@/utils/index.js'
 
 export default {
     name: 'DemandPlanningExamine',
@@ -323,8 +324,8 @@ export default {
         wfHistoryList() {
           wfHistoryList(this.listObj.businessId).then(({ data }) => {
             if(data.recordList.length){
-              this.recordList = data.recordList || []
-              this.historyData = data.recordList[0]
+              this.recordList = mergeByActId(data.recordList || []);
+              this.historyData = mergeByActId(data.recordList)[0]
             }
           })
         },
