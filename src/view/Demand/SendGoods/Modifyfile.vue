@@ -200,12 +200,18 @@
                                 <img src="/static/icon-file.png">
                                 <span>合格证附件</span>
                               </div>
-                                  <file-download-view class="outbound-field-uploader" style="width: 100%;"  :fileList="filterList(item.fileByList, 'hgz') || []"/>
+                              <div style="padding: 0 20px 0 0;">
+                                 <file-upload-view accept=".jpg,.png,.jpeg,.pdf" style="padding-right: 0.5rem;margin-left: 20px;" :fileList.sync="item.fileByList.hgz" businessType="01"/>
+                              </div>
+                             
+                                
                               <div class="detail-title-contentA">
                                 <img src="/static/icon-file.png">
                                 <span>厂检报告附件</span>
                               </div>
-                                        <file-download-view class="outbound-field-uploader" style="width: 100%;" :fileList="filterList(item.fileByList, 'cjbg') || []"/>
+                              <div style="padding: 0 20px 0 0;">
+                                  <file-upload-view accept=".jpg,.png,.jpeg,.pdf" style="padding-right: 0.5rem;margin-left: 20px;" :fileList.sync="item.fileByList.cjbg" businessType="01" :maxCount="100"/>
+                              </div>
                             </div>
                         </van-list>
                     </div>
@@ -295,13 +301,20 @@ export default {
                     this.params.createDate = this.formatTimestamp(res.data.createDate)
                     //  let file = JSON.parse(res.data.fileByList)
                     this.fileList.push({fileName:res.data.fileByList.fhd[0].fileName,filePath:res.data.fileByList.fhd[0].filePath})
-                    this.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item) => ({
-                        ...item,
-                        createDate:this.formatTimestamp(item.createDate),
-                        supplyDate:this.formattedCreateDate(item.supplyDate),
-                        updateDate:this.formattedCreateDate(item.updateDate),
-                        // fileByList: JSON.parse(item.fileByList)
-                    }))
+                    this.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item) => {
+                        let fileByListObj = {}
+                        try {
+                            if (item.fileByList && typeof item.fileByList === 'string') {
+                                fileByListObj = JSON.parse(item.fileByList)
+                            }
+                        } catch (e) {
+                            console.error('解析文件列表失败', item, e)
+                        }
+                        return {
+                            ...item,
+                            fileByList: fileByListObj,
+                        }
+                    })
                     // 装车照片
                     let { zczp } = res.data.fileByList || {}
                     this.zczp = zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
@@ -372,6 +385,21 @@ export default {
                 });
                 return
             }
+            // 附件必填校验
+            for (const item of this.materialCirculationDetailsTableDTOS) {
+                const hgz = item.fileByList?.hgz || [];
+                const cjbg = item.fileByList?.cjbg || [];
+
+                if (hgz.length === 0) {
+                    Toast(`合格证附件不能为空`);
+                    return;
+                }
+
+                if (cjbg.length === 0) {
+                    Toast(`厂检报告附件不能为空`);
+                    return;
+                }
+            }
             let fileList = []
                     let fhd = [];
                     if (this.fileList.length > 0) {
@@ -403,7 +431,13 @@ export default {
                         shippingAddress:this.params.shippingAddress,
                         shippingDate:this.params.shippingDate,
                         shipmentBatchNumber:this.params.shipmentBatchNumber,
-                        materialCirculationDetailsTableParamList: this.params.materialCirculationDetailsTableDTOS
+                        materialCirculationDetailsTableParamList: this.materialCirculationDetailsTableDTOS.map(item => {
+                            const newItem = { ...item };
+                            if (typeof newItem.fileByList === 'object' && newItem.fileByList !== null) {
+                                newItem.fileByList = JSON.stringify(newItem.fileByList);
+                            }
+                            return newItem;
+                        })
                     }
                       modifySendGoods(params).then((res) => {
                     if (res.code == 0) {
