@@ -7,8 +7,8 @@
       :show-subtitle="false"
       type="single"
       @confirm="onConfirm"
-      :min-date="maxDateRange[1]"
-      :max-date="maxDateRange[0]"
+      :min-date="minDateComp"
+      :max-date="maxDateComp"
     >
       <template v-slot:title>
         <div class="timeSelect">
@@ -37,6 +37,12 @@ Vue.use(Toast);
 
 export default {
   name: "demoPage",
+  props: {
+    unlimited: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       // 日历副标题
@@ -58,6 +64,24 @@ export default {
       multiArrow,
       flagNum: 0,
     };
+  },
+  computed: {
+    minDateComp() {
+      if (this.unlimited) {
+        const d = new Date();
+        d.setFullYear(d.getFullYear() - 20);
+        return d;
+      }
+      return this.maxDateRange[1];
+    },
+    maxDateComp() {
+      if (this.unlimited) {
+        const d = new Date();
+        d.setFullYear(d.getFullYear() + 20);
+        return d;
+      }
+      return this.maxDateRange[0];
+    }
   },
   mounted() {
 
@@ -94,22 +118,24 @@ export default {
       if (type == "down") {
         transDate = dayjs(this.titleDate.date).add(-1, dateType);
       }
-      const leftDiffMonths = dayjs(transDate).diff(dayjs(maxDateRange[1]), "months");
-      const rightDiffMonths = dayjs(maxDateRange[0]).diff(
-        dayjs(transDate),
-        "months"
-      );
-      console.log(leftDiffMonths, rightDiffMonths, "leftDiffMonths");
-      // 控制翻页范围，超出就提示
-      if (this.flagNum == 0) {
-        if (leftDiffMonths <= -1 || rightDiffMonths <= -1) {
-            Toast.fail("已超出最大可选范围");
-            return null;
-        }
-      } else {
-        if (leftDiffMonths >= 0 || rightDiffMonths <= 0) {
-            Toast.fail("已超出最大可选范围");
-            return null;
+      if (!this.unlimited) {
+        const leftDiffMonths = dayjs(transDate).diff(dayjs(maxDateRange[1]), "months");
+        const rightDiffMonths = dayjs(maxDateRange[0]).diff(
+          dayjs(transDate),
+          "months"
+        );
+        console.log(leftDiffMonths, rightDiffMonths, "leftDiffMonths");
+        // 控制翻页范围，超出就提示
+        if (this.flagNum == 0) {
+          if (leftDiffMonths <= -1 || rightDiffMonths <= -1) {
+              Toast.fail("已超出最大可选范围");
+              return null;
+          }
+        } else {
+          if (leftDiffMonths >= 0 || rightDiffMonths <= 0) {
+              Toast.fail("已超出最大可选范围");
+              return null;
+          }
         }
       }
 

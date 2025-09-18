@@ -110,7 +110,7 @@
             label="发货日期" input-align="right" :value="params.shippingDate" placeholder="点击选择日期"
             @click="handlerShowCalendar('calendar')" :rules="[{ required: true, message: '请填写发货日期' }]" />
           <!-- <van-calendar v-model="showCalendar" @confirm="onConfirm" /> -->
-          <Calendar ref="calendar" @onConfirm="onConfirm" />
+          <Calendar ref="calendar" @onConfirm="onConfirm" :unlimited="true" />
           <van-field readonly clickable name="calendar" :disabled="fileDisabled" required :value="params.arrivalDate"
             label="预计送到时间" input-align="right" placeholder="点击选择日期" @click="handlerShowCalendar('calendar2')"
             :rules="[{ required: true, message: '请填写预计送达时间' }]" />
