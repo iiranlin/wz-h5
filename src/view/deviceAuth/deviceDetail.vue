@@ -135,7 +135,7 @@ export default {
       },
       showUnitTypePicker: false,
       showDeviceTypePicker: false,
-      unitTypeOptions: ['指挥部','物代', '施工单位','监理单位','供应商'],
+      unitTypeOptions: ['枢纽指挥部','物代公司', '施工单位','监理单位','供应商'],
       deviceTypeOptions: ['手机', '平板']
     };
   },
