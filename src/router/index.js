@@ -49,7 +49,8 @@ export const routes = [
       {
         path: "supervisorPage",
         name: "supervisorPage",
-        meta: { title: "监理首页", isTabbar: true },
+        // 监理首页
+        meta: { title: "首页", isTabbar: true },
         component: () => import("@/view/homePage/supervisorPage.vue"),
       },
       {

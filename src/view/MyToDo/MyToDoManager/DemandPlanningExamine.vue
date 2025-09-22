@@ -97,9 +97,9 @@
           </div>
         </van-sticky>
         <material-details :list="filteredList" :planStatus="detailInfo.planStatus" :searchChecked="searchChecked"></material-details>
-        <!-- <van-tabs 
+        <!-- <van-tabs
             sticky
-            v-model="menuActiveIndex" 
+            v-model="menuActiveIndex"
             color="#0571ff"
             title-active-color="#0571ff"
             title-inactive-color="#2e2e2e">
@@ -158,7 +158,7 @@
                             <span>投资比例：</span>
                             <span>{{item.field1}}</span>
                         </li>
-                        <li class="li-item-remark"> 
+                        <li class="li-item-remark">
                             <span>备注：</span>
                             <div class="remark-detail">{{item.remark || '未填写'}}</div>
                         </li>
@@ -166,10 +166,10 @@
                 </div>
             </van-tab>
             <van-tab title="查看流程">
-                <van-list 
-                    v-model="loading" 
-                    :finished="finished" 
-                    finished-text="没有更多了..." 
+                <van-list
+                    v-model="loading"
+                    :finished="finished"
+                    finished-text="没有更多了..."
                     @load="getProcessList">
 
                     <div v-for="(item,index) in processList" :key="index" class="box-container">
@@ -296,7 +296,7 @@ export default {
         this.type = this.$route.params.type;
         // ⼊库流程、收货流程不能操作修改后同意
         this.showEditAdop = !["RKLC", "SHLC","FHLC"].includes(this.listObj.businessType)
-        
+
         //审核意见回调
         eventBus.$off('examineOpinionEdit');
         eventBus.$on('examineOpinionEdit',function(opinion,type){
@@ -314,7 +314,7 @@ export default {
         this.wfHistoryList()
     },
     activated() {
-       
+
     },
     methods: {
         async getBatch() {
@@ -421,10 +421,10 @@ export default {
                   }else{
                     this.approvalRequest();
                   }
-                    
+
                 }
             }).catch((error) => {
-                
+
             }).finally(() => {
                 toast.clear();
             });
@@ -448,9 +448,14 @@ export default {
             this.assigneePopupShow = false;
             this.assigner = '请选择下一级审核人';
             this.candidateUser = [];
+            this.type = 0; // 恢复为未审核状态，底部按钮重新显示
         },
         //选择审核人提交
         handleAssigneeSubmit(){
+            if (!this.candidateUser.length) {
+                this.$toast('请选择下一级审核人');
+                return;
+            }
             if(this.type=='editAdopt'){
               this.approvalEditRequest()
             }else{
@@ -479,7 +484,7 @@ export default {
                 });
                 this.$router.back();
             }).catch((error) => {
-                
+
             }).finally(() => {
                 toast.clear();
             });
@@ -506,7 +511,7 @@ export default {
                 });
                 this.$router.back();
             }).catch((error) => {
-                
+
             }).finally(() => {
                 toast.clear();
             });
@@ -533,7 +538,7 @@ export default {
                 });
                 this.$router.back();
             }).catch((error) => {
-                
+
             }).finally(() => {
                 toast.clear();
             });
@@ -552,7 +557,7 @@ export default {
         handleClick(item){
             this.$router.push({
                 name: "SaveMaterials",
-                query: { 
+                query: {
                     id: item.businessId,
                     type: 'update',
                 },
