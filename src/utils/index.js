@@ -316,29 +316,48 @@ export async function compressPDF (file, { limitSizeMB = 20, quality = 0.8 } = {
   }
 }
 
-// 合并 actId 相同的项，合并 assigneeName
+// 合并连续 actId 相同且 status 都无值的项，合并 assigneeName，否则不合并
 export function mergeByActId(data) {
-  const map = new Map();
+  if (!Array.isArray(data) || data.length === 0) return [];
 
-  data.forEach(item => {
-    if (!map.has(item.actId)) {
-      // 首次遇到这个 actId，直接放进去
-      map.set(item.actId, {
-        ...item,
-        assigneeName: item.assigneeName ? [item.assigneeName] : [] // 用数组存储
+  const result = [];
+  let group = [];
+
+  const pushGroup = () => {
+    if (group.length === 0) return;
+    // 检查 group 内 status 是否都无值
+    const hasStatus = group.some(item => item.status !== undefined && item.status !== null && item.status !== "");
+    if (group.length === 1 || hasStatus) {
+      // 只有一个或有 status，不合并，逐个 push
+      group.forEach(item => {
+        result.push({
+          ...item,
+          assigneeName: item.assigneeName || ""
+        });
       });
     } else {
-      // 已存在这个 actId，合并 assigneeName
-      const exist = map.get(item.actId);
-      if (item.assigneeName && !exist.assigneeName.includes(item.assigneeName)) {
-        exist.assigneeName.push(item.assigneeName);
-      }
+      // 全部无 status，合并 assigneeName
+      const merged = { ...group[0] };
+      merged.assigneeName = group
+        .map(i => i.assigneeName)
+        .filter(Boolean)
+        .filter((v, i, arr) => arr.indexOf(v) === i)
+        .join("、");
+      result.push(merged);
     }
-  });
+    group = [];
+  };
 
-  // 把 assigneeName 数组转成字符串
-  return Array.from(map.values()).map(item => ({
-    ...item,
-    assigneeName: item.assigneeName.join("、") // 用顿号拼接
-  }));
+  for (let i = 0; i < data.length; i++) {
+    const item = data[i];
+    if (group.length === 0 || group[group.length - 1].actId === item.actId) {
+      group.push(item);
+    } else {
+      pushGroup();
+      group.push(item);
+    }
+  }
+  pushGroup();
+
+  return result;
 }
