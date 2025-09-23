@@ -136,7 +136,7 @@
       </div>
     </div>
 
-    <div style="margin-bottom: 30px;">    
+    <div style="margin-bottom: 30px;">
       <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList"
       :key="item.id"
       :class="boolExceptZero(item.putTotal) && boolExceptZero(item.refundTotal) ? '' : 'box-container-unedited'">
@@ -313,10 +313,13 @@ export default {
   activated() {
     this.from = this.$route.query.from
     this.id = this.$route.query.id
-    this.tabs = this.$route.query.tabs==(true||'true') 
+    this.tabs = this.$route.query.tabs==(true||'true')
     this.isLable =this.$route.query.isLable==(true||'true')
     this.getBatch(this.id)
     this.getDetailList();
+     // 每次进入页面清空自检单和其他资料
+    this.fileZjdList = []
+    this.fileQtzlList = []
   },
   computed: {
     isFlag() {
@@ -352,7 +355,7 @@ export default {
       },
       showDatePicker: false, // 控制日期选择器显示
       id:"",
-      tabs:true,  
+      tabs:true,
       isLable:false,
       dataList:[],
       fileTHList:[],
@@ -368,7 +371,7 @@ export default {
       editStatus,
       backupParams: {},
       from: "",
-      
+
       //是否显示选择审批人弹框
       assigneePopupShow:false,
       //审批人数据
@@ -381,7 +384,7 @@ export default {
       opinion: '',
       // 待审核带过来的审核参数对象定义
       listObj: {},
-    } 
+    }
   },
   filters: {
     formatDate(value) {
@@ -396,7 +399,7 @@ export default {
         return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
       }else{
         return ""
-      }  
+      }
     },
     formatToDate(value) {
       if(value){
@@ -407,7 +410,7 @@ export default {
         return `${y}-${m}-${d}`;
       }else{
         return ""
-      }  
+      }
     }
   },
   methods: {
@@ -436,7 +439,7 @@ export default {
             });
             this.$router.back();
         }).catch((error) => {
-            
+
         }).finally(() => {
             toast.clear();
         });
@@ -480,7 +483,7 @@ export default {
                 this.approvalRequest();
             }
         }).catch((error) => {
-            
+
         }).finally(() => {
             toast.clear();
         });
@@ -507,7 +510,7 @@ export default {
             });
             this.$router.push({ name: this.from });
         }).catch((error) => {
-            
+
         }).finally(() => {
             toast.clear();
         });
@@ -565,7 +568,7 @@ export default {
     },
     historyCaches() {
       const data = this.$store.state.public.selectGoodData || []
-      
+
       const finallyData = data.map((item) => Object.assign({}, item, {
         supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
         minDate: this.minDate,
@@ -615,7 +618,7 @@ export default {
                 }
                   el.values = el.values?.length > 0 ? el.values : []
                   this.fileTHList.push({id:el.id,value:[]})
-              })  
+              })
             }
 
             this.$store.dispatch('public/setSelectGoodData', data);
@@ -629,21 +632,21 @@ export default {
     handleInput(val,index,item){
       const num = Number(val);
       if (!isNaN(num) && num <= item.sendTotal) {
-        this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = num; 
+        this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = num;
         this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal =this.dataList.materialCirculationDetailsTableDTOS[index].sendTotal - this.dataList.materialCirculationDetailsTableDTOS[index].putTotal
       } else {
-        this.$toast('实收数量不能大于发货数量'); 
-        this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = 0; 
+        this.$toast('实收数量不能大于发货数量');
+        this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = 0;
       }
     },
     handleInput1(val,index,item){
       const num = Number(val);
       if (!isNaN(num) && num <= item.sendTotal) {
-        this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal = num; 
+        this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal = num;
         this.dataList.materialCirculationDetailsTableDTOS[index].putTotal = this.dataList.materialCirculationDetailsTableDTOS[index].sendTotal - this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal
       } else {
-        this.$toast('退货数量不能大于发货数量'); 
-        this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal=0 
+        this.$toast('退货数量不能大于发货数量');
+        this.dataList.materialCirculationDetailsTableDTOS[index].refundTotal=0
       }
     },
     onDateConfirm(val) {
@@ -663,12 +666,12 @@ export default {
           this.dataList.materialCirculationDetailsTableDTOS.find(el=>el.id == item.id).fileByList =  JSON.stringify(newObj)
         }
       })
-      
+
       if(this.fileZjdList.length){
         let fileObj={
           zjd:this.fileZjdList
         }
-        let newObj =Object.assign({}, JSON.parse(this.dataList.fileByList),fileObj) 
+        let newObj =Object.assign({}, JSON.parse(this.dataList.fileByList),fileObj)
         this.dataList.fileByList = JSON.stringify(newObj)
       }
 
@@ -676,7 +679,7 @@ export default {
         let fileObj={
           qtzl:this.fileQtzlList
         }
-        let newObj =Object.assign({}, JSON.parse(this.dataList.fileByList),fileObj) 
+        let newObj =Object.assign({}, JSON.parse(this.dataList.fileByList),fileObj)
         this.dataList.fileByList = JSON.stringify(newObj)
       }
 
@@ -710,7 +713,7 @@ export default {
       }
       this.backupParams = params
       this.handleExamineClick(params)
-      
+
     },
     checkClick(){
       this.$router.push({name: 'DoAccept',query: {id:this.id,tabs:true,isLable:false}})
@@ -724,7 +727,7 @@ export default {
         return `${y}-${m}-${d}`;
       }else{
         return ""
-      }  
+      }
     },
     onClickBack() {
       this.$router.push({path: '/AcceptanceReturn'})
@@ -739,7 +742,7 @@ export default {
     optionsSuccess(assignee, { id, planType }) {
       submitTodo({ id, planType: planType, assignee, ...this.backupParams }).then(() => {
         this.$toast('提交审核成功')
-        this.$router.push({path: '/AcceptanceReturn'})  
+        this.$router.push({path: '/AcceptanceReturn'})
       })
     },
     //去审核点击
@@ -772,10 +775,13 @@ export default {
   mounted() {
     this.from = this.$route.query.from
     this.id = this.$route.query.id
-    this.tabs = this.$route.query.tabs==(true||'true') 
+    this.tabs = this.$route.query.tabs==(true||'true')
     this.isLable =this.$route.query.isLable==(true||'true')
     this.getBatch(this.id)
-    this.getDetailList()  
+    this.getDetailList()
+    // 每次进入页面清空自检单和其他资料
+    this.fileZjdList = []
+    this.fileQtzlList = []
   }
 }
 </script>
@@ -1167,7 +1173,7 @@ export default {
   }
 
   .van-cell {
-   
+
     padding-right: 10px;
   }
 
