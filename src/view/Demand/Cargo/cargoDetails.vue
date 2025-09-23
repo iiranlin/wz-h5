@@ -329,7 +329,8 @@ export default {
 
       // 施工单位FB、ZB显示 consigneeOperator
       if (deptCode.startsWith('FB') || deptCode.startsWith('ZB')) {
-        return this.params.consigneeOperator || '';
+        // return  this.params.consigneeOperator || '';
+      return this.params.createUserName || '';
       }
 
       // 默认显示 createUserName
