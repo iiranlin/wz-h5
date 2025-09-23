@@ -216,6 +216,8 @@
     </van-popup>
     <file-preview ref="filePreview"></file-preview>
     <back-to-top className=".default-container"></back-to-top>
+
+    <div style="height: 55px;"></div>
   </div>
 </template>
 <script>
@@ -355,8 +357,21 @@ export default {
     // this.getOrderStatusOptions();
   },
   activated() {
+    // 只在切换新数据时重置弹窗
+  const newId = this.$route.query.id;
+  if (this.id !== newId) {
+    this.assigneePopupShow = false;
+    this.assigner = '请选择下一级审核人';
+    this.candidateUser = [];
+  }
+
     this.id = this.$route.query.id
     this.btnEvent = this.$route.query.btnEvent
+
+    // 关键：每次都重新赋值，确保 taskId 等是最新的
+  const { businessType, businessId, businessCode, taskId, procInstId, from } = this.$route.query
+  this.from = from
+  this.listObj = { businessType, businessId, businessCode, taskId, procInstId }
     this.cargoDetails();
   },
   methods: {
@@ -486,6 +501,11 @@ export default {
       })
       return name
     },
+     clearNextAssignee(){
+           this.assigneePopupShow = false;
+           this.assigner = '请选择下一级审核人';
+            this.candidateUser = [];
+        },
      //通过请求
     approvalRequest(){
         let toast = this.$toast.loading({
@@ -502,13 +522,15 @@ export default {
             taskId: this.listObj.taskId
           }
           auditApprove(params).then(({ message }) => {
+             // 关闭弹窗，清空下级审核人数据
+              this.clearNextAssignee()
             this.$notify({
                 type: 'success',
                 message: message
             });
             this.$router.push({ name: this.from });
         }).catch((error) => {
-            
+
         }).finally(() => {
             toast.clear();
         });
@@ -532,9 +554,14 @@ export default {
         this.assigneePopupShow = false;
         this.assigner = '请选择下一级审核人';
         this.candidateUser = [];
+        this.type = 0; // 恢复为未审核状态，底部按钮重新显示
     },
     //选择审核人提交
     handleAssigneeSubmit(){
+      if (!this.candidateUser.length) {
+                this.$toast('请选择下一级审核人');
+                return;
+            }
         this.approvalRequest();
     },
     //获取下一级审批人
@@ -552,7 +579,7 @@ export default {
                 this.approvalRequest();
             }
         }).catch((error) => {
-            
+
         }).finally(() => {
             toast.clear();
         });
@@ -580,7 +607,7 @@ export default {
             });
             this.$router.push({ name: this.from });
         }).catch((error) => {
-            
+
         }).finally(() => {
             toast.clear();
         });
