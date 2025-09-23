@@ -60,6 +60,18 @@ export const routes = [
           import("@/view/PlannedManagement/PlannedManagementList.vue"),
       },
       {
+        path: "/purchaseFile",
+        name: "purchaseFile",
+        meta: { title: "采购文件核备", isTabbar: true },
+        component: () => import("@/view/SelfBuying/purchaseFile.vue"),
+      },
+      {
+        path: "/purchaseContract",
+        name: "purchaseContract",
+        meta: { title: "采购合同核备", isTabbar: true },
+        component: () => import("@/view/SelfBuying/purchaseContract.vue"),
+      },
+      {
         path: "/AcceptanceReturn",
         name: "AcceptanceReturn",
         meta: { title: "验收管理", isTabbar: true },
@@ -166,6 +178,63 @@ export const routes = [
         name: "editPassword",
         meta: { title: "修改密码" },
         component: () => import("@/view/homePage/components/editPassword.vue"),
+      },
+    ],
+  },
+  {
+    path: "/SelfBuyingChild",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "perfectFile",
+        name: "perfectFile",
+        meta: { title: "新增文件核备" },
+        component: () =>
+          import("@/view/SelfBuying/SelfBuyingChild/perfectFile.vue"),
+        beforeEnter(to, from, next) {
+          to.meta.title = `${typeName[to.query.type]}文件核备`;
+          next();
+        },
+      },
+      {
+        path: "perfectFileDetail",
+        name: "perfectFileDetail",
+        meta: { title: "文件核备详情" },
+        component: () =>
+          import("@/view/SelfBuying/SelfBuyingChild/perfectFileDetail.vue"),
+      },
+      {
+        path: "archivedData",
+        name: "archivedData",
+        meta: { title: "采购文件归档" },
+        component: () =>
+          import("@/view/SelfBuying/SelfBuyingChild/archivedData.vue"),
+      },
+      {
+        path: "perfectContract",
+        name: "perfectContract",
+        meta: { title: "新增合同核备" },
+        component: () =>
+          import("@/view/SelfBuying/SelfBuyingChild/perfectContract.vue"),
+        beforeEnter(to, from, next) {
+          to.meta.title = `${typeName[to.query.type]}合同核备`;
+          next();
+        },
+      },
+      {
+        path: "perfectContractDetail",
+        name: "perfectContractDetail",
+        meta: { title: "合同核备详情" },
+        component: () =>
+          import("@/view/SelfBuying/SelfBuyingChild/perfectContractDetail.vue"),
+      },
+      {
+        path: "certificateUpdate",
+        name: "certificateUpdate",
+        meta: { title: "证书更新" },
+        component: () =>
+          import("@/view/SelfBuying/SelfBuyingChild/certificateUpdate.vue"),
       },
     ],
   },

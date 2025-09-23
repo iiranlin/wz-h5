@@ -20,3 +20,8 @@ export const downloadStorageList = (params) => {
 export const downloadSettlementList = (params) => {
   return download(`${VUE_APP_PRODMGR_INV}/materialExport/settlementList`, params, 'get')
 }
+
+// 下载文件采购表
+export const downloadexport = (data) => {
+  return download(`${VUE_APP_PRODMGR_INV}/materialPurchaseFile/export`, data)
+}

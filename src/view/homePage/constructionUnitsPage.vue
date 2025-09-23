@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <div style="margin-bottom: 20px;">
+      <div style="margin-bottom: 10px;">
         <div class="lastModule">
           <div class="twoLines" @click="handleRouter('/RefundListContent')">
             <img :src="CreditOrder">
@@ -53,6 +53,24 @@
             <img :src="StockOut">
             出库单
           </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <div class="selfBuying">
+          <div class="selfTitle">
+            自购物资核备
+          </div>
+          <van-cell title="采购文件核备" is-link @click="handleRouter('/purchaseFile')">
+            <template #icon>
+              <img :src="BuyerFile">
+            </template>
+          </van-cell>
+          <van-cell title="采购合同核备" is-link @click="handleRouter('/purchaseContract')">
+            <template #icon>
+              <img :src="BuyerPact">
+            </template>
+          </van-cell>
         </div>
       </div>
     </van-pull-refresh>
@@ -68,6 +86,8 @@ const warehousing = require('@/assets/img/warehousing.png');
 const DemandInventory = require('@/assets/img/DemandInventory.png');
 const CreditOrder = require('@/assets/img/CreditOrder.png');
 const StockOut = require('@/assets/img/StockOut.png');
+const BuyerFile = require('@/assets/img/BuyerFile.png');
+const BuyerPact = require('@/assets/img/BuyerPact.png');
 
 import VideoArea from './components/VideoArea.vue';
 import CheckModule from './components/checkModule.vue';
@@ -88,7 +108,9 @@ export default {
       warehousing,
       DemandInventory,
       CreditOrder,
-      StockOut
+      StockOut,
+      BuyerFile,
+      BuyerPact
     };
   },
 
@@ -143,17 +165,56 @@ export default {
   color: #fff;
 }
 
+.selfTitle {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.selfBuying {
+  width: 94%;
+  // height: 80px;
+  margin: 0 auto;
+  border-radius: 8px;
+  // line-height: 80px;
+  font-size: 18px;
+  background-color: #fff;
+  box-sizing: border-box;
+  background-blend-mode: multiply;
+  position: relative;
+
+  img {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+  }
+
+  ::v-deep .van-cell {
+    padding: 0.1rem 0.4rem 0.1rem 0.25rem;
+    border-radius: 8px;
+  }
+
+  ::v-deep .van-cell__title {
+    display: flex;
+    align-items: center;
+  }
+
+  ::v-deep .van-cell__right-icon {
+    line-height: 0.9rem;
+  }
+}
 
 .demandInfo {
   width: 94%;
-  height: 100px;
+  height: 80px;
   margin: 0 auto;
   border-radius: 8px;
-  line-height: 100px;
+  line-height: 80px;
   padding-left: 30px;
   font-size: 18px;
   font-weight: 600;
-  background: linear-gradient(to right, white 0%, #BEDBF4 100%), url('../../assets/img/demand.png') no-repeat right top / 200px 100px;
+  background: linear-gradient(to right, white 0%, #BEDBF4 100%), url('../../assets/img/demand.png') no-repeat right top / 200px 80px;
   box-sizing: border-box;
   background-blend-mode: multiply;
   position: relative;
@@ -162,7 +223,7 @@ export default {
 .van-icon-plus {
   position: absolute;
   right: 10px;
-  bottom: 35%;
+  bottom: 30%;
   z-index: 999;
   width: 30px;
   height: 30px;
@@ -183,10 +244,10 @@ export default {
 
 .twoLines {
   width: 50%;
-  height: 100px;
+  height: 70px;
   margin: 0 auto;
   border-radius: 8px;
-  line-height: 100px;
+  line-height: 70px;
   text-align: center;
   font-size: 16px;
   background-color: #fff;

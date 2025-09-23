@@ -110,10 +110,10 @@ export default {
 .dot() {
   // 注意：名字后面带 ()，表示不会直接输出到 CSS
   width: 94%;
-  height: 100px;
+  height: 80px;
   margin: 0 auto;
   border-radius: 8px;
-  line-height: 100px;
+  line-height: 80px;
   padding-left: 50px;
   font-size: 18px;
   font-weight: 600;
@@ -134,12 +134,12 @@ export default {
 
 .demandInfo {
   .dot();
-  background: linear-gradient(to right, white 0%, #BEDBF4 100%), url('../../assets/img/demand.png') no-repeat right top / 200px 100px;
+  background: linear-gradient(to right, white 0%, #BEDBF4 100%), url('../../assets/img/demand.png') no-repeat right top / 200px 80px;
 }
 
 .demandInfo2 {
   .dot();
-  background: linear-gradient(to right, white 0%, #BEDBF4 100%), url('../../assets/img/review.png') no-repeat right top / 200px 100px;
+  background: linear-gradient(to right, white 0%, #BEDBF4 100%), url('../../assets/img/review.png') no-repeat right top / 200px 80px;
 }
 
 .unitNum {

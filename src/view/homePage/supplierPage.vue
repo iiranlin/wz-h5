@@ -103,14 +103,14 @@ export default {
 
 .demandInfo {
   width: 94%;
-  height: 100px;
+  height: 80px;
   margin: 0 auto;
   border-radius: 8px;
-  line-height: 100px;
+  line-height: 80px;
   padding-left: 30px;
   font-size: 18px;
   font-weight: 600;
-  background: linear-gradient(to right, white 0%, #BEDBF4 100%), url('../../assets/img/demand.png') no-repeat right top / 200px 100px;
+  background: linear-gradient(to right, white 0%, #BEDBF4 100%), url('../../assets/img/demand.png') no-repeat right top / 200px 80px;
   box-sizing: border-box;
   background-blend-mode: multiply;
 }
@@ -124,10 +124,10 @@ export default {
 
 .twoLines {
   width: 50%;
-  height: 100px;
+  height: 70px;
   margin: 0 auto;
   border-radius: 8px;
-  line-height: 100px;
+  line-height: 70px;
   text-align: center;
   font-size: 16px;
   background-color: #fff;

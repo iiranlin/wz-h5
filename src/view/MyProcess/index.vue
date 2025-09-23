@@ -1,6 +1,42 @@
 <template>
   <div class="default-container save-materials">
-    <div class="detail-base-info">
+    <div class="detail-base-info" v-if="businessType === 'CGWJ'">
+      <div class="detail-title-text">
+        <p>物资名称：</p>
+        <p>{{ detail.purchaseFileName }}</p>
+      </div>
+      <div class="detail-ul-text">
+        <ul class="detail-ul">
+          <li>
+            <span>标段项目：</span>
+            <span>{{ detail.projefctName }}</span>
+          </li>
+          <li>
+            <span>采购单位：</span>
+            <span>{{ detail.unitName }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="detail-base-info" v-else-if="businessType === 'CGHT'">
+      <div class="detail-title-text">
+        <p>合同名称：</p>
+        <p>{{ detail.contractName }}</p>
+      </div>
+      <div class="detail-ul-text">
+        <ul class="detail-ul">
+          <li>
+            <span>标段项目：</span>
+            <span>{{ detail.projefctName }}</span>
+          </li>
+          <li>
+            <span>采购单位：</span>
+            <span>{{ detail.unitName }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="detail-base-info" v-else>
       <div class="detail-title-text">
         <p>需求名称：</p>
         <p>{{ detail.planName }}</p>
@@ -30,6 +66,7 @@
 <script>
 import IndexDetail from './components/indexDetail'
 import { materialDemandPlanRestDetail } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialPurchaseFiledetail,materialPurchaseContractdetail } from '@/api/prodmgr-inv/SelfBuying'
 import { detailTakeBack, detailTake } from "@/api/prodmgr-inv/receive";
 import {detailBySend} from '@/api/demand/sendGoods'
 import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
@@ -65,6 +102,12 @@ export default {
       }
       if(this.businessType === "FHLC"){
         return detailBySend
+      }
+      if(this.businessType === "CGWJ"){
+        return materialPurchaseFiledetail
+      }
+      if(this.businessType === "CGHT"){
+        return materialPurchaseContractdetail
       }
       
       return materialDemandPlanRestDetail

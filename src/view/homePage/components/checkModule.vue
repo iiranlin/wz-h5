@@ -82,7 +82,7 @@ export default {
 
 .auditInfo {
   width: 94%;
-  height: 100px;
+  height: 90px;
   background-color: #fff;
   margin: 0 auto;
   border-radius: 8px;
@@ -97,8 +97,9 @@ export default {
     justify-content: center;
 
     div:nth-child(1) {
-      font-size: 35px;
-      font-weight: 600;
+      font-size: 30px;
+      margin-bottom: 5px;
+      // font-weight: 600;
     }
 
     div:nth-child(2) {
