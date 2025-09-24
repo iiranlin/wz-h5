@@ -23,62 +23,63 @@
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.itemName" required name="itemName" label="合同名称" placeholder="请输入合同名称"
+          <van-field v-model="sectionInfo.contractName" required name="contractName" label="合同名称" placeholder="请输入合同名称"
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.budget" required name="budget" label="合同金额" placeholder="请输入合同金额"
-            input-align="right">
+          <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="合同金额"
+            placeholder="请输入合同金额" input-align="right">
             <template #button>
               <span style="color: #333;">万元</span>
             </template>
           </van-field>
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.itemCode" required name="itemCode" label="合同编号" placeholder="请输入合同编号"
-            input-align="right" />
+          <van-field v-model="sectionInfo.contractNumber" required name="contractNumber" label="合同编号"
+            placeholder="请输入合同编号" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.buyerCode" required name="buyerCode" label="采购编号" placeholder="请输入采购编号"
-            input-align="right" />
+          <van-field v-model="sectionInfo.purchaseNumber" required name="purchaseNumber" label="采购编号"
+            placeholder="请输入采购编号" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.genera" readonly clickable required name="genera" label="物资大类"
+          <van-field v-model="sectionInfo.name" readonly clickable required name="name" label="物资大类"
             placeholder="请选择物资大类" right-icon="arrow" input-align="right" @click="showGeneraPicker = true">
 
           </van-field>
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.parcelCode" required name="parcelCode" label="包件号" placeholder="请输入包件号"
+          <van-field v-model="sectionInfo.packageNumber" required name="packageNumber" label="包件号" placeholder="请输入包件号"
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.category" readonly clickable required name="category
+          <van-field v-model="sectionInfo.purchaseName" readonly clickable required name="purchaseName
 " label="类别" placeholder="请选择类别" right-icon="arrow" @click="showcategoryPicker = true" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.variety" readonly clickable required name="variety
+          <van-field v-model="sectionInfo.purchaseTypeName" readonly clickable required name="purchaseTypeName
 " label="物资种类" placeholder="请选择物资种类" right-icon="arrow" @click="showvarietyPicker = true" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.detail" readonly clickable required name="detail
+          <van-field v-model="sectionInfo.purchaseDetailName" readonly clickable required name="purchaseDetailName
 " label="物资细目" placeholder="请选择物资细目" right-icon="arrow" @click="showdetailPicker = true" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.amount" required name="amount
+          <van-field v-model="sectionInfo.supplierName" required name="supplierName
 " label="供应商" placeholder="请输入供应商" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.expectedCompletion" readonly clickable required name="expectedCompletion"
-            label="合同签订日期" placeholder="请选择合同签订日期" right-icon="arrow" @click="handlerShowCalendar('calendar')"
+          <van-field v-model="sectionInfo.startTime" readonly clickable required name="startTime" label="合同签订日期"
+            placeholder="请选择合同签订日期" right-icon="arrow" @click="handlerShowCalendar('calendar', 0)"
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field readonly required name="defaultRadio" label="铁路专用产品" input-align="right">
+          <van-field readonly required name="railwaySpecial" label="铁路专用产品" input-align="right">
             <template #input>
-              <van-radio-group v-model="sectionInfo.defaultRadio" direction="horizontal" style="justify-content: end;">
-                <van-radio name="0" shape="square" class="detail-radio">是</van-radio>
-                <van-radio name="1" shape="square" class="detail-radio">否</van-radio>
+              <van-radio-group v-model="sectionInfo.railwaySpecial" direction="horizontal"
+                style="justify-content: end;">
+                <van-radio name="1" shape="square" class="detail-radio">是</van-radio>
+                <van-radio name="0" shape="square" class="detail-radio">否</van-radio>
               </van-radio-group>
             </template>
           </van-field>
@@ -91,58 +92,61 @@
         <img src="/static/icon-file.png">
         <span>合同副本扫描件</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.schemeList?.length"><span
+      <p class="box-container-p" v-if="!sectionInfo?.htfbsmj?.length"><span
           class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.schemeList
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.htfbsmj
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited"
-      :style="{ marginBottom: sectionInfo.defaultRadio == '1' ? '65px' : '0' }">
+      :style="{ marginBottom: sectionInfo.railwaySpecial == '0' ? '65px' : '0' }">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>供应商质量终身承诺书</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.fileList?.length"><span
+      <p class="box-container-p" v-if="!sectionInfo?.gyszlzscns?.length"><span
           class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.fileList
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.gyszlzscns
         || []" businessType="02" class="outbound-field-uploader" />
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" v-if="sectionInfo.defaultRadio != '1'">
-      <div class="detail-title-content">
-        <img src="@/assets/img/certificate.png" />
-        <span>许可/认证证书</span>
-      </div>
-      <ul class="detail-list-ul-edited">
-        <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.licence" required name="licence" label="许可/认证类别" placeholder="请输入许可/认证类别"
-            input-align="right" />
-        </li>
-        <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.issueUnit" required name="issueUnit" label="发证单位" placeholder="请输入发证单位"
-            input-align="right" />
-        </li>
-        <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.certificateNo" required name="certificateNo
+    <div v-for="(item, index) in sectionInfo.contractLicense" :key="item.id" v-if="sectionInfo.railwaySpecial != '0'"
+      :style="{ marginBottom: index == sectionInfo.contractLicense.length - 1 ? '65px' : '0' }">
+      <div class="detail-base-info detail-base-info-edited">
+        <div class="detail-title-content">
+          <img src="@/assets/img/certificate.png" />
+          <span>许可/认证证书</span>
+        </div>
+        <ul class="detail-list-ul-edited">
+          <li class="detail-list-li-input">
+            <van-field v-model="item.licenseCategory" required name="licenseCategory" label="许可/认证类别"
+              placeholder="请输入许可/认证类别" input-align="right" />
+          </li>
+          <li class="detail-list-li-input">
+            <van-field v-model="item.unit" required name="unit" label="发证单位" placeholder="请输入发证单位"
+              input-align="right" />
+          </li>
+          <li class="detail-list-li-input">
+            <van-field v-model="item.quantity" required name="quantity
 " label="证书编号" placeholder="请输入证书编号" input-align="right" />
-        </li>
-        <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.validPeriod" readonly clickable required name="validPeriod" label="有效期限"
-            placeholder="请选择有效期限" @click="handlerShowCalendar('calendar1')" right-icon="arrow" input-align="right" />
-        </li>
-      </ul>
-    </div>
-
-    <div class="detail-base-info detail-base-info-edited" style="margin-bottom: 65px;"
-      v-if="sectionInfo.defaultRadio != '1'">
-      <div class="detail-title-content">
-        <img src="/static/icon-file.png">
-        <span>合同核备附件</span>
+          </li>
+          <li class="detail-list-li-input">
+            <van-field v-model="item.validPeriod" readonly clickable required name="validPeriod" label="有效期限"
+              placeholder="请选择有效期限" @click="handlerShowCalendar('calendar1', 0, index)" right-icon="arrow"
+              input-align="right" />
+          </li>
+        </ul>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.fileList01?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式，可上传多个</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.fileList01
-        || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
+
+      <div class="detail-base-info detail-base-info-edited">
+        <div class="detail-title-content">
+          <img src="/static/icon-file.png">
+          <span>合同核备附件</span>
+        </div>
+        <p class="box-container-p" v-if="!item?.attachmentFile?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式，可上传多个</p>
+        <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="item.attachmentFile
+          || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
+      </div>
     </div>
 
     <div class="default-button-container">
@@ -179,22 +183,52 @@
 import FileUploadView from "@/components/FileUploadView.vue";
 import Calendar from "@/layout/components/calendar.vue";
 import rangeCalendar from "./components/calendar.vue";
-import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject } from "@/api/prodmgr-inv/SelfBuying"
+import { parseTime } from '@/utils/index'
+import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify } from "@/api/prodmgr-inv/SelfBuying"
 
 export default {
   name: 'PerfectFile',
 
   components: { FileUploadView, Calendar, rangeCalendar },
 
+  watch: {
+    'sectionInfo.railwaySpecial': {
+      handler(val) {
+        if (val == '0') {
+          this.sectionInfo.contractLicense = [
+            {
+              licenseCategory: '',
+              unit: '',
+              quantity: '',
+              validPeriod: '',
+              attachmentFile: [],
+              validityGuarantee: [],
+            }
+          ]
+        }
+      },
+      deep: true
+    }
+  },
+
   data() {
     return {
       detailInfo: {},
       sectionInfo: {
-        schemeList: [],
-        fileList: [],
-        fileList01: [],
+        htfbsmj: [],
+        gyszlzscns: [],
+        contractLicense: [
+          {
+            licenseCategory: '',
+            unit: '',
+            quantity: '',
+            validPeriod: '',
+            attachmentFile: [],
+            validityGuarantee: [],
+          }
+        ]
       },
-      rearHand: [],
+      contractLicenseIndex: 0,
       // 物资大类
       showGeneraPicker: false,
       generaColumns: [],
@@ -211,50 +245,75 @@ export default {
   },
 
   async mounted() {
+    this.getGeneraList();
+    this.detailInfo = await this.getMaterialSectionProject();
     // 判断是编辑还是新增，查询展示信息和回显数据
     if (this.$route.query.type == 'create') {
-      this.getGeneraList();
-      this.detailInfo = await this.getMaterialSectionProject();
+      this.sectionInfo.projectId = this.detailInfo.projectId;
+      this.sectionInfo.unitName = this.detailInfo.constructionCompany;
+      this.sectionInfo.projefctName = this.detailInfo.sectionName;
     } else {
-      console.log("修改")
+      const data = await this.getGeneraDetail();
+
+      data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
+      data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
+      data.startTime = parseTime(data.startTime, '{y}-{m}-{d}');
+
+      if (data.railwaySpecial == '1') {
+        data.contractLicense.forEach(el => {
+          el.validPeriod = el.validityGuarantee[0] + ' 至 ' + el.validityGuarantee[1];
+          el.attachmentFile = JSON.parse(el.attachmentFile) || [];
+        })
+      }
+
+      this.sectionInfo = data;
+      this.sectionInfo.projectId = this.detailInfo.projectId;
+
+      await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
+      await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
+      await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
     }
   },
 
   methods: {
     // 物资大类确认事件
-    async onGeneraConfirm(value) {
-      this.sectionInfo.genera = value.text;
-      this.sectionInfo.generaCode = value.code;
+    async onGeneraConfirm(value, flag = true) {
+      this.sectionInfo.name = value.text;
+      this.sectionInfo.code = value.code;
       this.showGeneraPicker = false;
 
-      const data = await this.getPurchaseList({ code: value.text });
+      if (flag) {
+        this.sectionInfo.purchaseName = '';
+        this.sectionInfo.purchaseDetailName = '';
+        this.sectionInfo.purchaseTypeName = '';
+        this.categoryColumns = [];
+        this.detailColumns = [];
+        this.varietyColumns = [];
+      }
 
-      this.sectionInfo.category = '';
-      this.sectionInfo.detail = '';
-      this.sectionInfo.variety = '';
-      this.categoryColumns = [];
-      this.detailColumns = [];
-      this.varietyColumns = [];
+      const data = await this.getPurchaseList({ code: value.text });
 
       this.categoryColumns = data?.map(el => {
         return { text: el.purchaseName, code: el.purchaseCode }
       }) || [];
     },
     // 类别确认事件
-    async oncategoryConfirm(value) {
+    async oncategoryConfirm(value, flag = true) {
       if (!value) {
         return this.showcategoryPicker = false;
       }
-      this.sectionInfo.category = value.text;
-      this.sectionInfo.categoryCode = value.code;
+      this.sectionInfo.purchaseName = value.text;
+      this.sectionInfo.purchaseCode = value.code;
       this.showcategoryPicker = false;
 
-      const data = await this.getPurchaseListType({ code: this.sectionInfo.genera, purchaseCode: value.code });
+      if (flag) {
+        this.sectionInfo.purchaseDetailName = '';
+        this.sectionInfo.purchaseTypeName = '';
+        this.detailColumns = [];
+        this.varietyColumns = [];
+      }
 
-      this.sectionInfo.detail = '';
-      this.sectionInfo.variety = '';
-      this.detailColumns = [];
-      this.varietyColumns = [];
+      const data = await this.getPurchaseListType({ code: this.sectionInfo.name, purchaseCode: value.code });
 
       this.varietyColumns = data?.map(el => {
         return { text: el.purchaseTypeName, code: el.purchaseTypeCode }
@@ -265,34 +324,44 @@ export default {
       if (!value) {
         return this.showdetailPicker = false;
       }
-      this.sectionInfo.detail = value.text;
-      this.sectionInfo.detailCode = value.code;
+      this.sectionInfo.purchaseDetailName = value.text;
+      this.sectionInfo.purchaseDetailCode = value.code;
       this.showdetailPicker = false;
     },
     // 物资种类确认事件
-    async onvarietyConfirm(value) {
+    async onvarietyConfirm(value, flag = true) {
       if (!value) {
         return this.showvarietyPicker = false;
       }
-      this.sectionInfo.variety = value.text;
-      this.sectionInfo.varietyCode = value.code;
+      this.sectionInfo.purchaseTypeName = value.text;
+      this.sectionInfo.purchaseTypeCode = value.code;
       this.showvarietyPicker = false;
 
-      const data = await this.getPurchaseListDetail({ code: this.sectionInfo.genera, purchaseCode: this.sectionInfo.categoryCode, purchaseTypeCode: value.code });
+      if (flag) {
+        this.sectionInfo.purchaseDetailName = '';
+        this.detailColumns = [];
+      }
 
-      this.sectionInfo.detail = '';
-      this.detailColumns = [];
+      const data = await this.getPurchaseListDetail({ code: this.sectionInfo.name, purchaseCode: this.sectionInfo.purchaseCode, purchaseTypeCode: value.code });
 
       this.detailColumns = data?.map(el => {
         return { text: el.purchaseDetailName, code: el.purchaseDetailCode }
       }) || [];
+    },
+    // 获取详情
+    async getGeneraDetail() {
+      const res = await materialPurchaseContractdetail(this.$route.query.id);
+
+      if (res.code == 0) {
+        return res.data
+      }
     },
     // 获取物资大类
     async getGeneraList() {
       await materialCategoryList().then(res => {
         if (res.code == 0) {
           this.generaColumns = res.data.map(el => {
-            return { text: el.name }
+            return { text: el.name, code: el.code }
           });
         }
       });
@@ -355,9 +424,12 @@ export default {
       month2 = month2.length === 1 ? `0${month2}` : month2;
       day2 = day2.length === 1 ? `0${day2}` : day2;
 
-      this.rearHand = [`${year}-${month}-${day}`, `${year2}-${month2}-${day2}`]
-
-      this.sectionInfo.validPeriod = `${year}-${month}-${day} 至 ${year2}-${month2}-${day2}`
+      this.sectionInfo.contractLicense.find((el, index) => {
+        if (index == this.contractLicenseIndex) {
+          el.validPeriod = `${year}-${month}-${day} 至 ${year2}-${month2}-${day2}`;
+          el.validityGuarantee = [`${year}-${month}-${day}`, `${year2}-${month2}-${day2}`]
+        }
+      })
 
       this.$forceUpdate();
     },
@@ -375,107 +447,121 @@ export default {
       month = month.length === 1 ? `0${month}` : month;
       day = day.length === 1 ? `0${day}` : day;
 
-      this.sectionInfo.expectedCompletion = `${year}-${month}-${day}`
+      this.sectionInfo.startTime = `${year}-${month}-${day}`
       this.$forceUpdate();
     },
-    handlerShowCalendar(elementName, num = 0) {
+    handlerShowCalendar(elementName, num, index = undefined) {
+      this.contractLicenseIndex = index;
       this.$refs[elementName]?.handleCalendarShow(num);
     },
+    // 许可/认证证书必填验证
+    isEveryItemValid(list, requiredKeys) {
+      if (!Array.isArray(list)) return false;
+
+      return list.every(item => {
+        if (!item || typeof item !== 'object') return false;
+
+        return requiredKeys.every(key => {
+          const val = item[key];
+          // 把“有值”定义为：不是 undefined/null/空字符串
+          return val !== undefined && val !== null && String(val).trim() !== '';
+        });
+      });
+    },
     sureClick(isData) {
-      console.log(this.sectionInfo.defaultRadio, 'sectionInfo.defaultRadio')
       if (isData) {
-        if (!this.sectionInfo.itemName) {
+        if (!this.sectionInfo.contractName) {
           this.$notify({
             type: 'warning',
             message: '请输入合同名称!',
           });
           return
         }
-        if (!this.sectionInfo.budget) {
+        if (!this.sectionInfo.amount) {
           this.$notify({
             type: 'warning',
             message: '请输入合同金额!',
           });
           return
         }
-        if (!this.sectionInfo.itemCode) {
+        if (!this.sectionInfo.contractNumber) {
           this.$notify({
             type: 'warning',
             message: '请输入合同编号!',
           });
           return
         }
-        if (!this.sectionInfo.buyerCode) {
+        if (!this.sectionInfo.purchaseNumber) {
           this.$notify({
             type: 'warning',
             message: '请输入采购编号!',
           });
           return
         }
-        if (!this.sectionInfo.genera) {
+        if (!this.sectionInfo.name) {
           this.$notify({
             type: 'warning',
             message: '请选择物资大类!',
           });
           return
         }
-        if (!this.sectionInfo.parcelCode) {
+        if (!this.sectionInfo.packageNumber) {
           this.$notify({
             type: 'warning',
             message: '请输入包件号!',
           });
           return
         }
-        if (!this.sectionInfo.category) {
+        if (!this.sectionInfo.purchaseName) {
           this.$notify({
             type: 'warning',
             message: '请选择类别!',
           });
           return
         }
-        if (!this.sectionInfo.detail) {
+        if (!this.sectionInfo.purchaseDetailName) {
           this.$notify({
             type: 'warning',
             message: '请选择物资细目!',
           });
           return
         }
-        if (!this.sectionInfo.amount) {
+        if (!this.sectionInfo.supplierName) {
           this.$notify({
             type: 'warning',
             message: '请输入供应商!',
           });
           return
         }
-        if (!this.sectionInfo.variety) {
+        if (!this.sectionInfo.purchaseTypeName) {
           this.$notify({
             type: 'warning',
             message: '请选择物资种类!',
           });
           return
         }
-        if (!this.sectionInfo.expectedCompletion) {
+        if (!this.sectionInfo.startTime) {
           this.$notify({
             type: 'warning',
             message: '请选择合同签订日期!',
           });
           return
         }
-        if (!this.sectionInfo.defaultRadio) {
+        if (!this.sectionInfo.railwaySpecial) {
           this.$notify({
             type: 'warning',
             message: '请选择是否为铁路产品!',
           });
           return
         }
-        if (!this.sectionInfo.schemeList?.length > 0) {
+        if (!this.sectionInfo.htfbsmj?.length > 0) {
           this.$notify({
             type: 'warning',
             message: '请选择合同副本扫描件!',
           });
           return
         }
-        if (!this.sectionInfo.fileList?.length > 0) {
+        if (!this.sectionInfo.gyszlzscns?.length > 0) {
           this.$notify({
             type: 'warning',
             message: '请选择供应商质量终身承诺书!',
@@ -483,42 +569,63 @@ export default {
           return
         }
 
-        if (this.sectionInfo.defaultRadio == '0') {
-          if (!this.sectionInfo.licence) {
-            this.$notify({
-              type: 'warning',
-              message: '请输入许可/认证类别!',
-            });
-            return
-          }
-
-          if (!this.sectionInfo.issueUnit) {
-            this.$notify({
-              type: 'warning',
-              message: '请输入发证单位!',
-            });
-            return
-          }
-
-          if (!this.sectionInfo.certificateNo) {
-            this.$notify({
-              type: 'warning',
-              message: '请输入证书编号!',
-            });
-            return
-          }
-
-          if (!this.sectionInfo.validPeriod) {
-            this.$notify({
-              type: 'warning',
-              message: '请选择有效期限!',
-            });
-            return
-          }
+        if (this.sectionInfo.railwaySpecial == '1' && !this.isEveryItemValid(this.sectionInfo.contractLicense, ['licenseCategory', 'unit', 'quantity', 'validityGuarantee'])) {
+          this.$notify({
+            type: 'warning',
+            message: '请完善许可/认证证书信息!',
+          });
+          return
         }
 
-
         // 判断新增或编辑调用不同接口，成功后跳转回列表页面
+        const time = new Date(this.sectionInfo.startTime);
+
+        this.sectionInfo.amount = +this.sectionInfo.amount;
+
+        const str = this.$route.query.type == 'create' ? "" : "[]";
+
+        const contractLicense = this.sectionInfo.railwaySpecial == '1' ? this.sectionInfo.contractLicense?.map(item => {
+          return {
+            ...item,
+            licenseCategory: item.licenseCategory,
+            unit: item.unit,
+            quantity: item.quantity,
+            validityGuarantee: item.validityGuarantee,
+            attachmentFile: item.attachmentFile?.length > 0 ? JSON.stringify(item.attachmentFile) : str,
+          }
+        }) : [];
+
+        if (this.$route.query.type == 'create') {
+
+          const params = {
+            ...this.sectionInfo,
+            id: null,
+            files: JSON.stringify({ htfbsmj: this.sectionInfo.htfbsmj, gyszlzscns: this.sectionInfo.gyszlzscns }),
+            startTime: time.getTime(),
+            contractLicense: contractLicense,
+          }
+
+          materialPurchaseContractcreate(params).then(res => {
+            if (res.code == 0) {
+              this.$toast('新增成功')
+              this.$router.push({ name: 'purchaseContract' })
+            }
+          })
+        } else {
+          const params = {
+            ...this.sectionInfo,
+            files: JSON.stringify({ htfbsmj: this.sectionInfo.htfbsmj, gyszlzscns: this.sectionInfo.gyszlzscns }),
+            startTime: time.getTime(),
+            contractLicense: contractLicense,
+          }
+
+          materialPurchaseContractmodify(params).then(res => {
+            if (res.code == 0) {
+              this.$toast('修改成功')
+              this.$router.push({ name: 'purchaseContract' })
+            }
+          })
+        }
 
       } else {
         this.$router.push({ name: 'purchaseContract' })

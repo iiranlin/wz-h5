@@ -169,6 +169,10 @@ export default {
                     name: "SendGoods",
                     query: {  goodData: JSON.stringify([]), id: item.businessId, text: 'edit', planId: item.businessId }
                 });
+            } else if( item.businessType == 'CGWJ') {
+                this.$router.push({ name: 'perfectFileDetail', query: { id: item.businessId, } });
+            } else if(item.businessType == 'CGHT') {
+                this.$router.push({ name: 'perfectContractDetail', query: { id: item.businessId, } });
             } else {
                 this.$router.push({
                     name: "DemandPlanningExamine",
@@ -189,7 +193,11 @@ export default {
                     name: "SendGoods",
                     query: { goodData: JSON.stringify([]), id: item.businessId, text: 'edit', planId: item.businessId }
                 });
-            } else {
+            } else if( item.businessType == 'CGWJ') {
+                this.$router.push({ name: 'perfectFileDetail', query: { id: item.businessId, } });
+            } else if(item.businessType == 'CGHT') {
+                this.$router.push({ name: 'perfectContractDetail', query: { id: item.businessId, } });
+            }  else {
                 this.$router.push({
                     name: "SaveMaterials",
                     query: {

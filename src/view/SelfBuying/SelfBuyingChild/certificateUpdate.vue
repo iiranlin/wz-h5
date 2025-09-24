@@ -4,21 +4,21 @@
     <div class="detail-base-info">
       <div class="detail-title-text">
         <p>合同名称：</p>
-        <p>{{ '宁淮铁路建设项目' }}</p>
+        <p>{{ $route.query.contractName }}</p>
       </div>
       <div class="detail-ul-text">
         <ul class="detail-ul">
           <li>
             <span>合同编号：</span>
-            <span>{{ '宁淮铁路战前1标' }}</span>
+            <span>{{ $route.query.contractNumber }}</span>
           </li>
           <li>
             <span>标段项目：</span>
-            <span>{{ '宁淮铁路战前1标' }}</span>
+            <span>{{ $route.query.projefctName }}</span>
           </li>
           <li>
             <span>买方单位：</span>
-            <span>{{ '中铁十九部项目建设施工单位' }}</span>
+            <span>{{ $route.query.unitName }}</span>
           </li>
         </ul>
       </div>
@@ -31,15 +31,15 @@
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field v-model="formData.licence" required name="licence" label="许可/认证类别" placeholder="请输入许可/认证类别"
+          <van-field v-model="formData.licenseCategory" required name="licenseCategory" label="许可/认证类别"
+            placeholder="请输入许可/认证类别" input-align="right" />
+        </li>
+        <li class="detail-list-li-input">
+          <van-field v-model="formData.unit" required name="unit" label="发证单位" placeholder="请输入发证单位"
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="formData.issueUnit" required name="issueUnit" label="发证单位" placeholder="请输入发证单位"
-            input-align="right" />
-        </li>
-        <li class="detail-list-li-input">
-          <van-field v-model="formData.certificateNo" required name="certificateNo
+          <van-field v-model="formData.quantity" required name="quantity
 " label="证书编号" placeholder="请输入证书编号" input-align="right" />
         </li>
         <li class="detail-list-li-input">
@@ -54,8 +54,8 @@
         <img src="/static/icon-file.png">
         <span>合同核备附件</span>
       </div>
-      <p class="box-container-p" v-if="!formData?.fileList01?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式，可上传多个</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.fileList01
+      <p class="box-container-p" v-if="!formData?.attachmentFile?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式，可上传多个</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.attachmentFile
         || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
     </div>
 
@@ -73,6 +73,9 @@
 import FileUploadView from "@/components/FileUploadView.vue";
 import rangeCalendar from "./components/calendar.vue";
 
+import { materialPurchaseContractLicensecreate } from '@/api/prodmgr-inv/SelfBuying'
+
+
 export default {
   name: 'certificateUpdate',
 
@@ -84,9 +87,9 @@ export default {
   data() {
     return {
       formData: {
-        fileList01: [],
+        attachmentFile: [],
+        validityGuarantee: []
       },
-      rearHand: []
     };
   },
 
@@ -124,7 +127,13 @@ export default {
       month2 = month2.length === 1 ? `0${month2}` : month2;
       day2 = day2.length === 1 ? `0${day2}` : day2;
 
-      this.rearHand = [`${year}-${month}-${day}`, `${year2}-${month2}-${day2}`]
+      const startTime = `${year}-${month}-${day}`;
+      const endTime = `${year2}-${month2}-${day2}`;
+
+      const dateObj = new Date(startTime).toISOString();
+      const dateObj2 = new Date(endTime).toISOString();
+
+      this.formData.validityGuarantee = [dateObj, dateObj2]
 
       this.formData.validPeriod = `${year}-${month}-${day} 至 ${year2}-${month2}-${day2}`
 
@@ -132,21 +141,21 @@ export default {
     },
     sureClick(isData) {
       if (isData) {
-        if (!this.formData.licence) {
+        if (!this.formData.licenseCategory) {
           this.$notify({
             type: 'warning',
             message: '请输入许可/认证类别!',
           });
           return
         }
-        if (!this.formData.issueUnit) {
+        if (!this.formData.unit) {
           this.$notify({
             type: 'warning',
             message: '请输入发证单位!',
           });
           return
         }
-        if (!this.formData.certificateNo) {
+        if (!this.formData.quantity) {
           this.$notify({
             type: 'warning',
             message: '请输入证书编号!',
@@ -160,15 +169,24 @@ export default {
           });
           return
         }
-        if (!this.formData.fileList01?.length > 0) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择合同核备附件!',
-          });
-          return
+
+        const params = {
+          contractNumber: this.$route.query.contractNumber,
+          licenseCategory: this.formData.licenseCategory,
+          unit: this.formData.unit,
+          quantity: this.formData.quantity,
+          startTime: this.formData.validityGuarantee[0],
+          endTime: this.formData.validityGuarantee[1],
+          validityGuarantee: this.formData.validityGuarantee,
+          attachmentFile: this.formData.attachmentFile?.length > 0 ? JSON.stringify(this.formData.attachmentFile) : ''
         }
 
-        // 判断新增或编辑调用不同接口，成功后跳转回列表页面
+        materialPurchaseContractLicensecreate(params).then(res => {
+          if (res.code == 0) {
+            this.$toast('证书更新成功')
+            this.$router.push({ name: 'purchaseContract' })
+          }
+        })
 
       } else {
         this.$router.push({ name: 'purchaseContract' })

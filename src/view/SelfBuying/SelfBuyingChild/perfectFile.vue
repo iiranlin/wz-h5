@@ -45,8 +45,8 @@
 " type="number" label="数量" placeholder="请输入数量" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.amount" required name="amount" label="预算金额" placeholder="请输入预算金额"
-            input-align="right">
+          <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="预算金额"
+            placeholder="请输入预算金额" input-align="right">
             <template #button>
               <span style="color: #333;">万元</span>
             </template>
@@ -343,7 +343,6 @@ export default {
       this.$refs[elementName]?.handleCalendarShow(num);
     },
     sureClick(isData) {
-      console.log(this.sectionInfo, "this.sectionInfo")
       if (isData) {
         if (!this.sectionInfo.name) {
           this.$notify({
@@ -417,11 +416,25 @@ export default {
         }
 
         if (this.$route.query.type == 'create') {
+          const registrationDate = new Date(this.sectionInfo.registrationDate).toISOString();
+
           const params = {
             ...this.sectionInfo,
             id: "",
             registration: JSON.stringify(this.sectionInfo.registration),
             bidDocument: JSON.stringify(this.sectionInfo.bidDocument),
+            registrationDate,
+            schemeApproval: "\"\"",
+            tenderAnnouncement: "\"\"",
+            bidEvaluationReport: "\"\"",
+            acceptance: "\"\"",
+            contractCopy: "\"\"",
+            other: "\"\"",
+            scheme: "\"\"",
+            bidAddendum: "\"\"",
+            bidCandidateWeb: "\"\"",
+            bidCopy: "\"\"",
+            commitment: "\"\"",
           }
 
           materialPurchaseFilecreate(params).then(res => {

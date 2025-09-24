@@ -122,6 +122,32 @@ export function materialPurchaseContractSubmit(data) {
   })
 }
 
+// 自购合同新增
+export function materialPurchaseContractcreate(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialPurchaseContract/create`,
+    method: 'post',
+    data
+  })
+}
+
+// 自购合同修改
+export function materialPurchaseContractmodify(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialPurchaseContract/modify`,
+    method: 'post',
+    data
+  })
+}
+// 更新证书
+export function materialPurchaseContractLicensecreate(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialPurchaseContractLicense/create`,
+    method: 'post',
+    data
+  })
+}
+
 // 删除自购合同
 export function batchRemoveContract(data) {
   return request({

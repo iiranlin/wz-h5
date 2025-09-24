@@ -27,9 +27,8 @@
               <span class="li-span-grey">{{ item.contractNumber }}</span>
               <div class="li-title-status">
                 <img :src="checkAuditStatus(item.status)" />
-                <span :style="handlerTextColor(tabList, 'status', item.status)"
-                  :type="item.status | statusStyleFilter" round size="medium"
-                  :class="{ 'li-status-completed': item.status == 4 }">{{
+                <span :style="handlerTextColor(tabList, 'status', item.status)" :type="item.status | statusStyleFilter"
+                  round size="medium" :class="{ 'li-status-completed': item.status == 4 }">{{
                     item.status | statusFilter(tabList)
                   }}
                 </span>
@@ -38,7 +37,7 @@
             <ul class="list-ul">
               <li>
                 <span class="font-weight">合同名称：{{ item.contractName
- }}</span>
+                  }}</span>
               </li>
               <li>
                 <span>标段项目：</span>
@@ -168,7 +167,7 @@ export default {
   },
   filters: {
     statusFilter(status, tabList) {
-      return tabList.find(item => item.status == status).title
+      return tabList.find(item => item.status === status).title
     },
     statusStyleFilter(status) {
       const statusMap = [
@@ -256,10 +255,7 @@ export default {
 
     // 详情
     handleDetail(item) {
-
       this.$router.push({ name: 'perfectContractDetail', query: { ...item } });
-
-      console.log(item, "详情")
     },
 
     // 新增/修改
@@ -348,7 +344,6 @@ export default {
 
     // 删除
     handleDeleteClick(item) {
-      console.log("删除")
       this.$dialog.confirm({
         message: '是否确认删除？',
         confirmButtonText: '确认',
@@ -375,15 +370,39 @@ export default {
 
     // 更新证书
     async handleUpdateFile(item) {
-
       this.$router.push({ name: 'certificateUpdate', query: { ...item } });
-
-      console.log(item, "更新证书")
     },
   }
 }
 </script>
 <style lang="less" scoped>
+.list-ul-button {
+  display: flex;
+  flex-wrap: nowrap;
+  /* 不换行 */
+  overflow-x: auto;
+  /* 允许横向滚动 */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* 移动端平滑滚动 */
+  gap: 7px;
+  /* 按钮之间留点间距 */
+}
+
+/* 隐藏滚动条（可选） */
+.list-ul-button::-webkit-scrollbar {
+  display: none;
+}
+
+/* 按钮数量 ≤ 4 时右对齐 */
+// .list-ul-button:has(> :nth-child(4):last-child),
+.list-ul-button:has(> :nth-child(3):last-child),
+.list-ul-button:has(> :nth-child(2):last-child),
+.list-ul-button:has(> :nth-child(1):last-child) {
+  justify-content: flex-end;
+}
+
+
 .in-out-management-list {
 
   ::v-deep .van-tabs__wrap {

@@ -122,7 +122,7 @@ import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 
-import { materialPurchaseFileList, batchRemove,materialPurchaseFileSubmit } from '@/api/prodmgr-inv/SelfBuying'
+import { materialPurchaseFileList, batchRemove, materialPurchaseFileSubmit } from '@/api/prodmgr-inv/SelfBuying'
 import { recall } from '@/api/prodmgr-inv/audit'
 import { downloadexport } from '@/api/prodmgr-inv/file'
 
@@ -163,7 +163,7 @@ export default {
   },
   filters: {
     statusFilter(status, tabList) {
-      return tabList.find(item => item.status == status).title
+      return tabList.find(item => item.status === status).title
     },
     statusStyleFilter(status) {
       const statusMap = [
@@ -381,6 +381,32 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.list-ul-button {
+  display: flex;
+  flex-wrap: nowrap;
+  /* 不换行 */
+  overflow-x: auto;
+  /* 允许横向滚动 */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* 移动端平滑滚动 */
+  gap: 7px;
+  /* 按钮之间留点间距 */
+}
+
+/* 隐藏滚动条（可选） */
+.list-ul-button::-webkit-scrollbar {
+  display: none;
+}
+
+/* 按钮数量 ≤ 4 时右对齐 */
+// .list-ul-button:has(> :nth-child(4):last-child),
+.list-ul-button:has(> :nth-child(3):last-child),
+.list-ul-button:has(> :nth-child(2):last-child),
+.list-ul-button:has(> :nth-child(1):last-child) {
+  justify-content: flex-end;
+}
+
 .in-out-management-list {
 
   ::v-deep .van-tabs__wrap {

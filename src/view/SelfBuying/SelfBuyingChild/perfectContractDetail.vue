@@ -71,7 +71,7 @@
           <span>{{ formData.railwaySpecial == '1' ? '是' : '否' }}</span>
         </li>
         <li>
-          <span>合同金额：</span>
+          <span>合同金额(万元)：</span>
           <span>{{ formData.amount }}</span>
         </li>
       </ul>
@@ -128,52 +128,45 @@
       <file-download-view :fileList="filterList(formData.files, 'gyszlzscns') || []" />
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" v-if="formData.railwaySpecial == '1'">
-      <div class="detail-title-content">
-        <img src="@/assets/img/certificate.png" />
-        <span>许可/认证证书</span>
+    <div v-for="(item, index) in formData.contractLicense" :key="item.id" v-if="formData.railwaySpecial == '1'"
+      :style="{ marginBottom: index == formData.contractLicense.length - 1 ? '65px' : '0' }">
+      <div class="detail-base-info detail-base-info-edited">
+        <div class="detail-title-content">
+          <img src="@/assets/img/certificate.png" />
+          <span>许可/认证证书</span>
+        </div>
+        <ul class="detail-info-ul">
+          <li>
+            <span>创建时间：</span>
+            <span>{{ item.createDate | formatToDate }}</span>
+          </li>
+          <li>
+            <span>创建人：</span>
+            <span>{{ item.createUserName }}</span>
+          </li>
+          <li>
+            <span>许可/认证类别：</span>
+            <span>{{ item.licenseCategory }}</span>
+          </li>
+          <li>
+            <span>发证单位：</span>
+            <span>{{ item.unit }}</span>
+          </li>
+          <li>
+            <span>证书编号：</span>
+            <span>{{ item.quantity }}</span>
+          </li>
+          <li>
+            <span>有效期限：</span>
+            <span>{{ item.startTime | formatDate }} 至 {{ item.endTime | formatDate }}</span>
+          </li>
+        </ul>
       </div>
-      <ul class="detail-info-ul" v-for="item in formData.contractLicense" :key="item.id">
-        <li>
-          <span>创建时间：</span>
-          <span>{{ item.createDate | formatToDate }}</span>
-        </li>
-        <li>
-          <span>创建人：</span>
-          <span>{{ item.createUserName }}</span>
-        </li>
-        <li>
-          <span>许可/认证类别：</span>
-          <span>{{ item.licenseCategory }}</span>
-        </li>
-        <li>
-          <span>发证单位：</span>
-          <span>{{ item.unit }}</span>
-        </li>
-        <li>
-          <span>证书编号：</span>
-          <span>{{ item.quantity }}</span>
-        </li>
-        <li>
-          <span>有效期限：</span>
-          <span>{{ item.startTime | formatDate }} 至 {{ item.endTime | formatDate }}</span>
-        </li>
-        <!-- <li class="li-item-remark">
-          <span>合同核备附件：</span>
-          <div class="remark-detail"><file-download-view :fileList="item.attachmentFile || []" /></div>
-        </li> -->
-      </ul>
-    </div>
 
-    <div class="detail-base-info detail-base-info-edited" style="margin-bottom: 65px;"
-      v-if="formData.railwaySpecial == '1'">
-      <div class="detail-title-content">
-        <img src="@/assets/img/icon-picking-list.png">
-        <span>合同核备附件</span>
-      </div>
-      <div v-for="item in formData.contractLicense" :key="item.id">
-        <div class="file-download-title" v-if="item.attachmentFile && item.attachmentFile.length > 0">
-          <span class="title">{{ item.licenseCategory }}</span>
+      <div class="detail-base-info detail-base-info-edited">
+        <div class="detail-title-content">
+          <img src="@/assets/img/icon-picking-list.png">
+          <span>合同核备附件</span>
         </div>
         <file-download-view :fileList="item.attachmentFile || []" />
       </div>
@@ -184,6 +177,7 @@
 <script>
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import { mergeByActId } from '@/utils/index.js'
+import { wfHistoryList } from '@/api/myToDoList'
 import indexMixin from '@/view/mixins'
 
 import { materialPurchaseContractdetail } from '@/api/prodmgr-inv/SelfBuying'
@@ -229,9 +223,7 @@ export default {
   data() {
     return {
       formData: {
-        fileList01: [],
-        fileList02: [],
-        fileList03: [],
+
       },
       recordList: [],
       historyData: {},
@@ -240,6 +232,7 @@ export default {
 
   mounted() {
     this.handleDetail();
+    this.wfHistoryList();
   },
 
   methods: {
@@ -247,26 +240,23 @@ export default {
     handleDetail() {
       materialPurchaseContractdetail(this.$route.query.id).then(({ data }) => {
         data.contractLicense.forEach(item => {
-          console.log(item.attachmentFile, "item.attachmentFile")
           item.attachmentFile = item.attachmentFile ? JSON.parse(item.attachmentFile) || [] : []
         })
         this.formData = data
-        // this.formData.fileList01 = JSON.parse(data.registration) || []
-        // this.formData.fileList02 = JSON.parse(data.bidDocument) || []
       })
     },
     // 流程信息
     wfHistoryList() {
-      // wfHistoryList(this.listObj.businessId).then(({ data }) => {
-      //   if (data.recordList.length) {
-      //     this.recordList = mergeByActId(data.recordList || []);
-      //     this.historyData = mergeByActId(data.recordList)[0]
-      //   }
-      // })
+      wfHistoryList(this.$route.query.id).then(({ data }) => {
+        if (data.recordList.length) {
+          this.recordList = mergeByActId(data.recordList || []);
+          this.historyData = mergeByActId(data.recordList)[0]
+        }
+      })
     },
     //查看流程点击
     handleProcessClick(item) {
-      this.$router.push({ name: "MyProcess", params: { businessId: item.id } })
+      this.$router.push({ name: "MyProcess", params: { businessId: item.id, businessType: "CGHT", } })
     },
   },
 };
@@ -526,6 +516,12 @@ export default {
       .detail-ul-p {
         display: flex;
         align-items: center;
+
+        img {
+          width: 14px;
+          height: 14px;
+          margin-top: -2px;
+        }
 
         & :nth-child(1) {
           margin-right: 3px;

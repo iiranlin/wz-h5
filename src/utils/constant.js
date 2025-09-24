@@ -4,4 +4,6 @@ export const FLOW_ROUTE = {
     RKLC:'InboundDetails', // 入库
     SHLC:'DoAcceptDetail', // 收货
     FHLC:'cargoDetails', // 发货
+    CGHT:'perfectContractDetail',// 采购合同
+    CGWJ:'perfectFileDetail',// 采购文件
 }

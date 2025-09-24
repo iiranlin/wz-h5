@@ -134,7 +134,7 @@
       <file-download-view :fileList="formData.fileList01 || []" />
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 65px;">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
         <span>招标文件（含技术规格书）</span>
@@ -147,6 +147,7 @@
 <script>
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import { mergeByActId } from '@/utils/index.js'
+import { wfHistoryList } from '@/api/myToDoList'
 import indexMixin from '@/view/mixins'
 
 import { materialPurchaseFiledetail } from '@/api/prodmgr-inv/SelfBuying'
@@ -203,6 +204,7 @@ export default {
 
   mounted() {
     this.handleDetail();
+    this.wfHistoryList();
   },
 
   methods: {
@@ -216,16 +218,16 @@ export default {
     },
     // 流程信息
     wfHistoryList() {
-      // wfHistoryList(this.listObj.businessId).then(({ data }) => {
-      //   if (data.recordList.length) {
-      //     this.recordList = mergeByActId(data.recordList || []);
-      //     this.historyData = mergeByActId(data.recordList)[0]
-      //   }
-      // })
+      wfHistoryList(this.$route.query.id).then(({ data }) => {
+        if (data.recordList.length) {
+          this.recordList = mergeByActId(data.recordList || []);
+          this.historyData = mergeByActId(data.recordList)[0]
+        }
+      })
     },
     //查看流程点击
     handleProcessClick(item) {
-      this.$router.push({ name: "MyProcess", params: { businessId: item.id } })
+      this.$router.push({ name: "MyProcess", params: { businessId: item.id, businessType: "CGWJ", } })
     },
   },
 };
@@ -471,6 +473,12 @@ export default {
       .detail-ul-p {
         display: flex;
         align-items: center;
+
+        img {
+          width: 14px;
+          height: 14px;
+          margin-top: -2px;
+        }
 
         & :nth-child(1) {
           margin-right: 3px;
