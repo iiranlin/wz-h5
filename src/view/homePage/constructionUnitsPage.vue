@@ -34,20 +34,20 @@
         <div class="lastModule">
           <div class="twoLines" @click="handleRouter('/InListContent')">
             <img :src="warehousing">
-            入库单
+            质检管理
           </div>
-          <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/InventoryListContent')">
-            <img :src="DemandInventory">
-            需求库存
+          <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/RefundListContent')">
+            <img :src="CreditOrder">
+            质检退货
           </div>
         </div>
       </div>
 
       <div style="margin-bottom: 10px;">
         <div class="lastModule">
-          <div class="twoLines" @click="handleRouter('/RefundListContent')">
-            <img :src="CreditOrder">
-            质检退货
+          <div class="twoLines"  @click="handleRouter('/InventoryListContent')">
+            <img :src="DemandInventory">
+            出库管理
           </div>
           <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/OutListContent')">
             <img :src="StockOut">
