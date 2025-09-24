@@ -169,6 +169,17 @@ export default {
                     name: "SendGoods",
                     query: {  goodData: JSON.stringify([]), id: item.businessId, text: 'edit', planId: item.businessId }
                 });
+            }else if(item.businessType == 'SHLC'){
+                this.$router.push({
+                    name: "DoAccept",
+                    query: {
+                        id: item.businessId,
+                        tabs:true,
+                        isLable:false,
+                        takeStatus:5
+                    },
+                });
+
             } else {
                 this.$router.push({
                     name: "DemandPlanningExamine",
@@ -189,6 +200,17 @@ export default {
                     name: "SendGoods",
                     query: { goodData: JSON.stringify([]), id: item.businessId, text: 'edit', planId: item.businessId }
                 });
+            }else if(item.businessType == 'SHLC'){
+                this.$router.push({
+                    name: "DoAccept",
+                    query: {
+                        id: item.businessId,
+                        tabs:true,
+                        isLable:false,
+                        takeStatus:5
+                    },
+                });
+
             } else {
                 this.$router.push({
                     name: "SaveMaterials",

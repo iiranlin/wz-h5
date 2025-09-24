@@ -319,8 +319,11 @@ export default {
     this.getBatch(this.id)
     this.getDetailList();
      // 每次进入页面清空自检单和其他资料
-    this.fileZjdList = []
-    this.fileQtzlList = []
+     if(this.takeStatus != 5){
+      this.fileZjdList = []
+      this.fileQtzlList = []
+     }
+
   },
   computed: {
     isFlag() {
@@ -605,7 +608,8 @@ export default {
             const data = this.$store.state.public.selectGoodData?.length > 0 ? this.$store.state.public.selectGoodData : this.dataList.materialCirculationDetailsTableDTOS;
 
             this.dataList.materialCirculationDetailsTableDTOS = data;
-
+            this.fileZjdList = this.filterList(this.dataList.fileByList, 'zjd') || []
+            this.fileQtzlList = this.filterList(this.dataList.fileByList, 'qtzl') || []
             if (!this.isView) {
               this.dataList.takeDate = parseTime(this.currentTime, '{y}-{m}-{d}')
             } else {
@@ -781,8 +785,10 @@ export default {
     this.getBatch(this.id)
     this.getDetailList()
     // 每次进入页面清空自检单和其他资料
-    this.fileZjdList = []
-    this.fileQtzlList = []
+    if(this.takeStatus != 5){
+      this.fileZjdList = []
+      this.fileQtzlList = []
+     }
   }
 }
 </script>
