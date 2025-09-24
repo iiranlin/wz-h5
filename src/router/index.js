@@ -100,7 +100,7 @@ export const routes = [
       {
         path: "/InListContent",
         name: "InListContent",
-        meta: { title: "入库单", isTabbar: true },
+        meta: { title: "质检管理", isTabbar: true },
         component: () =>
           import("@/view/InOutManagement/components/InListContent.vue"),
       },
