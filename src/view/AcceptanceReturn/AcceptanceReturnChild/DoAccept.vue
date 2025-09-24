@@ -168,7 +168,7 @@
           </li> -->
           <li class="li-item-overlength">
             <span>有效期截止日期：</span>
-            <span>{{ item.expirationDate }}</span>
+            <span>{{ item.expirationDate | formatToDate }}</span>
           </li>
           <li class="li-item-overlength">
             <span>本次发货数量：</span>
