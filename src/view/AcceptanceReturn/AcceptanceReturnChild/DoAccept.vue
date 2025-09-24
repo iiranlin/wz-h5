@@ -280,6 +280,7 @@
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
 
     <back-to-top className=".default-container"></back-to-top>
+    <div style="height: 50px;opacity: 0;">底部安全距离</div>
   </div>
 </template>
 <script>
