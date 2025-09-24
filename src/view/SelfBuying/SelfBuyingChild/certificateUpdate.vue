@@ -32,7 +32,7 @@
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
           <van-field v-model="formData.licenseCategory" required name="licenseCategory" label="许可/认证类别"
-            placeholder="请输入许可/认证类别" input-align="right" />
+            placeholder="请输入许可/认证类别" input-align="right" label-width="7.2em" />
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="formData.unit" required name="unit" label="发证单位" placeholder="请输入发证单位"

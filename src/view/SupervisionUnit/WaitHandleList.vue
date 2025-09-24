@@ -34,11 +34,11 @@
                                 <span>标段项目：</span>
                                 <span>{{ item.sectionName }}</span>
                             </li>
-                            <li>
+                            <li v-if="item.businessType != 'CGWJ'">
                                 <span>合同名称：</span>
                                 <span>{{ item.contractName }}</span>
                             </li>
-                            <li>
+                            <li v-if="item.businessType != 'CGWJ' && item.businessType != 'CGHT'">
                                 <span>物资名称：</span>
                                 <span>{{ item.materialName }}</span>
                             </li>

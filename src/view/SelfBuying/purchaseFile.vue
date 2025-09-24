@@ -56,7 +56,8 @@
               </li>
               <li>
                 <span>预算金额：</span>
-                <span>{{ item.amount }}</span>
+                <span class="li-span-click">{{ item.amount }}</span>
+                <span>万元</span>
               </li>
               <li>
                 <span>提交人：</span>
@@ -73,8 +74,8 @@
               </li>
             </ul>
             <div class="list-ul-button">
-              <!-- 未提交、已通过、已驳回可修改 -->
-              <van-button class="button-info" plain round type="info" v-if="![2].includes(item.status)"
+              <!-- 未提交、已驳回可修改 -->
+              <van-button class="button-info" plain round type="info" v-if="[1, 0].includes(item.status)"
                 @click.stop="handleSelfBuying(item)">修改</van-button>
 
               <!-- 未提交、已驳回可提交审核 -->

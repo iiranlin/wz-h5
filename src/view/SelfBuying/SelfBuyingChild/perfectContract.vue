@@ -120,7 +120,7 @@
         <ul class="detail-list-ul-edited">
           <li class="detail-list-li-input">
             <van-field v-model="item.licenseCategory" required name="licenseCategory" label="许可/认证类别"
-              placeholder="请输入许可/认证类别" input-align="right" />
+              placeholder="请输入许可/认证类别" input-align="right" label-width="7.2em" />
           </li>
           <li class="detail-list-li-input">
             <van-field v-model="item.unit" required name="unit" label="发证单位" placeholder="请输入发证单位"
@@ -226,7 +226,8 @@ export default {
             attachmentFile: [],
             validityGuarantee: [],
           }
-        ]
+        ],
+        railwaySpecial: '1'
       },
       contractLicenseIndex: 0,
       // 物资大类
@@ -244,7 +245,7 @@ export default {
     };
   },
 
-  async mounted() {
+  async created() {
     this.getGeneraList();
     this.detailInfo = await this.getMaterialSectionProject();
     // 判断是编辑还是新增，查询展示信息和回显数据
@@ -253,25 +254,31 @@ export default {
       this.sectionInfo.unitName = this.detailInfo.constructionCompany;
       this.sectionInfo.projefctName = this.detailInfo.sectionName;
     } else {
-      const data = await this.getGeneraDetail();
+      try {
+        const data = await this.getGeneraDetail();
+        console.log(data, "data")
 
-      data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
-      data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
-      data.startTime = parseTime(data.startTime, '{y}-{m}-{d}');
+        data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
+        data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
+        data.startTime = parseTime(data.startTime, '{y}-{m}-{d}');
 
-      if (data.railwaySpecial == '1') {
-        data.contractLicense.forEach(el => {
-          el.validPeriod = el.validityGuarantee[0] + ' 至 ' + el.validityGuarantee[1];
-          el.attachmentFile = JSON.parse(el.attachmentFile) || [];
-        })
+        if (data.railwaySpecial == '1') {
+          data.contractLicense.forEach(el => {
+            el.validPeriod = el.validityGuarantee[0] + ' 至 ' + el.validityGuarantee[1];
+            el.attachmentFile = el.attachmentFile ? JSON.parse(el.attachmentFile) : [];
+          })
+        }
+
+        this.sectionInfo = data;
+        this.sectionInfo.projectId = this.detailInfo.projectId;
+
+        await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
+        await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
+        await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
+      } catch (error) {
+        console.log(error, "error")
       }
 
-      this.sectionInfo = data;
-      this.sectionInfo.projectId = this.detailInfo.projectId;
-
-      await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
-      await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
-      await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
     }
   },
 

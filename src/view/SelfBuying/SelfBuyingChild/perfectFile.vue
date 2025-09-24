@@ -58,7 +58,7 @@
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.registrationDate" readonly clickable required name="registrationDate"
-            label="预计采购完成日期" placeholder="请选择预计采购完成日期" right-icon="arrow" @click="handlerShowCalendar('calendar')"
+            label="预计采购完成日期" placeholder="请选择预计采购完成日期" right-icon="arrow" label-width="8.2em" @click="handlerShowCalendar('calendar')"
             input-align="right" />
         </li>
       </ul>
@@ -176,7 +176,7 @@ export default {
     };
   },
 
-  async mounted() {
+  async created() {
     this.getGeneraList();
     this.detailInfo = await this.getMaterialSectionProject();
     // 判断是编辑还是新增，查询展示信息和回显数据

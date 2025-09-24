@@ -48,7 +48,7 @@
         </li>
         <li>
           <span>预算金额：</span>
-          <span>{{ formData.amount }}</span>
+          <span class="li-span-click">{{ formData.amount }}</span> <span>万元</span>
         </li>
         <li>
           <span>预计采购完成日期：</span>
