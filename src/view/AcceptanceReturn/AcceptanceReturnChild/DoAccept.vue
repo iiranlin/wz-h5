@@ -168,7 +168,7 @@
           </li> -->
           <li class="li-item-overlength">
             <span>有效期截止日期：</span>
-            <span>{{ item.expirationDate }}</span>
+            <span>{{ item.expirationDate | formatToDate }}</span>
           </li>
           <li class="li-item-overlength">
             <span>本次发货数量：</span>
@@ -280,6 +280,7 @@
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
 
     <back-to-top className=".default-container"></back-to-top>
+    <div style="height: 50px;opacity: 0;">底部安全距离</div>
   </div>
 </template>
 <script>
@@ -318,8 +319,11 @@ export default {
     this.getBatch(this.id)
     this.getDetailList();
      // 每次进入页面清空自检单和其他资料
-    this.fileZjdList = []
-    this.fileQtzlList = []
+     if(this.takeStatus != 5){
+      this.fileZjdList = []
+      this.fileQtzlList = []
+     }
+
   },
   computed: {
     isFlag() {
@@ -604,7 +608,8 @@ export default {
             const data = this.$store.state.public.selectGoodData?.length > 0 ? this.$store.state.public.selectGoodData : this.dataList.materialCirculationDetailsTableDTOS;
 
             this.dataList.materialCirculationDetailsTableDTOS = data;
-
+            this.fileZjdList = this.filterList(this.dataList.fileByList, 'zjd') || []
+            this.fileQtzlList = this.filterList(this.dataList.fileByList, 'qtzl') || []
             if (!this.isView) {
               this.dataList.takeDate = parseTime(this.currentTime, '{y}-{m}-{d}')
             } else {
@@ -780,8 +785,10 @@ export default {
     this.getBatch(this.id)
     this.getDetailList()
     // 每次进入页面清空自检单和其他资料
-    this.fileZjdList = []
-    this.fileQtzlList = []
+    if(this.takeStatus != 5){
+      this.fileZjdList = []
+      this.fileQtzlList = []
+     }
   }
 }
 </script>

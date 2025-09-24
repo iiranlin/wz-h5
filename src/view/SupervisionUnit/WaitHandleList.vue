@@ -173,6 +173,17 @@ export default {
                 this.$router.push({ name: 'perfectFileDetail', query: { id: item.businessId, } });
             } else if(item.businessType == 'CGHT') {
                 this.$router.push({ name: 'perfectContractDetail', query: { id: item.businessId, } });
+            }else if(item.businessType == 'SHLC'){
+                this.$router.push({
+                    name: "DoAccept",
+                    query: {
+                        id: item.businessId,
+                        tabs:true,
+                        isLable:false,
+                        takeStatus:5
+                    },
+                });
+
             } else {
                 this.$router.push({
                     name: "DemandPlanningExamine",
@@ -197,6 +208,17 @@ export default {
                 this.$router.push({ name: 'perfectFile', query: { id: item.businessId, type: 'update' } });
             } else if (item.businessType == 'CGHT') {
                 this.$router.push({ name: 'perfectContract', query: { id: item.businessId, type: 'update' } });
+            }else if(item.businessType == 'SHLC'){
+                this.$router.push({
+                    name: "DoAccept",
+                    query: {
+                        id: item.businessId,
+                        tabs:true,
+                        isLable:false,
+                        takeStatus:5
+                    },
+                });
+
             } else {
                 this.$router.push({
                     name: "SaveMaterials",
