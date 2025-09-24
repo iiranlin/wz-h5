@@ -39,7 +39,8 @@ service.interceptors.request.use(
         for (const key in config.params) {
           if (Object.hasOwnProperty.call(config.params, key)) {
             const element = config.params[key] + ''
-            config.params[key] = config.params[key] && encrypt(element, secretKey)
+             // 只要 key 存在就加密
+            config.params[key] = encrypt(element, secretKey)
           }
         }
       }
