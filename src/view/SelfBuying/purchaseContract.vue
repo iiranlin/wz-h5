@@ -260,7 +260,7 @@ export default {
 
     // 新增/修改
     handleSelfBuying(item) {
-      const query = item ? { id: item.id, contractId: item.contractId, type: 'update' } : { type: 'create' };
+      const query = item ? { id: item.id, type: 'update' } : { type: 'create' };
 
       this.$router.push({ name: 'perfectContract', query: query })
     },
