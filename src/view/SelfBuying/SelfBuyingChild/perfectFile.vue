@@ -42,7 +42,7 @@
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.quantity" required name="quantity
-" type="number" label="数量" placeholder="请输入数量" input-align="right" />
+" label="数量" placeholder="请输入数量" input-align="right" />
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="预算金额"
