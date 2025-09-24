@@ -28,7 +28,7 @@
               <div class="li-title-status">
                 <img :src="checkAuditStatus(item.status)" />
                 <span :style="handlerTextColor(tabList, 'status', item.status)" :type="item.status | statusStyleFilter"
-                  round size="medium" :class="{ 'li-status-completed': item.status == 4 }">{{
+                  round size="medium" :class="{ 'li-status-completed': item.status == 0 }">{{
                     item.status | statusFilter(tabList)
                   }}
                 </span>
@@ -78,15 +78,15 @@
             </ul>
             <div class="list-ul-button">
               <!-- 未提交、已驳回可修改 -->
-              <van-button class="button-info" plain round type="info" v-if="[1, 4].includes(item.status)"
+              <van-button class="button-info" plain round type="info" v-if="[1, 0].includes(item.status)"
                 @click.stop="handleSelfBuying(item)">修改</van-button>
 
               <!-- 未提交、已驳回可提交审核 -->
-              <van-button class="button-info" round type="info" v-if="[1, 4].includes(item.status)"
+              <van-button class="button-info" round type="info" v-if="[1, 0].includes(item.status)"
                 @click.stop="handleDoAccept(item)">提交审核</van-button>
 
               <!-- 未提交、已驳回可删除 -->
-              <van-button class="button-info" plain round type="danger" v-if="[1, 4].includes(item.status)"
+              <van-button class="button-info" plain round type="danger" v-if="[1, 0].includes(item.status)"
                 @click.stop="handleDeleteClick(item)">删除</van-button>
 
               <!-- 所有状态均可查看详情 -->
