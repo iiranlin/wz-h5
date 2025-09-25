@@ -9,10 +9,11 @@ router.beforeEach(async (to, from, next) => {
   if(to.query.TokenKey){
     setToken(to.query.TokenKey)
   }
+  let title = to.meta.title
+  document.title = title
   if (isAndroid()) {
     // 路由文件里有的路由在beforeEnter中重新设置了meta.title, 增加计时器确保传给安卓的是最新值。
     setTimeout(() => {
-      let title = to.meta.title
       Android.sendMenuTitle(title)
     }, 100)
   }
