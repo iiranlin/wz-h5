@@ -735,7 +735,7 @@ export default {
       }
     },
     onClickBack() {
-      this.$router.push({path: '/AcceptanceReturn'})
+      this.$router.push({path: '/Acceptance'})
     },
     imgClick({ fileName, filePath }) {
       this.$refs.filePreview.init(fileName, filePath)
@@ -747,7 +747,7 @@ export default {
     optionsSuccess(assignee, { id, planType }) {
       submitTodo({ id, planType: planType, assignee, ...this.backupParams }).then(() => {
         this.$toast('提交审核成功')
-        this.$router.push({path: '/AcceptanceReturn'})
+        this.$router.push({path: '/Acceptance'})
       })
     },
     //去审核点击
