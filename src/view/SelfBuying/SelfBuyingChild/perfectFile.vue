@@ -46,7 +46,7 @@
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="预算金额"
-            placeholder="请输入预算金额" input-align="right">
+            placeholder="请输入预算金额" @input="handlerAmount" input-align="right">
             <template #button>
               <span style="color: #333;">万元</span>
             </template>
@@ -58,8 +58,8 @@
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.registrationDate" readonly clickable required name="registrationDate"
-            label="预计采购完成日期" placeholder="请选择预计采购完成日期" right-icon="arrow" label-width="8.2em" @click="handlerShowCalendar('calendar')"
-            input-align="right" />
+            label="预计采购完成日期" placeholder="请选择预计采购完成日期" right-icon="arrow" label-width="8.2em"
+            @click="handlerShowCalendar('calendar')" input-align="right" />
         </li>
       </ul>
     </div>
@@ -341,6 +341,15 @@ export default {
     },
     handlerShowCalendar(elementName, num = 0) {
       this.$refs[elementName]?.handleCalendarShow(num);
+    },
+    handlerfix(str) {
+      const [i, d] = String(str).split('.');
+      return d && d.length >= 6;
+    },
+    handlerAmount(value) {
+      const [i, d] = String(value).split('.');
+      
+      this.sectionInfo.amount = this.handlerfix(value) ? `${i}.${d.slice(0, 6)}` : value;
     },
     sureClick(isData) {
       if (isData) {

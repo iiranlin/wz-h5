@@ -28,7 +28,7 @@
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="合同金额"
-            placeholder="请输入合同金额" input-align="right">
+            placeholder="请输入合同金额" input-align="right" @input="handlerAmount">
             <template #button>
               <span style="color: #333;">万元</span>
             </template>
@@ -474,6 +474,15 @@ export default {
           return val !== undefined && val !== null && String(val).trim() !== '';
         });
       });
+    },
+    handlerfix(str) {
+      const [i, d] = String(str).split('.');
+      return d && d.length >= 6;
+    },
+    handlerAmount(value) {
+      const [i, d] = String(value).split('.');
+
+      this.sectionInfo.amount = this.handlerfix(value) ? `${i}.${d.slice(0, 6)}` : value;
     },
     sureClick(isData) {
       if (isData) {
