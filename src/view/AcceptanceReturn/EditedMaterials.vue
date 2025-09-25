@@ -203,7 +203,7 @@ export default {
         return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
       }else{
         return ""
-      }  
+      }
     },
     formatToDate(value) {
       if(value){
@@ -214,7 +214,7 @@ export default {
         return `${y}-${m}-${d}`;
       }else{
         return ""
-      }  
+      }
     }
   },
   data() {
@@ -248,11 +248,11 @@ export default {
       const num = Number(item.putTotal);
 
       if (!isNaN(num) && num <= item.sendTotal) {
-        this.sectionInfo.putTotal = num; 
+        this.sectionInfo.putTotal = num;
         this.sectionInfo.refundTotal =(this.sectionInfo.sendTotal - this.sectionInfo.putTotal).toFixed(2)
       } else {
-        this.$toast('实收数量不能大于发货数量'); 
-        this.sectionInfo.putTotal = 0; 
+        this.$toast('实收数量不能大于发货数量');
+        this.sectionInfo.putTotal = 0;
       }
     },
     handleInput1(item){
@@ -262,11 +262,11 @@ export default {
 
       const num = Number(item.refundTotal);
       if (!isNaN(num) && num <= item.sendTotal) {
-        this.sectionInfo.refundTotal = num; 
+        this.sectionInfo.refundTotal = num;
         this.sectionInfo.putTotal = (this.sectionInfo.sendTotal - this.sectionInfo.refundTotal).toFixed(2)
       } else {
-        this.$toast('退货数量不能大于发货数量'); 
-        this.sectionInfo.refundTotal=0 
+        this.$toast('退货数量不能大于发货数量');
+        this.sectionInfo.refundTotal=0
       }
     },
     init() {
@@ -280,7 +280,7 @@ export default {
 
 
       const data = Object.assign({}, this.$store.state.public.materiaData || {})
-      
+
       this.sectionInfo = data;
     },
     boolExceptZero(val) {

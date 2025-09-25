@@ -172,15 +172,15 @@
           </li>
           <li class="li-item-overlength">
             <span>本次发货数量：</span>
-            <span class="li-span-click">{{ item.sendTotal }}</span>
+            <span class="li-span-click">{{ item.sendTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>实收数量：</span>
-            <span class="li-span-click">{{ item.putTotal }}</span>
+            <span class="li-span-click">{{ item.putTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>退货数量：</span>
-            <span style="color: #e4393c;">{{ item.refundTotal }}</span>
+            <span style="color: #e4393c;">{{ item.refundTotal }} {{ item.unit }}</span>
           </li>
           <!-- <li >
                       <span>生产日期：</span>

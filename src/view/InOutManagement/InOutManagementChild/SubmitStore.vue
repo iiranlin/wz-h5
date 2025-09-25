@@ -89,15 +89,15 @@
           </li>
           <li class="li-item-overlength">
             <span>本次实收数量：</span>
-            <span class="li-span-click">{{ item.putTotal }}</span>
+            <span class="li-span-click">{{ item.putTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>报检通过：</span>
-            <span class="li-span-click">{{ item.storeTotal }}</span>
+            <span class="li-span-click">{{ item.storeTotal }} {{ item.unit }}</span>
           </li>
           <li>
             <span>报检退货：</span>
-            <span style="color: #e4393c;">{{ item.refundZjTotal }}</span>
+            <span style="color: #e4393c;">{{ item.refundZjTotal }} {{ item.unit }}</span>
           </li>
         </ul>
       </div>
