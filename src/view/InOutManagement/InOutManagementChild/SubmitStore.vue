@@ -470,7 +470,7 @@ export default {
       const params = Object.assign({ supplyId: this.supplyId, id: this.id, planType: planType, assignee }, this.formData, { materialCirculationDetailsTableParamList: this.tableData })
       materialStoreTableRestSubmit(params).then(() => {
         this.$toast('提交入库审核成功')
-        this.$router.push({ path: '/InOutManagementList' })
+        this.$router.push({ path: '/InListContent' })
       })
     },
     imgClick({ fileName, filePath }) {

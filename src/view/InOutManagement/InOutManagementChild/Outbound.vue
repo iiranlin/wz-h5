@@ -33,14 +33,14 @@
               input-align="right"/>
             <van-field v-model="formData.pickUserName" name="领料人" label="领料人：" placeholder="请输入领料人" required clearable
               input-align="right"/>
-            <van-field v-model="formData.pickDate" 
+            <van-field v-model="formData.pickDate"
               label="领料日期："
               required
               input-align="right"
-              readonly 
-              clickable 
-              name="领料日期" 
-              placeholder="请选择领料日期" 
+              readonly
+              clickable
+              name="领料日期"
+              placeholder="请选择领料日期"
               @click="handlerShowCalendar('calendar')" />
             <van-field v-model="formData.issueUserName" name="发料人" label="发料人：" placeholder="请输入发料人" required clearable
               input-align="right"/>
@@ -120,9 +120,9 @@
       <img src="@/assets/img/icon-logistics-information.png"/>
       <span>物资明细（共{{detailList.length}}项）</span>
       <van-search ref="getheight"
-          v-model="searchValue" 
-          placeholder="输入关键字搜索" 
-          shape="round" 
+          v-model="searchValue"
+          placeholder="输入关键字搜索"
+          shape="round"
           left-icon="none"
           background="#f2f4f8"
           @search="onSearch()">
@@ -183,7 +183,7 @@
       <van-button class="button-info" round type="info" @click="previewClick('submit')" v-if="queryType === 'save'">上一步</van-button>
       <van-button class="button-info" round type="info" @click="outboundClick" v-if="queryType === 'save'">确定出库</van-button>
     </div>
-    <!-- <van-calendar v-model="showsTimePop" 
+    <!-- <van-calendar v-model="showsTimePop"
       @confirm="timeConfirm">
     </van-calendar> -->
     <Calendar ref="calendar" @onConfirm="timeConfirm" />
@@ -238,7 +238,7 @@ export default {
       queryType: '',
       detailInfo:{},
       detailList:[],
-      showsTimePop: false, 
+      showsTimePop: false,
       searchValue: '',
       formData: {
         planName: '',     //需求名称
@@ -276,7 +276,7 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-      
+
       if(this.queryIndex!=undefined){
         this.fileList = this.$store.state.public.outboundFileList.length?this.$store.state.public.outboundFileList:[]
         this.formData = Object.keys(this.$store.state.public.outboundFormData).length?this.$store.state.public.outboundFormData:this.formData
@@ -284,12 +284,12 @@ export default {
         this.detailList = this.$store.state.public.outboundList
         if(Object.keys(this.$store.state.public.outboundData).length) {
             this.detailList[this.queryIndex] = this.$store.state.public.outboundData
-            let sum=0 
+            let sum=0
             this.detailList[this.queryIndex].childList.forEach(item=>{
               sum = sum + item.outTotal
             })
             this.detailList[this.queryIndex].sumTotal = sum
-            
+
           }
          toast.clear();
       }else{
@@ -304,14 +304,14 @@ export default {
             this.detailList.forEach((item) => {
               if(item.stockStatus != '0'){
                 this.getChildDetail(item);
-              } 
+              }
             })
           }).catch((error) => {
 
           }).finally(() => {
             toast.clear();
           })
-        
+
       }
     },
     //获取明细子集信息
@@ -392,7 +392,7 @@ export default {
       formData.append("file", file.file);
       formData.append("businessType","01");
       formData.append("key",file.file.name);
-      
+
       file.status = 'uploading';
       file.message = '上传中...';
 
@@ -513,13 +513,13 @@ export default {
             type: 'success',
             message: message
         });
-        this.$router.push({ path: '/InOutManagementList' })
+        this.$router.push({ path: '/InListContent' })
       }).catch((error) => {
 
       }).finally(() => {
         toast.clear();
       });
-   
+
     },
     initSubmitList(){
       this.submitList = [];
@@ -542,7 +542,7 @@ export default {
       this.$store.dispatch('public/setOutboundData', item)
       this.$store.dispatch('public/setOutboundList', this.detailList)
       this.$store.dispatch('public/setOutboundInfo', this.detailInfo)
-      
+
       const query = {type:'submit',id:this.id,index:index}
       this.$router.push({ name: 'EditedOutbound' ,query})
     },
@@ -770,7 +770,7 @@ export default {
             padding: 5px 10px;
           }
         }
-     
+
       }
     }
     .detail-ul {
@@ -810,7 +810,7 @@ export default {
   .select-materials-sticky {
     ::v-deep .van-sticky {
       background: #f2f4f8;
-      
+
     }
   }
 
