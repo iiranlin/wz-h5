@@ -403,14 +403,14 @@ export default {
         if (!this.sectionInfo.registration?.length > 0) {
           this.$notify({
             type: 'warning',
-            message: '请选择采购方案或招标计划!',
+            message: '请上传采购方案或招标计划!',
           });
           return
         }
         if (!this.sectionInfo.bidDocument?.length > 0) {
           this.$notify({
             type: 'warning',
-            message: '请选择采购文件（含技术规格书）!',
+            message: '请上传采购文件（含技术规格书）!',
           });
           return
         }

@@ -564,14 +564,14 @@ export default {
         if (!this.sectionInfo.htfbsmj?.length > 0) {
           this.$notify({
             type: 'warning',
-            message: '请选择合同副本扫描件!',
+            message: '请上传合同副本扫描件!',
           });
           return
         }
         if (!this.sectionInfo.gyszlzscns?.length > 0) {
           this.$notify({
             type: 'warning',
-            message: '请选择供应商质量终身承诺书!',
+            message: '请上传供应商质量终身承诺书!',
           });
           return
         }
