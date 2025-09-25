@@ -14,7 +14,7 @@
             <li>
               <span>建设项目：</span>
               <span>{{ formData.projectName }}</span>
-            </li> 
+            </li>
             <li>
               <span>标段项目：</span>
               <span>{{ formData.sectionName }}</span>
@@ -38,7 +38,7 @@
     <div class="detail-base-info detail-base-info-edited" v-if="queryType === 'submit'">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
-        <span>报检信息</span>
+        <span>报检结果</span>
       </div>
       <p class="box-container-p" v-if="!formData.fileList01?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="5" :fileList="formData.fileList01 || []" businessType="01" />
@@ -47,7 +47,7 @@
     <div class="detail-base-info detail-base-info-edited" v-if="queryType != 'submit' && formData.fileList01?.length">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
-        <span>报检信息</span>
+        <span>报检结果</span>
       </div>
       <file-download-view :fileList="formData.fileList01 || []" />
     </div>
@@ -278,7 +278,7 @@ export default {
     },
     historyCaches() {
       const data = this.$store.state.public.selectStoreData || []
-      
+
       const finallyData = data.map((item) => Object.assign({}, item, {
         supplyDate: item.supplyDate || parseTime(new Date(), '{y}-{m}-{d}'),
         minDate: this.minDate,
@@ -338,7 +338,7 @@ export default {
           }))
         }
 
-        
+
         this.$store.dispatch('public/setSelectStoreData', this.tableData);
 
         this.materiaList = this.historyCaches();
@@ -443,7 +443,7 @@ export default {
       } else {
         this.$notify({
           type: 'warning',
-          message: "请上传报检材料附件"
+          message: "请上传报检结果附件"
         });
         return
       }

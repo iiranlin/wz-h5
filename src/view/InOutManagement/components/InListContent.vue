@@ -39,7 +39,7 @@
             <li>
               <span>建设项目：</span>
               <span>{{ item.projectName }}</span>
-            </li> 
+            </li>
             <li>
               <span>标段项目：</span>
               <span>{{ item.sectionName }}</span>
@@ -84,7 +84,7 @@
             <van-button class="button-info" plain round type="info" @click="withdrawClick(item)"
               v-if="item.storeStatus == '5'">撤回</van-button>
             <van-button class="button-info" round type="info" @click="submitStore(item)"
-              v-if="item.storeStatus == '1' || item.storeStatus == '6'">提交报检材料</van-button>
+              v-if="item.storeStatus == '1' || item.storeStatus == '6'">提交报检结果</van-button>
             <van-button class="button-info" round type="info" @click="handleDonwload(item)"
               v-if="item.storeStatus == '3' || item.storeStatus == '2'">下载入库单</van-button>
           </div>
@@ -244,14 +244,14 @@ export default {
     },
     //查看流程点击
     handleProcessClick(item) {
-      this.$router.push({ 
-        name: "MyProcess", 
-        params: { 
-          businessId: item.id, 
+      this.$router.push({
+        name: "MyProcess",
+        params: {
+          businessId: item.id,
           workflowId: item.storeMiddleId,
           businessType: 'RKLC',
           storeStatus: item.storeStatus,
-        } 
+        }
       })
     },
     detailsClick(key, item) {
@@ -259,7 +259,7 @@ export default {
         '1': () => {
           if (item.storeNumber) {
             this.$store.dispatch('public/setInboundInformation', {});
-            
+
             this.$store.dispatch('public/setSelectStoreData', []);
 
             this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
@@ -269,9 +269,9 @@ export default {
         },
         '2': () => {
           this.$store.dispatch('public/setGoodsReceiptInfo', {});
-          
+
           this.$store.dispatch('public/setSelectGoodData', []);
-          
+
           this.$router.push({ name: 'DoAcceptDetail', query: { id: item.id, takeStatus: item.takeStatus } })
         }
       }
