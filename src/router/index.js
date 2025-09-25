@@ -107,7 +107,7 @@ export const routes = [
       {
         path: "/InventoryListContent",
         name: "InventoryListContent",
-        meta: { title: "需求库存", isTabbar: true },
+        meta: { title: "出库管理", isTabbar: true },
         component: () =>
           import("@/view/InOutManagement/components/InventoryListContent.vue"),
       },
