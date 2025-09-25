@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
   if (isAndroid()) {
     // 路由文件里有的路由在beforeEnter中重新设置了meta.title, 增加计时器确保传给安卓的是最新值。
     setTimeout(() => {
-      Android.sendMenuTitle(title)
+      Android.sendMenuTitle(to.meta.title)
     }, 100)
   }
   if (whiteList.indexOf(to.path) !== -1) {
