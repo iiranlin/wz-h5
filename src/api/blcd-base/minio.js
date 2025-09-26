@@ -35,3 +35,14 @@ export const minioImageToPdf = (data) => {
     timeout: 0, //无超时时间
   })
 }
+
+/**
+ * 获取阿里云OSS STS临时凭证
+ * @returns {Promise}
+ */
+export function getOssStsToken() {
+  return request({
+    url: `${VUE_APP_BASE_SERVER}/oss/getCredentials`,
+    method: 'get'
+  })
+}

@@ -1,24 +1,21 @@
 <template>
     <div>
         <div class="file-upload-title" v-if="title">
-            <span :class="['title', { required }]">{{title}}</span>
+            <span :class="['title', { required }]">{{ title }}</span>
         </div>
         <div>
             <ul>
-                <li v-for="(item,index) in fileList" :key="index" >
+                <li v-for="(item, index) in fileList" :key="index">
                     <div class="file-info" style="width:100%">
-                        <img :src="checkFileImage(item.fileName)"/>
-                        <span @click="previewClick(item)">{{item.fileName}}</span>
-                        <img class="file-delete" src="/static/icon_file_delete.png" @click="handleFileDelete(index)"/>
+                        <img :src="checkFileImage(item.fileName)" />
+                        <span @click="previewClick(item)">{{ item.fileName }}</span>
+                        <img class="file-delete" src="/static/icon_file_delete.png" @click="handleFileDelete(index)" />
                     </div>
                 </li>
             </ul>
         </div>
         <div class="file-add" v-if="fileList.length < maxCount">
-            <van-uploader 
-                :preview-imag='false'
-                :after-read="afterReadTransfer"
-                :before-read="beforeRead"
+            <van-uploader :preview-imag='false' :after-read="afterReadTransfer" :before-read="beforeRead"
                 :accept="accept">
                 <van-button class="button-info" icon="plus" type="default" round block>上传附件</van-button>
             </van-uploader>
@@ -28,57 +25,118 @@
     </div>
 </template>
 <script>
-import {minioUpload, minioImageToPdf} from '@/api/blcd-base/minio'
+import { minioUpload, minioImageToPdf, getOssStsToken } from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
 import { compressPDF, compressImage } from "@/utils/index.js";
+import OSS from "ali-oss";
 
 export default {
-    components: {FilePreview},
+    components: { FilePreview },
 
     props: {
-        title:{
+        title: {
             type: String,
             default: '',
         },
-        fileList:{
+        fileList: {
             type: Array,
             default: [],
         },
-        businessType:{
+        businessType: {
             type: String,
             default: '',
         },
-        maxCount:{                 
+        maxCount: {
             type: Number,
             default: 1,
         },
         // 多个,分割  accept=".doc,.txt,.pdf,.xls,.docx,.xlsx"
-        accept:{
+        accept: {
             type: String,
             default: '.pdf',
         },
         // 是否必填 默认是 
-        required:{
+        required: {
             type: Boolean,
             default: true,
-        }
+        },
+        // 🔹 新增阿里云参数
+        useOss: { type: Boolean, default: false },
     },
     data() {
         return {
-            
+            // 上传进度
+            uploadProgress: 0,
+            // OSS客户端实例
+            ossClient: null,
+            // STS临时凭证缓存
+            stsCredentials: null,
+            // STS凭证过期时间
+            stsExpiration: null,
+            // OSS配置
+            ossConfig: {
+                bucket: "yc-mat",
+                region: 'cn-beijing',
+                secure: true,
+                endpoint: 'https://oss-cn-beijing.aliyuncs.com'
+            }
         }
     },
-    methods:{
+    methods: {
+        /**
+        * 获取或刷新STS临时凭证
+        * @returns {Promise<Object>} STS凭证对象
+        */
+        async getStsCredentials() {
+            try {
+                // 从后端API获取STS凭证
+                const response = await getOssStsToken();
+                if (!response.success) {
+                    throw new Error(response.message || '获取STS凭证失败');
+                }
+                const credentials = JSON.parse(response.data);
+
+                // 缓存凭证和过期时间（STS凭证通常有效期为1小时）
+                this.stsCredentials = credentials
+                return this.stsCredentials;
+            } catch (error) {
+                console.error('获取STS凭证失败:', error);
+                throw new Error('获取OSS上传凭证失败，请重试');
+            }
+        },
+
+        /**
+         * 创建或更新OSS客户端
+         * @returns {Promise<OSS>} OSS客户端实例
+         */
+        async getOssClient() {
+            try {
+                const credentials = await this.getStsCredentials();
+
+                // 创建新的OSS客户端实例
+                this.ossClient = new OSS({
+                    ...this.ossConfig,
+                    accessKeyId: credentials.accessKeyId,
+                    accessKeySecret: credentials.secretAccessKey,
+                    stsToken: credentials.securityToken
+                });
+
+                return this.ossClient;
+            } catch (error) {
+                console.error('创建OSS客户端失败:', error);
+                throw error;
+            }
+        },
         //附件上传前
-        beforeRead(file){
+        beforeRead(file) {
             const types = this.accept.split(",");
             const extensions = this.accept.replaceAll(".", "").toUpperCase()// PDF,JPG
             if (!types.includes(`.${file.name.split('.').pop().toLowerCase()}`)) {
-              this.$notify({
-                type: 'warning',
-                message: `仅支持上传 ${extensions} 文件!`,
-              });
-              return false;
+                this.$notify({
+                    type: 'warning',
+                    message: `仅支持上传 ${extensions} 文件!`,
+                });
+                return false;
             }
             const isLt500M = file.size / 1024 / 1024 < 500;
             const isFileName = file.name.length < 90;
@@ -100,7 +158,7 @@ export default {
             return true;
         },
         //校验附件上传
-        async afterReadTransfer (file) {
+        async afterReadTransfer(file) {
             file.status = 'uploading';
             file.message = '上传中...';
             const Toast = this.$toast.loading({
@@ -109,70 +167,113 @@ export default {
                 forbidClick: true,
             });
 
-            const fileName = file.file.name;
-            const fileType = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
-            const imageTypes = ['jpg', 'jpeg', 'png', 'bmp'];
+            this.uploadProgress = 0; // 重置进度
 
-            // 压缩配置
-            const compressConfig = {
-                limitSizeMB: 0,  // >20MB 才压缩, 设置 0 表示所有文件都压缩
-                quality: 0.1      // 压缩比 80%
-            };
+            try {
+                if (this.useOss) {
+                    // 使用阿里云上传
+                    const ossClient = await this.getOssClient();
 
-            let processedFile = file.file;
-            if (imageTypes.includes(fileType)) {
-                processedFile = await compressImage(file.file, compressConfig);
-            }
-            // else if (fileType === 'pdf') {
-            //     processedFile = await compressPDF(file.file, compressConfig);
-            // }
+                    // 生成OSS Key
+                    const ossKey = `${this.businessType}/${Date.now()}_${file.file.name}`;
 
-            let formData = new FormData();
-            formData.append("file", processedFile);
-            formData.append("businessType", this.businessType);
-            formData.append("key", processedFile.name);
+                    // 使用分片上传，支持大文件和断点续传
+                    await ossClient.multipartUpload(ossKey, file.file, {
+                        progress: (p) => {
+                            // 更新上传进度
+                            this.uploadProgress = Math.floor(p * 100);
+                        },
+                        partSize: 1024 * 1024, // 1MB分片大小
+                        parallel: 4, // 并发上传数
+                        meta: {
+                            businessType: this.businessType,
+                            uploadTime: new Date().toISOString()
+                        }
+                    });
 
-           
+                    // 构造与MinIO兼容的数据结构
+                    // 手动拼接OSS文件URL地址（OSS上传成功后不返回完整URL，需要手动拼接）
+                    const ossFileUrl = `https://${this.ossConfig.bucket}.${this.ossConfig.endpoint.replace('https://', '')}/${ossKey}`;
 
-            const uploadApi = imageTypes.includes(fileType) ? minioImageToPdf : minioUpload;
+                    this.$notify({ type: 'success', message: "上传成功" });
+                    let fileObj = {
+                        fileName: file.file.name,
+                        filePath: ossFileUrl, // 使用工具函数拼接的OSS URL，保持与MinIO数据结构一致
+                        ossKey: ossKey,
+                        uploadType: 'oss' // 标识上传类型，便于后续区分处理
+                    };
+                    this.fileList.push(fileObj);
+                } else {
+                    const fileName = file.file.name;
+                    const fileType = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
+                    const imageTypes = ['jpg', 'jpeg', 'png', 'bmp'];
 
-            uploadApi(formData).then(({ data }) => {
-                this.$notify({ type: 'success', message: "上传成功" });
-                let file = { fileName: data.fileName, filePath: data.filePath };
-                this.fileList.push(file);
-            }).catch(() => {
+                    // 压缩配置
+                    const compressConfig = {
+                        limitSizeMB: 0,  // >20MB 才压缩, 设置 0 表示所有文件都压缩
+                        quality: 0.1      // 压缩比 80%
+                    };
+
+                    let processedFile = file.file;
+                    if (imageTypes.includes(fileType)) {
+                        processedFile = await compressImage(file.file, compressConfig);
+                    }
+                    // else if (fileType === 'pdf') {
+                    //     processedFile = await compressPDF(file.file, compressConfig);
+                    // }
+
+                    let formData = new FormData();
+                    formData.append("file", processedFile);
+                    formData.append("businessType", this.businessType);
+                    formData.append("key", processedFile.name);
+
+
+
+                    const uploadApi = imageTypes.includes(fileType) ? minioImageToPdf : minioUpload;
+
+                    uploadApi(formData).then(({ data }) => {
+                        this.$notify({ type: 'success', message: "上传成功" });
+                        let file = { fileName: data.fileName, filePath: data.filePath };
+                        this.fileList.push(file);
+                    }).catch(() => {
+                        this.$notify({ type: 'warning', message: "上传失败" });
+                    }).finally(() => {
+                        Toast.clear();
+                    });
+                }
+            } catch (error) {
                 this.$notify({ type: 'warning', message: "上传失败" });
-            }).finally(() => {
+            } finally {
                 Toast.clear();
-            });
+            }
         },
-         //匹配附件图标
-        checkFileImage(fileName){
+        //匹配附件图标
+        checkFileImage(fileName) {
             let type = fileName.substr(fileName.lastIndexOf('.') + 1);
 
-            if(type == 'xlsx' || type =='xls'){
+            if (type == 'xlsx' || type == 'xls') {
                 return '/static/file-excel.png'
-            }else if(type == 'pdf'){
+            } else if (type == 'pdf') {
                 return '/static/file-pdf.png'
-            }else if(type == 'jpg' || type == 'png' || type == 'jpeg' || type == 'bmp'){
+            } else if (type == 'jpg' || type == 'png' || type == 'jpeg' || type == 'bmp') {
                 return '/static/file-img.png'
-            }else if(type == 'docx' || type == 'doc'){
+            } else if (type == 'docx' || type == 'doc') {
                 return '/static/file-doc.png'
-            }else if(type == 'txt'){
+            } else if (type == 'txt') {
                 return '/static/file-txt.png'
-            }else if(type == 'ppt'){
+            } else if (type == 'ppt') {
                 return '/static/file-ppt.png'
-            }else{
+            } else {
                 return '/static/file-txt.png'
             }
         },
         //附件删除
-        handleFileDelete(index){
+        handleFileDelete(index) {
             this.fileList.splice(index, 1)
         },
         //预览点击
-        previewClick(item){
-            this.$refs.filePreview.init(item.fileName, item.filePath)
+        previewClick(item) {
+            this.$refs.filePreview.init(item.fileName, item.filePath, item?.uploadType)
         },
     },
 }
@@ -190,6 +291,7 @@ export default {
         color: #646566;
         // font-weight: 600;
     }
+
     .title.required::before {
         position: absolute;
         left: 0.2rem;
@@ -198,6 +300,7 @@ export default {
         content: '*';
     }
 }
+
 .file-info {
     box-sizing: border-box;
     min-height: 50px;
@@ -216,6 +319,7 @@ export default {
         height: 36px;
         margin-left: 10px;
     }
+
     span {
         font-size: 14px;
         // color: #0571ff;
@@ -224,6 +328,7 @@ export default {
         margin-right: 35px;
         word-break: break-all;
     }
+
     .file-delete {
         width: 32px;
         height: 32px;
@@ -231,6 +336,7 @@ export default {
         right: 0px;
     }
 }
+
 .file-add {
     text-align: center;
     margin: 20px 45px 10px 45px;
@@ -238,9 +344,11 @@ export default {
     ::v-deep .van-uploader {
         width: 100%;
     }
+
     ::v-deep .van-uploader__input-wrapper {
         width: 100%;
     }
+
     ::v-deep .van-button {
         height: 36px;
     }

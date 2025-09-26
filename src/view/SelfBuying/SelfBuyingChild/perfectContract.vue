@@ -93,8 +93,8 @@
         <span>合同副本扫描件</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.htfbsmj?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.htfbsmj
+          class="li-span-red">*</span>必填项，请选择文件上传，支持pdf格式</p>
+      <file-upload-view accept=".pdf" :useOss="true" :fileList="sectionInfo.htfbsmj
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
@@ -105,8 +105,8 @@
         <span>供应商质量终身承诺书</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.gyszlzscns?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.gyszlzscns
+          class="li-span-red">*</span>必填项，请选择文件上传，支持pdf格式</p>
+      <file-upload-view accept=".pdf" :useOss="true" :fileList="sectionInfo.gyszlzscns
         || []" businessType="02" class="outbound-field-uploader" />
     </div>
 
@@ -143,8 +143,8 @@
           <img src="/static/icon-file.png">
           <span>合同核备附件</span>
         </div>
-        <p class="box-container-p" v-if="!item?.attachmentFile?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式，可上传多个</p>
-        <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="item.attachmentFile
+        <p class="box-container-p" v-if="!item?.attachmentFile?.length">请选择文件上传，支持pdf格式，可上传多个</p>
+        <file-upload-view accept=".pdf" :useOss="true" :fileList="item.attachmentFile
           || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
       </div>
     </div>

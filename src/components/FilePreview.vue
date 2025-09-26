@@ -71,20 +71,20 @@ export default {
     };
   },
   methods: {
-    init(fileName, filePath) {
+    init(fileName, filePath, uploadType) {
       let type = fileName.substr(fileName.lastIndexOf('.') + 1);
       if (type == 'xlsx') {
         this.fileType = 'excel';
-        this.showXlsx(fileName, filePath)
+        this.showXlsx(fileName, filePath, uploadType)
       } else if (type == 'pdf') {
         this.fileType = 'pdf';
-        this.showPdf(fileName, filePath)
+        this.showPdf(fileName, filePath, uploadType)
       } else if (type == 'jpg' || type == 'png' || type == 'jpeg' || type == 'bmp') {
         this.fileType = 'img';
-        this.showImage(fileName, filePath);
+        this.showImage(fileName, filePath, uploadType);
       } else if (type == 'docx') {
         this.fileType = 'word';
-        this.showWord(fileName, filePath)
+        this.showWord(fileName, filePath, uploadType)
       } else {
         this.$notify({
           type: 'warning',
@@ -93,31 +93,75 @@ export default {
       }
     },
     //预览pdf
-    showPdf(fileName, filePath) {
+    async showPdf(fileName, filePath, uploadType) {
       this.showType = true;
 
-      minioDownload({ fileName, filePath }).then((data) => {
-        let url = window.URL.createObjectURL(new Blob([data]));
+      if (uploadType === 'oss' || (filePath && filePath.includes('oss-cn-'))) {
+        const response = await fetch(filePath);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
         this.pdfUrl = url;
-      })
+
+      } else {
+        minioDownload({ fileName, filePath }).then((data) => {
+          let url = window.URL.createObjectURL(new Blob([data]));
+          this.pdfUrl = url;
+        })
+      }
     },
     //预览excel
-    showXlsx(fileName, filePath) {
+    async showXlsx(fileName, filePath, uploadType) {
       this.showType = true;
 
-      minioDownload({ fileName, filePath }).then((data) => {
-        let url = window.URL.createObjectURL(new Blob([data]));
-        this.excelUrl = url;
-      }).catch((err) => {
+      if (uploadType === 'oss' || (filePath && filePath.includes('oss-cn-'))) {
+        const response = await fetch(filePath);
 
-      })
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        this.excelUrl = url;
+
+      } else {
+        minioDownload({ fileName, filePath }).then((data) => {
+          let url = window.URL.createObjectURL(new Blob([data]));
+          this.excelUrl = url;
+        }).catch((err) => {
+
+        })
+      }
+
     },
     //预览图片
-    async showImage(fileName, filePath) {
-      minioDownload({ fileName, filePath }).then((data) => {
-        let url = window.URL.createObjectURL(new Blob([data]));
+    async showImage(fileName, filePath, uploadType) {
+      if (uploadType === 'oss' || (filePath && filePath.includes('oss-cn-'))) {
+        const response = await fetch(filePath);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
         this.images.push(url);
-      })
+
+      } else {
+        minioDownload({ fileName, filePath }).then((data) => {
+          let url = window.URL.createObjectURL(new Blob([data]));
+          this.images.push(url);
+        })
+      }
+
       this.showType = true;
       this.showImg = true;
     },
@@ -221,13 +265,14 @@ export default {
   width: 98%;
   height: 85%;
 }
+
 .pdf-button-container {
   position: absolute;
   bottom: 15px;
   width: 100%;
   height: 30px;
   display: flex;
-  align-items:center;
+  align-items: center;
   justify-content: center;
 
   .van-button {

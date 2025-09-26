@@ -60,14 +60,14 @@ export default {
             }
         },
         //附件下载
-        handleFileDwonLoad({fileName, filePath}){
+        handleFileDwonLoad({fileName, filePath, uploadType}){
             if (isAndroid()) {
-                Android.fileDownLoad(fileName,filePath);
+                Android.fileDownLoad(fileName,filePath,uploadType);
             }
         },
         //预览点击
         previewClick(item){
-            this.$refs.filePreview.init(item.fileName, item.filePath)
+            this.$refs.filePreview.init(item.fileName, item.filePath, item?.uploadType)
         },
     },
 }

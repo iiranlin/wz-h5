@@ -99,8 +99,8 @@
         <span>采购方案或招标计划</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.registration?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.registration
+          class="li-span-red">*</span>必填项，请选择文件上传，支持pdf格式</p>
+      <file-upload-view accept=".pdf" :useOss="true" :fileList="sectionInfo.registration
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
@@ -110,8 +110,8 @@
         <span>采购文件（含技术规格书）</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.bidDocument?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.bidDocument
+          class="li-span-red">*</span>必填项，请选择文件上传，支持pdf格式</p>
+      <file-upload-view accept=".pdf" :useOss="true" :fileList="sectionInfo.bidDocument
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
@@ -348,7 +348,7 @@ export default {
     },
     handlerAmount(value) {
       const [i, d] = String(value).split('.');
-      
+
       this.sectionInfo.amount = this.handlerfix(value) ? `${i}.${d.slice(0, 6)}` : value;
     },
     sureClick(isData) {

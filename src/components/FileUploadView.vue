@@ -26,9 +26,10 @@
     </div>
 </template>
 <script>
-import { minioUpload, minioImageToPdf } from '@/api/blcd-base/minio'
+import { minioUpload, minioImageToPdf, getOssStsToken } from '@/api/blcd-base/minio'
 import FilePreview from "@/components/FilePreview.vue";
 import { compressPDF, compressImage } from "@/utils/index.js";
+import OSS from "ali-oss";
 
 export default {
     components: { FilePreview },
@@ -54,6 +55,8 @@ export default {
             type: String,
             default: '.pdf',
         },
+        // 🔹 新增阿里云参数
+        useOss: { type: Boolean, default: false },
         isFileList: {
             type: Boolean,
             default: true,
@@ -65,10 +68,68 @@ export default {
     },
     data() {
         return {
-
+            // 上传进度
+            uploadProgress: 0,
+            // OSS客户端实例
+            ossClient: null,
+            // STS临时凭证缓存
+            stsCredentials: null,
+            // STS凭证过期时间
+            stsExpiration: null,
+            // OSS配置
+            ossConfig: {
+                bucket: "yc-mat",
+                region: 'cn-beijing',
+                secure: true,
+                endpoint: 'https://oss-cn-beijing.aliyuncs.com'
+            }
         }
     },
     methods: {
+        /**
+ * 获取或刷新STS临时凭证
+ * @returns {Promise<Object>} STS凭证对象
+ */
+        async getStsCredentials() {
+            try {
+                // 从后端API获取STS凭证
+                const response = await getOssStsToken();
+                if (!response.success) {
+                    throw new Error(response.message || '获取STS凭证失败');
+                }
+                const credentials = JSON.parse(response.data);
+
+                // 缓存凭证和过期时间（STS凭证通常有效期为1小时）
+                this.stsCredentials = credentials
+                return this.stsCredentials;
+            } catch (error) {
+                console.error('获取STS凭证失败:', error);
+                throw new Error('获取OSS上传凭证失败，请重试');
+            }
+        },
+
+        /**
+         * 创建或更新OSS客户端
+         * @returns {Promise<OSS>} OSS客户端实例
+         */
+        async getOssClient() {
+            try {
+                const credentials = await this.getStsCredentials();
+
+                // 创建新的OSS客户端实例
+                this.ossClient = new OSS({
+                    ...this.ossConfig,
+                    accessKeyId: credentials.accessKeyId,
+                    accessKeySecret: credentials.secretAccessKey,
+                    stsToken: credentials.securityToken
+                });
+
+                return this.ossClient;
+            } catch (error) {
+                console.error('创建OSS客户端失败:', error);
+                throw error;
+            }
+        },
         //附件上传前
         beforeRead(file) {
             const types = this.accept.split(",");
@@ -101,7 +162,7 @@ export default {
             return true;
         },
         //校验附件上传
-        async afterReadTransfer (file) {
+        async afterReadTransfer(file) {
 
             file.status = 'uploading';
             file.message = '上传中...';
@@ -110,43 +171,86 @@ export default {
                 duration: 0,
                 forbidClick: true,
             });
-            
-            const fileName = file.file.name;
-            const fileType = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
-            const imageTypes = ['jpg', 'jpeg', 'png', 'bmp'];
 
-            // 压缩配置
-            const compressConfig = {
-                limitSizeMB: 0,  // >20MB 才压缩, 设置 0 表示所有文件都压缩
-                quality: 0.1      // 压缩比 80%
-            };
+            this.uploadProgress = 0; // 重置进度
 
-            let processedFile = file.file;
-            if (imageTypes.includes(fileType)) {
-                processedFile = await compressImage(file.file, compressConfig);
-            }
-            // else if (fileType === 'pdf') {
-            //     processedFile = await compressPDF(file.file, compressConfig);
-            // }
+            try {
+                if (this.useOss) {
+                    // 🔹 走 OSS STS 上传逻辑
+                    const ossClient = await this.getOssClient();
 
-            let formData = new FormData();
-            formData.append("file", processedFile);
-            formData.append("businessType", this.businessType);
-            formData.append("key", processedFile.name);
+                    // 生成OSS Key
+                    const ossKey = `${this.businessType}/${Date.now()}_${file.file.name}`;
 
-           
+                    // 使用分片上传，支持大文件和断点续传
+                    await ossClient.multipartUpload(ossKey, file.file, {
+                        progress: (p) => {
+                            // 更新上传进度
+                            this.uploadProgress = Math.floor(p * 100);
+                        },
+                        partSize: 1024 * 1024, // 1MB分片大小
+                        parallel: 4, // 并发上传数
+                        meta: {
+                            businessType: this.businessType,
+                            uploadTime: new Date().toISOString()
+                        }
+                    });
 
-            const uploadApi = imageTypes.includes(fileType) ? minioImageToPdf : minioUpload;
+                    // 构造与MinIO兼容的数据结构
+                    // 手动拼接OSS文件URL地址（OSS上传成功后不返回完整URL，需要手动拼接）
+                    const ossFileUrl = `https://${this.ossConfig.bucket}.${this.ossConfig.endpoint.replace('https://', '')}/${ossKey}`;
 
-            uploadApi(formData).then(({ data }) => {
-                this.$notify({ type: 'success', message: "上传成功" });
-                let file = { fileName: data.fileName, filePath: data.filePath };
-                this.fileList.push(file);
-            }).catch(() => {
+                    this.$notify({ type: 'success', message: "上传成功" });
+                    let fileObj = {
+                        fileName: file.file.name,
+                        filePath: ossFileUrl, // 使用工具函数拼接的OSS URL，保持与MinIO数据结构一致
+                        ossKey: ossKey,
+                        uploadType: 'oss' // 标识上传类型，便于后续区分处理
+                    };
+                    this.fileList.push(fileObj);
+                } else {
+                    // 🔹 走 MinIO 上传逻辑
+
+                    const fileName = file.file.name;
+                    const fileType = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
+                    const imageTypes = ['jpg', 'jpeg', 'png', 'bmp'];
+
+                    // 压缩配置
+                    const compressConfig = {
+                        limitSizeMB: 0,  // >20MB 才压缩, 设置 0 表示所有文件都压缩
+                        quality: 0.1      // 压缩比 80%
+                    };
+
+                    let processedFile = file.file;
+                    if (imageTypes.includes(fileType)) {
+                        processedFile = await compressImage(file.file, compressConfig);
+                    }
+                    // else if (fileType === 'pdf') {
+                    //     processedFile = await compressPDF(file.file, compressConfig);
+                    // }
+
+                    let formData = new FormData();
+                    formData.append("file", processedFile);
+                    formData.append("businessType", this.businessType);
+                    formData.append("key", processedFile.name);
+
+                    const uploadApi = imageTypes.includes(fileType) ? minioImageToPdf : minioUpload;
+
+                    uploadApi(formData).then(({ data }) => {
+                        this.$notify({ type: 'success', message: "上传成功" });
+                        let file = { fileName: data.fileName, filePath: data.filePath };
+                        this.fileList.push(file);
+                    }).catch(() => {
+                        this.$notify({ type: 'warning', message: "上传失败" });
+                    }).finally(() => {
+                        Toast.clear();
+                    });
+                }
+            } catch (error) {
                 this.$notify({ type: 'warning', message: "上传失败" });
-            }).finally(() => {
+            } finally {
                 Toast.clear();
-            });
+            }
         },
         //匹配附件图标
         checkFileImage(fileName) {
@@ -174,7 +278,7 @@ export default {
         },
         //预览点击
         previewClick(item) {
-            this.$refs.filePreview.init(item.fileName, item.filePath)
+            this.$refs.filePreview.init(item.fileName, item.filePath, item?.uploadType)
         },
     },
 }

@@ -54,9 +54,9 @@
         <img src="/static/icon-file.png">
         <span>合同核备附件</span>
       </div>
-      <p class="box-container-p" v-if="!formData?.attachmentFile?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式，可上传多个</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.attachmentFile
-        || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
+      <p class="box-container-p" v-if="!formData?.attachmentFile?.length">请选择文件上传，支持pdf格式，可上传多个</p>
+      <file-upload-view accept=".pdf" :useOss="true" :fileList="formData.attachmentFile
+        || []" :maxCount="99" businessType="01" class="outbound-field-uploader" />
     </div>
 
     <div class="default-button-container">
