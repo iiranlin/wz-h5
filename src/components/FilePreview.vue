@@ -82,7 +82,7 @@ export default {
       } else if (type == 'jpg' || type == 'png' || type == 'jpeg' || type == 'bmp') {
         this.fileType = 'img';
         this.showImage(fileName, filePath);
-      } else if (type == 'docx') {
+      } else if (type == 'docx' || type == 'doc') {
         this.fileType = 'word';
         this.showWord(fileName, filePath)
       } else {
@@ -122,18 +122,23 @@ export default {
       this.showImg = true;
     },
     //预览word
-    showWord(fileName) {
+    showWord(fileName, filePath) {
+       this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      });
       minioDownload({ fileName, filePath }).then((data) => {
+        this.showType = true
 
         this.$nextTick(() => {
           renderAsync(data, this.$refs.file, null);
-
-          setTimeout(() => {
-            this.showType = true
-          }, 30)
         })
       }).catch((err) => {
 
+      })
+      .finally(() => {
+        this.$toast.clear();
       })
     },
     //pdf加载时

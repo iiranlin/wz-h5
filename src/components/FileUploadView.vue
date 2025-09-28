@@ -140,7 +140,7 @@ export default {
 
             uploadApi(formData).then(({ data }) => {
                 this.$notify({ type: 'success', message: "上传成功" });
-                let file = { fileName: data.fileName, filePath: data.filePath };
+                let file = { fileName: data.fileName, filePath: data.filePath || data.path };
                 this.fileList.push(file);
             }).catch(() => {
                 this.$notify({ type: 'warning', message: "上传失败" });
