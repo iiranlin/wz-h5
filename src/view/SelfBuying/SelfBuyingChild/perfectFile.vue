@@ -41,8 +41,12 @@
 " label="物资细目" placeholder="请选择物资细目" right-icon="arrow" @click="showdetailPicker = true" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.quantity" required name="quantity
+          <van-field type="number"  v-model="sectionInfo.quantity" required name="quantity
 " label="数量" placeholder="请输入数量" input-align="right" />
+        </li>
+        <li class="detail-list-li-input">
+          <van-field v-model="sectionInfo.unit" required name="unit" label="计量单位" placeholder="请输入或选择计量单位"
+            input-align="right" right-icon="arrow" @click-right-icon="showUnitPicker = true" />
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="预算金额"
@@ -99,8 +103,8 @@
         <span>采购方案或招标计划</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.registration?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.registration
+          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.registration
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
@@ -110,8 +114,8 @@
         <span>采购文件（含技术规格书）</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.bidDocument?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.bidDocument
+          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.bidDocument
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
@@ -138,6 +142,10 @@
       <van-picker show-toolbar :columns="varietyColumns" @cancel="showvarietyPicker = false"
         @confirm="onvarietyConfirm" />
     </van-popup>
+    <!-- 计量单位 -->
+    <van-popup v-model="showUnitPicker" round position="bottom">
+      <van-picker show-toolbar :columns="unitColumns" @cancel="showUnitPicker = false" @confirm="onUnitConfirm" />
+    </van-popup>
     <!-- 预计采购完成日期 -->
     <Calendar ref="calendar" @onConfirm="handleDataConfirm" />
   </div>
@@ -153,13 +161,28 @@ export default {
   name: 'PerfectFile',
 
   components: { FileUploadView, Calendar },
-
+  dicts:['MeasureUnit'],
   data() {
     return {
       detailInfo: {},
       sectionInfo: {
         registration: [],
         bidDocument: [],
+        name: '',
+        code: '',
+        purchaseName: '',
+        purchaseCode: '',
+        purchaseTypeName: '',
+        purchaseTypeCode: '',
+        purchaseDetailName: '',
+        purchaseDetailCode: '',
+        quantity: '',
+        unit: '',
+        amount: '',
+        purchaseFileName: '',
+        registrationDate: '',
+        remak: '',
+        executionStandard: ''
       },
       // 物资大类
       showGeneraPicker: false,
@@ -173,9 +196,19 @@ export default {
       // 物资种类
       showvarietyPicker: false,
       varietyColumns: [],
+      // 计量单位
+      showUnitPicker: false,
+      // unitColumns: ['个', '件', '台', '套', '米', '吨', '千克', '平方米', '立方米'],
     };
   },
-
+ computed: {
+    unitColumns() {
+      if (this.dict && this.dict.MeasureUnit) {
+        return this.dict.MeasureUnit.map(item => item.label);
+      }
+      return [];
+    }
+  },
   async created() {
     this.getGeneraList();
     this.detailInfo = await this.getMaterialSectionProject();
@@ -272,13 +305,18 @@ export default {
         return { text: el.purchaseDetailName, code: el.purchaseDetailCode }
       }) || [];
     },
+    // 计量单位确认事件
+    onUnitConfirm(value) {
+      if (!value) {
+        return this.showUnitPicker = false;
+      }
+      this.$nextTick(() => {
+        this.sectionInfo.unit = value;
+      })
+      this.showUnitPicker = false;
+    },
     // 获取详情
     async getGeneraDetail() {
-      const res = await materialPurchaseFiledetail(this.$route.query.id);
-
-      if (res.code == 0) {
-        return res.data
-      }
     },
     // 获取物资大类
     async getGeneraList() {
@@ -348,7 +386,7 @@ export default {
     },
     handlerAmount(value) {
       const [i, d] = String(value).split('.');
-      
+
       this.sectionInfo.amount = this.handlerfix(value) ? `${i}.${d.slice(0, 6)}` : value;
     },
     sureClick(isData) {
