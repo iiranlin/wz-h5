@@ -55,7 +55,7 @@
                 <span>{{ item.unitName }}</span>
               </li>
               <li>
-                <span>预算金额：</span>
+                <span>预估采购金额：</span>
                 <span class="li-span-click">{{ item.amount }}</span>
                 <span>万元</span>
               </li>

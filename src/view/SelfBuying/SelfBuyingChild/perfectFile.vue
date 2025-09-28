@@ -49,8 +49,8 @@
             input-align="right" right-icon="arrow" @click-right-icon="showUnitPicker = true" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="预算金额"
-            placeholder="请输入预算金额" @input="handlerAmount" input-align="right">
+          <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="预估采购金额"
+            placeholder="请输入预估采购金额" @input="handlerAmount" input-align="right">
             <template #button>
               <span style="color: #333;">万元</span>
             </template>
@@ -317,6 +317,11 @@ export default {
     },
     // 获取详情
     async getGeneraDetail() {
+      const res = await materialPurchaseFiledetail(this.$route.query.id);
+
+      if (res.code == 0) {
+        return res.data
+      }
     },
     // 获取物资大类
     async getGeneraList() {
@@ -426,13 +431,13 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.amount) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入预算金额!',
-          });
-          return
-        }
+        // if (!this.sectionInfo.amount) {
+        //   this.$notify({
+        //     type: 'warning',
+        //     message: '请输入预算金额!',
+        //   });
+        //   return
+        // }
         if (!this.sectionInfo.purchaseFileName) {
           this.$notify({
             type: 'warning',
