@@ -43,6 +43,10 @@
           <span>{{ formData.quantity }}</span>
         </li>
         <li>
+          <span>计量单位：</span>
+          <span>{{ formData.unit }}</span>
+        </li>
+        <li>
           <span>物资种类：</span>
           <span>{{ formData.purchaseTypeName }}</span>
         </li>

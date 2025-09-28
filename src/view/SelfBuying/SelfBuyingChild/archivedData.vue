@@ -42,6 +42,10 @@
           <span>数量：</span>
           <span>{{ formData.quantity }}</span>
         </li>
+         <li>
+          <span>计量单位：</span>
+          <span>{{ formData.unit }}</span>
+        </li>
         <li>
           <span>物资种类：</span>
           <span>{{ formData.purchaseTypeName }}</span>
@@ -83,8 +87,8 @@
         <img src="@/assets/img/icon-picking-list.png">
         <span>招标公告网页版</span>
       </div>
-      <p class="box-container-p" v-if="!formData.tenderAnnouncement?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.tenderAnnouncement" businessType="01" />
+      <p class="box-container-p" v-if="!formData.tenderAnnouncement?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.tenderAnnouncement" businessType="01" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -92,8 +96,8 @@
         <img src="@/assets/img/icon-picking-list.png">
         <span>招标文件答疑、补遗</span>
       </div>
-      <p class="box-container-p" v-if="!formData.bidAddendum?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.bidAddendum" businessType="02" />
+      <p class="box-container-p" v-if="!formData.bidAddendum?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidAddendum" businessType="02" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -101,8 +105,8 @@
         <img src="@/assets/img/icon-picking-list.png">
         <span>评标报告</span>
       </div>
-      <p class="box-container-p" v-if="!formData.bidEvaluationReport?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.bidEvaluationReport" businessType="03" />
+      <p class="box-container-p" v-if="!formData.bidEvaluationReport?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidEvaluationReport" businessType="03" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -110,8 +114,8 @@
         <img src="@/assets/img/icon-picking-list.png">
         <span>中标候选人公示网页版</span>
       </div>
-      <p class="box-container-p" v-if="!formData.bidCandidateWeb?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.bidCandidateWeb" businessType="04" />
+      <p class="box-container-p" v-if="!formData.bidCandidateWeb?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidCandidateWeb" businessType="04" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -119,8 +123,8 @@
         <img src="@/assets/img/icon-picking-list.png">
         <span>中标通知书</span>
       </div>
-      <p class="box-container-p" v-if="!formData.acceptance?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.acceptance" businessType="05" />
+      <p class="box-container-p" v-if="!formData.acceptance?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.acceptance" businessType="05" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -137,8 +141,8 @@
         <img src="@/assets/img/icon-picking-list.png">
         <span>合同副本</span>
       </div>
-      <p class="box-container-p" v-if="!formData.contractCopy?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.contractCopy" businessType="07" />
+      <p class="box-container-p" v-if="!formData.contractCopy?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.contractCopy" businessType="07" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -146,8 +150,8 @@
         <img src="@/assets/img/icon-picking-list.png">
         <span>供应商质量终身承诺书</span>
       </div>
-      <p class="box-container-p" v-if="!formData.commitment?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.commitment" businessType="08" />
+      <p class="box-container-p" v-if="!formData.commitment?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.commitment" businessType="08" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 65px;">
@@ -155,8 +159,8 @@
         <img src="@/assets/img/icon-picking-list.png">
         <span>其他文件</span>
       </div>
-      <p class="box-container-p" v-if="!formData.other?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.other" businessType="09" />
+      <p class="box-container-p" v-if="!formData.other?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
+      <file-upload-view :maxCount="100" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.other" businessType="09" />
     </div>
 
     <div class="default-button-container">
