@@ -115,7 +115,7 @@
             label="预计送到时间" input-align="right" placeholder="点击选择日期" @click="handlerShowCalendar('calendar2')"
             :rules="[{ required: true, message: '请填写预计送达时间' }]" />
           <!-- <van-calendar v-model="sendStop" @confirm="onStopConfirm" /> -->
-          <Calendar ref="calendar2" @onConfirm="onStopConfirm" />
+          <Calendar ref="calendar2" @onConfirm="onStopConfirm" :unlimited="true" />
           <van-field v-model="params.carNumber" label="车牌号" @click.stop="fieldClick($event, 'carNumber')"
             :disabled="fileDisabled" type="text" placeholder="车牌号" input-align="right" />
         </div>

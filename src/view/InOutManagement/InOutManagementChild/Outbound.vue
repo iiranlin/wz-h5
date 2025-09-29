@@ -513,7 +513,7 @@ export default {
             type: 'success',
             message: message
         });
-        this.$router.push({ path: '/InListContent' })
+        this.$router.push({ path: '/OutListContent' })
       }).catch((error) => {
 
       }).finally(() => {
