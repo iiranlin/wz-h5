@@ -60,11 +60,11 @@
           </li>
           <li class="li-item-overlength">
             <span>需求数量：</span>
-            <span class="li-span-click">{{item.planAmount}}</span>
+            <span class="li-span-click">{{item.planAmount}} {{ item.unit }}</span>
           </li>
           <li class="li-item-overlength">
             <span>本次实收数量：</span>
-            <span class="li-span-click">{{item.storeTotal}}</span>
+            <span class="li-span-click">{{item.storeTotal}} {{ item.unit }}</span>
           </li>
           <!-- <li class="li-item-remark">
             <span>备注：</span>

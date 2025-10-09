@@ -28,7 +28,7 @@
         </li>
         <li style="margin: 10px 0; padding: 10px 0 0; border-top: 1px solid #ebedf0;">
           <span>本次实收数量：</span>
-          <span>{{ sectionInfo.putTotal }}</span>
+          <span>{{ sectionInfo.putTotal }} {{ sectionInfo.unit }}</span>
         </li>
       </ul>
     </div>
@@ -180,12 +180,12 @@
     <div class="default-button-container" v-if="queryType == 'submit' && sectionInfo.defaultRadio">
 
       <div class="default-button-container-selected" v-if="sectionInfo.defaultRadio == '1'">
-        <span>确认通过： <span class="li-span-click" style="font-size: 30px;line-height: 30px;">{{ sectionInfo.storeTotal }}</span> 
+        <span>确认通过： <span class="li-span-click" style="font-size: 24px;line-height: 24px;">{{ sectionInfo.storeTotal }}</span>  <span>{{ sectionInfo.unit }}</span>
         </span>
       </div>
 
       <div class="default-button-container-selected" v-if="sectionInfo.defaultRadio == '2'">
-        <span>确认退货： <span class="li-span-orange" style="font-size: 30px;line-height: 30px;">{{ sectionInfo.refundZjTotal }}</span> 
+        <span>确认退货： <span class="li-span-orange" style="font-size: 24px;line-height: 24px;">{{ sectionInfo.refundZjTotal }} </span>  <span>{{ sectionInfo.unit }}</span>
         </span>
       </div>
 

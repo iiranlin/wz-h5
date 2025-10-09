@@ -26,12 +26,12 @@
 
         <li>
           <span>需求数量：</span>
-          <span class="li-span-click">{{ sectionInfo.planAmount }}</span>
+          <span class="li-span-click">{{ sectionInfo.planAmount }} {{ sectionInfo.unit }}</span>
         </li>
 
         <li>
             <span>本次实收数量：</span>
-            <span class="li-span-click">{{sectionInfo.storeTotal}}</span>
+            <span class="li-span-click">{{sectionInfo.storeTotal}} {{ sectionInfo.unit }}</span>
           </li>
       </ul>
     </div>
