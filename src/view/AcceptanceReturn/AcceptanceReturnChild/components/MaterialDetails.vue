@@ -29,7 +29,7 @@
           </li>
           <li>
             <span>退货附件（数量）：</span>
-            <span class="li-span-click">{{ filterList(item.fileByList, 'thfj_sh')?.length }} {{ item.unit }}</span>
+            <span class="li-span-click">{{ filterList(item.fileByList, 'thfj_sh')?.length }} </span>
           </li>
         </ul>
         <div class="detail-ul-text" v-if="searchChecked && ['6', '7', '8', '9'].includes(planStatus)">
