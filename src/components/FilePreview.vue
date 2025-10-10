@@ -6,20 +6,23 @@
     <div v-if="fileType == 'pdf' && showType">
       <div class="pass_bullet_mark" @click.self="handleClose">
         <div class="pass_bullet">
-          <div class="pass_bottom">
-            <div class="pdfContainer">
-              <div class="pdf">
+          <div class="pass_bottom" style="height: 100%;">
+            <div class="pdfContainer" style="height: 100%;" @touchstart="handleTouchStart" @touchmove="handleTouchMove"
+              @touchend="handleTouchEnd">
+              <div class="pdf" :style="{
+                transform: 'translate(' + translateX + 'px,' + translateY + 'px) scale(' + currentScale + ')',
+              }">
                 <pdf ref="pdf" :src="pdfUrl" :page="currentPage" :rotate="pageRotate" @num-pages="pageCount = $event"
                   @page-loaded="currentPage = $event" @loaded="loadPdfHandler"></pdf>
               </div>
+            </div>
           </div>
         </div>
+        <div class="pdf-button-container" @click.self="handleClose">
+          <van-button native-type="button" type="success" @click="prev()">上一页</van-button>
+          <van-button native-type="button" type="success" @click="next()">下一页</van-button>
+        </div>
       </div>
-      <div class="pdf-button-container" @click.self="handleClose">
-        <van-button native-type="button" type="success" @click="prev()">上一页</van-button>
-        <van-button native-type="button" type="success" @click="next()">下一页</van-button>
-      </div>
-    </div>
     </div>
     <div v-if="fileType == 'excel' && showType">
       <div class="pass_bullet_mark" @click.self="handleClose">
@@ -58,18 +61,39 @@ export default {
     return {
       currentPage: 0, // pdf文件页码
       pageCount: 0, // pdf文件总页数
-      scale: 100,  //  开始的时候默认和容器一样大即宽高都是100%
       pageRotate: 0,  // 旋转角度
       startPosition: 0,
+      
 
       pdfUrl: "",
       images: [],
       excelUrl: '',
       showType: false,
       showImg: false,
-      fileType: ''
+      fileType: '',
+      // For pinch-to-zoom
+      currentScale: 1,
+      initialScale: 1,
+      initialDistance: 0,
+      translateX: 0,
+    translateY: 0,
+    lastTranslateX: 0,
+    lastTranslateY: 0,
+    isPanning: false,
+    startX: 0,
+    startY: 0,
     };
   },
+  watch: {
+  currentScale(newVal) {
+    if (newVal === 1) {
+      this.translateX = 0;
+      this.translateY = 0;
+      this.lastTranslateX = 0;
+      this.lastTranslateY = 0;
+    }
+  }
+},
   methods: {
     init(fileName, filePath) {
       let type = fileName.substr(fileName.lastIndexOf('.') + 1);
@@ -144,9 +168,53 @@ export default {
     //pdf加载时
     loadPdfHandler(e) {
       this.currentPage = 1; // 加载的时候先加载第一页
-      this.$refs.pdf.$el.style.width = parseInt(this.scale) + "%";
-      this.$refs.pdf.$el.style.height = parseInt(this.scale) + "%";
     },
+    getDistance(touches) {
+    const [touch1, touch2] = touches;
+    return Math.sqrt(
+      Math.pow(touch2.clientX - touch1.clientX, 2) +
+      Math.pow(touch2.clientY - touch1.clientY, 2)
+    );
+  },
+    handleTouchStart(event) {
+    if (event.touches.length === 2) {
+      // 双指缩放开始
+      event.preventDefault();
+      this.initialDistance = this.getDistance(event.touches);
+      this.initialScale = this.currentScale;
+    } else if (event.touches.length === 1 && this.currentScale > 1) {
+      // 单指拖动开始
+      this.isPanning = true;
+      this.startX = event.touches[0].clientX - this.lastTranslateX;
+      this.startY = event.touches[0].clientY - this.lastTranslateY;
+    }
+  },
+     handleTouchMove(event) {
+    if (event.touches.length === 2) {
+      // 缩放中
+      event.preventDefault();
+      const currentDistance = this.getDistance(event.touches);
+      const scale = (currentDistance / this.initialDistance) * this.initialScale;
+      this.currentScale = Math.max(1, Math.min(scale, 3)); // 限制缩放比例
+    } else if (event.touches.length === 1 && this.isPanning) {
+      // 拖动中
+      event.preventDefault();
+      const touch = event.touches[0];
+      this.translateX = touch.clientX - this.startX;
+      this.translateY = touch.clientY - this.startY;
+    }
+  },
+    handleTouchEnd(event) {
+    if (event.touches.length === 0) {
+      // 拖动结束，记录上次偏移量
+      this.isPanning = false;
+      this.lastTranslateX = this.translateX;
+      this.lastTranslateY = this.translateY;
+    }
+    if (event.touches.length < 2) {
+      this.initialDistance = 0;
+    }
+  },
     //上一页
     prev() {
       if (this.currentPage > 1) {
@@ -225,6 +293,15 @@ export default {
 .pdfContainer {
   width: 98%;
   height: 85%;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pdf {
+  transition: transform 0.1s ease-out;
+  transform-origin: center center;
+  touch-action: none; /* 禁止浏览器默认滚动行为 */
 }
 .pdf-button-container {
   position: absolute;
