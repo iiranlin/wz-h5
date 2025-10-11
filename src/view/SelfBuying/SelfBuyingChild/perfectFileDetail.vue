@@ -58,6 +58,10 @@
           <span>预计采购完成日期：</span>
           <span>{{ formData.registrationDate | formatDate }}</span>
         </li>
+        <li>
+          <span>采购方式：</span>
+          <span>{{ formData.purchaseMethod }}</span>
+        </li>
       </ul>
     </div>
 
