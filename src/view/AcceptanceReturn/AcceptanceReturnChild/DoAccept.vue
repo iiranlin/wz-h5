@@ -98,7 +98,7 @@
         <span>其他资料</span>
       </div>
       <p class="box-container-p" v-if="!fileQtzlList?.length">非必填，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="fileQtzlList" businessType="01" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileQtzlList" businessType="01" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited"
