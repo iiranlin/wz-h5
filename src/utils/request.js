@@ -131,20 +131,32 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-
     let { message } = error;
-    if (message == "Network Error") {
-      message = "后端接口连接异常";
-    } else if (message.includes("timeout")) {
-      message = "系统接口请求超时";
-    } else if (message.includes("Request failed with status code")) {
-      message = "系统异常，请稍后再试"
-    } else if (message.includes("数据正在处理")) {
-      // 数据处理中，不需要额外处理
-    } else {
-      message = "系统异常，请稍后再试"
+    const config = error.response && error.response.config || {}
+    const response = error.response;
+    const isEncrypted = process.env.NODE_ENV !== 'development' && response && typeof response.data === 'string' && !config.minioSm4 && !config.minioSm4R
+    let decryptedData;
+    if (isEncrypted) {
+      try {
+        decryptedData = JSON.parse(decrypt(response.data, secretKey));
+        message = decryptedData.message || decryptedData.msg || '解密失败，请稍后再试';
+      } catch (e) {
+        console.error("Failed to decrypt error response:", e);
+        message = '解密失败，请稍后再试'
+      }
     }
-    if (!message.includes("数据正在处理")) {
+    
+    if (!isEncrypted) {
+      if (message == "Network Error") {
+        message = "后端接口连接异常";
+      } else if (message.includes("timeout")) {
+        message = "系统接口请求超时";
+      } else if (message.includes("Request failed with status code")) {
+        message = "系统异常，请稍后再试"
+      }
+    }
+
+    if (message && !message.includes("数据正在处理")) {
       Notify({
         message: message,
         type: 'danger',
