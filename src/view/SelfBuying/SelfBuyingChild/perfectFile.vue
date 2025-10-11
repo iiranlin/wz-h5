@@ -65,6 +65,11 @@
             label="预计采购完成日期" placeholder="请选择预计采购完成日期" right-icon="arrow" label-width="8.2em"
             @click="handlerShowCalendar('calendar')" input-align="right" />
         </li>
+        <li class="detail-list-li-input">
+          <van-field v-model="sectionInfo.purchaseMethod"  required name="purchaseMethod"
+            label="采购方式" placeholder="请输入或选择采购方式" right-icon="arrow"
+            @click-right-icon="showprocurementPicker = true" input-align="right" />
+        </li>
       </ul>
     </div>
 
@@ -148,6 +153,10 @@
     </van-popup>
     <!-- 预计采购完成日期 -->
     <Calendar ref="calendar" @onConfirm="handleDataConfirm" />
+    <!-- 采购方式 -->
+    <van-popup v-model="showprocurementPicker" round position="bottom">
+      <van-picker show-toolbar :columns="procurementColumns" @cancel="showprocurementPicker = false" @confirm="procurementConfirm" />
+    </van-popup>
   </div>
 </template>
 
@@ -181,6 +190,7 @@ export default {
         amount: '',
         purchaseFileName: '',
         registrationDate: '',
+        purchaseMethod: '',
         remak: '',
         executionStandard: ''
       },
@@ -199,6 +209,9 @@ export default {
       // 计量单位
       showUnitPicker: false,
       // unitColumns: ['个', '件', '台', '套', '米', '吨', '千克', '平方米', '立方米'],
+      // 采购方式
+      showprocurementPicker: false,
+      procurementColumns: ['公开招标', '邀请招标', '竞争性谈判', '单一来源采购', '询价采购', '协议招标'],
     };
   },
  computed: {
@@ -394,6 +407,14 @@ export default {
 
       this.sectionInfo.amount = this.handlerfix(value) ? `${i}.${d.slice(0, 6)}` : value;
     },
+    // 采购方式确认事件
+    procurementConfirm(value) {
+      if (!value) {
+        return this.showprocurementPicker = false;
+      }
+      this.sectionInfo.purchaseMethod = value;
+      this.showprocurementPicker = false;
+    },
     sureClick(isData) {
       if (isData) {
         if (!this.sectionInfo.name) {
@@ -449,6 +470,13 @@ export default {
           this.$notify({
             type: 'warning',
             message: '请选择预计采购完成日期!',
+          });
+          return
+        }
+        if (!this.sectionInfo.purchaseMethod) {
+          this.$notify({
+            type: 'warning',
+            message: '请选择采购方式!',
           });
           return
         }
