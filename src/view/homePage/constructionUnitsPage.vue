@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div style="margin-bottom: 20px;">
+      <!-- <div style="margin-bottom: 20px;">
         <div class="selfBuying">
           <div class="selfTitle">
             自购物资核备
@@ -72,7 +72,7 @@
             </template>
           </van-cell>
         </div>
-      </div>
+      </div> -->
     </van-pull-refresh>
   </div>
 </template>
