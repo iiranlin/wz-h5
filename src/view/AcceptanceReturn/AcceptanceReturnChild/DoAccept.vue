@@ -95,10 +95,19 @@
     <div class="detail-base-info detail-base-info-edited" v-if="!isView">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
-        <span>其他资料</span>
+        <span>到货确认照片</span>
       </div>
-      <p class="box-container-p" v-if="!fileQtzlList?.length">非必填，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+      <p class="box-container-p" v-if="!fileQtzlList?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
       <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileQtzlList" businessType="01" />
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited" v-if="!isView">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png">
+        <span>交货单</span>
+      </div>
+      <p class="box-container-p" v-if="!fileJhdList?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileJhdList" businessType="01" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited"
@@ -114,9 +123,18 @@
       v-if="isView && filterList(dataList.fileByList, 'qtzl')?.length > 0">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
-        <span>其他资料</span>
+        <span>到货确认照片</span>
       </div>
       <file-download-view class="outbound-field-uploader" :fileList="filterList(dataList.fileByList, 'qtzl') || []" />
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited"
+      v-if="isView && filterList(dataList.fileByList, 'jhd')?.length > 0">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png">
+        <span>交货单</span>
+      </div>
+      <file-download-view class="outbound-field-uploader" :fileList="filterList(dataList.fileByList, 'jhd') || []" />
     </div>
 
     <div v-if="!isView" class="detail-floor-content">
@@ -322,6 +340,7 @@ export default {
      if(this.takeStatus != 5){
       this.fileZjdList = []
       this.fileQtzlList = []
+      this.fileJhdList = []
      }
 
   },
@@ -365,6 +384,7 @@ export default {
       fileTHList:[],
       fileZjdList:[],
       fileQtzlList:[],
+      fileJhdList:[],
       currentTime: new Date() ,// 获取当前时间
       menuActiveIndex: '0',
       btnClickIndex: '0',
@@ -610,6 +630,7 @@ export default {
             this.dataList.materialCirculationDetailsTableDTOS = data;
             this.fileZjdList = this.filterList(this.dataList.fileByList, 'zjd') || []
             this.fileQtzlList = this.filterList(this.dataList.fileByList, 'qtzl') || []
+            this.fileJhdList = this.filterList(this.dataList.fileByList, 'jhd') || []
             if (!this.isView) {
               this.dataList.takeDate = parseTime(this.currentTime, '{y}-{m}-{d}')
             } else {
@@ -678,6 +699,11 @@ export default {
         }
         let newObj =Object.assign({}, JSON.parse(this.dataList.fileByList),fileObj)
         this.dataList.fileByList = JSON.stringify(newObj)
+      } else {
+       return this.$notify({
+            type: 'warning',
+            message: '请上传自检单!',
+          });
       }
 
       if(this.fileQtzlList.length){
@@ -686,6 +712,24 @@ export default {
         }
         let newObj =Object.assign({}, JSON.parse(this.dataList.fileByList),fileObj)
         this.dataList.fileByList = JSON.stringify(newObj)
+      } else {
+        return this.$notify({
+            type: 'warning',
+            message: '请上传到货确认照片!',
+        });
+      }
+
+      if(this.fileJhdList.length){
+        let fileObj={
+          jhd:this.fileJhdList
+        }
+        let newObj =Object.assign({}, JSON.parse(this.dataList.fileByList),fileObj)
+        this.dataList.fileByList = JSON.stringify(newObj)
+      } else {
+        return this.$notify({
+            type: 'warning',
+            message: '请上传交货单!',
+        })
       }
 
       let params= {
@@ -713,6 +757,20 @@ export default {
          this.$notify({
             type: 'warning',
             message: '请上传自检单!',
+          });
+         return
+      }
+      if(!JSON.parse(params.fileByList).qtzl){
+         this.$notify({
+            type: 'warning',
+            message: '请上传到货确认照片!',
+          });
+         return
+      }
+      if(!JSON.parse(params.fileByList).jhd){
+         this.$notify({
+            type: 'warning',
+            message: '请上传交货单!',
           });
          return
       }
@@ -788,6 +846,7 @@ export default {
     if(this.takeStatus != 5){
       this.fileZjdList = []
       this.fileQtzlList = []
+      this.fileJhdList = []
      }
   }
 }

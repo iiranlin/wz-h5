@@ -74,8 +74,10 @@
       </div>
       <file-download-view class="outbound-field-uploader" title="自检单："
         :fileList="filterList(dataList.fileByList, 'zjd') || []" />
-      <file-download-view class="outbound-field-uploader" title="其他资料："
+      <file-download-view class="outbound-field-uploader" title="到货确认照片："
         :fileList="filterList(dataList.fileByList, 'qtzl') || []" />
+      <file-download-view class="outbound-field-uploader" title="交货单："
+        :fileList="filterList(dataList.fileByList, 'jhd') || []" />
     </div>
     <back-to-top className=".default-scroll"></back-to-top>
     <file-preview ref="filePreview"></file-preview>
