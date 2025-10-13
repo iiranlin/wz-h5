@@ -400,6 +400,13 @@ export default {
       // })
     },
     cargoDetails() {
+      this.params = {}
+      this.cargoList = []
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      });
       detailBySend(this.id).then((res) => {
         if (res.code == 0) {
           this.params = res.data
@@ -408,17 +415,19 @@ export default {
             ...item,
             // fileByList: JSON.parse(item.fileByList)
           }))
-
+        }
+      }).then(async res2 => {
           let params = {
             shipmentBatchNumber: this.params.shipmentBatchNumber,
           }
-          addList(params).then((res) => {
+          await addList(params).then((res) => {
             if (res.code == 0) {
               this.cargoList = res.data.list
               this.freightLocationDiaLog = true
             }
           })
-        }
+      }).finally(() => {
+        this.$toast.clear();
       })
     },
     tabsChange() {
