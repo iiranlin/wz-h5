@@ -62,6 +62,10 @@
                 <span>提报时间：</span>
                 <span>{{ parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
               </li>
+              <li>
+                <span>供应时间：</span>
+                <span>{{ parseTime(item.supplyDate, '{y}-{m}-{d} {h}:{i}') }}</span>
+              </li>
             </ul>
             <div class="list-ul-button">
               <van-button class="button-info" plain round type="info"
