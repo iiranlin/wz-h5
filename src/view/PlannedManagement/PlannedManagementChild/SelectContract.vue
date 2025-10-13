@@ -106,7 +106,11 @@ export default {
         // 数据全部加载完成
         if (this.list.length >= data.total) {
           this.finished = true
+          return
+        } else {
+          this.finished = false
         }
+        this.listQuery.pageNum++
       }).catch(() => {
         this.finished = true
         this.error = true
