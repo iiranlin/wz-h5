@@ -268,11 +268,19 @@ export function handlerTextColor(statusList, value, status) {
 
 import imageCompression from 'browser-image-compression';
 
-export async function compressImage (file, { limitSizeMB = 20, quality = 0.8 } = {}) {
+export async function compressImage (file) {
   const fileSizeMB = file.size / 1024 / 1024;
-  const needCompress = limitSizeMB === 0 || fileSizeMB > limitSizeMB;
+   let quality = 1; // 默认不压缩
 
-  if (!needCompress) return file;
+  // 分段压缩策略
+  if (fileSizeMB >= 10) {
+    quality = 0.15; // 大于等于10MB，压缩到15%
+  } else if (fileSizeMB >= 5) {
+    quality = 0.3; // 5MB~10MB，压缩到30%
+  } else {
+    // 小于5MB不压缩
+    return file;
+  }
 
   try {
     const compressedBlob = await imageCompression(file, {
