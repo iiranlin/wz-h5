@@ -25,6 +25,7 @@ service.interceptors.request.use(
     const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
     if (getToken() && !isToken) {
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+      config.headers['myreadiskey'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
 
     // 根据环境设置不同的请求头 - 无论是否有token都添加
