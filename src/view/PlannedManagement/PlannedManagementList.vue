@@ -64,7 +64,7 @@
               </li>
               <li>
                 <span>供应时间：</span>
-                <span>{{ parseTime(item.supplyDate, '{y}-{m}-{d} {h}:{i}') }}</span>
+                <span>{{ parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
               </li>
             </ul>
             <div class="list-ul-button">
