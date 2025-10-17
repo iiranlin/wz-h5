@@ -143,7 +143,7 @@ service.interceptors.response.use(
         message = decryptedData.message || decryptedData.msg || '解密失败，请稍后再试';
       } catch (e) {
         console.error("Failed to decrypt error response:", e);
-        message = '解密失败，请稍后再试'
+        message = '异常数据，请联系管理员'
       }
     }
     
