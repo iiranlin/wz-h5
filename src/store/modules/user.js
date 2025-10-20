@@ -1,4 +1,4 @@
-import { authInfo } from '@/api/login'
+import { authInfo, getLoginSelectUser } from '@/api/login'
 import { getToken, removeToken } from '@/utils/auth'
 import { logout } from '@/api/blcd-base/auth'
 import { setUserInfo } from '@/utils/user-info'
@@ -8,7 +8,9 @@ const user = {
   state: {
     token: getToken(),
     userInfo: {},
-    roles: false
+    roles: false,
+    selectProjectDialog: false,
+    selectProjectUserData: []
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -19,6 +21,12 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_SELECT_PROJECT_DIALOG: (state, selectProjectDialog) => {
+      state.selectProjectDialog = selectProjectDialog
+    },
+    SET_SELECT_PROJECT_USER_DATA: (state, selectProjectUserData) => {
+      state.selectProjectUserData = selectProjectUserData
     }
   },
   actions: {
@@ -33,6 +41,22 @@ const user = {
             sessionStorage.setItem("rank", user.rank);
             sessionStorage.setItem("username", user.username);
             setUserInfo(user)
+            resolve(res)
+          }
+        }).catch(error => {
+            reject(error)
+        })
+      })
+    },
+    // 获取登录账号下相同标段的账号
+    GetSameProjectUser({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getLoginSelectUser().then(res => {
+          if (res.success) {
+            const userData = res.data;
+
+            commit('SET_SELECT_PROJECT_USER_DATA', userData);
+
             resolve(res)
           }
         }).catch(error => {

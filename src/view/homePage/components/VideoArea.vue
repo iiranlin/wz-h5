@@ -39,6 +39,11 @@
               修改密码
             </div>
 
+            <div v-if="projectShow" class="login-out" @click="handlerProjects">
+              <van-image width="26" height="26" :src="SwitchProjectsIcon" />
+              切换项目
+            </div>
+
             <div class="login-out" @click="handlerLogOut">
               <van-image width="26" height="26" :src="LoginOutIcon" />
               退出登录
@@ -52,9 +57,7 @@
       </van-popup>
     </div>
 
-    <div>
-
-    </div>
+    <selectProject ref="selectProjectVideo" :showCancelButton="true"></selectProject>
   </div>
 </template>
 
@@ -64,8 +67,15 @@ import videoUrl from '@/assets/video/Banner.mp4'
 import { getUserInfo } from '@/utils/user-info'
 import LoginOutIcon from '@/assets/img/退出登录.png';
 import EditPasswordIcon from '@/assets/img/修改密码.png';
+import SwitchProjectsIcon from '@/assets/img/SwitchProjectsIcon.png';
+
+import selectProject from './selectProject.vue';
 export default {
   name: 'VideoArea',
+
+  components: {
+    selectProject
+  },
 
   computed: {
     // 如果单位名称和部门名称相同，则只显示单位名称
@@ -74,6 +84,9 @@ export default {
     },
     username() {
       return this.userInfo.username
+    },
+    projectShow() {
+      return this.$store.getters.selectProjectUserData?.length > 1
     }
   },
 
@@ -83,7 +96,8 @@ export default {
       userInfo: getUserInfo(),
       show: false,
       LoginOutIcon,
-      EditPasswordIcon
+      EditPasswordIcon,
+      SwitchProjectsIcon
     };
   },
 
@@ -108,7 +122,11 @@ export default {
       }).catch(() => {
         // on cancel
       })
-    }
+    },
+    handlerProjects() {
+      this.$refs.selectProjectVideo.dialogShow = true;
+      this.$store.commit('SET_SELECT_PROJECT_DIALOG', true);
+    }, 
   },
 };
 </script>

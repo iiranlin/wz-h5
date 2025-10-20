@@ -99,6 +99,9 @@ const mutations = {
     const inData = state.scrollPosition
     state.scrollPosition = {...inData, ...scrollPosition}
   },
+  SET_SCROLL_POSITION_RESET(state, scrollPosition) {
+    state.scrollPosition = scrollPosition
+  },
   SET_MATERIA_DATA:(state, materiaData)=>{
     state.materiaData = materiaData
   },
@@ -173,6 +176,9 @@ const actions = {
   },
   setScrollPosition({commit}, data){
     commit('SET_SCROLL_POSITION', data)
+  },
+  setScrollPositionReset({commit}, data){
+    commit('SET_SCROLL_POSITION_RESET', data)
   },
   setMateriaData({commit}, data){
     commit('SET_MATERIA_DATA', data)

@@ -3,23 +3,28 @@
 		<div :class="isTabbar && checkNavMenu()?.length > 1?'app-container':'default-container'">
 			<transition name="fade-transform" mode="out-in">
         <keep-alive :include="keepPages">
-          <router-view :key="key" />
+          <router-view :key="routerKey" />
         </keep-alive>
 			</transition>
 		</div>
 		<div class="nav-container" v-show="isTabbar && checkNavMenu()?.length > 1">
 			<navbar :navMenu="checkNavMenu()"/>
 		</div>
+
+		<selectProject ref="selectProject"></selectProject>
 	</div>
 </template>
 <script>
 import {Navbar} from './components'
 import { getUserInfo } from '@/utils/user-info'
 import { isAndroid } from "@/utils"
+
+import selectProject from '@/view/homePage/components/selectProject.vue';
 export default {
 	name: 'Layout',
 	components: {
-		Navbar
+		Navbar,
+		selectProject
 	},
 	data() {
 		return {
@@ -129,6 +134,9 @@ export default {
     key() {
       return this.$route.path
     },
+		routerKey() {
+			return this.$route.fullPath
+		},
     keepPages() {
       return this.$store.getters.getKeepPages
     },
@@ -136,12 +144,19 @@ export default {
       return this.$route.meta.isTabbar
     },
 	},
-	created() {
+	async created() {
 		if (isAndroid()) {
 			Android.setWaterMark(this.userInfo.nickName);
 		}
-		
+
 		const code = this.checkDeptCode()
+		// 跳转到施工单位首页并且有多个标段项目
+		const { data } = await this.$store.dispatch("GetSameProjectUser");
+		
+		if (data?.length > 1) {
+			this.$refs.selectProject.dialogShow = true;
+			this.$store.commit('SET_SELECT_PROJECT_DIALOG', true)
+		}
 
 		this.checkNavMenu();
 	},

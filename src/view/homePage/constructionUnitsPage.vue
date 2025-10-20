@@ -93,7 +93,7 @@ import VideoArea from './components/VideoArea.vue';
 import CheckModule from './components/checkModule.vue';
 export default {
   name: 'constructionUnitsPage',
-  mixins: [keepPages],
+  // mixins: [keepPages],
 
   components: {
     VideoArea,
@@ -114,12 +114,12 @@ export default {
     };
   },
 
-  activated() {
-    this.$nextTick(() => {
-      this.$refs.VideoArea?.$refs.videos?.play();
-      this.$refs.checkModule?.handlerTodoCount();
-    })
-  },
+  // activated() {
+  //   this.$nextTick(() => {
+  //     this.$refs.VideoArea?.$refs.videos?.play();
+  //     this.$refs.checkModule?.handlerTodoCount();
+  //   })
+  // },
 
   mounted() {
 

@@ -8,3 +8,11 @@ export function authInfo() {
 		method: 'GET',
 	})
 }
+
+// 获取登录账号下相同标段的账号
+export function getLoginSelectUser() {
+	return request({
+    url: `${VUE_APP_BASE_SERVER}/loginSelect/selectUser`,
+		method: 'GET',
+	})
+}
