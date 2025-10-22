@@ -12,6 +12,7 @@
 		</div>
 
 		<selectProject ref="selectProject"></selectProject>
+		<updateCheck></updateCheck>
 	</div>
 </template>
 <script>
@@ -20,11 +21,13 @@ import { getUserInfo } from '@/utils/user-info'
 import { isAndroid } from "@/utils"
 
 import selectProject from '@/view/homePage/components/selectProject.vue';
+import updateCheck from '../view/homePage/components/UpdateCheck.vue';
 export default {
 	name: 'Layout',
 	components: {
 		Navbar,
-		selectProject
+		selectProject,
+		updateCheck
 	},
 	data() {
 		return {
