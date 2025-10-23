@@ -61,7 +61,9 @@ export default {
       setToken(item.token);
       // 获取用户信息
       await this.$store.dispatch("GetInfo");
-      this.$router.replace({ path: '/constructionUnitsPage', query: { _t: Date.now() } });
+      //  reload page
+      this.$router.replace({ path: '/', query: { _t: Date.now() } });
+      window.location.reload()
     }
   },
 };

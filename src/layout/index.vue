@@ -157,8 +157,12 @@ export default {
 		const { data } = await this.$store.dispatch("GetSameProjectUser");
 		
 		if (data?.length > 1) {
-			this.$refs.selectProject.dialogShow = true;
-			this.$store.commit('SET_SELECT_PROJECT_DIALOG', true)
+			if(!sessionStorage.getItem('firstLoadDialog')){
+				// 仅第一次自动弹出选择项目对话框
+				sessionStorage.setItem('firstLoadDialog', 'true');
+				this.$refs.selectProject.dialogShow = true;
+				this.$store.commit('SET_SELECT_PROJECT_DIALOG', true)
+			}
 		}
 
 		this.checkNavMenu();
