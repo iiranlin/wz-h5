@@ -163,7 +163,7 @@
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.fileList01?.length"><span
           class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.fileList01 || []" businessType="01"
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="9999" :fileList="sectionInfo.fileList01 || []" businessType="01"
         class="outbound-field-uploader" />
     </div>
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -173,7 +173,7 @@
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.fileList02?.length"><span
           class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="sectionInfo.fileList02 || []"
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="9999" :fileList="sectionInfo.fileList02 || []"
         businessType="01" class="outbound-field-uploader" />
     </div>
     <div class="detail-base-info detail-base-info-edited">
