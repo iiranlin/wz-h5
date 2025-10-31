@@ -34,7 +34,7 @@
           <span>类别：</span>
           <span>{{ formData.purchaseName }}</span>
         </li>
-        <li>
+        <!-- <li>
           <span>物资细目：</span>
           <span>{{ formData.purchaseDetailName }}</span>
         </li>
@@ -45,7 +45,7 @@
         <li>
           <span>计量单位：</span>
           <span>{{ formData.unit }}</span>
-        </li>
+        </li> -->
         <li>
           <span>物资种类：</span>
           <span>{{ formData.purchaseTypeName }}</span>
