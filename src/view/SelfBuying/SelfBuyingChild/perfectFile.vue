@@ -36,7 +36,7 @@
           <van-field v-model="sectionInfo.purchaseTypeName" readonly clickable required name="purchaseTypeName
 " label="物资种类" placeholder="请选择物资种类" right-icon="arrow" @click="showvarietyPicker = true" input-align="right" />
         </li>
-        <li class="detail-list-li-input">
+        <!-- <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.purchaseDetailName" readonly clickable required name="purchaseDetailName
 " label="物资细目" placeholder="请选择物资细目" right-icon="arrow" @click="showdetailPicker = true" input-align="right" />
         </li>
@@ -47,10 +47,10 @@
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.unit" required name="unit" label="计量单位" placeholder="请输入或选择计量单位"
             input-align="right" right-icon="arrow" @click-right-icon="showUnitPicker = true" />
-        </li>
+        </li> -->
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.amount"  name="amount" type="number" label="预估采购金额"
-            placeholder="请输入预估采购金额" @input="handlerAmount" input-align="right">
+          <van-field v-model="sectionInfo.amount" name="amount" type="number" label="预估采购金额" placeholder="请输入预估采购金额"
+            @input="handlerAmount" input-align="right">
             <template #button>
               <span style="color: #333;">万元</span>
             </template>
@@ -66,21 +66,24 @@
             @click="handlerShowCalendar('calendar')" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.purchaseMethod"  required name="purchaseMethod"
-            label="采购方式" placeholder="请输入或选择采购方式" right-icon="arrow"
-            @click-right-icon="showprocurementPicker = true" input-align="right" />
+          <van-field v-model="sectionInfo.purchaseMethod" required name="purchaseMethod" label="采购方式"
+            placeholder="请输入或选择采购方式" right-icon="arrow" @click-right-icon="showprocurementPicker = true"
+            input-align="right" />
         </li>
       </ul>
     </div>
 
     <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
+        <span class="li-span-red">*</span>
         <img src="@/assets/img/Icon-notes.png" />
-        <span>备注</span>
+        <span>
+          备注
+        </span>
       </div>
       <div class="detail-title-content-field">
         <van-field v-model="sectionInfo.remak" class="detail-base-info-edited-textarea" rows="3" autosize
-          type="textarea" placeholder="请输入备注信息" />
+          type="textarea" placeholder="请备注物资相关信息" />
       </div>
     </div>
 
@@ -155,7 +158,8 @@
     <Calendar ref="calendar" @onConfirm="handleDataConfirm" />
     <!-- 采购方式 -->
     <van-popup v-model="showprocurementPicker" round position="bottom">
-      <van-picker show-toolbar :columns="procurementColumns" @cancel="showprocurementPicker = false" @confirm="procurementConfirm" />
+      <van-picker show-toolbar :columns="procurementColumns" @cancel="showprocurementPicker = false"
+        @confirm="procurementConfirm" />
     </van-popup>
   </div>
 </template>
@@ -170,7 +174,7 @@ export default {
   name: 'PerfectFile',
 
   components: { FileUploadView, Calendar },
-  dicts:['MeasureUnit'],
+  dicts: ['MeasureUnit'],
   data() {
     return {
       detailInfo: {},
@@ -214,7 +218,7 @@ export default {
       procurementColumns: ['公开招标', '邀请招标', '竞争性谈判', '单一来源采购', '询价采购', '协议招标'],
     };
   },
- computed: {
+  computed: {
     unitColumns() {
       if (this.dict && this.dict.MeasureUnit) {
         return this.dict.MeasureUnit.map(item => item.label);
@@ -431,20 +435,20 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.purchaseDetailName) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择物资细目!',
-          });
-          return
-        }
-        if (!this.sectionInfo.quantity) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入数量!',
-          });
-          return
-        }
+        // if (!this.sectionInfo.purchaseDetailName) {
+        //   this.$notify({
+        //     type: 'warning',
+        //     message: '请选择物资细目!',
+        //   });
+        //   return
+        // }
+        // if (!this.sectionInfo.quantity) {
+        //   this.$notify({
+        //     type: 'warning',
+        //     message: '请输入数量!',
+        //   });
+        //   return
+        // }
         if (!this.sectionInfo.purchaseTypeName) {
           this.$notify({
             type: 'warning',
@@ -477,6 +481,13 @@ export default {
           this.$notify({
             type: 'warning',
             message: '请选择采购方式!',
+          });
+          return
+        }
+        if (!this.sectionInfo.remak) {
+          this.$notify({
+            type: 'warning',
+            message: '请备注物资相关信息!',
           });
           return
         }
