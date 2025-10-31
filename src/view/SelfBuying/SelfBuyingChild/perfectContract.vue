@@ -27,7 +27,7 @@
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="合同金额"
+          <van-field readonly v-model="sectionInfo.amount" required name="amount" type="number" label="合同金额"
             placeholder="请输入合同金额" input-align="right" @input="handlerAmount">
             <template #button>
               <span style="color: #333;">万元</span>
@@ -61,10 +61,6 @@
 " label="物资种类" placeholder="请选择物资种类" right-icon="arrow" @click="showvarietyPicker = true" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.purchaseDetailName" readonly clickable required name="purchaseDetailName
-" label="物资细目" placeholder="请选择物资细目" right-icon="arrow" @click="showdetailPicker = true" input-align="right" />
-        </li>
-        <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.supplierName" required name="supplierName
 " label="供应商" placeholder="请输入供应商" input-align="right" />
         </li>
@@ -73,18 +69,110 @@
             placeholder="请选择合同签订日期" right-icon="arrow" @click="handlerShowCalendar('calendar', 0)"
             input-align="right" />
         </li>
-        <li class="detail-list-li-input">
-          <van-field readonly required name="railwaySpecial" label="铁路专用产品" input-align="right">
-            <template #input>
-              <van-radio-group v-model="sectionInfo.railwaySpecial" direction="horizontal"
-                style="justify-content: end;">
-                <van-radio name="1" shape="square" class="detail-radio">是</van-radio>
-                <van-radio name="0" shape="square" class="detail-radio">否</van-radio>
-              </van-radio-group>
-            </template>
-          </van-field>
-        </li>
       </ul>
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited">
+      <van-collapse v-model="activeNames">
+        <van-collapse-item v-for="(item, index) in sectionInfo.contractDetailsList" :key="index" :name="index">
+          <template #title>
+            <div class="detail-title-content">
+              <img src="@/assets/img/Icon_notarize.png" />
+              <span>物资明细{{ index + 1 }}</span>
+            </div>
+          </template>
+          <template #value>
+            <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
+              @click.stop="handleDelete">删除</span>
+          </template>
+          <ul class="detail-list-ul-edited">
+            <li class="detail-list-li-input">
+              <van-field v-model="item.materialName" required name="materialName" label="物资名称" placeholder="请输入物资名称"
+                input-align="right" />
+            </li>
+            <li class="detail-list-li-input">
+              <van-field v-model="item.specModel" required name="specModel" label="规格型号" placeholder="请输入规格型号"
+                input-align="right" />
+            </li>
+            <li class="detail-list-li-input">
+              <van-field v-model="item.unit" required name="unit" label="计量单位" placeholder="请输入或选择计量单位"
+                input-align="right" right-icon="arrow" @click-right-icon="handleUnit(index)" />
+            </li>
+            <li class="detail-list-li-input">
+              <van-field type="number" v-model="item.amount" required name="amount
+" label="数量" placeholder="请输入数量" input-align="right" />
+            </li>
+            <li class="detail-list-li-input">
+              <van-field v-model="item.price" required name="price" type="number" label="单价" placeholder="请输入单价金额"
+                input-align="right">
+                <template #button>
+                  <span style="color: #333;">万元</span>
+                </template>
+              </van-field>
+            </li>
+            <li class="detail-list-li-input">
+              <van-field type="number" v-model="item.vatRate" required name="vatRate
+" label="税率" placeholder="请输入税率" input-align="right">
+                <template #button>
+                  <span style="color: #333;">%</span>
+                </template>
+              </van-field>
+            </li>
+            <li class="detail-list-li-input">
+              <van-field type="number" v-model="item.totalAmount" required name="totalAmount
+" label="合价" placeholder="请输入合价" input-align="right">
+                <template #button>
+                  <span style="color: #333;">万元</span>
+                </template>
+              </van-field>
+            </li>
+            <li class="detail-list-li-input">
+              <van-field readonly required name="railwaySpecial" label="铁路专用产品" input-align="right">
+                <template #input>
+                  <van-radio-group @change="(name) => handleRailwaySpecial(name, index)" v-model="item.railwaySpecial"
+                    direction="horizontal" style="justify-content: end;">
+                    <van-radio name="1" shape="square" class="detail-radio">是</van-radio>
+                    <van-radio name="0" shape="square" class="detail-radio">否</van-radio>
+                  </van-radio-group>
+                </template>
+              </van-field>
+            </li>
+          </ul>
+
+          <div v-if="item.railwaySpecial != '0'" style="border-top: 1px solid #e5e5e5;">
+            <div class="detail-base-info detail-base-info-edited">
+              <div class="detail-title-content">
+                <img src="@/assets/img/certificate.png" />
+                <span>许可/认证证书</span>
+              </div>
+              <ul class="detail-list-ul-edited">
+                <li class="detail-list-li-input">
+                  <van-field v-model="item.licenseCategory" required name="licenseCategory" label="许可/认证类别"
+                    placeholder="请输入许可/认证类别" input-align="right" label-width="7.2em" />
+                </li>
+                <li class="detail-list-li-input">
+                  <van-field v-model="item.issuanceUnit" required name="issuanceUnit" label="发证单位" placeholder="请输入发证单位"
+                    input-align="right" />
+                </li>
+                <li class="detail-list-li-input">
+                  <van-field v-model="item.quantity" required name="quantity
+" label="证书编号" placeholder="请输入证书编号" input-align="right" />
+                </li>
+                <li class="detail-list-li-input">
+                  <van-field v-model="item.validPeriod" readonly clickable required name="validPeriod" label="有效期限"
+                    placeholder="请选择有效期限" @click="handlerShowCalendar('calendar1', 0, index)" right-icon="arrow"
+                    input-align="right" />
+                </li>
+              </ul>
+            </div>
+          </div>
+        </van-collapse-item>
+      </van-collapse>
+
+      <div class="file-add">
+        <van-button @click="handerAdd" class="button-info" type="default" round block><span
+            style="color: #1989FA;">+添加物资明细</span></van-button>
+      </div>
     </div>
 
     <div class="detail-base-info detail-base-info-edited">
@@ -98,8 +186,7 @@
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
-    <div class="detail-base-info detail-base-info-edited"
-      :style="{ marginBottom: sectionInfo.railwaySpecial == '0' ? '65px' : '0' }">
+    <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>供应商质量终身承诺书</span>
@@ -109,44 +196,15 @@
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.gyszlzscns
         || []" businessType="02" class="outbound-field-uploader" />
     </div>
-
-    <div v-for="(item, index) in sectionInfo.contractLicense" :key="item.id" v-if="sectionInfo.railwaySpecial != '0'"
-      :style="{ marginBottom: index == sectionInfo.contractLicense.length - 1 ? '65px' : '0' }">
-      <div class="detail-base-info detail-base-info-edited">
-        <div class="detail-title-content">
-          <img src="@/assets/img/certificate.png" />
-          <span>许可/认证证书</span>
-        </div>
-        <ul class="detail-list-ul-edited">
-          <li class="detail-list-li-input">
-            <van-field v-model="item.licenseCategory" required name="licenseCategory" label="许可/认证类别"
-              placeholder="请输入许可/认证类别" input-align="right" label-width="7.2em" />
-          </li>
-          <li class="detail-list-li-input">
-            <van-field v-model="item.unit" required name="unit" label="发证单位" placeholder="请输入发证单位"
-              input-align="right" />
-          </li>
-          <li class="detail-list-li-input">
-            <van-field v-model="item.quantity" required name="quantity
-" label="证书编号" placeholder="请输入证书编号" input-align="right" />
-          </li>
-          <li class="detail-list-li-input">
-            <van-field v-model="item.validPeriod" readonly clickable required name="validPeriod" label="有效期限"
-              placeholder="请选择有效期限" @click="handlerShowCalendar('calendar1', 0, index)" right-icon="arrow"
-              input-align="right" />
-          </li>
-        </ul>
+    <div class="detail-base-info detail-base-info-edited" style="margin-bottom: 65px;">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png">
+        <span>合同核备附件</span>
       </div>
-
-      <div class="detail-base-info detail-base-info-edited">
-        <div class="detail-title-content">
-          <img src="/static/icon-file.png">
-          <span>合同核备附件</span>
-        </div>
-        <p class="box-container-p" v-if="!item?.attachmentFile?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式，可上传多个</p>
-        <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="item.attachmentFile
-          || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
-      </div>
+      <p class="box-container-p" v-if="!sectionInfo?.hthbfj?.length"><span
+          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式，可上传多个</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.hthbfj
+        || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
     </div>
 
     <div class="default-button-container">
@@ -172,6 +230,10 @@
       <van-picker show-toolbar :columns="varietyColumns" @cancel="showvarietyPicker = false"
         @confirm="onvarietyConfirm" />
     </van-popup>
+    <!-- 计量单位 -->
+    <van-popup v-model="showUnitPicker" round position="bottom">
+      <van-picker show-toolbar :columns="unitColumns" @cancel="showUnitPicker = false" @confirm="onUnitConfirm" />
+    </van-popup>
     <!-- 合同签订日期 -->
     <Calendar ref="calendar" @onConfirm="handleDataConfirm" :unlimited="true" />
     <!-- 有效期限 -->
@@ -191,43 +253,61 @@ export default {
 
   components: { FileUploadView, Calendar, rangeCalendar },
 
+  computed: {
+    unitColumns() {
+      if (this.dict && this.dict.MeasureUnit) {
+        return this.dict.MeasureUnit.map(item => item.label);
+      }
+      return [];
+    },
+    contractValue() {
+      let value = 0;
+      this.sectionInfo.contractDetailsList.forEach(el => {
+        value += +el.totalAmount;
+      });
+
+      return value;
+    },
+  },
+
   watch: {
-    'sectionInfo.railwaySpecial': {
+    contractValue: {
       handler(val) {
-        if (val == '0') {
-          this.sectionInfo.contractLicense = [
-            {
-              licenseCategory: '',
-              unit: '',
-              quantity: '',
-              validPeriod: '',
-              attachmentFile: [],
-              validityGuarantee: [],
-            }
-          ]
-        }
+        this.sectionInfo.amount = val;
       },
-      deep: true
+      immediate: true,
     }
   },
 
+  dicts: ['MeasureUnit'],
+
   data() {
     return {
+      contractDetailsIndex: 0,
+      activeNames: [0],
       detailInfo: {},
       sectionInfo: {
         htfbsmj: [],
         gyszlzscns: [],
-        contractLicense: [
+        hthbfj: [],
+        contractDetailsList: [
           {
-            licenseCategory: '',
+            materialName: '',
+            specModel: '',
             unit: '',
+            amount: '',
+            price: '',
+            vatRate: '',
+            totalAmount: '',
+            railwaySpecial: '0',
+            licenseCategory: '',
+            issuanceUnit: '',
             quantity: '',
             validPeriod: '',
-            attachmentFile: [],
-            validityGuarantee: [],
+            startTime: '',
+            endTime: '',
           }
         ],
-        railwaySpecial: '1'
       },
       contractLicenseIndex: 0,
       // 物资大类
@@ -242,6 +322,8 @@ export default {
       // 物资种类
       showvarietyPicker: false,
       varietyColumns: [],
+      // 计量单位
+      showUnitPicker: false,
     };
   },
 
@@ -256,18 +338,20 @@ export default {
     } else {
       try {
         const data = await this.getGeneraDetail();
-        console.log(data, "data")
 
         data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
         data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
+        data.hthbfj = JSON.parse(data.files)?.hthbfj || [];
         data.startTime = parseTime(data.startTime, '{y}-{m}-{d}');
 
-        if (data.railwaySpecial == '1') {
-          data.contractLicense.forEach(el => {
-            el.validPeriod = el.validityGuarantee[0] + ' 至 ' + el.validityGuarantee[1];
-            el.attachmentFile = el.attachmentFile ? JSON.parse(el.attachmentFile) : [];
-          })
-        }
+        data.contractDetailsList.forEach((el, index) => {
+          if (el.railwaySpecial == '1') {
+            el.validPeriod = this.formatTimestamp(el.startTime) + ' 至 ' + this.formatTimestamp(el.endTime);
+          }
+
+          this.activeNames.push(index);
+        })
+
 
         this.sectionInfo = data;
         this.sectionInfo.projectId = this.detailInfo.projectId;
@@ -283,6 +367,68 @@ export default {
   },
 
   methods: {
+    formatTimestamp(timestamp) {
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+    handleRailwaySpecial(name, index) {
+      if (name == 0) {
+        this.sectionInfo.contractDetailsList[index].licenseCategory = '';
+        this.sectionInfo.contractDetailsList[index].issuanceUnit = '';
+        this.sectionInfo.contractDetailsList[index].quantity = '';
+        this.sectionInfo.contractDetailsList[index].validPeriod = '';
+        this.sectionInfo.contractDetailsList[index].startTime = '';
+        this.sectionInfo.contractDetailsList[index].endTime = '';
+      }
+    },
+    handleUnit(index) {
+      this.contractDetailsIndex = index;
+      this.showUnitPicker = true;
+    },
+    handleDelete(index) {
+      this.$dialog.confirm({
+        message: '是否确认删除？',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.sectionInfo.contractDetailsList.splice(index, 1);
+      })
+    },
+    handerAdd() {
+      this.sectionInfo.contractDetailsList.push(
+        {
+          materialName: '',
+          specModel: '',
+          unit: '',
+          amount: '',
+          price: '',
+          vatRate: '',
+          totalAmount: '',
+          railwaySpecial: '0',
+          licenseCategory: '',
+          issuanceUnit: '',
+          quantity: '',
+          validPeriod: '',
+          startTime: '',
+          endTime: '',
+        }
+      );
+
+      this.activeNames.push(this.sectionInfo.contractDetailsList.length - 1);
+    },
+    // 计量单位确认事件
+    onUnitConfirm(value) {
+      if (!value) {
+        return this.showUnitPicker = false;
+      }
+      this.$nextTick(() => {
+        this.sectionInfo.contractDetailsList[this.contractDetailsIndex].unit = value;
+      })
+      this.showUnitPicker = false;
+    },
     // 物资大类确认事件
     async onGeneraConfirm(value, flag = true) {
       this.sectionInfo.name = value.text;
@@ -431,12 +577,9 @@ export default {
       month2 = month2.length === 1 ? `0${month2}` : month2;
       day2 = day2.length === 1 ? `0${day2}` : day2;
 
-      this.sectionInfo.contractLicense.find((el, index) => {
-        if (index == this.contractLicenseIndex) {
-          el.validPeriod = `${year}-${month}-${day} 至 ${year2}-${month2}-${day2}`;
-          el.validityGuarantee = [`${year}-${month}-${day}`, `${year2}-${month2}-${day2}`]
-        }
-      })
+      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].validPeriod = `${year}-${month}-${day} 至 ${year2}-${month2}-${day2}`;
+
+      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].startTime = `${year}-${month}-${day}`; this.sectionInfo.contractDetailsList[this.contractLicenseIndex].endTime = `${year2}-${month2}-${day2}`;
 
       this.$forceUpdate();
     },
@@ -474,6 +617,41 @@ export default {
           return val !== undefined && val !== null && String(val).trim() !== '';
         });
       });
+    },
+    validateContractDetails(contractDetailsList) {
+      // 需要验证的字段数组
+      const requiredFields = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial', 'licenseCategory', 'issuanceUnit', 'quantity', 'validPeriod', 'startTime', 'endTime'];
+
+      const requiredFields2 = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial',];
+
+      for (let i = 0; i < contractDetailsList.length; i++) {
+        const item = contractDetailsList[i];
+
+        // 只有当 railwaySpecial == '1' 时才验证这些字段
+        if (item.railwaySpecial === '1') {
+          for (const field of requiredFields) {
+            // 检查字段是否为空（空字符串、null、undefined）
+            if (!item[field]) {
+              return {
+                isValid: false,
+              };
+            }
+          }
+        } else {
+          for (const field of requiredFields2) {
+            // 检查字段是否为空
+            if (!item[field]) {
+              return {
+                isValid: false,
+              };
+            }
+          }
+        }
+      }
+
+      return {
+        isValid: true,
+      };
     },
     handlerfix(str) {
       const [i, d] = String(str).split('.');
@@ -535,13 +713,13 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.purchaseDetailName) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择物资细目!',
-          });
-          return
-        }
+        // if (!this.sectionInfo.purchaseDetailName) {
+        //   this.$notify({
+        //     type: 'warning',
+        //     message: '请选择物资细目!',
+        //   });
+        //   return
+        // }
         if (!this.sectionInfo.supplierName) {
           this.$notify({
             type: 'warning',
@@ -563,13 +741,22 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.railwaySpecial) {
+        // if (!this.sectionInfo.railwaySpecial) {
+        //   this.$notify({
+        //     type: 'warning',
+        //     message: '请选择是否为铁路产品!',
+        //   });
+        //   return
+        // }
+
+        if (!this.validateContractDetails(this.sectionInfo.contractDetailsList).isValid) {
           this.$notify({
             type: 'warning',
-            message: '请选择是否为铁路产品!',
+            message: '请完善物资明细信息!',
           });
           return
         }
+
         if (!this.sectionInfo.htfbsmj?.length > 0) {
           this.$notify({
             type: 'warning',
@@ -584,11 +771,10 @@ export default {
           });
           return
         }
-
-        if (this.sectionInfo.railwaySpecial == '1' && !this.isEveryItemValid(this.sectionInfo.contractLicense, ['licenseCategory', 'unit', 'quantity', 'validityGuarantee'])) {
+        if (!this.sectionInfo.hthbfj?.length > 0) {
           this.$notify({
             type: 'warning',
-            message: '请完善许可/认证证书信息!',
+            message: '请上传合同核备附件!',
           });
           return
         }
@@ -598,27 +784,14 @@ export default {
 
         this.sectionInfo.amount = +this.sectionInfo.amount;
 
-        const str = this.$route.query.type == 'create' ? "" : "[]";
-
-        const contractLicense = this.sectionInfo.railwaySpecial == '1' ? this.sectionInfo.contractLicense?.map(item => {
-          return {
-            ...item,
-            licenseCategory: item.licenseCategory,
-            unit: item.unit,
-            quantity: item.quantity,
-            validityGuarantee: item.validityGuarantee,
-            attachmentFile: item.attachmentFile?.length > 0 ? JSON.stringify(item.attachmentFile) : str,
-          }
-        }) : [];
-
         if (this.$route.query.type == 'create') {
 
           const params = {
             ...this.sectionInfo,
             id: null,
-            files: JSON.stringify({ htfbsmj: this.sectionInfo.htfbsmj, gyszlzscns: this.sectionInfo.gyszlzscns }),
+            files: JSON.stringify({ htfbsmj: this.sectionInfo.htfbsmj, gyszlzscns: this.sectionInfo.gyszlzscns, hthbfj: this.sectionInfo.hthbfj }),
             startTime: time.getTime(),
-            contractLicense: contractLicense,
+            contractDetailsList: this.sectionInfo.contractDetailsList,
             sectionShortName: this.detailInfo.projectShortName,
             projectName: this.detailInfo.projectName,
           }
@@ -632,9 +805,9 @@ export default {
         } else {
           const params = {
             ...this.sectionInfo,
-            files: JSON.stringify({ htfbsmj: this.sectionInfo.htfbsmj, gyszlzscns: this.sectionInfo.gyszlzscns }),
+            files: JSON.stringify({ htfbsmj: this.sectionInfo.htfbsmj, gyszlzscns: this.sectionInfo.gyszlzscns, hthbfj: this.sectionInfo.hthbfj }),
             startTime: time.getTime(),
-            contractLicense: contractLicense,
+            contractDetailsList: this.sectionInfo.contractDetailsList,
           }
 
           materialPurchaseContractmodify(params).then(res => {
@@ -657,6 +830,51 @@ export default {
 /deep/.van-calendar__popup.van-popup--bottom,
 .van-calendar__popup.van-popup--top {
   height: 94% !important;
+}
+
+::v-deep .van-collapse-item__content {
+  padding: 0 !important;
+}
+
+::v-deep .van-cell__right-icon {
+  height: 0.8rem !important;
+  line-height: 0.8rem !important;
+}
+
+::v-deep .van-collapse-item .van-collapse-item__title {
+  padding-left: 0 !important;
+  padding-right: 10px !important;
+  align-items: center;
+}
+
+.file-add {
+  text-align: center;
+  margin: 10px 45px 0px 45px;
+  padding-bottom: 10px;
+
+  ::v-deep .van-uploader {
+    width: 100%;
+  }
+
+  ::v-deep .van-uploader__input-wrapper {
+    width: 100%;
+  }
+
+  ::v-deep .van-button {
+    height: 36px;
+  }
+
+  .van-button__text {
+    span {
+      vertical-align: middle;
+    }
+
+    .file-download {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+    }
+  }
 }
 
 .requirement-details {

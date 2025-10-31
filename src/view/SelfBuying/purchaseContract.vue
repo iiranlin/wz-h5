@@ -59,10 +59,10 @@
                 <span>物资种类：</span>
                 <span>{{ item.purchaseTypeName }}</span>
               </li>
-              <li>
+              <!-- <li>
                 <span>铁路专用产品：</span>
                 <span>{{ item.railwaySpecial == '1' ? '是' : '否' }}</span>
-              </li>
+              </li> -->
               <li>
                 <span>合同金额：</span>
                 <span>{{ item.amount }}</span>

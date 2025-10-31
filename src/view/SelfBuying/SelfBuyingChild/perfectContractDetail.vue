@@ -54,10 +54,10 @@
           <span>类别：</span>
           <span>{{ formData.purchaseName }}</span>
         </li>
-        <li>
+        <!-- <li>
           <span>物资细目：</span>
           <span>{{ formData.purchaseDetailName }}</span>
-        </li>
+        </li> -->
         <li>
           <span>签订日期：</span>
           <span>{{ formData.startTime | formatDate }}</span>
@@ -66,15 +66,88 @@
           <span>物资种类：</span>
           <span>{{ formData.purchaseTypeName }}</span>
         </li>
-        <li>
+        <!-- <li>
           <span>铁路专用产品：</span>
           <span>{{ formData.railwaySpecial == '1' ? '是' : '否' }}</span>
-        </li>
+        </li> -->
         <li>
           <span>合同金额(万元)：</span>
           <span>{{ formData.amount }}</span>
         </li>
       </ul>
+    </div>
+    <div class="detail-base-info detail-base-info-edited">
+      <van-collapse v-model="activeNames">
+        <van-collapse-item v-for="(item, index) in formData.contractDetailsList" :key="index" :name="index">
+          <template #title>
+            <div class="detail-title-content">
+              <img src="@/assets/img/Icon_notarize.png" />
+              <span>物资明细{{ index + 1 }}</span>
+            </div>
+          </template>
+          <ul class="detail-info-ul">
+            <li>
+              <span>物资名称：</span>
+              <span>{{ item.materialName }}</span>
+            </li>
+            <li>
+              <span>规格型号：</span>
+              <span>{{ item.specModel }}</span>
+            </li>
+            <li>
+              <span>计量单位：</span>
+              <span>{{ item.unit }}</span>
+            </li>
+            <li>
+              <span>数量：</span>
+              <span>{{ item.amount }}</span>
+            </li>
+            <li>
+              <span>单价：</span>
+              <span>{{ item.price }} 万元</span>
+            </li>
+            <li>
+              <span>税率：</span>
+              <span>{{ item.vatRate }} %</span>
+            </li>
+            <li>
+              <span>合价：</span>
+              <span>{{ item.totalAmount }}</span>
+            </li>
+            <li>
+              <span>铁路专用产品：</span>
+              <span>{{ item.railwaySpecial == '1' ? '是' : '否' }}</span>
+            </li>
+          </ul>
+
+          <div v-if="item.railwaySpecial != '0'" style="border-top: 1px solid #e5e5e5;">
+            <div class="detail-base-info detail-base-info-edited">
+              <div class="detail-title-content">
+                <img src="@/assets/img/certificate.png" />
+                <span>许可/认证证书</span>
+              </div>
+              <ul class="detail-info-ul">
+                <li>
+                  <span>许可/认证类别：</span>
+                  <span>{{ item.licenseCategory }}</span>
+                </li>
+                <li>
+                  <span>发证单位：</span>
+                  <span>{{ item.issuanceUnit }}</span>
+                </li>
+                <li>
+                  <span>证书编号：</span>
+                  <span>{{ item.quantity }}</span>
+                </li>
+                <li>
+                  <span>有效期限：</span>
+                  <span>{{ item.startTime | formatDate }} 至 {{ item.endTime | formatDate }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </van-collapse-item>
+      </van-collapse>
     </div>
 
     <!-- 流程信息待完善 -->
@@ -119,8 +192,7 @@
       <file-download-view :fileList="filterList(formData.files, 'htfbsmj') || []" />
     </div>
 
-    <div class="detail-base-info detail-base-info-edited"
-      :style="{ marginBottom: formData.railwaySpecial == '0' ? '65px' : '0' }">
+    <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
         <span>供应商质量终身承诺书</span>
@@ -128,7 +200,16 @@
       <file-download-view :fileList="filterList(formData.files, 'gyszlzscns') || []" />
     </div>
 
-    <div v-for="(item, index) in formData.contractLicense" :key="item.id" v-if="formData.railwaySpecial == '1'"
+    <div class="detail-base-info detail-base-info-edited"
+      :style="{ marginBottom: formData.railwaySpecial == '0' ? '65px' : '0' }">
+      <div class="detail-title-content">
+        <img src="@/assets/img/icon-picking-list.png">
+        <span>合同核备附件</span>
+      </div>
+      <file-download-view :fileList="filterList(formData.files, 'hthbfj') || []" />
+    </div>
+
+    <!-- <div v-for="(item, index) in formData.contractLicense" :key="item.id" v-if="formData.railwaySpecial == '1'"
       :style="{ marginBottom: index == formData.contractLicense.length - 1 ? '65px' : '0' }">
       <div class="detail-base-info detail-base-info-edited">
         <div class="detail-title-content">
@@ -170,30 +251,28 @@
         </div>
         <file-download-view :fileList="item.attachmentFile || []" />
       </div>
+    </div> -->
 
-
-      <div class="default-button-container default-button-container-box"
-        v-if="from === 'WaitExamineList' && formData.status == 2">
-        <div class="default-button-container-div">
-          <p @click="handleReject()"><img src="@/assets/img/Icon-detailInfo.png" alt=""><span>驳回</span></p>
-        </div>
-        <van-button class="button-info button-info-container" block type="info" round
-          @click="handleAdopt()">通过</van-button>
+    <div class="default-button-container default-button-container-box"
+      v-if="from === 'WaitExamineList' && formData.status == 2">
+      <div class="default-button-container-div">
+        <p @click="handleReject()"><img src="@/assets/img/Icon-detailInfo.png" alt=""><span>驳回</span></p>
       </div>
-
-      <!--选择审批人弹框-->
-      <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
-        <div class="assignee-popup">
-          <span>提示</span>
-          <van-cell :title="assigner" required is-link center @click="handleAssigneePopupClick()" />
-          <div class="default-button-container">
-            <van-button class="button-info" plain block type="info" round
-              @click="handleAssigneeCancel()">取消</van-button>
-            <van-button class="button-info" block type="info" round @click="handleAssigneeSubmit()">提交</van-button>
-          </div>
-        </div>
-      </van-popup>
+      <van-button class="button-info button-info-container" block type="info" round
+        @click="handleAdopt()">通过</van-button>
     </div>
+
+    <!--选择审批人弹框-->
+    <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
+      <div class="assignee-popup">
+        <span>提示</span>
+        <van-cell :title="assigner" required is-link center @click="handleAssigneePopupClick()" />
+        <div class="default-button-container">
+          <van-button class="button-info" plain block type="info" round @click="handleAssigneeCancel()">取消</van-button>
+          <van-button class="button-info" block type="info" round @click="handleAssigneeSubmit()">提交</van-button>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -248,6 +327,7 @@ export default {
 
   data() {
     return {
+      activeNames: [0],
       from: "",
       //是否显示选择审批人弹框
       assigneePopupShow: false,
@@ -293,9 +373,10 @@ export default {
     // 获取详情
     handleDetail() {
       materialPurchaseContractdetail(this.$route.query.id).then(({ data }) => {
-        data.contractLicense.forEach(item => {
-          item.attachmentFile = item.attachmentFile ? JSON.parse(item.attachmentFile) || [] : []
+        data.contractDetailsList.forEach((el, index) => {
+          this.activeNames.push(index);
         })
+
         this.formData = data
       })
     },
@@ -449,6 +530,21 @@ export default {
 /deep/.van-calendar__popup.van-popup--bottom,
 .van-calendar__popup.van-popup--top {
   height: 94% !important;
+}
+
+::v-deep .van-collapse-item__content {
+  padding: 0 !important;
+}
+
+::v-deep .van-cell__right-icon {
+  height: 0.8rem !important;
+  line-height: 0.8rem !important;
+}
+
+::v-deep .van-collapse-item .van-collapse-item__title {
+  padding-left: 0 !important;
+  padding-right: 10px !important;
+  align-items: center;
 }
 
 .file-download-title {
