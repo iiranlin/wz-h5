@@ -101,9 +101,9 @@
                 @click.stop="handleProcessClick(item)">查看流程</van-button>
 
               <!--  审核通过并且是铁路专用产品才能更新证书 -->
-              <van-button class="button-info" round type="info"
+              <!-- <van-button class="button-info" round type="info"
                 v-if="[3].includes(item.status) && item.railwaySpecial == 1"
-                @click.stop="handleUpdateFile(item)">证书更新</van-button>
+                @click.stop="handleUpdateFile(item)">证书更新</van-button> -->
             </div>
           </div>
         </van-list>
