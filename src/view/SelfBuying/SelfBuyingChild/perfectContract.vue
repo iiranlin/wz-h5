@@ -619,6 +619,8 @@ export default {
             files: JSON.stringify({ htfbsmj: this.sectionInfo.htfbsmj, gyszlzscns: this.sectionInfo.gyszlzscns }),
             startTime: time.getTime(),
             contractLicense: contractLicense,
+            sectionShortName: this.detailInfo.projectShortName,
+            projectName: this.detailInfo.projectName,
           }
 
           materialPurchaseContractcreate(params).then(res => {

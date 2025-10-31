@@ -515,6 +515,7 @@ export default {
             bidCandidateWeb: "\"\"",
             bidCopy: "\"\"",
             commitment: "\"\"",
+            sectionShortName: this.detailInfo.projectShortName
           }
 
           materialPurchaseFilecreate(params).then(res => {
