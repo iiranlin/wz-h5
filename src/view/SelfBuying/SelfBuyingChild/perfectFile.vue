@@ -49,16 +49,16 @@
             input-align="right" right-icon="arrow" @click-right-icon="showUnitPicker = true" />
         </li> -->
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.amount" name="amount" type="number" label="预估采购金额" placeholder="请输入预估采购金额"
+          <van-field v-model="sectionInfo.purchaseFileName" required name="purchaseFileName" label="物资名称"
+            placeholder="请输入物资名称" input-align="right" />
+        </li>
+        <li class="detail-list-li-input">
+          <van-field v-model="sectionInfo.amount" required name="amount" type="number" label="预估采购金额" placeholder="请输入预估采购金额"
             @input="handlerAmount" input-align="right">
             <template #button>
               <span style="color: #333;">万元</span>
             </template>
           </van-field>
-        </li>
-        <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.purchaseFileName" required name="purchaseFileName" label="物资名称"
-            placeholder="请输入物资名称" input-align="right" />
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.registrationDate" readonly clickable required name="registrationDate"
@@ -456,13 +456,13 @@ export default {
           });
           return
         }
-        // if (!this.sectionInfo.amount) {
-        //   this.$notify({
-        //     type: 'warning',
-        //     message: '请输入预算金额!',
-        //   });
-        //   return
-        // }
+        if (!this.sectionInfo.amount) {
+          this.$notify({
+            type: 'warning',
+            message: '请输入预估采购金额!',
+          });
+          return
+        }
         if (!this.sectionInfo.purchaseFileName) {
           this.$notify({
             type: 'warning',
