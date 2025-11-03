@@ -72,107 +72,107 @@
       </ul>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited">
-      <van-collapse v-model="activeNames">
-        <van-collapse-item v-for="(item, index) in sectionInfo.contractDetailsList" :key="index" :name="index">
-          <template #title>
-            <div class="detail-title-content">
-              <img src="@/assets/img/Icon_notarize.png" />
-              <span>物资明细{{ index + 1 }}</span>
-            </div>
-          </template>
-          <template #value>
-            <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
-              @click.stop="handleDelete">删除</span>
-          </template>
-          <ul class="detail-list-ul-edited">
-            <li class="detail-list-li-input">
-              <van-field v-model="item.materialName" required name="materialName" label="物资名称" placeholder="请输入物资名称"
-                input-align="right" />
-            </li>
-            <li class="detail-list-li-input">
-              <van-field v-model="item.specModel" required name="specModel" label="规格型号" placeholder="请输入规格型号"
-                input-align="right" />
-            </li>
-            <li class="detail-list-li-input">
-              <van-field v-model="item.unit" required name="unit" label="计量单位" placeholder="请输入或选择计量单位"
-                input-align="right" right-icon="arrow" @click-right-icon="handleUnit(index)" />
-            </li>
-            <li class="detail-list-li-input">
-              <van-field type="number" v-model="item.amount" required name="amount
-" label="数量" placeholder="请输入数量" input-align="right" />
-            </li>
-            <li class="detail-list-li-input">
-              <van-field v-model="item.price" required name="price" type="number" label="单价" placeholder="请输入单价金额"
-                input-align="right">
-                <template #button>
-                  <span style="color: #333;">万元</span>
-                </template>
-              </van-field>
-            </li>
-            <li class="detail-list-li-input">
-              <van-field type="number" v-model="item.vatRate" required name="vatRate
-" label="税率" placeholder="请输入税率" input-align="right">
-                <template #button>
-                  <span style="color: #333;">%</span>
-                </template>
-              </van-field>
-            </li>
-            <li class="detail-list-li-input">
-              <van-field type="number" v-model="item.totalAmount" required name="totalAmount
-" label="合价" placeholder="请输入合价" input-align="right">
-                <template #button>
-                  <span style="color: #333;">万元</span>
-                </template>
-              </van-field>
-            </li>
-            <li class="detail-list-li-input">
-              <van-field readonly required name="railwaySpecial" label="铁路专用产品" input-align="right">
-                <template #input>
-                  <van-radio-group @change="(name) => handleRailwaySpecial(name, index)" v-model="item.railwaySpecial"
-                    direction="horizontal" style="justify-content: end;">
-                    <van-radio name="1" shape="square" class="detail-radio">是</van-radio>
-                    <van-radio name="0" shape="square" class="detail-radio">否</van-radio>
-                  </van-radio-group>
-                </template>
-              </van-field>
-            </li>
-          </ul>
-
-          <div v-if="item.railwaySpecial != '0'" style="border-top: 1px solid #e5e5e5;">
-            <div class="detail-base-info detail-base-info-edited">
-              <div class="detail-title-content">
-                <img src="@/assets/img/certificate.png" />
-                <span>许可/认证证书</span>
-              </div>
-              <ul class="detail-list-ul-edited">
-                <li class="detail-list-li-input">
-                  <van-field v-model="item.licenseCategory" required name="licenseCategory" label="许可/认证类别"
-                    placeholder="请输入许可/认证类别" input-align="right" label-width="7.2em" />
-                </li>
-                <li class="detail-list-li-input">
-                  <van-field v-model="item.issuanceUnit" required name="issuanceUnit" label="发证单位" placeholder="请输入发证单位"
-                    input-align="right" />
-                </li>
-                <li class="detail-list-li-input">
-                  <van-field v-model="item.quantity" required name="quantity
-" label="证书编号" placeholder="请输入证书编号" input-align="right" />
-                </li>
-                <li class="detail-list-li-input">
-                  <van-field v-model="item.validPeriod" readonly clickable required name="validPeriod" label="有效期限"
-                    placeholder="请选择有效期限" @click="handlerShowCalendar('calendar1', 0, index)" right-icon="arrow"
-                    input-align="right" />
-                </li>
-              </ul>
-            </div>
+    <van-collapse v-model="activeNames">
+      <van-collapse-item class="detail-base-info detail-base-info-edited"
+        :style="index + 1 == sectionInfo.contractDetailsList.length ? { boxShadow: '0 -2px 5px rgba(32,30,74,.1)' } : ''"
+        v-for="(item, index) in sectionInfo.contractDetailsList" :key="index" :name="index">
+        <template #title>
+          <div class="detail-title-content">
+            <img src="@/assets/img/Icon_notarize.png" />
+            <span>物资明细{{ index + 1 }}</span>
           </div>
-        </van-collapse-item>
-      </van-collapse>
+        </template>
+        <template #value>
+          <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
+            @click.stop="handleDelete">删除</span>
+        </template>
+        <ul class="detail-list-ul-edited">
+          <li class="detail-list-li-input">
+            <van-field v-model="item.materialName" required name="materialName" label="物资名称" placeholder="请输入物资名称"
+              input-align="right" />
+          </li>
+          <li class="detail-list-li-input">
+            <van-field v-model="item.specModel" required name="specModel" label="规格型号" placeholder="请输入规格型号"
+              input-align="right" />
+          </li>
+          <li class="detail-list-li-input">
+            <van-field v-model="item.unit" required name="unit" label="计量单位" placeholder="请输入或选择计量单位"
+              input-align="right" right-icon="arrow" @click-right-icon="handleUnit(index)" />
+          </li>
+          <li class="detail-list-li-input">
+            <van-field type="number" v-model="item.amount" required name="amount
+" label="数量" placeholder="请输入数量" input-align="right" />
+          </li>
+          <li class="detail-list-li-input">
+            <van-field v-model="item.price" required name="price" type="number" label="单价" placeholder="请输入单价金额"
+              input-align="right">
+              <template #button>
+                <span style="color: #333;">万元</span>
+              </template>
+            </van-field>
+          </li>
+          <li class="detail-list-li-input">
+            <van-field type="number" v-model="item.vatRate" required name="vatRate
+" label="税率" placeholder="请输入税率" input-align="right">
+              <template #button>
+                <span style="color: #333;">%</span>
+              </template>
+            </van-field>
+          </li>
+          <li class="detail-list-li-input">
+            <van-field type="number" v-model="item.totalAmount" required name="totalAmount
+" label="合价" placeholder="请输入合价" input-align="right">
+              <template #button>
+                <span style="color: #333;">万元</span>
+              </template>
+            </van-field>
+          </li>
+          <li class="detail-list-li-input">
+            <van-field readonly required name="railwaySpecial" label="铁路专用产品" input-align="right">
+              <template #input>
+                <van-radio-group @change="(name) => handleRailwaySpecial(name, index)" v-model="item.railwaySpecial"
+                  direction="horizontal" style="justify-content: end;">
+                  <van-radio name="1" shape="square" class="detail-radio">是</van-radio>
+                  <van-radio name="0" shape="square" class="detail-radio">否</van-radio>
+                </van-radio-group>
+              </template>
+            </van-field>
+          </li>
+        </ul>
 
-      <div class="file-add">
-        <van-button @click="handerAdd" class="button-info" type="default" round block><span
-            style="color: #1989FA;">+添加物资明细</span></van-button>
-      </div>
+        <div v-if="item.railwaySpecial != '0'" style="border-top: 1px solid #e5e5e5;">
+          <div class="detail-base-info detail-base-info-edited">
+            <div class="detail-title-content">
+              <img src="@/assets/img/certificate.png" />
+              <span>许可/认证证书</span>
+            </div>
+            <ul class="detail-list-ul-edited">
+              <li class="detail-list-li-input">
+                <van-field v-model="item.licenseCategory" required name="licenseCategory" label="许可/认证类别"
+                  placeholder="请输入许可/认证类别" input-align="right" label-width="7.2em" />
+              </li>
+              <li class="detail-list-li-input">
+                <van-field v-model="item.issuanceUnit" required name="issuanceUnit" label="发证单位" placeholder="请输入发证单位"
+                  input-align="right" />
+              </li>
+              <li class="detail-list-li-input">
+                <van-field v-model="item.quantity" required name="quantity
+" label="证书编号" placeholder="请输入证书编号" input-align="right" />
+              </li>
+              <li class="detail-list-li-input">
+                <van-field v-model="item.validPeriod" readonly clickable required name="validPeriod" label="有效期限"
+                  placeholder="请选择有效期限" @click="handlerShowCalendar('calendar1', 0, index)" right-icon="arrow"
+                  input-align="right" />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </van-collapse-item>
+    </van-collapse>
+
+    <div class="file-add">
+      <van-button @click="handerAdd" class="button-info" type="default" round block><span
+          style="color: #1989FA;">+添加物资明细</span></van-button>
     </div>
 
     <div class="detail-base-info detail-base-info-edited">
@@ -346,7 +346,7 @@ export default {
 
         data.contractDetailsList.forEach((el, index) => {
           if (el.railwaySpecial == '1') {
-            el.validPeriod = this.formatTimestamp(el.startTime) + ' 至 ' + this.formatTimestamp(el.endTime);
+            el.validPeriod = el.startTime && el.endTime ? this.formatTimestamp(el.startTime) + ' 至 ' + this.formatTimestamp(el.endTime) : '';
           }
 
           this.activeNames.push(index);
@@ -849,8 +849,14 @@ export default {
 
 .file-add {
   text-align: center;
-  margin: 10px 45px 0px 45px;
-  padding-bottom: 10px;
+  padding: 10px 40px 10px 40px;
+  width: auto;
+  box-sizing: border-box;
+  margin-left: 6px;
+  margin-right: 6px;
+  background: #ffffff;
+  border-radius: 7px;
+  box-shadow: 0px 2px 5px rgba(32, 30, 74, 0.1);
 
   ::v-deep .van-uploader {
     width: 100%;

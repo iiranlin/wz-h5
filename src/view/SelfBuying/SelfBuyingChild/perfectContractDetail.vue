@@ -54,10 +54,6 @@
           <span>类别：</span>
           <span>{{ formData.purchaseName }}</span>
         </li>
-        <!-- <li>
-          <span>物资细目：</span>
-          <span>{{ formData.purchaseDetailName }}</span>
-        </li> -->
         <li>
           <span>签订日期：</span>
           <span>{{ formData.startTime | formatDate }}</span>
@@ -66,89 +62,84 @@
           <span>物资种类：</span>
           <span>{{ formData.purchaseTypeName }}</span>
         </li>
-        <!-- <li>
-          <span>铁路专用产品：</span>
-          <span>{{ formData.railwaySpecial == '1' ? '是' : '否' }}</span>
-        </li> -->
         <li>
           <span>合同金额(万元)：</span>
           <span>{{ formData.amount }}</span>
         </li>
       </ul>
     </div>
-    <div class="detail-base-info detail-base-info-edited">
-      <van-collapse v-model="activeNames">
-        <van-collapse-item v-for="(item, index) in formData.contractDetailsList" :key="index" :name="index">
-          <template #title>
-            <div class="detail-title-content">
-              <img src="@/assets/img/Icon_notarize.png" />
-              <span>物资明细{{ index + 1 }}</span>
-            </div>
-          </template>
-          <ul class="detail-info-ul">
-            <li>
-              <span>物资名称：</span>
-              <span>{{ item.materialName }}</span>
-            </li>
-            <li>
-              <span>规格型号：</span>
-              <span>{{ item.specModel }}</span>
-            </li>
-            <li>
-              <span>计量单位：</span>
-              <span>{{ item.unit }}</span>
-            </li>
-            <li>
-              <span>数量：</span>
-              <span>{{ item.amount }}</span>
-            </li>
-            <li>
-              <span>单价：</span>
-              <span>{{ item.price }} 万元</span>
-            </li>
-            <li>
-              <span>税率：</span>
-              <span>{{ item.vatRate }} %</span>
-            </li>
-            <li>
-              <span>合价：</span>
-              <span>{{ item.totalAmount }}</span>
-            </li>
-            <li>
-              <span>铁路专用产品：</span>
-              <span>{{ item.railwaySpecial == '1' ? '是' : '否' }}</span>
-            </li>
-          </ul>
-
-          <div v-if="item.railwaySpecial != '0'" style="border-top: 1px solid #e5e5e5;">
-            <div class="detail-base-info detail-base-info-edited">
-              <div class="detail-title-content">
-                <img src="@/assets/img/certificate.png" />
-                <span>许可/认证证书</span>
-              </div>
-              <ul class="detail-info-ul">
-                <li>
-                  <span>许可/认证类别：</span>
-                  <span>{{ item.licenseCategory }}</span>
-                </li>
-                <li>
-                  <span>发证单位：</span>
-                  <span>{{ item.issuanceUnit }}</span>
-                </li>
-                <li>
-                  <span>证书编号：</span>
-                  <span>{{ item.quantity }}</span>
-                </li>
-                <li>
-                  <span>有效期限：</span>
-                  <span>{{ item.startTime | formatDate }} 至 {{ item.endTime | formatDate }}</span>
-                </li>
-              </ul>
-            </div>
+    <van-collapse v-model="activeNames">
+      <van-collapse-item class="detail-base-info detail-base-info-edited"
+        v-for="(item, index) in formData.contractDetailsList" :key="index" :name="index">
+        <template #title>
+          <div class="detail-title-content">
+            <img src="@/assets/img/Icon_notarize.png" />
+            <span>物资明细{{ index + 1 }}</span>
           </div>
-        </van-collapse-item>
-      </van-collapse>
-    </div>
+        </template>
+        <ul class="detail-info-ul">
+          <li>
+            <span>物资名称：</span>
+            <span>{{ item.materialName }}</span>
+          </li>
+          <li>
+            <span>规格型号：</span>
+            <span>{{ item.specModel }}</span>
+          </li>
+          <li>
+            <span>计量单位：</span>
+            <span>{{ item.unit }}</span>
+          </li>
+          <li>
+            <span>数量：</span>
+            <span>{{ item.amount }}</span>
+          </li>
+          <li>
+            <span>单价：</span>
+            <span>{{ item.price }} 万元</span>
+          </li>
+          <li>
+            <span>税率：</span>
+            <span>{{ item.vatRate }} %</span>
+          </li>
+          <li>
+            <span>合价：</span>
+            <span>{{ item.totalAmount }} 万元</span>
+          </li>
+          <li>
+            <span>铁路专用产品：</span>
+            <span>{{ item.railwaySpecial == '1' ? '是' : '否' }}</span>
+          </li>
+        </ul>
+
+        <div v-if="item.railwaySpecial != '0'" style="border-top: 1px solid #e5e5e5;">
+          <div class="detail-base-info detail-base-info-edited">
+            <div class="detail-title-content">
+              <img src="@/assets/img/certificate.png" />
+              <span>许可/认证证书</span>
+            </div>
+            <ul class="detail-info-ul">
+              <li>
+                <span>许可/认证类别：</span>
+                <span>{{ item.licenseCategory }}</span>
+              </li>
+              <li>
+                <span>发证单位：</span>
+                <span>{{ item.issuanceUnit }}</span>
+              </li>
+              <li>
+                <span>证书编号：</span>
+                <span>{{ item.quantity }}</span>
+              </li>
+              <li>
+                <span>有效期限：</span>
+                <span>{{ item.startTime | formatDate }} 至 {{ item.endTime | formatDate }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </van-collapse-item>
+    </van-collapse>
 
     <!-- 流程信息待完善 -->
     <div class="detail-base-info detail-base-info-edited" v-if="recordList.length">
@@ -208,50 +199,6 @@
       </div>
       <file-download-view :fileList="filterList(formData.files, 'hthbfj') || []" />
     </div>
-
-    <!-- <div v-for="(item, index) in formData.contractLicense" :key="item.id" v-if="formData.railwaySpecial == '1'"
-      :style="{ marginBottom: index == formData.contractLicense.length - 1 ? '65px' : '0' }">
-      <div class="detail-base-info detail-base-info-edited">
-        <div class="detail-title-content">
-          <img src="@/assets/img/certificate.png" />
-          <span>许可/认证证书</span>
-        </div>
-        <ul class="detail-info-ul">
-          <li>
-            <span>创建时间：</span>
-            <span>{{ item.createDate | formatToDate }}</span>
-          </li>
-          <li>
-            <span>创建人：</span>
-            <span>{{ item.createUserName }}</span>
-          </li>
-          <li>
-            <span>许可/认证类别：</span>
-            <span>{{ item.licenseCategory }}</span>
-          </li>
-          <li>
-            <span>发证单位：</span>
-            <span>{{ item.unit }}</span>
-          </li>
-          <li>
-            <span>证书编号：</span>
-            <span>{{ item.quantity }}</span>
-          </li>
-          <li>
-            <span>有效期限：</span>
-            <span>{{ item.startTime | formatDate }} 至 {{ item.endTime | formatDate }}</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="detail-base-info detail-base-info-edited">
-        <div class="detail-title-content">
-          <img src="@/assets/img/icon-picking-list.png">
-          <span>合同核备附件</span>
-        </div>
-        <file-download-view :fileList="item.attachmentFile || []" />
-      </div>
-    </div> -->
 
     <div class="default-button-container default-button-container-box"
       v-if="from === 'WaitExamineList' && formData.status == 2">
