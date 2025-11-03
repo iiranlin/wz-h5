@@ -43,10 +43,10 @@
                 <span>标段项目：</span>
                 <span>{{ item.projefctName }}</span>
               </li>
-              <li>
+              <!-- <li>
                 <span>证书有效期：</span>
                 <span>{{ item.licenseTime }}</span>
-              </li>
+              </li> -->
               <li>
                 <span>供应商：</span>
                 <span>{{ item.supplierName }}</span>
@@ -64,7 +64,7 @@
                 <span>{{ item.railwaySpecial == '1' ? '是' : '否' }}</span>
               </li> -->
               <li>
-                <span>合同金额：</span>
+                <span>合同金额(万元)：</span>
                 <span>{{ item.amount }}</span>
               </li>
               <li>
