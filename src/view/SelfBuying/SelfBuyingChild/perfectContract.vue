@@ -84,7 +84,7 @@
         </template>
         <template #value>
           <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
-            @click.stop="handleDelete">删除</span>
+            @click.stop="handleDelete(index)">删除</span>
         </template>
         <ul class="detail-list-ul-edited">
           <li class="detail-list-li-input">
