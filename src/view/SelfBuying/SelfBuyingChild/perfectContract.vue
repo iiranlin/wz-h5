@@ -27,7 +27,7 @@
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field readonly v-model="sectionInfo.amount" required name="amount" type="number" label="合同金额"
+          <van-field readonly v-model="sectionInfo.amount" name="amount" type="number" label="合同金额"
             placeholder="请输入合同金额" input-align="right" @input="handlerAmount">
             <template #button>
               <span style="color: #333;">万元</span>
@@ -671,13 +671,13 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.amount) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入合同金额!',
-          });
-          return
-        }
+        // if (!this.sectionInfo.amount) {
+        //   this.$notify({
+        //     type: 'warning',
+        //     message: '请输入合同金额!',
+        //   });
+        //   return
+        // }
         if (!this.sectionInfo.contractNumber) {
           this.$notify({
             type: 'warning',
