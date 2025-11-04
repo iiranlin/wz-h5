@@ -188,6 +188,9 @@ export default {
         },
         //列表条目点击
         handleItemClick(item){
+            this.$store.dispatch('public/setGoodsReceiptInfo', {});
+            this.$store.dispatch('public/setSelectGoodData', []);
+
             const { businessType, businessId } = item
             if(Object.keys(FLOW_ROUTE).includes(businessType)){
                 let name = FLOW_ROUTE[businessType]

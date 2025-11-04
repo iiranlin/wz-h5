@@ -336,12 +336,6 @@ export default {
     this.isLable =this.$route.query.isLable==(true||'true')
     this.getBatch(this.id)
     this.getDetailList();
-     // 每次进入页面清空自检单和其他资料
-     if(this.takeStatus != 5){
-      this.fileZjdList = []
-      this.fileQtzlList = []
-      this.fileJhdList = []
-     }
 
   },
   computed: {
@@ -585,8 +579,10 @@ export default {
 
     editedClick(item, index) {
       this.$store.dispatch('public/setMateriaData', { ...item, sellerName: this.dataList?.sellerName || "" })
+      
+      const fileByList = this.dataList.fileByList ? JSON.parse(this.dataList.fileByList) : {};
 
-      this.$store.dispatch('public/setGoodsReceiptInfo', this.dataList)
+      this.$store.dispatch('public/setGoodsReceiptInfo', { ...this.dataList, fileByList: JSON.stringify({ ...fileByList, zjd: this.fileZjdList, qtzl: this.fileQtzlList, jhd: this.fileJhdList }) })
 
       this.$router.push({ name: 'EditedMaterialDoAccept', query: {from: this.from, id: this.id, tabs: this.tabs, isLable: this.isLable, isView: this.isView, takeStatus: this.takeStatus}  })
     },
@@ -617,7 +613,7 @@ export default {
       const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : defaultTake;
        getDetailApi(this.id).then((res)=>{
           if(res.success){
-            const GoodsReceiptInfo = this.$store.state.public.goodsReceiptInfo || {};
+            const GoodsReceiptInfo = this.$store.state.public.GoodsReceiptInfo || {};
 
             if (Object.keys(GoodsReceiptInfo).length > 0) {
               this.dataList = Object.assign({}, this.dataList, GoodsReceiptInfo);
@@ -842,12 +838,6 @@ export default {
     this.isLable =this.$route.query.isLable==(true||'true')
     this.getBatch(this.id)
     this.getDetailList()
-    // 每次进入页面清空自检单和其他资料
-    if(this.takeStatus != 5){
-      this.fileZjdList = []
-      this.fileQtzlList = []
-      this.fileJhdList = []
-     }
   }
 }
 </script>

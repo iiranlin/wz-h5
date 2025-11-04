@@ -174,6 +174,9 @@ export default {
             } else if(item.businessType == 'CGHT') {
                 this.$router.push({ name: 'perfectContractDetail', query: { id: item.businessId, } });
             }else if(item.businessType == 'SHLC'){
+                this.$store.dispatch('public/setGoodsReceiptInfo', {});
+                this.$store.dispatch('public/setSelectGoodData', []);
+                
                 this.$router.push({
                     name: "DoAccept",
                     query: {
@@ -209,6 +212,9 @@ export default {
             } else if (item.businessType == 'CGHT') {
                 this.$router.push({ name: 'perfectContract', query: { id: item.businessId, type: 'update' } });
             }else if(item.businessType == 'SHLC'){
+                this.$store.dispatch('public/setGoodsReceiptInfo', {});
+                this.$store.dispatch('public/setSelectGoodData', []);
+
                 this.$router.push({
                     name: "DoAccept",
                     query: {

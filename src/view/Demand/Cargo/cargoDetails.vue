@@ -482,6 +482,9 @@ export default {
       // this.$router.push({path:'/sendGoods'})
     },
     handleDoAccept(item) {
+      this.$store.dispatch('public/setGoodsReceiptInfo', {});
+      this.$store.dispatch('public/setSelectGoodData', []);
+
       this.$router.push({name: 'DoAccept', query: {id: this.id, tabs: true, takeStatus: item.takeStatus}})
     },
     checkAuditStatus(status) {
