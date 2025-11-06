@@ -182,7 +182,7 @@
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.htfbsmj?.length"><span
           class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.htfbsmj
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.htfbsmj
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
@@ -193,7 +193,7 @@
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.gyszlzscns?.length"><span
           class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.gyszlzscns
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.gyszlzscns
         || []" businessType="02" class="outbound-field-uploader" />
     </div>
     <div class="detail-base-info detail-base-info-edited" style="margin-bottom: 65px;">

@@ -114,7 +114,7 @@
 
                             </ul>
                             <div style="padding: 0 20px;">
-                                 <file-upload-view accept=".jpg,.png,.jpeg,.pdf" style="padding-right: 0.5rem;margin-left: 0px;"  title="发货单附件" :fileList="fileList" businessType="01"/>
+                                 <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" style="padding-right: 0.5rem;margin-left: 0px;"  title="发货单附件" :fileList="fileList" businessType="01"/>
                             </div>
                             <div style="padding: 0 20px;">
                                  <file-upload-view  style="padding-right: 0.5rem;margin-left: 0px;"  title="装车照片" :fileList="zczp" businessType="01" :required="false" accept=".jpg,.png,.jpeg,.pdf" :maxCount="100"  />
@@ -201,7 +201,7 @@
                                 <span>合格证附件</span>
                               </div>
                               <div style="padding: 0 20px 0 0;">
-                                 <file-upload-view accept=".jpg,.png,.jpeg,.pdf" style="padding-right: 0.5rem;margin-left: 20px;" :fileList.sync="item.fileByList.hgz" businessType="01"/>
+                                 <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" style="padding-right: 0.5rem;margin-left: 20px;" :fileList.sync="item.fileByList.hgz" businessType="01"/>
                               </div>
                              
                                 

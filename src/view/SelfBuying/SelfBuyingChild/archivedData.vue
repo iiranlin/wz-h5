@@ -88,7 +88,7 @@
         <span>招标公告网页版</span>
       </div>
       <p class="box-container-p" v-if="!formData.tenderAnnouncement?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.tenderAnnouncement" businessType="01" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.tenderAnnouncement" businessType="01" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -97,7 +97,7 @@
         <span>招标文件答疑、补遗</span>
       </div>
       <p class="box-container-p" v-if="!formData.bidAddendum?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidAddendum" businessType="02" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidAddendum" businessType="02" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -106,7 +106,7 @@
         <span>评标报告</span>
       </div>
       <p class="box-container-p" v-if="!formData.bidEvaluationReport?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidEvaluationReport" businessType="03" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidEvaluationReport" businessType="03" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -115,7 +115,7 @@
         <span>中标候选人公示网页版</span>
       </div>
       <p class="box-container-p" v-if="!formData.bidCandidateWeb?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidCandidateWeb" businessType="04" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidCandidateWeb" businessType="04" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -124,7 +124,7 @@
         <span>中标通知书</span>
       </div>
       <p class="box-container-p" v-if="!formData.acceptance?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.acceptance" businessType="05" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.acceptance" businessType="05" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -133,7 +133,7 @@
         <span>中标人的投标文件副本</span>
       </div>
       <p class="box-container-p" v-if="!formData.bidCopy?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.bidCopy" businessType="06" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="formData.bidCopy" businessType="06" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -142,7 +142,7 @@
         <span>合同副本</span>
       </div>
       <p class="box-container-p" v-if="!formData.contractCopy?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.contractCopy" businessType="07" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.contractCopy" businessType="07" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
@@ -151,7 +151,7 @@
         <span>供应商质量终身承诺书</span>
       </div>
       <p class="box-container-p" v-if="!formData.commitment?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.commitment" businessType="08" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.commitment" businessType="08" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 65px;">

@@ -82,7 +82,7 @@
         <span>退货附件</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo.values?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.values || []" businessType="01" class="outbound-field-uploader" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.values || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;" v-if="isView && filterList(sectionInfo.fileByList, 'thfj_sh')?.length > 0">
