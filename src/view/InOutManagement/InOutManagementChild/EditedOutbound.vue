@@ -35,6 +35,14 @@
       </div>
       <div class="detail-title-content-field">
             <ul class="detail-list-ul-edited detail-list-ul">
+                 <template>
+                <van-field label="出库数量" class="detail-base-info-edited-input" placeholder="请输入数量" required clearable
+                  input-align="right">
+                  <template #input>
+                    <van-stepper  v-model="item.outTotal" :min="0" :max="item.remainingStock" :disabled="item.remainingStock == 0" />
+                  </template>
+                </van-field>
+              </template>
               <li class="li-item-overlength">
                 <span>当前库存数量：</span>
                 <span>{{item.remainingStock}}</span>
@@ -51,14 +59,7 @@
                 <span>有效期截至日期：</span>
                 <span>{{item.expirationDate && parseTime(item.expirationDate,'{y}-{m}-{d}')}}</span>
               </li>
-              <template>
-                <van-field label="出库数量" class="detail-base-info-edited-input" placeholder="请输入数量" required clearable
-                  input-align="right">
-                  <template #input>
-                    <van-stepper v-model="item.outTotal" :min="0" :max="item.remainingStock" />
-                  </template>
-                </van-field>
-              </template>
+           
               <div class="detail-title-content-field">
                 <van-field class="detail-base-info-edited-textarea" v-model="item.remark" rows="2" autosize
                   type="textarea" placeholder="请输入备注信息" />
