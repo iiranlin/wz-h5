@@ -224,6 +224,7 @@
 </template>
 
 <script>
+import keepPages from '@/view/mixins/keepPages'
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import { mergeByActId } from '@/utils/index.js'
 import { wfHistoryList } from '@/api/myToDoList'
@@ -237,7 +238,7 @@ import { materialPurchaseContractdetail } from '@/api/prodmgr-inv/SelfBuying'
 export default {
   name: 'perfectContractDetail',
 
-  mixins: [indexMixin],
+  mixins: [indexMixin, keepPages],
 
   components: {
     FileDownloadView
@@ -274,6 +275,7 @@ export default {
 
   data() {
     return {
+      rQueryId: '',
       activeNames: [0],
       from: "",
       //是否显示选择审批人弹框
@@ -296,13 +298,14 @@ export default {
     };
   },
 
-  mounted() {
-    this.handleDetail();
-    this.wfHistoryList();
-
-    const { businessType, businessId, businessCode, taskId, procInstId, from } = this.$route.query
+  mounted() {    
+    const { businessType, businessId, businessCode, taskId, procInstId, from, id } = this.$route.query
+    this.rQueryId = id
     this.from = from
     this.listObj = { businessType, businessId, businessCode, taskId, procInstId }
+
+    this.handleDetail();
+    this.wfHistoryList();
     //审核意见回调
     eventBus.$off('examineOpinionEdit');
     eventBus.$on('examineOpinionEdit', function (opinion, type) {
@@ -316,10 +319,20 @@ export default {
     }.bind(this));
   },
 
+  activated() {
+    const { businessType, businessId, businessCode, taskId, procInstId, from, id } = this.$route.query
+    this.rQueryId = id
+    this.from = from
+    this.listObj = { businessType, businessId, businessCode, taskId, procInstId }
+
+    this.handleDetail();
+    this.wfHistoryList();
+  },
+
   methods: {
     // 获取详情
     handleDetail() {
-      materialPurchaseContractdetail(this.$route.query.id).then(({ data }) => {
+      materialPurchaseContractdetail(this.rQueryId).then(({ data }) => {
         data.contractDetailsList.forEach((el, index) => {
           this.activeNames.push(index);
         })
@@ -329,7 +342,7 @@ export default {
     },
     // 流程信息
     wfHistoryList() {
-      wfHistoryList(this.$route.query.id).then(({ data }) => {
+      wfHistoryList(this.rQueryId).then(({ data }) => {
         if (data.recordList.length) {
           this.recordList = mergeByActId(data.recordList || []);
           this.historyData = mergeByActId(data.recordList)[0]
