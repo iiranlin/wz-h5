@@ -112,7 +112,7 @@
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.registration?.length"><span
           class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.registration
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.registration
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 
@@ -123,7 +123,7 @@
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.bidDocument?.length"><span
           class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.bidDocument
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.bidDocument
         || []" businessType="01" class="outbound-field-uploader" />
     </div>
 

@@ -68,7 +68,7 @@
             </van-form>
           </div>
           <div style="padding-right: 0.5rem;padding-bottom:1.25rem;">
-            <file-upload-view accept=".jpg,.png,.jpeg,.pdf" title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01" />
+            <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" title="合格证附件" :fileList="goodsData[index].fileList01" businessType="01" />
             <file-upload-view accept=".jpg,.png,.jpeg,.pdf" title="厂检报告附件" :fileList="goodsData[index].fileList02" businessType="01" :maxCount="99"/>
           </div>
         </div>

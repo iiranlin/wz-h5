@@ -129,7 +129,7 @@
       </div>
       <p class="box-container-p" v-if="!fileList.length"><span
           class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01"
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01"
         class="outbound-field-uploader" />
     </div>
 
