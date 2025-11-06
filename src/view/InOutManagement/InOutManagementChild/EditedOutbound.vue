@@ -31,7 +31,7 @@
     <div class="detail-base-info detail-base-info-edited" v-for="(item,index) in sectionInfo.childList" :key="index">
       <div class="detail-title-content">
           <img src="@/assets/img/Icon-notes.png" />
-          <span>入库批次</span>
+          <span>入库批次{{ index + 1 }}</span>
       </div>
       <div class="detail-title-content-field">
             <ul class="detail-list-ul-edited detail-list-ul">
