@@ -49,8 +49,9 @@
               退出登录
             </div>
 
-
-
+            <div class="login-out"><van-image width="26" height="26" :src="Messages" />接收短信 
+                  <van-switch class="switchStyle" v-model="switchChecked" size="20" @change="smsStatusChange" />          
+            </div>
           </div>
 
         </div>
@@ -68,6 +69,8 @@ import { getUserInfo } from '@/utils/user-info'
 import LoginOutIcon from '@/assets/img/退出登录.png';
 import EditPasswordIcon from '@/assets/img/修改密码.png';
 import SwitchProjectsIcon from '@/assets/img/SwitchProjectsIcon.png';
+import Messages from '@/assets/img/Messages.png';
+import { updateSmsStatus } from '../api/homePage.js'
 
 import selectProject from './selectProject.vue';
 export default {
@@ -95,14 +98,16 @@ export default {
       videoUrl,
       userInfo: getUserInfo(),
       show: false,
+      switchChecked: true,
       LoginOutIcon,
       EditPasswordIcon,
-      SwitchProjectsIcon
+      SwitchProjectsIcon,
+      Messages
     };
   },
 
   mounted() {
-
+    this.switchChecked = this.userInfo.smsStatus == 1 ? true : false;
   },
 
   methods: {
@@ -126,7 +131,18 @@ export default {
     handlerProjects() {
       this.$refs.selectProjectVideo.dialogShow = true;
       this.$store.commit('SET_SELECT_PROJECT_DIALOG', true);
-    }, 
+    },
+    smsStatusChange(value) {
+      const valueInt = value == true ? 1 : 0;
+
+      updateSmsStatus({ id: this.userInfo.id, smsStatus: valueInt }).then(async res => {
+        if (res.code === 0) {
+          this.$toast.success('修改成功')
+          // 获取用户信息
+          await this.$store.dispatch("GetInfo");
+        }
+      })
+    }
   },
 };
 </script>
@@ -137,6 +153,10 @@ export default {
   height: 46vh;
   object-fit: fill;
   display: block;
+}
+
+.switchStyle {
+  margin-left: 5px;
 }
 
 .userInfo {
