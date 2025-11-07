@@ -41,7 +41,7 @@
               </li>
               <li>
                 <span>标段项目：</span>
-                <span>{{ item.projefctName }}</span>
+                <span>{{ item.sectionShortName }}</span>
               </li>
               <!-- <li>
                 <span>证书有效期：</span>

@@ -40,7 +40,7 @@
               </li>
               <li>
                 <span>标段项目：</span>
-                <span>{{ item.projefctName }}</span>
+                <span>{{ item.sectionShortName }}</span>
               </li>
               <li>
                 <span>类别：</span>

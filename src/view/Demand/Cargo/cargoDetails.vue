@@ -31,7 +31,7 @@
         </li>
         <li>
           <span class="detail-label">标段项目：</span>
-          <span class="detail-value">{{ params.sectionName }}</span>
+          <span class="detail-value">{{ params.sectionShortName }}</span>
         </li>
 
       </ul>

@@ -49,7 +49,7 @@
                    </li>
                    <li>
                      <span>标段项目: </span>
-                     <span>{{ item.sectionName }}</span>
+                     <span>{{ item.sectionShortName }}</span>
                    </li>
 
                                         <!-- <li>

@@ -47,7 +47,7 @@
                             </li>
                             <li>
                                 <span>标段项目：</span>
-                                <span>{{item.sectionName}}</span>
+                                <span>{{item.sectionShortName}}</span>
                             </li>
                             <li>
                                 <span>合同名称：</span>

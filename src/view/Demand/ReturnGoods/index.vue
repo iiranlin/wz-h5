@@ -19,7 +19,7 @@
         <ul class="detail-ul">
          <li>
                         <span>需求项目：</span>
-                        <span>{{ params.sectionName }}</span>
+                        <span>{{ params.sectionShortName }}</span>
                     </li>
                     <li>
                         <span>需求组织：</span>

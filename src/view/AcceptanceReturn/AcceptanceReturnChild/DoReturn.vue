@@ -19,7 +19,7 @@
           </li>
           <li>
             <span>标段项目：</span>
-            <span>{{dataList.sectionName}}</span>
+            <span>{{dataList.sectionShortName}}</span>
           </li>
           <li>
             <span>需求组织：</span>

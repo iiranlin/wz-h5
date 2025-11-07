@@ -58,7 +58,7 @@
                                 </li>
                                 <li>
                                     <span>标段项目：</span>
-                                    <span class="text">{{ params.sectionName }}</span>
+                                    <span class="text">{{ params.sectionShortName }}</span>
                                 </li>
                                 <li>
                                     <span>发货单号:</span>

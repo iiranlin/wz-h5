@@ -14,7 +14,7 @@
           </li>
           <li>
             <span>标段项目：</span>
-            <span>{{ $route.query.projefctName }}</span>
+            <span>{{ $route.query.sectionShortName }}</span>
           </li>
           <li>
             <span>买方单位：</span>

@@ -17,7 +17,7 @@
         </li> 
         <li>
           <span>标段项目：</span>
-          <span>{{ detailGyMx.sectionName }}</span>
+          <span>{{ detailGyMx.sectionShortName }}</span>
         </li>
         <li>
           <span>需求组织：</span>

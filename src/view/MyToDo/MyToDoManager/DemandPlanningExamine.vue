@@ -9,7 +9,7 @@
                 <ul class="detail-ul">
                     <li>
                         <span>标段名称:</span>
-                        <span>{{detailInfo.sectionName}}</span>
+                        <span>{{detailInfo.sectionShortName}}</span>
                     </li>
                     <li>
                         <span>需求组织：</span>

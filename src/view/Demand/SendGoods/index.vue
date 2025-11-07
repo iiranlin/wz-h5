@@ -13,7 +13,7 @@
           </li>
           <li>
             <span>标段项目：</span>
-            <span>{{ goodsMsg.sectionName }}</span>
+            <span>{{ goodsMsg.sectionShortName }}</span>
           </li>
           <li>
             <span>合同名称：</span>

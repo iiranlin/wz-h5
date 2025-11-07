@@ -10,7 +10,7 @@
         <ul class="detail-ul">
           <li>
             <span>标段项目：</span>
-            <span>{{ formData.projefctName }}</span>
+            <span>{{ formData.sectionShortName }}</span>
           </li>
           <li>
             <span>采购单位：</span>

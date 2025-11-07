@@ -4,7 +4,7 @@
     <div class="detail-base-info">
       <div class="detail-title-text">
         <p>标段项目：</p>
-        <p>{{ detailInfo.sectionName }}</p>
+        <p>{{ detailInfo.sectionShortName }}</p>
       </div>
       <div class="detail-ul-text">
         <ul class="detail-ul">

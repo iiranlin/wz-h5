@@ -9,7 +9,7 @@
         <ul class="detail-ul">
           <li>
             <span>标段项目：</span>
-            <span>{{ detail.projefctName }}</span>
+            <span>{{ detail.sectionShortName }}</span>
           </li>
           <li>
             <span>采购单位：</span>
@@ -27,7 +27,7 @@
         <ul class="detail-ul">
           <li>
             <span>标段项目：</span>
-            <span>{{ detail.projefctName }}</span>
+            <span>{{ detail.sectionShortName }}</span>
           </li>
           <li>
             <span>采购单位：</span>
@@ -49,7 +49,7 @@
           </li> 
           <li>
             <span>标段项目：</span>
-            <span>{{ detail.sectionName }}</span>
+            <span>{{ detail.sectionShortName }}</span>
           </li>
           <li>
             <span>需求组织：</span>

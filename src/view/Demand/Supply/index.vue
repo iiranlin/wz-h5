@@ -23,7 +23,7 @@
           </li> 
           <li>
             <span>标段项目：</span>
-            <span>{{ result.sectionName }}</span>
+            <span>{{ result.sectionShortName }}</span>
           </li>
           <li>
             <span>需求组织：</span>
