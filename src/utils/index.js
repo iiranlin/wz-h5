@@ -273,10 +273,13 @@ export async function compressImage (file) {
    let quality = 1; // 默认不压缩
 
   // 分段压缩策略
-  if (fileSizeMB >= 10) {
-    quality = 0.15; // 大于等于10MB，压缩到15%
+  if(fileSizeMB >= 20) {
+    quality = 0.25; // 大于等于20MB，压缩到25%
+  }
+    else if (fileSizeMB >= 10) {
+    quality = 0.4; // 大于等于10MB，压缩到40%
   } else if (fileSizeMB >= 5) {
-    quality = 0.3; // 5MB~10MB，压缩到30%
+    quality = 0.7; // 5MB~10MB，压缩到70%
   } else {
     // 小于5MB不压缩
     return file;
