@@ -95,7 +95,7 @@ export default {
     detailApi(){
       // 收货流程 
       if(this.businessType === "SHLC"){
-        return this.form == "AcceptanceReturn" || this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : detailTake;
+        return this.form == "AcceptanceReturn" || this.takeStatus == 5 || this.takeStatus == void 0 || this.takeStatus == 0 ? detailTakeBack : detailTake;
       }
       if(this.businessType === "RKLC"){
         console.log(this.form,this.storeStatus,'-----------------');
