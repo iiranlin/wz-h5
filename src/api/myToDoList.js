@@ -34,6 +34,14 @@ export function wfNextAssignee(taskId) {
     })
 }
 
+//获取下一级审批人并且是多选人员
+export function wfNextAssigneeMore(taskId) {
+    return request({
+        url: `${VUE_APP_PRODMGR_WORKFLOW}/wf/nextAssignee/V1/${taskId}`,
+        method: 'GET',
+    })
+}
+
 //需求计划审批详情
 export function materialDemandPlanRestDetail(businessId) {
     return request({

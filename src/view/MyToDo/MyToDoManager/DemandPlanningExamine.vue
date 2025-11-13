@@ -234,7 +234,7 @@
 import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import eventBus from '@/utils/eventBus.js'
-import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,auditEditApprove,wfHistoryList } from '@/api/myToDoList'
+import { materialDemandPlanRestDetail,auditReject,wfNextAssigneeMore,auditApprove,auditEditApprove,wfHistoryList } from '@/api/myToDoList'
 import { materialDemandPlanRestDetailGyMx } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import MaterialDetails from '@/view/PlannedManagement/PlannedManagementChild/components/MaterialDetails'
@@ -248,6 +248,7 @@ export default {
 
     data () {
         return {
+            multiple: false,
             menuActiveIndex: 0,
             //审核状态
             type: '',   //0 未审核 1 已审核
@@ -411,11 +412,14 @@ export default {
                 message: "正在加载...",
                 forbidClick: true
             });
-            wfNextAssignee(this.listObj.taskId).then(({ data }) => {
-                if(data && data.length > 0){
-                    this.assigneeList = data;
-                    this.assigneePopupShow = true;
-                }else{
+            wfNextAssigneeMore(this.listObj.taskId).then(({ data }) => {
+                if(data.data && data.data.length > 0){
+                this.assigneeList = data.data;
+                 if(data.nextTaskType ==="APPOINT_AND"){
+                    this.multiple = true;
+                  }
+                this.assigneePopupShow = true;
+            }else{
                   if(this.type=='editAdopt'){
                     this.approvalEditRequest()
                   }else{
@@ -435,13 +439,15 @@ export default {
                 name: "ApproverChoice",
                 params: {
                     obj: JSON.stringify(this.assigneeList),
+                    selectd: JSON.stringify(this.candidateUser) ,
+                    multiple: this.multiple
                 },
             });
         },
         //选择审核人回调
         approverChoiceCallBack(item){
-            this.assigner = item.nickName;
-            this.candidateUser.push(item.id);
+            this.assigner = item.map(x=> x.nickName).join('，');
+            this.candidateUser = item.map(x => x.id);
         },
         //选择审核人取消
         handleAssigneeCancel(){

@@ -180,7 +180,7 @@ import { mergeByActId } from '@/utils/index.js'
 import { wfHistoryList } from '@/api/myToDoList'
 import indexMixin from '@/view/mixins'
 
-import { auditReject, wfNextAssignee, auditApprove } from '@/api/myToDoList'
+import { auditReject, wfNextAssigneeMore, auditApprove } from '@/api/myToDoList'
 import eventBus from '@/utils/eventBus.js'
 
 import { materialPurchaseFiledetail } from '@/api/prodmgr-inv/SelfBuying'
@@ -226,6 +226,7 @@ export default {
 
   data() {
     return {
+      multiple: false,
       rQueryId: '',
       from: "",
       //是否显示选择审批人弹框
@@ -335,13 +336,15 @@ export default {
         name: "ApproverChoice",
         params: {
           obj: JSON.stringify(this.assigneeList),
+           selectd: JSON.stringify(this.candidateUser) ,
+           multiple: this.multiple
         },
       });
     },
     //选择审核人回调
     approverChoiceCallBack(item) {
-      this.assigner = item.nickName;
-      this.candidateUser.push(item.id);
+      this.assigner = item.map(x=> x.nickName).join('，');
+      this.candidateUser = item.map(x => x.id);
     },
     //选择审核人取消
     handleAssigneeCancel() {
@@ -360,11 +363,14 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-      wfNextAssignee(this.listObj.taskId).then(({ data }) => {
-        if (data && data.length > 0) {
-          this.assigneeList = data;
-          this.assigneePopupShow = true;
-        } else {
+      wfNextAssigneeMore(this.listObj.taskId).then(({ data }) => {
+       if(data.data && data.data.length > 0){
+                this.assigneeList = data.data;
+                 if(data.nextTaskType ==="APPOINT_AND"){
+                    this.multiple = true;
+                  }
+                this.assigneePopupShow = true;
+            } else {
           this.approvalRequest();
         }
       }).catch((error) => {

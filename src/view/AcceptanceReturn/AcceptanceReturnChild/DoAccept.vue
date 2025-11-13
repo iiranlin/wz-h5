@@ -316,7 +316,7 @@ import FileDownloadView from "@/components/FileDownloadView.vue";
 import Calendar from "@/layout/components/calendar.vue";
 import activitiAssignee from '@/components/activitiAssignee'
 import { submitTodo } from "@/api/prodmgr-inv/receive"
-import { materialDemandPlanRestDetail,auditReject,wfNextAssignee,auditApprove,wfHistoryList } from '@/api/myToDoList'
+import { materialDemandPlanRestDetail,auditReject,wfNextAssigneeMore,auditApprove,wfHistoryList } from '@/api/myToDoList'
 import eventBus from '@/utils/eventBus.js'
 
 export default {
@@ -360,6 +360,7 @@ export default {
   },
   data() {
     return {
+      multiple: false,
       dataPc: [],
       minDate: new Date(),
       formData: {
@@ -468,13 +469,15 @@ export default {
             name: "ApproverChoice",
             params: {
                 obj: JSON.stringify(this.assigneeList),
+                selectd: JSON.stringify(this.candidateUser) ,
+                multiple: this.multiple
             },
         });
     },
     //选择审核人回调
     approverChoiceCallBack(item){
-        this.assigner = item.nickName;
-        this.candidateUser.push(item.id);
+        this.assigner = item.map(x=> x.nickName).join('，');
+        this.candidateUser = item.map(x => x.id);
     },
     //选择审核人取消
     handleAssigneeCancel(){
@@ -493,9 +496,12 @@ export default {
             message: "正在加载...",
             forbidClick: true
         });
-        wfNextAssignee(this.listObj.taskId).then(({ data }) => {
-            if(data && data.length > 0){
-                this.assigneeList = data;
+        wfNextAssigneeMore(this.listObj.taskId).then(({ data }) => {
+            if(data.data && data.data.length > 0){
+                this.assigneeList = data.data;
+                 if(data.nextTaskType ==="APPOINT_AND"){
+                    this.multiple = true;
+                  }
                 this.assigneePopupShow = true;
             }else{
                 this.approvalRequest();
