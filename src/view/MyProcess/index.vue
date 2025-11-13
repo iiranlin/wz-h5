@@ -98,7 +98,8 @@ export default {
         return this.form == "AcceptanceReturn" || this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : detailTake;
       }
       if(this.businessType === "RKLC"){
-        return this.form == "OverExamineList" || this.form == "WaitExamineList" || ["5", "6"].includes(this.storeStatus) ? detailStoreBack : detailByStore
+        console.log(this.form,this.storeStatus,'-----------------');
+        return ['WaitHandleList','OverExamineList','WaitExamineList'].includes(this.form)   || ["5", "6","0"].includes(this.storeStatus) ? detailStoreBack : detailByStore
       }
       if(this.businessType === "FHLC"){
         return detailBySend

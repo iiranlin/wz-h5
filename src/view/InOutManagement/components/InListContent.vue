@@ -247,7 +247,7 @@ export default {
       this.$router.push({
         name: "MyProcess",
         params: {
-          businessId: item.id,
+          businessId: item.storeStatus == 0 ? item.storeMiddleId : item.id,
           workflowId: item.storeMiddleId,
           businessType: 'RKLC',
           storeStatus: item.storeStatus,
@@ -262,7 +262,7 @@ export default {
 
             this.$store.dispatch('public/setSelectStoreData', []);
 
-            this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
+            this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.storeStatus == 0 ? item.storeMiddleId : item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
           } else {
             this.$toast('入库完成才能查看详情');
           }

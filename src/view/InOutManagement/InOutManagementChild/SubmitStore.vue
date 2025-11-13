@@ -295,7 +295,7 @@ export default {
       return finallyData
     },
     detailByStore(id, storeStatus) {
-      const url = storeStatus == "5" || storeStatus == "6" ? detailStoreBack : detailByStore
+      const url = storeStatus == "5" || storeStatus == "6" || storeStatus == '0' ? detailStoreBack : detailByStore
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",

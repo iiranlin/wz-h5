@@ -187,7 +187,19 @@ export default {
                     },
                 });
 
-            } else {
+            }
+            else if(item.businessType == 'RKLC'){
+                this.$router.push({
+                    name: "SubmitStore",
+                    query: {
+                        id: item.businessId,
+                        type: 'view',
+                        storeStatus: '0',
+                    },
+                });
+            }
+            
+            else {
                 this.$router.push({
                     name: "DemandPlanningExamine",
                     params: {
@@ -225,7 +237,19 @@ export default {
                     },
                 });
 
-            } else {
+            } 
+            else if(item.businessType == 'RKLC'){
+                this.$router.push({
+                    name: "SubmitStore",
+                    query: {
+                        id: item.businessId,
+                        type: 'submit',
+                        storeStatus: '0',
+                    },
+                });
+            }
+            
+            else {
                 this.$router.push({
                     name: "SaveMaterials",
                     query: {
