@@ -84,7 +84,7 @@
             <van-button class="button-info" plain round type="info" @click="withdrawClick(item)"
               v-if="item.storeStatus == '5'">撤回</van-button>
             <van-button class="button-info" round type="info" @click="submitStore(item)"
-              v-if="item.storeStatus == '1' || item.storeStatus == '6'">提交报检结果</van-button>
+              v-if="item.storeStatus == '1' || item.storeStatus == '0'">提交报检结果</van-button>
             <van-button class="button-info" round type="info" @click="handleDonwload(item)"
               v-if="item.storeStatus == '3' || item.storeStatus == '2'">下载入库单</van-button>
           </div>
@@ -127,7 +127,7 @@ export default {
         { value: "3", text: "检测通过", imgPath: '/static/newIcon_Storage.png', color: '#51CA40' },
         { value: "4", text: "已退货", imgPath: '/static/newIcon_ReturnedGoods.png', color: '#CE2320' },
         { value: "5", text: "审核中", imgPath: '/static/newIcon_audit.png', color: '#134daa' },
-        { value: "6", text: "已驳回", imgPath: '/static/newIcon_Rejected.png', color: '#CE2320' }
+        { value: "0", text: "已驳回", imgPath: '/static/newIcon_Rejected.png', color: '#CE2320' }
       ],
       refreshLoading: false,
       loading: false,

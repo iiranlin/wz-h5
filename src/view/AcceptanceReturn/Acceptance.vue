@@ -88,11 +88,11 @@
                   <van-button class="button-info" plain round type="info" v-if="item.takeStatus != 1"  @click.stop="handleProcessClick(item)">查看流程</van-button>
 
                   <!-- 状态不是未收货，按钮全不能操作 -->
-                  <van-button class="button-info" round type="info" v-if="item.takeStatus === '1'" @click.stop="handleDoAccept(item)">收货</van-button>
+                  <van-button class="button-info" round type="info" v-if="['1','0'].includes(item.takeStatus)" @click.stop="handleDoAccept(item)">收货</van-button>
                   <!--  非审核中不允许撤回 -->
                   <van-button class="button-info" plain round type="info" v-if="item.takeStatus === '5'" @click.stop="recallClick(item)">撤回</van-button>
                   <!--  未收货不能下载 -->
-                  <van-button class="button-info" round type="info" v-if="!['1', '5'].includes(item.takeStatus)" @click.stop="handleDonwload(item)">下载验收单</van-button>
+                  <van-button class="button-info" round type="info" v-if="!['1', '5','0'].includes(item.takeStatus)" @click.stop="handleDonwload(item)">下载验收单</van-button>
                 </div>
               </div>
             </van-list>
@@ -139,6 +139,7 @@ export default {
         {title: '部分退货', status: '3', color: '#FC5937'},
         {title: '已退货', status: '4', color: '#CE2320'},
         {title: '审核中', status: '5', color: '#134daa'},
+        {title: '已驳回',status:'0', color:'#FF9800'}
       ],
       dataList: [],
       allRefreshLoading: false,
@@ -166,6 +167,7 @@ export default {
         {status: '3', type: 'danger'},
         {status: '4', type: 'default'},
         {status: '5', type: 'warning'},
+        {status: '0', type: 'danger'}
       ]
       return statusMap.find(item => item.status === status).type
     },
@@ -327,6 +329,8 @@ export default {
         return '/static/newIcon_ReturnedGoods.png'
       }else if(status == '5'){
         return '/static/newIcon_audit.png'
+      }else if(status == '0'){
+        return '/static/newIcon_Partialreturns.png'
       }
         
     },

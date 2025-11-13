@@ -215,7 +215,7 @@ export default {
         { value: "3", text: "已入库" },
         { value: "4", text: "已退货" },
         { value: "5", text: "审核中" },
-        { value: "6", text: "已驳回" }
+        { value: "6", text: "已驳回" },
       ],
       menuActiveIndex: '0',
       btnClickIndex: '0',
