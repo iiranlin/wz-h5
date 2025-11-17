@@ -117,7 +117,10 @@
           <!-- <van-calendar v-model="sendStop" @confirm="onStopConfirm" /> -->
           <Calendar ref="calendar2" @onConfirm="onStopConfirm" :unlimited="true" />
           <van-field v-model="params.carNumber" label="车牌号" @click.stop="fieldClick($event, 'carNumber')"
-            :disabled="fileDisabled" type="text" placeholder="车牌号" input-align="right" />
+            :disabled="fileDisabled" type="text" placeholder="如无可备注" input-align="right"
+            required
+            :rules="[{ required: true, message: '如无可备注' }]"
+            />
         </div>
       </template>
     </div>
@@ -138,8 +141,9 @@
         <img src="/static/icon-file.png">
         <span>装车照片</span>
       </div>
-      <p class="box-container-p" v-if="!zczp.length">请选择文件上传，支持jpg、png、jpeg格式</p>
-      <file-upload-view-type :required="false" class="outbound-field-uploader" :fileList="zczp || []" businessType="01"
+      <p class="box-container-p" v-if="!zczp.length"><span
+          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg格式</p>
+      <file-upload-view-type :required="true" class="outbound-field-uploader" :fileList="zczp || []" businessType="01"
         accept=".jpg,.png,.jpeg,.pdf" :maxCount="100" />
     </div>
 
@@ -434,7 +438,7 @@ export default {
   },
   computed: {
     isFlag() {
-      const { receiver, arrivalDate } = this.params;
+      const { receiver, arrivalDate,carNumber='' } = this.params;
 
       let flag = false;
 
@@ -446,7 +450,7 @@ export default {
         }
       })
 
-      return this.fileList?.length > 0 && receiver && arrivalDate && flag;
+      return this.fileList?.length > 0 && this.zczp?.length > 0 && carNumber && receiver && arrivalDate && flag;
     }
   },
   activated() {
@@ -761,6 +765,10 @@ export default {
             Toast.fail("请上传的附件");
             return;
           }
+          if (!this.zczp?.length) {
+            Toast.fail("请上传装车照片");
+            return;
+          }
           let obj = {
             shippingAddress: [this.params.shippingAddress],
             carNumber: [this.params.carNumber],
@@ -812,7 +820,12 @@ export default {
             Toast.fail("请上传的附件");
             return;
           }
-          let fileByList = JSON.stringify({ fhd });
+          if (!this.zczp?.length) {
+            Toast.fail("请上传装车照片");
+            return;
+          }
+          let zczp = this.zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
+          let fileByList = JSON.stringify({ fhd, zczp });
 
           let params = {
             arrivalDate: this.params.arrivalDate,
@@ -867,7 +880,6 @@ export default {
         });
         return
       }
-
       if(!this.isFlag){
         this.$notify({
           type: 'warning',
