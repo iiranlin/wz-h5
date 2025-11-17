@@ -44,14 +44,16 @@
               切换项目
             </div>
 
+              <div class="login-out"><van-image width="26" height="26" :src="Messages" />接收短信 
+                  <van-switch class="switchStyle" v-model="switchChecked" size="20" @change="smsStatusChange" />          
+            </div>
+
             <div class="login-out" @click="handlerLogOut">
               <van-image width="26" height="26" :src="LoginOutIcon" />
               退出登录
             </div>
 
-            <div class="login-out"><van-image width="26" height="26" :src="Messages" />接收短信 
-                  <van-switch class="switchStyle" v-model="switchChecked" size="20" @change="smsStatusChange" />          
-            </div>
+          
           </div>
 
         </div>
