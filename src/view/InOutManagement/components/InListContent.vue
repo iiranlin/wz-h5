@@ -125,9 +125,9 @@ export default {
         { value: "1", text: "待检测", imgPath: '/static/Icon_checkPending.png', color: '#134daa' },
         // { value: "2", text: "部分退货", imgPath: '/static/newIcon_Partialreturns.png', color: '#FC5937' },
         { value: "3", text: "检测通过", imgPath: '/static/newIcon_Storage.png', color: '#51CA40' },
+        { value: "0", text: "已驳回", imgPath: '/static/newIcon_Rejected.png', color: '#CE2320' },
         { value: "4", text: "已退货", imgPath: '/static/newIcon_ReturnedGoods.png', color: '#CE2320' },
         { value: "5", text: "审核中", imgPath: '/static/newIcon_audit.png', color: '#134daa' },
-        { value: "0", text: "已驳回", imgPath: '/static/newIcon_Rejected.png', color: '#CE2320' }
       ],
       refreshLoading: false,
       loading: false,
@@ -140,10 +140,10 @@ export default {
     };
   },
   created() {
-    this.onRefresh()
     if(this.$route.meta.storeStatus){
       this.formData.storeStatus = this.$route.meta.storeStatus
     }
+    this.onRefresh()
   },
   activated() {
   },
