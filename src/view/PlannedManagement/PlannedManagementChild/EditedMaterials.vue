@@ -161,6 +161,7 @@ export default {
       this.init()
       return
     }
+    this.init()
     this.sectionInfo = Object.assign({}, this.sectionInfo, historyData)
     this.$store.dispatch('public/setHistoryData', {})
   },
@@ -193,9 +194,11 @@ export default {
       this.sectionInfo = Object.assign({}, item, { showDatePicker: false })
     },
     receiptClick() {
+      this.cacheCurrentSectionInfo()
       this.$router.push({ name: 'ReceiptList', query: { contractId: this.contractId, type: this.queryType, id: this.queryId } })
     },
     createClick() {
+      this.cacheCurrentSectionInfo()
       this.$router.push({ name: 'ReceiptOperate', query: { type: 'create' } })
     },
     sureClick(isData) {
@@ -308,6 +311,11 @@ export default {
       } catch (error) {
         console.error('保存投资信息缓存失败:', error)
       }
+    },
+    cacheCurrentSectionInfo() {
+      const cacheData = Object.assign({}, this.sectionInfo)
+      this.$store.dispatch('public/setMateriaData', cacheData)
+      this.$store.dispatch('public/setHistoryData', cacheData)
     }
   }
 }
