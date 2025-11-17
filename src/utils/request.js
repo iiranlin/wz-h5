@@ -9,6 +9,41 @@ import cache from '@/plugins/cache'
 import { encrypt, decrypt } from './sm4'
 import { saveAs } from 'file-saver'
 
+let loadingCount = 0
+let globalLoading = null
+
+function startGlobalLoading() {
+  if (loadingCount === 0) {
+    globalLoading = Toast.loading({
+      duration: 0,
+      message: "加载中...",
+      forbidClick: true
+    })
+  }
+  loadingCount++
+  console.log("startGlobalLoading", loadingCount)
+}
+
+function endGlobalLoading() {
+  if (loadingCount <= 0) return
+  loadingCount--
+  if (loadingCount === 0 && globalLoading) {
+    globalLoading.clear?.()
+    globalLoading = null
+  }
+  console.log("endGlobalLoading", loadingCount)
+}
+
+function closeGlobalLoading(config) {
+  if (config && config.loading) {
+    endGlobalLoading()
+    console.log("closeGlobalLoading")
+  }
+
+}
+
+
+
 const secretKey = '1234567890abcdef'
 
 
@@ -19,6 +54,9 @@ const service = axios.create({
 });
 service.interceptors.request.use(
   (config) => {
+    if (config.loading) {
+      startGlobalLoading()
+    }
     // 是否需要设置 token
     const isToken = (config.headers || {}).isToken === false
     // 是否需要防止数据重复提交
@@ -67,6 +105,7 @@ service.interceptors.request.use(
         if (s_data === requestObj.data && requestObj.time - s_time < interval && s_url === requestObj.url) {
           const message = '数据正在处理，请勿重复提交';
           console.warn(`[${s_url}]: ` + message)
+          closeGlobalLoading(config)
           return Promise.reject({ message: message })
         } else {
           cache.session.setJSON('sessionObj', requestObj)
@@ -81,11 +120,14 @@ service.interceptors.request.use(
     return config
   },
   (error) => {
+    closeGlobalLoading(error.config)
     return Promise.reject(error);
   }
 );
 service.interceptors.response.use(
   (response) => {
+    closeGlobalLoading(response.config)
+
     if(!response.config.minioSm4 && !response.config.minioSm4R && process.env.NODE_ENV !== 'development'){
       response.data = JSON.parse(decrypt(response.data, secretKey))
     }
@@ -130,8 +172,12 @@ service.interceptors.response.use(
     } else {
       return res || {};
     }
+
+
   },
   (error) => {
+    closeGlobalLoading(error.config || (error.response && error.response.config))
+
     let { message } = error;
     const config = error.response && error.response.config || {}
     const response = error.response;

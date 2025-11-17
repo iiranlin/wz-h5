@@ -54,6 +54,7 @@ export function auditReject(data) {
     return request({
         url: `${VUE_APP_PRODMGR_INV}/audit/reject`,
         method: 'POST',
+        loading: true,
         data
     })
 }
@@ -62,6 +63,7 @@ export function auditApprove(data) {
     return request({
         url: `${VUE_APP_PRODMGR_INV}/audit/approve`,
         method: 'POST',
+        loading: true,
         data
     })
 }
@@ -70,6 +72,7 @@ export function auditEditApprove(data) {
     return request({
         url: `${VUE_APP_PRODMGR_INV}/audit/modify/approve`,
         method: 'POST',
+        loading: true,
         data
     })
 }
