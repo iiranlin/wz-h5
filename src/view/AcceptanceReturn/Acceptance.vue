@@ -135,11 +135,11 @@ export default {
       tabList: [
         {title: '全部', status: '', color: ''},
         {title: '未收货', status: '1', color: '#134daa'},
+        {title: '审核中', status: '5', color: '#134daa'},
         {title: '已收货', status: '2', color: '#51CA40'},
+        {title: '已驳回',status:'0', color:'#FF9800'},
         {title: '部分退货', status: '3', color: '#FC5937'},
         {title: '已退货', status: '4', color: '#CE2320'},
-        {title: '审核中', status: '5', color: '#134daa'},
-        {title: '已驳回',status:'0', color:'#FF9800'}
       ],
       dataList: [],
       allRefreshLoading: false,
