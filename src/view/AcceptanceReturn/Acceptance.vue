@@ -220,7 +220,7 @@ export default {
       this.$router.push({ 
         name: "MyProcess", 
         params: { 
-          businessId: item.takeStatus == 5 ? item.id : item.backMiddleId,
+          businessId: item.backMiddleId ? item.backMiddleId : item.id,
           businessType: "SHLC",
           takeStatus: item.takeStatus,
           form: this.$route.name

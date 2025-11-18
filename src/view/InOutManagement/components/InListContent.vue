@@ -247,7 +247,7 @@ export default {
       this.$router.push({
         name: "MyProcess",
         params: {
-          businessId: item.storeStatus == 0 ? item.storeMiddleId : item.id,
+          businessId:  item.storeMiddleId ? item.storeMiddleId : item.id,
           workflowId: item.storeMiddleId,
           businessType: 'RKLC',
           storeStatus: item.storeStatus,
