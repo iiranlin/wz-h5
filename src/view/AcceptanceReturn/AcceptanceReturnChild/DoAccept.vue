@@ -616,7 +616,8 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-      const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : defaultTake;
+      console.log(this.takeStatus,'this.takeStatus');
+      const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 || this.takeStatus == 0 ? detailTakeBack : defaultTake;
        getDetailApi(this.id).then((res)=>{
           if(res.success){
             const GoodsReceiptInfo = this.$store.state.public.GoodsReceiptInfo || {};
