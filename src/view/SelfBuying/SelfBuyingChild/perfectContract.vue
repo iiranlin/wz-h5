@@ -77,14 +77,19 @@
         :style="index + 1 == sectionInfo.contractDetailsList.length ? { boxShadow: '0 -2px 5px rgba(32,30,74,.1)' } : ''"
         v-for="(item, index) in sectionInfo.contractDetailsList" :key="index" :name="index">
         <template #title>
-          <div class="detail-title-content">
-            <img src="@/assets/img/Icon_notarize.png" />
-            <span>物资明细{{ index + 1 }}</span>
+          <div class="detail-title-content" style="display: flex;align-items: center; ">
+              <img src="@/assets/img/Icon_notarize.png" />
+              <span>物资明细{{ index + 1 }}</span>
+              
+              
           </div>
         </template>
         <template #value>
-          <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
-            @click.stop="handleDelete(index)">删除</span>
+          <div style="display: flex; justify-content: flex-end;align-items: center;gap: 5px;">
+            <van-button v-if="index == 0" class="detail-button" style="margin-left: auto;"  @click="onPerfectContractDetail">批量上传物资</van-button>
+            <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
+              @click.stop="handleDelete(index)">删除</span>
+          </div>
         </template>
         <ul class="detail-list-ul-edited">
           <li class="detail-list-li-input">
@@ -247,9 +252,11 @@ import Calendar from "@/layout/components/calendar.vue";
 import rangeCalendar from "./components/calendar.vue";
 import { parseTime } from '@/utils/index'
 import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify } from "@/api/prodmgr-inv/SelfBuying"
+import keepPages from '@/view/mixins/keepPages'
 
 export default {
   name: 'PerfectFile',
+  mixins: [keepPages],
 
   components: { FileUploadView, Calendar, rangeCalendar },
 
@@ -326,6 +333,15 @@ export default {
       showUnitPicker: false,
     };
   },
+  activated(){
+    if(sessionStorage.getItem('perfectContract_imported_details')){
+      this.sectionInfo.contractDetailsList = JSON.parse(sessionStorage.getItem('perfectContract_imported_details') || '[]').map(x => {
+        x.validPeriod = `${x.startTime} 至 ${x.endTime}`
+      })
+      
+      console.log(sessionStorage.getItem('perfectContract_imported_details'))
+    }
+  },
 
   async created() {
     this.getGeneraList();
@@ -367,6 +383,15 @@ export default {
   },
 
   methods: {
+    // 跳转批量导入页面
+    onPerfectContractDetail(){
+      this.$router.push({
+        name: 'perfectContractBatchUpload', 
+        query: {
+          id: this.$route.query.id // 传入 contractId
+        }
+      });
+    },
     formatTimestamp(timestamp) {
       const date = new Date(timestamp);
       const year = date.getFullYear();
@@ -798,6 +823,7 @@ export default {
 
           materialPurchaseContractcreate(params).then(res => {
             if (res.code == 0) {
+              sessionStorage.removeItem('perfectContract_imported_details')
               this.$toast('新增成功')
               this.$router.push({ name: 'purchaseContract' })
             }
@@ -812,8 +838,11 @@ export default {
 
           materialPurchaseContractmodify(params).then(res => {
             if (res.code == 0) {
+              sessionStorage.removeItem('perfectContract_imported_details')
+              
               this.$toast('修改成功')
               this.$router.push({ name: 'purchaseContract' })
+
             }
           })
         }
@@ -1146,6 +1175,8 @@ export default {
       color: #7F8397;
       font-weight: 600;
 
+    
+
       img {
         width: 26px;
         height: 26px;
@@ -1346,4 +1377,8 @@ export default {
     margin-right: 12px;
   }
 }
+
+  .detail-button{
+        height: 30px;
+      }
 </style>
