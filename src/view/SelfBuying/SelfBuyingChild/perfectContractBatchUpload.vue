@@ -86,6 +86,7 @@
 
 <script>
 import { batchImport } from '@/api/prodmgr-inv/SelfBuying'
+import {customUpload} from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'PerfectContractBatchUpload',
@@ -138,12 +139,13 @@ export default {
       // fileDetail.file 是实际的 File 对象
       const formData = new FormData();
       formData.append('file', fileDetail.file);
-      formData.append('projectId ', this.projectId || ''); // 注意：原代码 projectId 后面有个空格，我保留了，请确认接口是否真的需要这个空格
+      formData.append('businessType',4)
+      formData.append('businessData ', this.projectId || ''); 
       
       this.loading = true;
       this.uploadResult = null; // 重置结果
 
-      batchImport(formData).then(res => {
+      customUpload(formData).then(res => {
         if(res && res.data) {
            this.uploadResult = res.data;
            // 只要上传过，清理掉uploader显示，强制显示结果区域

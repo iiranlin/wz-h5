@@ -25,3 +25,21 @@ export const downloadSettlementList = (params) => {
 export const downloadexport = (data) => {
   return download(`${VUE_APP_PRODMGR_INV}/materialPurchaseFile/export`, data)
 }
+
+// 通用下载接口
+export const customDownload = (data) => {
+  return download(`${VUE_APP_PRODMGR_INV}/materialBaseExport/export`, data)
+}
+
+/**
+ * 通用文件上传接口
+ * (@RequestParam("file") MultipartFile file, String businessType, String businessData)
+ * businessType  1 合同导入上传；2 甲供物资导入上传； 3 创建需求计划导入上传； 4 自购合同物资明细导入上传
+ *  */ 
+export const customUpload = (data) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialBaseImport/import`,
+    method: 'post',
+    data
+  })
+}
