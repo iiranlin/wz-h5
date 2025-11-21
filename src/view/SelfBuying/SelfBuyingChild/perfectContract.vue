@@ -100,6 +100,14 @@
             <van-field v-model="item.specModel" required name="specModel" label="规格型号" placeholder="请输入规格型号"
               input-align="right" />
           </li>
+           <li class="detail-list-li-input">
+            <van-field v-model="item.brand" required name="brand" label="物资品牌" placeholder="请输入物资品牌"
+              input-align="right" />
+          </li>
+           <li class="detail-list-li-input">
+            <van-field v-model="item.technicalStandard"  name="technicalStandard" label="技术标准" placeholder="请输入技术标准"
+              input-align="right" />
+          </li>
           <li class="detail-list-li-input">
             <van-field v-model="item.unit" required name="unit" label="计量单位" placeholder="请输入或选择计量单位"
               input-align="right" right-icon="arrow" @click-right-icon="handleUnit(index)" />
@@ -268,12 +276,12 @@ export default {
       return [];
     },
     contractValue() {
-      let value = 0;
-      this.sectionInfo.contractDetailsList.forEach(el => {
-        value += +el.totalAmount;
-      });
+      const list = Array.isArray(this.sectionInfo.contractDetailsList) ? this.sectionInfo.contractDetailsList : [];
 
-      return value;
+      return list.reduce((total, el) => {
+        const amount = el && el.totalAmount ? el.totalAmount : 0;
+        return total + Number(amount);
+      }, 0);
     },
   },
 
@@ -313,6 +321,8 @@ export default {
             validPeriod: '',
             startTime: '',
             endTime: '',
+            brand:'',
+            technicalStandard:''
           }
         ],
       },
@@ -334,12 +344,23 @@ export default {
     };
   },
   activated(){
-    if(sessionStorage.getItem('perfectContract_imported_details')){
-      this.sectionInfo.contractDetailsList = JSON.parse(sessionStorage.getItem('perfectContract_imported_details') || '[]').map(x => {
-        x.validPeriod = `${x.startTime} 至 ${x.endTime}`
-      })
-      
-      console.log(sessionStorage.getItem('perfectContract_imported_details'))
+    const importedDetails = sessionStorage.getItem('perfectContract_imported_details');
+
+    if(importedDetails){
+      try {
+        const parsedList = JSON.parse(importedDetails || '[]');
+
+        this.sectionInfo.contractDetailsList = Array.isArray(parsedList) ? parsedList.map(item => {
+          const validPeriod = item?.startTime && item?.endTime ? `${item.startTime} 至 ${item.endTime}` : '';
+
+          return {
+            ...item,
+            validPeriod,
+          };
+        }) : [];
+      } catch (error) {
+        console.log('解析批量导入物资明细失败', error);
+      }
     }
   },
 
@@ -427,6 +448,8 @@ export default {
         {
           materialName: '',
           specModel: '',
+          brand:'',
+          technicalStandard:'',
           unit: '',
           amount: '',
           price: '',
@@ -647,7 +670,7 @@ export default {
       // 需要验证的字段数组
       const requiredFields = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial', 'licenseCategory', 'issuanceUnit', 'quantity', 'validPeriod', 'startTime', 'endTime'];
 
-      const requiredFields2 = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial',];
+      const requiredFields2 = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial','brand'];
 
       for (let i = 0; i < contractDetailsList.length; i++) {
         const item = contractDetailsList[i];

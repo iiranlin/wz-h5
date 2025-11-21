@@ -87,6 +87,14 @@
             <span>{{ item.specModel }}</span>
           </li>
           <li>
+            <span>物资品牌：</span>
+            <span>{{ item.brand }}</span>
+          </li>
+          <li>
+            <span>技术标准：</span>
+            <span>{{ item.technicalStandard }}</span>
+          </li>
+          <li>
             <span>计量单位：</span>
             <span>{{ item.unit }}</span>
           </li>
@@ -299,7 +307,7 @@ export default {
     };
   },
 
-  mounted() {    
+  mounted() {
     const { businessType, businessId, businessCode, taskId, procInstId, from, id } = this.$route.query
     this.rQueryId = id
     this.from = from
@@ -387,15 +395,15 @@ export default {
         name: "ApproverChoice",
         params: {
           obj: JSON.stringify(this.assigneeList),
-          selectd: JSON.stringify(this.candidateUser) ,
+          selectd: JSON.stringify(this.candidateUser),
           multiple: this.multiple
         },
       });
     },
     //选择审核人回调
     approverChoiceCallBack(item) {
-       this.assigner = item.map(x=> x.nickName).join('，');
-       this.candidateUser = item.map(x => x.id);
+      this.assigner = item.map(x => x.nickName).join('，');
+      this.candidateUser = item.map(x => x.id);
     },
     //选择审核人取消
     handleAssigneeCancel() {
@@ -415,13 +423,13 @@ export default {
         forbidClick: true
       });
       wfNextAssigneeMore(this.listObj.taskId).then(({ data }) => {
-        if(data.data && data.data.length > 0){
-                this.assigneeList = data.data;
-                 if(data.nextTaskType ==="APPOINT_AND"){
-                    this.multiple = true;
-                  }
-                this.assigneePopupShow = true;
-            } else {
+        if (data.data && data.data.length > 0) {
+          this.assigneeList = data.data;
+          if (data.nextTaskType === "APPOINT_AND") {
+            this.multiple = true;
+          }
+          this.assigneePopupShow = true;
+        } else {
           this.approvalRequest();
         }
       }).catch((error) => {
