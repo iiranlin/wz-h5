@@ -174,3 +174,12 @@ export function batchImport(data) {
     minioSm4: true, //上传不需要加密
   });
 }
+
+// 添加证书
+export function addCertificate(data){
+   return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialPurchaseContractDetails/modify`,
+    method: "post",
+    data,
+  });
+}

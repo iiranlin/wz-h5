@@ -230,6 +230,13 @@ export const routes = [
         component: () =>
           import("@/view/SelfBuying/SelfBuyingChild/perfectContractBatchUpload.vue"),
       },
+     {
+        path: "perfectContractDetailCertificate",
+        name: "perfectContractDetailCertificate",
+        meta: { title: "合同核备证书" },
+        component: () =>
+          import("@/view/SelfBuying/SelfBuyingChild/perfectContractDetailCertificate.vue"),
+      },
       {
         path: "perfectContractDetail",
         name: "perfectContractDetail",

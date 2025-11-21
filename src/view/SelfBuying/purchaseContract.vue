@@ -88,6 +88,8 @@
               <!-- 未提交、已驳回可删除 -->
               <van-button class="button-info" plain round type="danger" v-if="[1, 0].includes(item.status)"
                 @click.stop="handleDeleteClick(item)">删除</van-button>
+                <!-- 添加证书 -->
+              <van-button class="button-info" plain round type="info" v-if="[3].includes(item.status)" @click.stop="handleCertificate(item)">+证书</van-button>
 
               <!-- 所有状态均可查看详情 -->
               <van-button class="button-info" plain round type="info" @click.stop="handleDetail(item)">详情</van-button>
@@ -251,6 +253,10 @@ export default {
       }).finally(() => {
         toast.clear();
       });
+    },
+    // 添加证书
+    handleCertificate(item){
+      this.$router.push({ name: 'perfectContractDetailCertificate', query: { ...item } });
     },
 
     // 详情
