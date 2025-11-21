@@ -214,8 +214,7 @@
         <img src="/static/icon-file.png">
         <span>合同核备附件</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.hthbfj?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式，可上传多个</p>
+      <p class="box-container-p" v-if="!sectionInfo?.hthbfj?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式，可上传多个</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.hthbfj
         || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
     </div>
@@ -819,13 +818,7 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.hthbfj?.length > 0) {
-          this.$notify({
-            type: 'warning',
-            message: '请上传合同核备附件!',
-          });
-          return
-        }
+        
 
         // 判断新增或编辑调用不同接口，成功后跳转回列表页面
         const time = new Date(this.sectionInfo.startTime);
