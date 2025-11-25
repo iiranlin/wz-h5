@@ -102,6 +102,7 @@ import BackToTop from '@/components/BackToTop'
 import { demandManagementList, demandManagementLookPdf } from '@/api/demand/demandManagement'
 import { downloadSettlementList } from '@/api/prodmgr-inv/file'
 import FilePreview from "@/components/FilePreview.vue";
+import {customDownload} from '@/api/prodmgr-inv/file'
 import Vue from 'vue';
 import { Toast } from 'vant';
 Vue.use(Toast);
@@ -267,7 +268,7 @@ export default {
     //下载结算单
     async handleDonwload(id) {
       try {
-        await downloadSettlementList({id});
+        await customDownload({ businessType:3,businessData:id });
       } catch (error) {
       } finally {
       }

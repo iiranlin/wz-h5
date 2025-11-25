@@ -105,6 +105,7 @@ import indexMixin from '@/view/mixins'
 import { listStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { recall } from '@/api/prodmgr-inv/audit'
 import { downloadStorageList } from '@/api/prodmgr-inv/file'
+import {customDownload} from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'InListContent',
@@ -226,7 +227,7 @@ export default {
     // 下载入库单
     async handleDonwload({id}) {
       try {
-        await downloadStorageList({id});
+        await customDownload({businessType:5, businessData:id });
       } catch (error) {
       } finally {
       }

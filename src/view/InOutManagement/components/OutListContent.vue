@@ -79,6 +79,7 @@
 <script>
 import {materialSupplierOutRestList} from '@/api/prodmgr-inv/materialDemandPlanRest'
 import {downloadOutOfTheWarehouse} from '@/api/prodmgr-inv/file'
+import {customDownload} from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'OutListContent',
@@ -148,7 +149,7 @@ export default {
     // 下载出库单
     async handleDonwload({id}) {
       try {
-        await downloadOutOfTheWarehouse({id});
+        await customDownload({businessType:6, businessData:id })
       } catch (error) {
       } finally {
       }

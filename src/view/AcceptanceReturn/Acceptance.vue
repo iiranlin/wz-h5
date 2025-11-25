@@ -118,6 +118,7 @@ import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 import { materialCirculationTableRestSubmit } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { recall } from '@/api/prodmgr-inv/audit'
 import { downloadHandoverAcceptanceForm } from '@/api/prodmgr-inv/file'
+import {customDownload} from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'Acceptance',
@@ -370,7 +371,7 @@ export default {
     // 下载验收单
     async handleDonwload({id}) {
       try {
-        await downloadHandoverAcceptanceForm({id});
+        await customDownload({businessType:4,businessData : id })
       } catch (error) {
       } finally {
       }
