@@ -120,7 +120,7 @@
             <van-field v-model="item.price" required name="price" type="number" label="单价" placeholder="请输入单价金额"
               input-align="right">
               <template #button>
-                <span style="color: #333;">万元</span>
+                <span style="color: #333;">元</span>
               </template>
             </van-field>
           </li>
@@ -136,7 +136,7 @@
             <van-field type="number" v-model="item.totalAmount" required name="totalAmount
 " label="合价" placeholder="请输入合价" input-align="right">
               <template #button>
-                <span style="color: #333;">万元</span>
+                <span style="color: #333;">元</span>
               </template>
             </van-field>
           </li>
@@ -279,7 +279,7 @@ export default {
 
       return list.reduce((total, el) => {
         const amount = el && el.totalAmount ? el.totalAmount : 0;
-        return total + Number(amount);
+        return total + Number(amount) ;
       }, 0);
     },
   },
@@ -287,7 +287,7 @@ export default {
   watch: {
     contractValue: {
       handler(val) {
-        this.sectionInfo.amount = val;
+        this.sectionInfo.amount = (val / 10000).toFixed(2);
       },
       immediate: true,
     }

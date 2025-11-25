@@ -101,7 +101,7 @@
           </li>
           <li>
             <span>单价：</span>
-            <span>{{ item.price }} 万元</span>
+            <span>{{ item.price }} 元</span>
           </li>
           <li>
             <span>税率：</span>
@@ -109,7 +109,7 @@
           </li>
           <li>
             <span>合价：</span>
-            <span>{{ item.totalAmount }} 万元</span>
+            <span>{{ item.totalAmount }} 元</span>
           </li>
           <li>
             <span>铁路专用产品：</span>
