@@ -116,7 +116,7 @@
             <span>{{ item.railwaySpecial == '1' ? '是' : '否' }}</span>
           </li>
           <li v-if="item.railwaySpecial == 1">
-            <van-button class="detail-button" block round style="margin-left: auto;"
+            <van-button class="detail-button" block round type="info" style="margin-left: auto;"
               @click="onAddCer(item)">添加证书</van-button>
           </li>
         </ul>
