@@ -78,15 +78,16 @@
         v-for="(item, index) in sectionInfo.contractDetailsList" :key="index" :name="index">
         <template #title>
           <div class="detail-title-content" style="display: flex;align-items: center; ">
-              <img src="@/assets/img/Icon_notarize.png" />
-              <span>物资明细{{ index + 1 }}</span>
-              
-              
+            <img src="@/assets/img/Icon_notarize.png" />
+            <span>物资明细{{ index + 1 }}</span>
+
+
           </div>
         </template>
         <template #value>
           <div style="display: flex; justify-content: flex-end;align-items: center;gap: 5px;">
-            <van-button v-if="index == 0" class="detail-button" style="margin-left: auto;"  @click="onPerfectContractDetail">批量上传物资</van-button>
+            <van-button v-if="index == 0" class="detail-button" style="margin-left: auto;"
+              @click="onPerfectContractDetail">批量上传物资</van-button>
             <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
               @click.stop="handleDelete(index)">删除</span>
           </div>
@@ -100,12 +101,12 @@
             <van-field v-model="item.specModel" required name="specModel" label="规格型号" placeholder="请输入规格型号"
               input-align="right" />
           </li>
-           <li class="detail-list-li-input">
+          <li class="detail-list-li-input">
             <van-field v-model="item.brand" required name="brand" label="物资品牌" placeholder="请输入物资品牌"
               input-align="right" />
           </li>
-           <li class="detail-list-li-input">
-            <van-field v-model="item.technicalStandard"  name="technicalStandard" label="技术标准" placeholder="请输入技术标准"
+          <li class="detail-list-li-input">
+            <van-field v-model="item.technicalStandard" name="technicalStandard" label="技术标准" placeholder="请输入技术标准"
               input-align="right" />
           </li>
           <li class="detail-list-li-input">
@@ -260,7 +261,7 @@ import rangeCalendar from "./components/calendar.vue";
 import { parseTime } from '@/utils/index'
 import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify } from "@/api/prodmgr-inv/SelfBuying"
 import keepPages from '@/view/mixins/keepPages'
-
+import dayjs from "dayjs";
 export default {
   name: 'PerfectFile',
   mixins: [keepPages],
@@ -279,7 +280,7 @@ export default {
 
       return list.reduce((total, el) => {
         const amount = el && el.totalAmount ? el.totalAmount : 0;
-        return total + Number(amount) ;
+        return total + Number(amount);
       }, 0);
     },
   },
@@ -320,8 +321,8 @@ export default {
             validPeriod: '',
             startTime: '',
             endTime: '',
-            brand:'',
-            technicalStandard:''
+            brand: '',
+            technicalStandard: ''
           }
         ],
       },
@@ -342,10 +343,12 @@ export default {
       showUnitPicker: false,
     };
   },
-  activated(){
+ async activated() {
+   await this.init()
+
     const importedDetails = sessionStorage.getItem('perfectContract_imported_details');
 
-    if(importedDetails){
+    if (importedDetails) {
       try {
         const parsedList = JSON.parse(importedDetails || '[]');
 
@@ -364,49 +367,79 @@ export default {
   },
 
   async created() {
-    this.getGeneraList();
-    this.detailInfo = await this.getMaterialSectionProject();
-    // 判断是编辑还是新增，查询展示信息和回显数据
-    if (this.$route.query.type == 'create') {
-      this.sectionInfo.projectId = this.detailInfo.projectId;
-      this.sectionInfo.unitName = this.detailInfo.constructionCompany;
-      this.sectionInfo.projefctName = this.detailInfo.sectionName;
-    } else {
-      try {
-        const data = await this.getGeneraDetail();
-
-        data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
-        data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
-        data.hthbfj = JSON.parse(data.files)?.hthbfj || [];
-        data.startTime = parseTime(data.startTime, '{y}-{m}-{d}');
-
-        data.contractDetailsList.forEach((el, index) => {
-          if (el.railwaySpecial == '1') {
-            el.validPeriod = el.startTime && el.endTime ? this.formatTimestamp(el.startTime) + ' 至 ' + this.formatTimestamp(el.endTime) : '';
-          }
-
-          this.activeNames.push(index);
-        })
-
-
-        this.sectionInfo = data;
-        this.sectionInfo.projectId = this.detailInfo.projectId;
-
-        await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
-        await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
-        await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
-      } catch (error) {
-        console.log(error, "error")
-      }
-
-    }
+    this.init()
   },
 
   methods: {
+   async init() {
+      this.getGeneraList();
+      this.detailInfo = await this.getMaterialSectionProject();
+      // 判断是编辑还是新增，查询展示信息和回显数据
+      if (this.$route.query.type == 'create') {
+        this.sectionInfo = {
+          htfbsmj: [],
+          gyszlzscns: [],
+          hthbfj: [],
+          contractDetailsList: [
+            {
+              materialName: '',
+              specModel: '',
+              unit: '',
+              amount: '',
+              price: '',
+              vatRate: '',
+              totalAmount: '',
+              railwaySpecial: '0',
+              licenseCategory: '',
+              issuanceUnit: '',
+              quantity: '',
+              validPeriod: '',
+              startTime: '',
+              endTime: '',
+              brand: '',
+              technicalStandard: ''
+            }
+          ],
+        }
+        this.sectionInfo.projectId = this.detailInfo.projectId;
+        this.sectionInfo.unitName = this.detailInfo.constructionCompany;
+        this.sectionInfo.projefctName = this.detailInfo.sectionName;
+      } else {
+        try {
+          const data = await this.getGeneraDetail();
+
+          data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
+          data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
+          data.hthbfj = JSON.parse(data.files)?.hthbfj || [];
+          data.startTime = dayjs(data.startTime).format("YYYY-MM-DD");
+
+          data.contractDetailsList.forEach((el, index) => {
+            if (el.railwaySpecial == '1') {
+              el.validPeriod = el.startTime && el.endTime ? dayjs(el.startTime).format('YYYY-MM-DD') + ' 至 ' + dayjs(el.endTime).format('YYYY-MM-DD') : '';
+            }
+
+            this.activeNames.push(index);
+          })
+
+
+          this.sectionInfo = data;
+          this.sectionInfo.projectId = this.detailInfo.projectId;
+
+          await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
+          await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
+          await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
+        } catch (error) {
+          console.log(error, "error")
+        }
+
+      }
+
+      return Promise.resolve()
+    },
     // 跳转批量导入页面
-    onPerfectContractDetail(){
+    onPerfectContractDetail() {
       this.$router.push({
-        name: 'perfectContractBatchUpload', 
+        name: 'perfectContractBatchUpload',
         query: {
           id: this.$route.query.id // 传入 contractId
         }
@@ -447,8 +480,8 @@ export default {
         {
           materialName: '',
           specModel: '',
-          brand:'',
-          technicalStandard:'',
+          brand: '',
+          technicalStandard: '',
           unit: '',
           amount: '',
           price: '',
@@ -600,33 +633,18 @@ export default {
     },
     // 有效期限
     handlevalidPeriodConfirm(time) {
-      const date = new Date(time[0]);
-      let dateString = date.toLocaleDateString().replace(/\//g, "-");
 
-      // 分割字符串并补零
-      const parts = dateString.split('-');
-      const year = parts[0];
-      let month = parts[1];
-      let day = parts[2];
+      const [start, end] = time;
 
-      month = month.length === 1 ? `0${month}` : month;
-      day = day.length === 1 ? `0${day}` : day;
+      // 转换为 YYYY-MM-DD 格式
+      const startStr = dayjs(start).format("YYYY-MM-DD");
+      const endStr = dayjs(end).format("YYYY-MM-DD");
 
-      const date2 = new Date(time[1]);
-      let dateString2 = date2.toLocaleDateString().replace(/\//g, "-");
-
-      // 分割字符串并补零
-      const parts2 = dateString2.split('-');
-      const year2 = parts2[0];
-      let month2 = parts2[1];
-      let day2 = parts2[2];
-
-      month2 = month2.length === 1 ? `0${month2}` : month2;
-      day2 = day2.length === 1 ? `0${day2}` : day2;
-
-      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].validPeriod = `${year}-${month}-${day} 至 ${year2}-${month2}-${day2}`;
-
-      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].startTime = `${year}-${month}-${day}`; this.sectionInfo.contractDetailsList[this.contractLicenseIndex].endTime = `${year2}-${month2}-${day2}`;
+      // 写入数据
+      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].validPeriod = `${startStr} 至 ${endStr}`;
+      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].startTime = startStr;
+      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].endTime = endStr;
+      console.log(this.sectionInfo, 'info', this.contractLicenseIndex);
 
       this.$forceUpdate();
     },
@@ -669,7 +687,7 @@ export default {
       // 需要验证的字段数组
       const requiredFields = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial', 'licenseCategory', 'issuanceUnit', 'quantity', 'validPeriod', 'startTime', 'endTime'];
 
-      const requiredFields2 = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial','brand'];
+      const requiredFields2 = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial', 'brand'];
 
       for (let i = 0; i < contractDetailsList.length; i++) {
         const item = contractDetailsList[i];
@@ -818,7 +836,7 @@ export default {
           });
           return
         }
-        
+
 
         // 判断新增或编辑调用不同接口，成功后跳转回列表页面
         const time = new Date(this.sectionInfo.startTime);
@@ -835,6 +853,7 @@ export default {
             contractDetailsList: this.sectionInfo.contractDetailsList,
             sectionShortName: this.detailInfo.projectShortName,
             projectName: this.detailInfo.projectName,
+
           }
 
           materialPurchaseContractcreate(params).then(res => {
@@ -855,7 +874,7 @@ export default {
           materialPurchaseContractmodify(params).then(res => {
             if (res.code == 0) {
               sessionStorage.removeItem('perfectContract_imported_details')
-              
+
               this.$toast('修改成功')
               this.$router.push({ name: 'purchaseContract' })
 
@@ -1191,7 +1210,7 @@ export default {
       color: #7F8397;
       font-weight: 600;
 
-    
+
 
       img {
         width: 26px;
@@ -1394,7 +1413,7 @@ export default {
   }
 }
 
-  .detail-button{
-        height: 30px;
-      }
+.detail-button {
+  height: 30px;
+}
 </style>
