@@ -9,34 +9,47 @@ import cache from '@/plugins/cache'
 import { encrypt, decrypt } from './sm4'
 import { saveAs } from 'file-saver'
 
-let loadingCount = 0
+let loadingQueue = []
 let globalLoading = null
 
-function startGlobalLoading() {
-  if (loadingCount === 0) {
+function startGlobalLoading(config) {
+  if (loadingQueue.length === 0) {
+    // 使用 allowMultiple 创建独立的 loading 实例
+    // 这样不会被其他地方的 Toast.clear() 影响
+    Toast.allowMultiple()
     globalLoading = Toast.loading({
-      duration: 0,
+      duration: 0, // 必须设置为 0，否则会使用默认值自动关闭
       message: "加载中...",
-      forbidClick: true
+      forbidClick: true,
+      className: 'global-request-loading' // 添加自定义类名便于识别
     })
   }
-  loadingCount++
-  console.log("startGlobalLoading", loadingCount)
+  loadingQueue.push(config)
+  console.log("startGlobalLoading", loadingQueue.length, globalLoading)
 }
 
-function endGlobalLoading() {
-  if (loadingCount <= 0) return
-  loadingCount--
-  if (loadingCount === 0 && globalLoading) {
-    globalLoading.clear?.()
-    globalLoading = null
+function endGlobalLoading(config) {
+  // 移除指定请求的 loading
+  const index = loadingQueue.indexOf(config)
+  if (index >= 0) {
+    loadingQueue.splice(index, 1)
   }
-  console.log("endGlobalLoading", loadingCount)
+  
+  if (loadingQueue.length === 0 && globalLoading && !config.keepLoading) {
+  
+      // 只清除我们自己的 loading 实例
+      if (globalLoading) {
+        globalLoading.clear()
+        globalLoading = null
+        Toast.allowMultiple(false) // 恢复默认行为
+      }
+  }
+  console.log("endGlobalLoading", loadingQueue.length, globalLoading)
 }
 
 function closeGlobalLoading(config) {
   if (config && config.loading) {
-    endGlobalLoading()
+    endGlobalLoading(config)
     console.log("closeGlobalLoading")
   }
 
@@ -55,7 +68,7 @@ const service = axios.create({
 service.interceptors.request.use(
   (config) => {
     if (config.loading) {
-      startGlobalLoading()
+      startGlobalLoading(config)
     }
     // 是否需要设置 token
     const isToken = (config.headers || {}).isToken === false
