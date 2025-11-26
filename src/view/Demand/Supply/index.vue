@@ -43,12 +43,12 @@
         </ul>
       </div>
         </div>
-        <div class="detail-base-info detail-base-info-edited" v-if="result.fileList?.[0]?.fileList.length">
+        <div class="detail-base-info detail-base-info-edited" v-if="findByBusinessType(result.fileList,'51').length">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
-        <span>附件</span>
+        <span>需求计划表</span>
       </div>
-      <file-download-view :fileList="result.fileList?.[0]?.fileList || []"></file-download-view>
+      <file-download-view :fileList="findByBusinessType(result.fileList,'51') || []"></file-download-view>
     </div>
     <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
       <div class="detail-title-content">
@@ -94,11 +94,14 @@ import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { Form } from 'vant';
 import { Field, Toast } from 'vant';
 import { supplyDetails } from '@/api/demand/demandManagement'
+import indexMixin from '@/view/mixins'
+import { findByBusinessType } from '@/utils/index.js'
 Vue.use(Form);
 Vue.use(Field);
 Vue.use(Toast);
 export default {
     name: 'MyProcess',
+    mixins: [indexMixin],
     components:{BackToTop,FileDownloadView,MaterialDetails},
     data() {
         return {
@@ -147,6 +150,7 @@ export default {
         this.getBatch(this.id)
     },
     methods: {
+findByBusinessType,
         async getBatch(id) {
       const res = await listPc(id)
       this.dataPc = res.data

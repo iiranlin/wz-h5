@@ -164,3 +164,22 @@ export function materialPurchaseContractdetail(id) {
     method: 'get'
   })
 }
+
+// 批量导入
+export function batchImport(data) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialPurchaseContract/importExcel`,
+    method: "post",
+    data,
+    minioSm4: true, //上传不需要加密
+  });
+}
+
+// 添加证书
+export function addCertificate(data){
+   return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialPurchaseContractDetails/modify`,
+    method: "post",
+    data,
+  });
+}

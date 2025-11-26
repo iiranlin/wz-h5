@@ -1,11 +1,8 @@
 <!-- 采购合同核备详情 -->
 <template>
   <div class="requirement-details">
-    <div class="detail-base-info">
-      <div class="detail-title-text">
-        <p>合同名称：</p>
-        <p>{{ formData.contractName }}</p>
-      </div>
+    <!-- <div class="detail-base-info">
+    
       <div class="detail-ul-text">
         <ul class="detail-ul">
           <li>
@@ -22,9 +19,9 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div> -->
 
-    <div class="detail-base-info detail-base-info-edited">
+    <!-- <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-basic-information.png" />
         <span>基本信息</span>
@@ -67,7 +64,7 @@
           <span>{{ formData.amount }}</span>
         </li>
       </ul>
-    </div>
+    </div> -->
     <van-collapse v-model="activeNames">
       <van-collapse-item class="detail-base-info detail-base-info-edited"
         v-for="(item, index) in formData.contractDetailsList" :key="index" :name="index">
@@ -118,6 +115,10 @@
             <span>铁路专用产品：</span>
             <span>{{ item.railwaySpecial == '1' ? '是' : '否' }}</span>
           </li>
+          <li v-if="item.railwaySpecial == 1">
+            <van-button class="detail-button" block round type="info" style="margin-left: auto;"
+              @click="onAddCer(item)">添加证书</van-button>
+          </li>
         </ul>
 
         <div v-if="item.railwaySpecial != '0'" style="border-top: 1px solid #e5e5e5;">
@@ -149,8 +150,37 @@
       </van-collapse-item>
     </van-collapse>
 
+    <van-popup v-model="showCerPopup" round position="bottom">
+      <div class="detail-base-info detail-base-info-edited dialog-wrap">
+        <div class="detail-title-content">
+          <img src="@/assets/img/certificate.png" />
+          <span>新增许可/认证证书</span>
+        </div>
+        <ul class="detail-list-ul">
+          <li class="detail-list-li-input">
+            <van-field v-model="cerForm.issuanceUnit" required name="issuanceUnit" label="发证单位" placeholder="请输入发证单位"
+              input-align="right" />
+          </li>
+          <li class="detail-list-li-input">
+            <van-field v-model="cerForm.quantity" required name="quantity" label="证书编号" placeholder="请输入证书编号"
+              input-align="right" />
+          </li>
+          <li class="detail-list-li-input">
+            <van-field readonly clickable required name="validPeriod" label="有效期限" placeholder="请选择有效期限"
+              right-icon="arrow" input-align="right" v-model="cerForm.validPeriod" @click="showCerRange = true" />
+          </li>
+        </ul>
+        <div class="default-button-container">
+          <van-button class="button-info" round @click="handleCerCancel">取消</van-button>
+          <van-button class="button-info" round type="info" @click="handleCerSubmit">确定</van-button>
+        </div>
+      </div>
+    </van-popup>
+
+    <van-calendar v-model="showCerRange" type="range" @confirm="handleCerDateConfirm" />
+
     <!-- 流程信息待完善 -->
-    <div class="detail-base-info detail-base-info-edited" v-if="recordList.length">
+    <!-- <div class="detail-base-info detail-base-info-edited" v-if="recordList.length">
       <div class="detail-title-content detail-base-info-edited-div" @click="handleProcessClick(formData)">
         <div class="detail-base-info-edited-img">
           <img src="@/assets/img/Icon-process.png" />
@@ -181,44 +211,44 @@
           <span>{{ historyData.endTime ? historyData.endTime.substr(0, 10) : "" }}</span>
         </li>
       </ul>
-    </div>
+    </div> -->
 
-    <div class="detail-base-info detail-base-info-edited">
+    <!-- <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
         <span>合同副本扫描件</span>
       </div>
       <file-download-view :fileList="filterList(formData.files, 'htfbsmj') || []" />
-    </div>
+    </div> -->
 
-    <div class="detail-base-info detail-base-info-edited">
+    <!-- <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
         <span>供应商质量终身承诺书</span>
       </div>
       <file-download-view :fileList="filterList(formData.files, 'gyszlzscns') || []" />
-    </div>
+    </div> -->
 
-    <div class="detail-base-info detail-base-info-edited"
+    <!-- <div class="detail-base-info detail-base-info-edited"
       :style="{ marginBottom: formData.railwaySpecial == '0' ? '65px' : '0' }">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
         <span>合同核备附件</span>
       </div>
       <file-download-view :fileList="filterList(formData.files, 'hthbfj') || []" />
-    </div>
+    </div> -->
 
-    <div class="default-button-container default-button-container-box"
+    <!-- <div class="default-button-container default-button-container-box"
       v-if="from === 'WaitExamineList' && formData.status == 2">
       <div class="default-button-container-div">
         <p @click="handleReject()"><img src="@/assets/img/Icon-detailInfo.png" alt=""><span>驳回</span></p>
       </div>
       <van-button class="button-info button-info-container" block type="info" round
         @click="handleAdopt()">通过</van-button>
-    </div>
+    </div> -->
 
     <!--选择审批人弹框-->
-    <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
+    <!-- <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
       <div class="assignee-popup">
         <span>提示</span>
         <van-cell :title="assigner" required is-link center @click="handleAssigneePopupClick()" />
@@ -227,7 +257,7 @@
           <van-button class="button-info" block type="info" round @click="handleAssigneeSubmit()">提交</van-button>
         </div>
       </div>
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 
@@ -241,7 +271,7 @@ import indexMixin from '@/view/mixins'
 import { auditReject, wfNextAssigneeMore, auditApprove } from '@/api/myToDoList'
 import eventBus from '@/utils/eventBus.js'
 
-import { materialPurchaseContractdetail } from '@/api/prodmgr-inv/SelfBuying'
+import { materialPurchaseContractdetail, addCertificate } from '@/api/prodmgr-inv/SelfBuying'
 
 export default {
   name: 'perfectContractDetail',
@@ -304,6 +334,16 @@ export default {
       },
       recordList: [],
       historyData: {},
+      showCerPopup: false,
+      showCerRange: false,
+      currentCerItem: null,
+      cerForm: {
+        issuanceUnit: '',
+        quantity: '',
+        validPeriod: '',
+        startTime: '',
+        endTime: '',
+      },
     };
   },
 
@@ -339,6 +379,72 @@ export default {
   },
 
   methods: {
+    onAddCer(item) {
+      this.currentCerItem = item || {};
+      const start = item?.startTime;
+      const end = item?.endTime;
+
+      this.cerForm = {
+        ...item,
+        issuanceUnit: '',
+        quantity: '',
+        validPeriod: '',
+        startTime: '',
+        endTime: '',
+      };
+
+      this.showCerPopup = true;
+    },
+    handleCerDateConfirm(dates) {
+      const [start, end] = dates || [];
+
+      if (!start || !end) {
+        this.showCerRange = false;
+        return;
+      }
+
+      const startText = this.formatDateText(start);
+      const endText = this.formatDateText(end);
+
+      this.cerForm.startTime = startText;
+      this.cerForm.endTime = endText;
+      this.cerForm.validPeriod = `${startText} 至 ${endText}`;
+      this.showCerRange = false;
+    },
+    handleCerSubmit() {
+      if (!this.cerForm.issuanceUnit || !this.cerForm.quantity || !this.cerForm.startTime || !this.cerForm.endTime) {
+        this.$notify({
+          type: 'warning',
+          message: '请完善证书信息后提交!',
+        });
+        return;
+      }
+
+      Object.assign(this.currentCerItem, {
+        issuanceUnit: this.cerForm.issuanceUnit,
+        quantity: this.cerForm.quantity,
+        startTime: this.cerForm.startTime,
+        endTime: this.cerForm.endTime,
+        validPeriod: this.cerForm.validPeriod,
+      });
+      addCertificate(this.currentCerItem).then(res => {
+        this.showCerPopup = false;
+        this.$toast('已添加证书信息');
+      })
+
+
+    },
+    handleCerCancel() {
+      this.showCerPopup = false;
+      this.showCerRange = false;
+    },
+    formatDateText(value) {
+      const dt = new Date(value);
+      const y = dt.getFullYear();
+      const m = (dt.getMonth() + 1 + '').padStart(2, '0');
+      const d = (dt.getDate() + '').padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    },
     // 获取详情
     handleDetail() {
       materialPurchaseContractdetail(this.rQueryId).then(({ data }) => {
@@ -501,6 +607,15 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.dialog-wrap {
+  height: 250px;
+}
+
+.detail-button {
+  height: 30px;
+  width: 100%;
+}
+
 /deep/.van-calendar__popup.van-popup--bottom,
 .van-calendar__popup.van-popup--top {
   height: 94% !important;
@@ -896,6 +1011,18 @@ export default {
 
 .box-container {
   padding: 0px;
+}
+
+.cer-popup {
+  padding: 12px 12px 20px 12px;
+}
+
+.cer-popup-title {
+  align-items: center;
+}
+
+.cer-popup .default-button-container {
+  margin-top: 14px;
 }
 
 

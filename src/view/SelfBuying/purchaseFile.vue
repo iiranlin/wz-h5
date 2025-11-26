@@ -126,6 +126,7 @@ import activitiAssignee from '@/components/activitiAssignee'
 import { materialPurchaseFileList, batchRemove, materialPurchaseFileSubmit } from '@/api/prodmgr-inv/SelfBuying'
 import { recall } from '@/api/prodmgr-inv/audit'
 import { downloadexport } from '@/api/prodmgr-inv/file'
+import {customDownload} from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'purchaseFile',
@@ -373,7 +374,7 @@ export default {
     // 下载
     async handleDonwload({ id }) {
       try {
-        await downloadexport(id);
+        await customDownload({businessType:7,businessData:id});
       } catch (error) {
       } finally {
       }

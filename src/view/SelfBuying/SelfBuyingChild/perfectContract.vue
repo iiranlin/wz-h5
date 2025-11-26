@@ -28,7 +28,7 @@
         </li>
         <li class="detail-list-li-input">
           <van-field readonly v-model="sectionInfo.amount" name="amount" type="number" label="合同金额"
-            placeholder="请输入合同金额" input-align="right" @input="handlerAmount">
+            placeholder="0" input-align="right" @input="handlerAmount">
             <template #button>
               <span style="color: #333;">万元</span>
             </template>
@@ -77,14 +77,20 @@
         :style="index + 1 == sectionInfo.contractDetailsList.length ? { boxShadow: '0 -2px 5px rgba(32,30,74,.1)' } : ''"
         v-for="(item, index) in sectionInfo.contractDetailsList" :key="index" :name="index">
         <template #title>
-          <div class="detail-title-content">
+          <div class="detail-title-content" style="display: flex;align-items: center; ">
             <img src="@/assets/img/Icon_notarize.png" />
             <span>物资明细{{ index + 1 }}</span>
+
+
           </div>
         </template>
         <template #value>
-          <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
-            @click.stop="handleDelete(index)">删除</span>
+          <div style="display: flex; justify-content: flex-end;align-items: center;gap: 5px;">
+            <van-button v-if="index == 0" class="detail-button" style="margin-left: auto;"
+              @click="onPerfectContractDetail">批量上传物资</van-button>
+            <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
+              @click.stop="handleDelete(index)">删除</span>
+          </div>
         </template>
         <ul class="detail-list-ul-edited">
           <li class="detail-list-li-input">
@@ -96,6 +102,14 @@
               input-align="right" />
           </li>
           <li class="detail-list-li-input">
+            <van-field v-model="item.brand" required name="brand" label="物资品牌" placeholder="请输入物资品牌"
+              input-align="right" />
+          </li>
+          <li class="detail-list-li-input">
+            <van-field v-model="item.technicalStandard" name="technicalStandard" label="技术标准" placeholder="请输入技术标准"
+              input-align="right" />
+          </li>
+          <li class="detail-list-li-input">
             <van-field v-model="item.unit" required name="unit" label="计量单位" placeholder="请输入或选择计量单位"
               input-align="right" right-icon="arrow" @click-right-icon="handleUnit(index)" />
           </li>
@@ -104,10 +118,10 @@
 " label="数量" placeholder="请输入数量" input-align="right" />
           </li>
           <li class="detail-list-li-input">
-            <van-field v-model="item.price" required name="price" type="number" label="单价" placeholder="请输入单价金额"
+            <van-field v-decimal="2" v-model="item.price" required name="price" type="number" label="单价" placeholder="请输入单价金额"
               input-align="right">
               <template #button>
-                <span style="color: #333;">万元</span>
+                <span style="color: #333;">元</span>
               </template>
             </van-field>
           </li>
@@ -120,10 +134,10 @@
             </van-field>
           </li>
           <li class="detail-list-li-input">
-            <van-field type="number" v-model="item.totalAmount" required name="totalAmount
+            <van-field v-decimal="2" type="number" v-model="item.totalAmount" required name="totalAmount
 " label="合价" placeholder="请输入合价" input-align="right">
               <template #button>
-                <span style="color: #333;">万元</span>
+                <span style="color: #333;">元</span>
               </template>
             </van-field>
           </li>
@@ -201,8 +215,7 @@
         <img src="/static/icon-file.png">
         <span>合同核备附件</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.hthbfj?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式，可上传多个</p>
+      <p class="box-container-p" v-if="!sectionInfo?.hthbfj?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式，可上传多个</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.hthbfj
         || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
     </div>
@@ -247,9 +260,11 @@ import Calendar from "@/layout/components/calendar.vue";
 import rangeCalendar from "./components/calendar.vue";
 import { parseTime } from '@/utils/index'
 import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify } from "@/api/prodmgr-inv/SelfBuying"
-
+import keepPages from '@/view/mixins/keepPages'
+import dayjs from "dayjs";
 export default {
   name: 'PerfectFile',
+  mixins: [keepPages],
 
   components: { FileUploadView, Calendar, rangeCalendar },
 
@@ -261,19 +276,19 @@ export default {
       return [];
     },
     contractValue() {
-      let value = 0;
-      this.sectionInfo.contractDetailsList.forEach(el => {
-        value += +el.totalAmount;
-      });
+      const list = Array.isArray(this.sectionInfo.contractDetailsList) ? this.sectionInfo.contractDetailsList : [];
 
-      return value;
+      return list.reduce((total, el) => {
+        const amount = el && el.totalAmount ? el.totalAmount : 0;
+        return total + Number(amount);
+      }, 0);
     },
   },
 
   watch: {
     contractValue: {
       handler(val) {
-        this.sectionInfo.amount = val;
+        this.sectionInfo.amount = (val / 10000).toFixed(2);
       },
       immediate: true,
     }
@@ -306,6 +321,8 @@ export default {
             validPeriod: '',
             startTime: '',
             endTime: '',
+            brand: '',
+            technicalStandard: ''
           }
         ],
       },
@@ -326,47 +343,108 @@ export default {
       showUnitPicker: false,
     };
   },
+ async activated() {
+   await this.init()
 
-  async created() {
-    this.getGeneraList();
-    this.detailInfo = await this.getMaterialSectionProject();
-    // 判断是编辑还是新增，查询展示信息和回显数据
-    if (this.$route.query.type == 'create') {
-      this.sectionInfo.projectId = this.detailInfo.projectId;
-      this.sectionInfo.unitName = this.detailInfo.constructionCompany;
-      this.sectionInfo.projefctName = this.detailInfo.sectionName;
-    } else {
+    const importedDetails = sessionStorage.getItem('perfectContract_imported_details');
+
+    if (importedDetails) {
       try {
-        const data = await this.getGeneraDetail();
+        const parsedList = JSON.parse(importedDetails || '[]');
 
-        data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
-        data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
-        data.hthbfj = JSON.parse(data.files)?.hthbfj || [];
-        data.startTime = parseTime(data.startTime, '{y}-{m}-{d}');
+        this.sectionInfo.contractDetailsList = Array.isArray(parsedList) ? parsedList.map(item => {
+          const validPeriod = item?.startTime && item?.endTime ? `${item.startTime} 至 ${item.endTime}` : '';
 
-        data.contractDetailsList.forEach((el, index) => {
-          if (el.railwaySpecial == '1') {
-            el.validPeriod = el.startTime && el.endTime ? this.formatTimestamp(el.startTime) + ' 至 ' + this.formatTimestamp(el.endTime) : '';
-          }
-
-          this.activeNames.push(index);
-        })
-
-
-        this.sectionInfo = data;
-        this.sectionInfo.projectId = this.detailInfo.projectId;
-
-        await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
-        await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
-        await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
+          return {
+            ...item,
+            validPeriod,
+          };
+        }) : [];
       } catch (error) {
-        console.log(error, "error")
+        console.log('解析批量导入物资明细失败', error);
       }
-
     }
   },
 
+  async created() {
+    this.init()
+  },
+
   methods: {
+   async init() {
+      this.getGeneraList();
+      this.detailInfo = await this.getMaterialSectionProject();
+      // 判断是编辑还是新增，查询展示信息和回显数据
+      if (this.$route.query.type == 'create') {
+        this.sectionInfo = {
+          htfbsmj: [],
+          gyszlzscns: [],
+          hthbfj: [],
+          contractDetailsList: [
+            {
+              materialName: '',
+              specModel: '',
+              unit: '',
+              amount: '',
+              price: '',
+              vatRate: '',
+              totalAmount: '',
+              railwaySpecial: '0',
+              licenseCategory: '',
+              issuanceUnit: '',
+              quantity: '',
+              validPeriod: '',
+              startTime: '',
+              endTime: '',
+              brand: '',
+              technicalStandard: ''
+            }
+          ],
+        }
+        this.sectionInfo.projectId = this.detailInfo.projectId;
+        this.sectionInfo.unitName = this.detailInfo.constructionCompany;
+        this.sectionInfo.projefctName = this.detailInfo.sectionName;
+      } else {
+        try {
+          const data = await this.getGeneraDetail();
+
+          data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
+          data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
+          data.hthbfj = JSON.parse(data.files)?.hthbfj || [];
+          data.startTime = dayjs(data.startTime).format("YYYY-MM-DD");
+
+          data.contractDetailsList.forEach((el, index) => {
+            if (el.railwaySpecial == '1') {
+              el.validPeriod = el.startTime && el.endTime ? dayjs(el.startTime).format('YYYY-MM-DD') + ' 至 ' + dayjs(el.endTime).format('YYYY-MM-DD') : '';
+            }
+
+            this.activeNames.push(index);
+          })
+
+
+          this.sectionInfo = data;
+          this.sectionInfo.projectId = this.detailInfo.projectId;
+
+          await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
+          await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
+          await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
+        } catch (error) {
+          console.log(error, "error")
+        }
+
+      }
+
+      return Promise.resolve()
+    },
+    // 跳转批量导入页面
+    onPerfectContractDetail() {
+      this.$router.push({
+        name: 'perfectContractBatchUpload',
+        query: {
+          id: this.$route.query.id // 传入 contractId
+        }
+      });
+    },
     formatTimestamp(timestamp) {
       const date = new Date(timestamp);
       const year = date.getFullYear();
@@ -402,6 +480,8 @@ export default {
         {
           materialName: '',
           specModel: '',
+          brand: '',
+          technicalStandard: '',
           unit: '',
           amount: '',
           price: '',
@@ -553,33 +633,18 @@ export default {
     },
     // 有效期限
     handlevalidPeriodConfirm(time) {
-      const date = new Date(time[0]);
-      let dateString = date.toLocaleDateString().replace(/\//g, "-");
 
-      // 分割字符串并补零
-      const parts = dateString.split('-');
-      const year = parts[0];
-      let month = parts[1];
-      let day = parts[2];
+      const [start, end] = time;
 
-      month = month.length === 1 ? `0${month}` : month;
-      day = day.length === 1 ? `0${day}` : day;
+      // 转换为 YYYY-MM-DD 格式
+      const startStr = dayjs(start).format("YYYY-MM-DD");
+      const endStr = dayjs(end).format("YYYY-MM-DD");
 
-      const date2 = new Date(time[1]);
-      let dateString2 = date2.toLocaleDateString().replace(/\//g, "-");
-
-      // 分割字符串并补零
-      const parts2 = dateString2.split('-');
-      const year2 = parts2[0];
-      let month2 = parts2[1];
-      let day2 = parts2[2];
-
-      month2 = month2.length === 1 ? `0${month2}` : month2;
-      day2 = day2.length === 1 ? `0${day2}` : day2;
-
-      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].validPeriod = `${year}-${month}-${day} 至 ${year2}-${month2}-${day2}`;
-
-      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].startTime = `${year}-${month}-${day}`; this.sectionInfo.contractDetailsList[this.contractLicenseIndex].endTime = `${year2}-${month2}-${day2}`;
+      // 写入数据
+      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].validPeriod = `${startStr} 至 ${endStr}`;
+      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].startTime = startStr;
+      this.sectionInfo.contractDetailsList[this.contractLicenseIndex].endTime = endStr;
+      console.log(this.sectionInfo, 'info', this.contractLicenseIndex);
 
       this.$forceUpdate();
     },
@@ -622,7 +687,7 @@ export default {
       // 需要验证的字段数组
       const requiredFields = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial', 'licenseCategory', 'issuanceUnit', 'quantity', 'validPeriod', 'startTime', 'endTime'];
 
-      const requiredFields2 = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial',];
+      const requiredFields2 = ['materialName', 'specModel', 'unit', 'price', 'vatRate', 'totalAmount', 'amount', 'railwaySpecial', 'brand'];
 
       for (let i = 0; i < contractDetailsList.length; i++) {
         const item = contractDetailsList[i];
@@ -771,13 +836,7 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.hthbfj?.length > 0) {
-          this.$notify({
-            type: 'warning',
-            message: '请上传合同核备附件!',
-          });
-          return
-        }
+
 
         // 判断新增或编辑调用不同接口，成功后跳转回列表页面
         const time = new Date(this.sectionInfo.startTime);
@@ -794,10 +853,12 @@ export default {
             contractDetailsList: this.sectionInfo.contractDetailsList,
             sectionShortName: this.detailInfo.projectShortName,
             projectName: this.detailInfo.projectName,
+
           }
 
           materialPurchaseContractcreate(params).then(res => {
             if (res.code == 0) {
+              sessionStorage.removeItem('perfectContract_imported_details')
               this.$toast('新增成功')
               this.$router.push({ name: 'purchaseContract' })
             }
@@ -812,8 +873,11 @@ export default {
 
           materialPurchaseContractmodify(params).then(res => {
             if (res.code == 0) {
+              sessionStorage.removeItem('perfectContract_imported_details')
+
               this.$toast('修改成功')
               this.$router.push({ name: 'purchaseContract' })
+
             }
           })
         }
@@ -1146,6 +1210,8 @@ export default {
       color: #7F8397;
       font-weight: 600;
 
+
+
       img {
         width: 26px;
         height: 26px;
@@ -1345,5 +1411,9 @@ export default {
     width: 169px !important;
     margin-right: 12px;
   }
+}
+
+.detail-button {
+  height: 30px;
 }
 </style>

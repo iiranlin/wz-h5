@@ -146,6 +146,64 @@ Vue.use(Stepper);
 Vue.prototype.parseTime = parseTime;
 Vue.prototype.handlerTextColor = handlerTextColor;
 
+Vue.directive('decimal', {
+  bind(el, binding, vnode) {
+    // 小数位数，默认 2 位
+    const decimalLen = typeof binding.value === 'number' ? binding.value : 2
+
+    // 兼容 van-field 这种外层是 div，内部才是 input 的情况
+    const inputEl =
+      el.tagName.toLowerCase() === 'input' ? el : el.querySelector('input')
+
+    if (!inputEl) return
+
+    const handler = (e) => {
+      let val = e.target.value
+
+      if (!val) return
+
+      // 1. 只允许数字和小数点
+      val = val.replace(/[^0-9.]/g, '')
+
+      // 2. 不允许第一个字符就是小数点
+      val = val.replace(/^\./g, '')
+
+      // 3. 只保留第一个小数点
+      val = val.replace(/\.{2,}/g, '.')
+      val = val.replace('.', '#').replace(/\./g, '').replace('#', '.')
+
+      // 4. 限制小数位数
+      if (decimalLen >= 0 && val.indexOf('.') > -1) {
+        const [intPart, decPart] = val.split('.')
+        val = intPart + '.' + decPart.slice(0, decimalLen)
+      }
+
+      // 有变更才回写并触发 v-model 更新
+      if (val !== e.target.value) {
+        e.target.value = val
+
+        // 触发原生 input 事件，让 v-model 生效
+        const event = document.createEvent('HTMLEvents')
+        event.initEvent('input', true, false)
+        e.target.dispatchEvent(event)
+      }
+    }
+
+    // 保存到元素上，unbind 时移除
+    inputEl.__decimalHandler__ = handler
+    inputEl.addEventListener('input', handler)
+  },
+
+  unbind(el) {
+    const inputEl =
+      el.tagName.toLowerCase() === 'input' ? el : el.querySelector('input')
+    if (inputEl && inputEl.__decimalHandler__) {
+      inputEl.removeEventListener('input', inputEl.__decimalHandler__)
+      delete inputEl.__decimalHandler__
+    }
+  }
+})
+
 new Vue({
   store,
   router,

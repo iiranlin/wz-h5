@@ -224,6 +224,20 @@ export const routes = [
         },
       },
       {
+        path: "perfectContractBatchUpload",
+        name: "perfectContractBatchUpload",
+        meta: { title: "批量上传物资" },
+        component: () =>
+          import("@/view/SelfBuying/SelfBuyingChild/perfectContractBatchUpload.vue"),
+      },
+     {
+        path: "perfectContractDetailCertificate",
+        name: "perfectContractDetailCertificate",
+        meta: { title: "合同核备证书" },
+        component: () =>
+          import("@/view/SelfBuying/SelfBuyingChild/perfectContractDetailCertificate.vue"),
+      },
+      {
         path: "perfectContractDetail",
         name: "perfectContractDetail",
         meta: { title: "合同核备详情" },

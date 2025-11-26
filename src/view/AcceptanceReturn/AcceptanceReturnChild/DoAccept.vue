@@ -616,7 +616,8 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-      const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 ? detailTakeBack : defaultTake;
+      console.log(this.takeStatus,'this.takeStatus');
+      const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 || this.takeStatus == 0 ? detailTakeBack : defaultTake;
        getDetailApi(this.id).then((res)=>{
           if(res.success){
             const GoodsReceiptInfo = this.$store.state.public.GoodsReceiptInfo || {};
@@ -805,7 +806,7 @@ export default {
     },
     //选择审核人回调
     optionsSuccess(assignee, { id, planType }) {
-      submitTodo({ id, planType: planType, assignee, ...this.backupParams }).then(() => {
+      submitTodo({  planType: planType, assignee, ...this.backupParams,id, }).then(() => {
         this.$toast('提交审核成功')
         this.$router.push({path: '/Acceptance'})
       })
@@ -817,7 +818,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$refs.activitiAssignee.init('SHLC', item)
+        this.$refs.activitiAssignee.init('SHLC', {...item, planType: "SH" ,id:this.$route.query.id})
       })
     },
   },

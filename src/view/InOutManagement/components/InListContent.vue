@@ -105,6 +105,7 @@ import indexMixin from '@/view/mixins'
 import { listStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { recall } from '@/api/prodmgr-inv/audit'
 import { downloadStorageList } from '@/api/prodmgr-inv/file'
+import {customDownload} from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'InListContent',
@@ -124,10 +125,10 @@ export default {
         { value: '', text: '全部', imgPath: '', color: '' },
         { value: "1", text: "待检测", imgPath: '/static/Icon_checkPending.png', color: '#134daa' },
         // { value: "2", text: "部分退货", imgPath: '/static/newIcon_Partialreturns.png', color: '#FC5937' },
+        { value: "5", text: "审核中", imgPath: '/static/newIcon_audit.png', color: '#134daa' },
         { value: "3", text: "检测通过", imgPath: '/static/newIcon_Storage.png', color: '#51CA40' },
         { value: "0", text: "已驳回", imgPath: '/static/newIcon_Rejected.png', color: '#CE2320' },
         { value: "4", text: "已退货", imgPath: '/static/newIcon_ReturnedGoods.png', color: '#CE2320' },
-        { value: "5", text: "审核中", imgPath: '/static/newIcon_audit.png', color: '#134daa' },
       ],
       refreshLoading: false,
       loading: false,
@@ -221,12 +222,12 @@ export default {
       this.$store.dispatch('public/setInboundInformation', {});
       this.$store.dispatch('public/setSelectStoreData', []);
 
-      this.$router.push({ name: 'SubmitStore', query: { type: 'submit', id: item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
+      this.$router.push({ name: 'SubmitStore', query: { type: 'submit', id: item.id, supplyId: item.planId, storeStatus: 1 } })
     },
     // 下载入库单
     async handleDonwload({id}) {
       try {
-        await downloadStorageList({id});
+        await customDownload({businessType:5, businessData:id });
       } catch (error) {
       } finally {
       }
@@ -247,7 +248,7 @@ export default {
       this.$router.push({
         name: "MyProcess",
         params: {
-          businessId: item.storeStatus == 0 ? item.storeMiddleId : item.id,
+          businessId:  item.storeMiddleId ? item.storeMiddleId : item.id,
           workflowId: item.storeMiddleId,
           businessType: 'RKLC',
           storeStatus: item.storeStatus,
@@ -262,7 +263,7 @@ export default {
 
             this.$store.dispatch('public/setSelectStoreData', []);
 
-            this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.storeStatus == 0 ? item.storeMiddleId : item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
+            this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.storeMiddleId? item.storeMiddleId : item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
           } else {
             this.$toast('入库完成才能查看详情');
           }

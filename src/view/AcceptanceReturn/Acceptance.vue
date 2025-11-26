@@ -118,6 +118,7 @@ import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
 import { materialCirculationTableRestSubmit } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { recall } from '@/api/prodmgr-inv/audit'
 import { downloadHandoverAcceptanceForm } from '@/api/prodmgr-inv/file'
+import {customDownload} from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'Acceptance',
@@ -135,11 +136,11 @@ export default {
       tabList: [
         {title: '全部', status: '', color: ''},
         {title: '未收货', status: '1', color: '#134daa'},
+        {title: '审核中', status: '5', color: '#134daa'},
         {title: '已收货', status: '2', color: '#51CA40'},
+        {title: '已驳回',status:'0', color:'#FF9800'},
         {title: '部分退货', status: '3', color: '#FC5937'},
         {title: '已退货', status: '4', color: '#CE2320'},
-        {title: '审核中', status: '5', color: '#134daa'},
-        {title: '已驳回',status:'0', color:'#FF9800'}
       ],
       dataList: [],
       allRefreshLoading: false,
@@ -220,7 +221,7 @@ export default {
       this.$router.push({ 
         name: "MyProcess", 
         params: { 
-          businessId: item.takeStatus == 5 ? item.id : item.backMiddleId,
+          businessId: item.backMiddleId ? item.backMiddleId : item.id,
           businessType: "SHLC",
           takeStatus: item.takeStatus,
           form: this.$route.name
@@ -282,7 +283,7 @@ export default {
       this.$store.dispatch('public/setGoodsReceiptInfo', {});
       
       this.$store.dispatch('public/setSelectGoodData', []);
-      this.$router.push({name: 'DoAcceptDetail', query: {id:item.id,tabs:item.takeNumber?true:false,isLable:item.takeNumber?true:false, takeStatus: item.takeStatus}})
+      this.$router.push({name: 'DoAcceptDetail', query: {id:item.id,tabs:item.takeNumber?true:false,isLable:item.takeNumber?true:false, takeStatus: item.takeStatus }})
     },
     viewLogistic(item){
       this.$router.push({name: 'lookCargo', query: {id:item.planId,number:item.shipmentBatchNumber,logisticsNumber:item.oddNumbers}})
@@ -301,7 +302,7 @@ export default {
       this.$store.dispatch('public/setGoodsReceiptInfo', {});
       this.$store.dispatch('public/setSelectGoodData', []);
       
-      this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true,isLable:false, takeStatus: item.takeStatus}})
+      this.$router.push({name: 'DoAccept',query: {id:item.id,tabs:true,isLable:false, takeStatus: item.takeStatus == 0 ? 1 : item.takeStatus}})
     },
 
     //搜索点击
@@ -370,7 +371,7 @@ export default {
     // 下载验收单
     async handleDonwload({id}) {
       try {
-        await downloadHandoverAcceptanceForm({id});
+        await customDownload({businessType:4,businessData : id })
       } catch (error) {
       } finally {
       }

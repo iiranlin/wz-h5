@@ -295,6 +295,7 @@ export default {
       return finallyData
     },
     detailByStore(id, storeStatus) {
+      console.log(storeStatus,'storeStatusstoreStatusstoreStatus');
       const url = storeStatus == "5" || storeStatus == "6" || storeStatus == '0' ? detailStoreBack : detailByStore
       let toast = this.$toast.loading({
         duration: 0,
@@ -467,7 +468,10 @@ export default {
     },
     //选择审核人回调
     optionsSuccess(assignee, { id, planType }) {
-      const params = Object.assign({ supplyId: this.supplyId, id: this.id, planType: planType, assignee }, this.formData, { materialCirculationDetailsTableParamList: this.tableData })
+      const params = Object.assign({ supplyId: this.supplyId,  planType: planType, assignee }, this.formData, { materialCirculationDetailsTableParamList: this.tableData },{
+        id: this.$route.query.id,
+      })
+      console.log(params,'paramsparamsparams');
       materialStoreTableRestSubmit(params).then(() => {
         this.$toast('提交入库审核成功')
         this.$router.push({ path: '/InListContent' })
