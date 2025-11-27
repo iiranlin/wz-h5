@@ -118,7 +118,7 @@
 " label="数量" placeholder="请输入数量" input-align="right" />
           </li>
           <li class="detail-list-li-input">
-            <van-field v-decimal="2" v-model="item.price" required name="price" type="number" label="单价" placeholder="请输入单价金额"
+            <van-field v-decimal="3" v-model="item.price" required name="price" type="number" label="单价" placeholder="请输入单价金额"
               input-align="right">
               <template #button>
                 <span style="color: #333;">元</span>
