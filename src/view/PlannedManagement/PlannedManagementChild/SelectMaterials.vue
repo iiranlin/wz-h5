@@ -50,7 +50,7 @@
       <div class="van-list">
         <van-checkbox-group v-model="materiaId" v-if="filteredList.length" @change="materiaIdChange">
           <van-checkbox :name="item.uniqueNumber || item.allocationUniqueNumber" v-for="(item, index) in filteredList"
-            :key="item.uniqueNumber || item.allocationUniqueNumber" :disabled="item.amount === item.cumulativeAmount">
+            :key="item.uniqueNumber || item.allocationUniqueNumber" :disabled="item.amount === item.cumulativeAmount || item.amount < 0">
             <ul class="list-ul">
               <li>
                 <span class="font-weight">{{ index + 1 }}.{{ item.materialName }}</span>
