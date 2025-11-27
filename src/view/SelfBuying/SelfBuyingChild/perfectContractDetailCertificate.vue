@@ -167,7 +167,7 @@
           </li>
           <li class="detail-list-li-input">
             <van-field readonly clickable required name="validPeriod" label="有效期限" placeholder="请选择有效期限"
-              right-icon="arrow" input-align="right" v-model="cerForm.validPeriod" @click="showCerRange = true" />
+              right-icon="arrow" input-align="right" v-model="cerForm.validPeriod" @click="$refs.calendar1.handleCalendarShow()" />
           </li>
         </ul>
         <div class="default-button-container">
@@ -177,7 +177,8 @@
       </div>
     </van-popup>
 
-    <van-calendar v-model="showCerRange" type="range" @confirm="handleCerDateConfirm" />
+    <!-- 有效期限 -->
+    <rangeCalendar ref="calendar1" @onConfirm="handleCerDateConfirm" :unlimited="true" />
 
     <!-- 流程信息待完善 -->
     <!-- <div class="detail-base-info detail-base-info-edited" v-if="recordList.length">
@@ -263,15 +264,18 @@
 
 <script>
 import keepPages from '@/view/mixins/keepPages'
+import BackToTop from '@/components/BackToTop'
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import { mergeByActId } from '@/utils/index.js'
 import { wfHistoryList } from '@/api/myToDoList'
 import indexMixin from '@/view/mixins'
+import dayjs from 'dayjs'
 
 import { auditReject, wfNextAssigneeMore, auditApprove } from '@/api/myToDoList'
 import eventBus from '@/utils/eventBus.js'
 
 import { materialPurchaseContractdetail, addCertificate } from '@/api/prodmgr-inv/SelfBuying'
+import rangeCalendar from "./components/calendar.vue"
 
 export default {
   name: 'perfectContractDetail',
@@ -279,7 +283,8 @@ export default {
   mixins: [indexMixin, keepPages],
 
   components: {
-    FileDownloadView
+    FileDownloadView,
+    rangeCalendar
   },
 
   filters: {
@@ -335,7 +340,6 @@ export default {
       recordList: [],
       historyData: {},
       showCerPopup: false,
-      showCerRange: false,
       currentCerItem: null,
       cerForm: {
         issuanceUnit: '',
@@ -399,17 +403,15 @@ export default {
       const [start, end] = dates || [];
 
       if (!start || !end) {
-        this.showCerRange = false;
         return;
       }
 
-      const startText = this.formatDateText(start);
-      const endText = this.formatDateText(end);
+      const startText = dayjs(start).format('YYYY-MM-DD');
+      const endText = dayjs(end).format('YYYY-MM-DD');
 
       this.cerForm.startTime = startText;
       this.cerForm.endTime = endText;
       this.cerForm.validPeriod = `${startText} 至 ${endText}`;
-      this.showCerRange = false;
     },
     handleCerSubmit() {
       if (!this.cerForm.issuanceUnit || !this.cerForm.quantity || !this.cerForm.startTime || !this.cerForm.endTime) {
@@ -436,7 +438,6 @@ export default {
     },
     handleCerCancel() {
       this.showCerPopup = false;
-      this.showCerRange = false;
     },
     formatDateText(value) {
       const dt = new Date(value);
