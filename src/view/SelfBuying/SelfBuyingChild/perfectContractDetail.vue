@@ -112,7 +112,7 @@
           </li>
           <li>
             <span>合价：</span>
-            <span>{{ item.totalAmount }} 元</span>
+            <span>{{ item.totalAmount }} 万元</span>
           </li>
           <li>
             <span>铁路专用产品：</span>

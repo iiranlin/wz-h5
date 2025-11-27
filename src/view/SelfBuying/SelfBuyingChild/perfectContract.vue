@@ -134,10 +134,10 @@
             </van-field>
           </li>
           <li class="detail-list-li-input">
-            <van-field v-decimal="2" type="number" v-model="item.totalAmount" required name="totalAmount
+            <van-field v-decimal="6"  type="number" v-model="item.totalAmount" required name="totalAmount
 " label="合价" placeholder="请输入合价" input-align="right">
               <template #button>
-                <span style="color: #333;">元</span>
+                <span style="color: #333;">万元</span>
               </template>
             </van-field>
           </li>
@@ -288,7 +288,7 @@ export default {
   watch: {
     contractValue: {
       handler(val) {
-        this.sectionInfo.amount = (val / 10000).toFixed(2);
+        this.sectionInfo.amount = val;
       },
       immediate: true,
     }
