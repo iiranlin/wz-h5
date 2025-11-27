@@ -86,8 +86,8 @@
         </template>
         <template #value>
           <div style="display: flex; justify-content: flex-end;align-items: center;gap: 5px;">
-            <van-button v-if="index == 0" class="detail-button" style="margin-left: auto;"
-              @click="onPerfectContractDetail">批量上传物资</van-button>
+            <!-- <van-button v-if="index == 0" class="detail-button" style="margin-left: auto;"
+              @click="onPerfectContractDetail">批量上传物资</van-button> -->
             <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
               @click.stop="handleDelete(index)">删除</span>
           </div>
