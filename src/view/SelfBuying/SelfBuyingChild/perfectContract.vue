@@ -39,7 +39,7 @@
             placeholder="请输入合同编号" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.purchaseNumber" required name="purchaseNumber" label="采购编号"
+          <van-field v-model="sectionInfo.purchaseNo" required name="purchaseNo" label="采购编号"
             placeholder="请输入采购编号" input-align="right" />
         </li>
         <li class="detail-list-li-input">
@@ -86,8 +86,8 @@
         </template>
         <template #value>
           <div style="display: flex; justify-content: flex-end;align-items: center;gap: 5px;">
-            <!-- <van-button v-if="index == 0" class="detail-button" style="margin-left: auto;"
-              @click="onPerfectContractDetail">批量上传物资</van-button> -->
+            <van-button v-if="index == 0" class="detail-button" style="margin-left: auto;"
+              @click="onPerfectContractDetail">批量上传物资</van-button>
             <span v-if="sectionInfo.contractDetailsList.length > 1" style="color: #1989FA;"
               @click.stop="handleDelete(index)">删除</span>
           </div>
@@ -750,7 +750,7 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.purchaseNumber) {
+        if (!this.sectionInfo.purchaseNo) {
           this.$notify({
             type: 'warning',
             message: '请输入采购编号!',

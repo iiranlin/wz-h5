@@ -32,7 +32,7 @@
       <ul class="detail-info-ul">
         <li>
           <span>采购编号：</span>
-          <span>{{ formData.purchaseNumber }}</span>
+          <span>{{ formData.purchaseNo }}</span>
         </li>
         <li>
           <span>买方单位：</span>

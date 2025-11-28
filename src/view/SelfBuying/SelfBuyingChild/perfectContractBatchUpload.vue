@@ -25,7 +25,7 @@
 
       <div class="template-download">
         <span>请严格按模板格式上传，</span>
-        <a style="color: #409eff; cursor: pointer" href="/自购物资合同核备-物资明细导入模板.xlsx" download>模板下载</a>
+        <a style="color: #409eff; cursor: pointer" @click=handleFileDwonLoad>模板下载</a>
       </div>
     </div>
 
@@ -87,14 +87,18 @@
 <script>
 import { batchImport } from '@/api/prodmgr-inv/SelfBuying'
 import {customUpload} from '@/api/prodmgr-inv/file'
+import { isAndroid } from "@/utils"
 
 export default {
   name: 'PerfectContractBatchUpload',
+    dicts: ['business'],
+
   data() {
     return {
       loading: false,
       uploaderList: [], // Vant uploader 绑定的文件列表
       uploadResult: null, // 存储接口返回的 data 对象
+      filePath: ''
     }
   },
   computed: {
@@ -102,7 +106,25 @@ export default {
       return this.$route.query.id
     }
   },
+  mounted(){
+    setTimeout(()=>{
+        this.filePath = this.dict.business.find(x => x.code === 'ZGWZFJ')?.remark
+        
+    },1000)
+  },
   methods: {
+    //附件下载
+    handleFileDwonLoad(){
+      if(this.filePath == ''){
+        this.$toast.fail('正在获取下载文件，请稍后重试')
+        this.filePath = this.dict.business.find(x => x.code === 'ZGWZFJ')?.remark
+
+        return
+      }
+        if (isAndroid()) {
+            Android.fileDownLoad('自购物资合同核备-物资明细导入模板.xlsx',this.filePath);
+        }
+    },
     onClickLeft() {
       this.$router.go(-1)
     },
