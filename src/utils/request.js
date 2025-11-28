@@ -144,6 +144,11 @@ service.interceptors.response.use(
     if(!response.config.minioSm4 && !response.config.minioSm4R && process.env.NODE_ENV !== 'development'){
       response.data = JSON.parse(decrypt(response.data, secretKey))
     }
+
+    // 需要解密
+    if(response.config.deCode){
+      response.data = JSON.parse(decrypt(response.data, secretKey))
+    }
     console.info(response.config.url, response.data)
     // 二进制数据则直接返回
     if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {

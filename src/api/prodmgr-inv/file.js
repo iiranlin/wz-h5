@@ -51,6 +51,7 @@ export const customUpload = (data) => {
     method: 'post',
     data,
     minioSm4: true, //上传不需要加密
+    deCode:true, //需要解密
     timeout: 0, //无超时时间
   })
 }
