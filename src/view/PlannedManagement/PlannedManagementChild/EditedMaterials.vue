@@ -29,10 +29,11 @@
       </ul>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field label="本次计划数量" placeholder="请输入数量" required clearable
-            input-align="right">
+          <van-field label="本次计划数量" placeholder="请输入数量" required clearable input-align="right">
             <template #input>
-              <van-stepper v-model="sectionInfo.planAmount" :min="0" :max="+sectionInfo.amount - +sectionInfo.cumulativeAmount + +(sectionInfo.backPlanAmount || 0)" :decimal-length="2" />
+              <van-stepper v-model="sectionInfo.planAmount" :min="0"
+                :max="+sectionInfo.amount - +sectionInfo.cumulativeAmount + +(sectionInfo.backPlanAmount || 0)"
+                :decimal-length="4" />
             </template>
           </van-field>
         </li>
@@ -66,7 +67,8 @@
           </ul>
         </div>
         <div class="detail-base-info-edited-all" style="padding-top: 0;">
-          <p @click="applicationAllClick({receiver: '', addr: '', field2: '',})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+          <p @click="applicationAllClick({ receiver: '', addr: '', field2: '', })"><img
+              src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
         </div>
       </template>
       <template v-else>
@@ -100,7 +102,7 @@
         </li>
       </ul>
       <div class="detail-base-info-edited-all">
-        <p @click="applicationAllClick({supplyDate: ''})"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+        <p @click="applicationAllClick({ supplyDate: '' })"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
       </div>
     </div>
     <div class="detail-base-info detail-base-info-edited">
@@ -110,16 +112,18 @@
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field required v-model="sectionInfo.field0" label="投资方" placeholder="请输入投资方"
-            input-align="right" @blur="saveInvestmentCache" />
+          <van-field required v-model="sectionInfo.field0" label="投资方" placeholder="请输入投资方" input-align="right"
+            @blur="saveInvestmentCache" />
         </li>
         <li class="detail-list-li-input">
-          <van-field required v-model="sectionInfo.field1" label="投资比例" placeholder="请输入投资比例"
-            input-align="right" @blur="saveInvestmentCache" />
+          <van-field required v-model="sectionInfo.field1" label="投资比例" placeholder="请输入投资比例" input-align="right"
+            @blur="saveInvestmentCache" />
         </li>
       </ul>
       <div class="detail-base-info-edited-all">
-        <p @click="applicationAllClick({field0: '', field1: ''}, true)"><img src="@/assets/img/Icon-Copy2All.png" />应用到所有物资</p>
+        <p @click="applicationAllClick({ field0: '', field1: '' }, true)"><img
+            src="@/assets/img/Icon-Copy2All.png" />应用到所有物资
+        </p>
       </div>
     </div>
     <div class="detail-base-info detail-base-info-edited">
@@ -179,10 +183,10 @@ export default {
       // 从本地缓存加载投资信息
       this.loadInvestmentCache()
 
-      console.log(this.sectionInfo,"sectionInfo")
+      console.log(this.sectionInfo, "sectionInfo")
     },
     cumulativeAmount(item) {
-      return this.queryType == 'update' && !item.uniqueNumber ?  +item.cumulativeAmount - +item.backPlanAmount + +(item.planAmount || 0) : +(item.cumulativeAmount || 0) + +(item.planAmount || 0)
+      return this.queryType == 'update' && !item.uniqueNumber ? +item.cumulativeAmount - +item.backPlanAmount + +(item.planAmount || 0) : +(item.cumulativeAmount || 0) + +(item.planAmount || 0)
     },
     dateClick(item) {
       this.sectionInfo = Object.assign({}, item, { showDatePicker: true })
@@ -239,9 +243,9 @@ export default {
           return
         }
         const data = this.$store.state.public.materiaList || []
-        data.forEach((item,index)=>{
-          if(item.id == this.sectionInfo.id){
-             this.$set(data, index, this.sectionInfo)
+        data.forEach((item, index) => {
+          if (item.id == this.sectionInfo.id) {
+            this.$set(data, index, this.sectionInfo)
           }
         })
         this.$store.dispatch('public/setMateriaList', data)
@@ -251,7 +255,7 @@ export default {
       }
       this.$router.push({ name: 'SaveMaterials', query: { contractId: this.contractId, type: this.queryType, id: this.queryId } })
     },
-    applicationAllClick (obj, isInvestment = false) {
+    applicationAllClick(obj, isInvestment = false) {
       this.$dialog.confirm({
         title: '提示',
         message: '确认要应用到所有物资吗？',
@@ -259,12 +263,12 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const data = this.$store.state.public.materiaList || []
-        console.log(data,"data")
+        console.log(data, "data")
         data.forEach((item) => {
           for (const key in obj) {
             if (Object.hasOwnProperty.call(obj, key)) {
               item[key] = this.sectionInfo[key]
-              console.log(item.key,"111")
+              console.log(item.key, "111")
             }
           }
         });

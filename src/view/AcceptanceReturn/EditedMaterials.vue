@@ -46,13 +46,15 @@
         <li class="detail-list-li-input">
           <van-field label="实收数量" placeholder="请输入数量" required clearable input-align="right">
             <template #input>
-              <van-stepper v-model="sectionInfo.putTotal" min='0'  :max="sectionInfo.sendTotal" @input="handleInput(sectionInfo)" />
+              <van-stepper v-model="sectionInfo.putTotal" min='0' :max="sectionInfo.sendTotal" step="0.0001"
+                :decimal-length="4" @change="handleInput(sectionInfo)" />
             </template>
           </van-field>
 
           <van-field label="退货数量" placeholder="请输入数量" required clearable input-align="right">
             <template #input>
-              <van-stepper v-model="sectionInfo.refundTotal"  min='0'  :max="sectionInfo.sendTotal" @input="handleInput1(sectionInfo)"/>
+              <van-stepper v-model="sectionInfo.refundTotal" min='0' :max="sectionInfo.sendTotal" step="0.0001"
+                :decimal-length="4" @change="handleInput1(sectionInfo)" />
             </template>
           </van-field>
         </li>
@@ -76,22 +78,26 @@
       </ul>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;" v-if="!isView && +sectionInfo.refundTotal > 0">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;"
+      v-if="!isView && +sectionInfo.refundTotal > 0">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>退货附件</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo.values?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.values || []" businessType="01" class="outbound-field-uploader" />
+      <p class="box-container-p" v-if="!sectionInfo.values?.length"><span
+          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="sectionInfo.values || []"
+        businessType="01" class="outbound-field-uploader" />
     </div>
 
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;" v-if="isView && filterList(sectionInfo.fileByList, 'thfj_sh')?.length > 0">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;"
+      v-if="isView && filterList(sectionInfo.fileByList, 'thfj_sh')?.length > 0">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>退货附件</span>
       </div>
       <file-download-view class="outbound-field-uploader"
-            :fileList="filterList(sectionInfo.fileByList, 'thfj_sh') || []" />
+        :fileList="filterList(sectionInfo.fileByList, 'thfj_sh') || []" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited">
@@ -119,34 +125,35 @@
         </div>
 
         <ul class="detail-info-ul">
-        <li>
-          <span>供应时间：</span>
-          <span>{{ sectionInfo.supplyDate | formatToDate}}</span>
-        </li>
-        <li>
-          <span>投资方：</span>
-          <span>{{ sectionInfo.field0 }}</span>
-        </li>
-        <li>
-          <span>投资比例：</span>
-          <span>{{ sectionInfo.field1 }}</span>
-        </li>
-      </ul>
+          <li>
+            <span>供应时间：</span>
+            <span>{{ sectionInfo.supplyDate | formatToDate }}</span>
+          </li>
+          <li>
+            <span>投资方：</span>
+            <span>{{ sectionInfo.field0 }}</span>
+          </li>
+          <li>
+            <span>投资比例：</span>
+            <span>{{ sectionInfo.field1 }}</span>
+          </li>
+        </ul>
       </template>
     </div>
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>合格证附件</span>
       </div>
-      <file-download-view class="outbound-field-uploader" :fileList="filterList(sectionInfo.fileByList, 'hgz') || []"/>
+      <file-download-view class="outbound-field-uploader" :fileList="filterList(sectionInfo.fileByList, 'hgz') || []" />
     </div>
-    <div class="detail-base-info detail-base-info-edited"  style="margin-top: 0; margin-bottom: 5px;">
+    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
         <span>厂检报告附件</span>
       </div>
-      <file-download-view class="outbound-field-uploader" :fileList="filterList(sectionInfo.fileByList, 'cjbg') || []"/>
+      <file-download-view class="outbound-field-uploader"
+        :fileList="filterList(sectionInfo.fileByList, 'cjbg') || []" />
     </div>
 
     <div class="detail-base-info detail-base-info-edited" v-if="!isView">
@@ -165,14 +172,14 @@
         <img src="@/assets/img/Icon-notes.png" />
         <span>备注</span>
       </div>
-        <div class="detail-ul-text">
-          <ul class="detail-ul">
-            <li>
-              <!-- <span>使用地点：</span> -->
-              <span class="remark-detail">{{ sectionInfo.remark || '未填写' }}</span>
-            </li>
-          </ul>
-        </div>
+      <div class="detail-ul-text">
+        <ul class="detail-ul">
+          <li>
+            <!-- <span>使用地点：</span> -->
+            <span class="remark-detail">{{ sectionInfo.remark || '未填写' }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div class="default-button-container" v-if="!isView">
@@ -188,11 +195,11 @@ import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
 export default {
   name: 'EditedMaterials',
-  mixins: [keepPages,indexMixin],
-  components: {FileUploadView,FileDownloadView},
+  mixins: [keepPages, indexMixin],
+  components: { FileUploadView, FileDownloadView },
   filters: {
     formatDate(value) {
-      if(value){
+      if (value) {
         const dt = new Date(value);
         const y = dt.getFullYear();
         const m = (dt.getMonth() + 1 + '').padStart(2, '0');
@@ -201,18 +208,18 @@ export default {
         const mm = (dt.getMinutes() + '').padStart(2, '0');
         const ss = (dt.getSeconds() + '').padStart(2, '0');
         return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
-      }else{
+      } else {
         return ""
       }
     },
     formatToDate(value) {
-      if(value){
+      if (value) {
         const dt = new Date(value);
         const y = dt.getFullYear();
         const m = (dt.getMonth() + 1 + '').padStart(2, '0');
         const d = (dt.getDate() + '').padStart(2, '0');
         return `${y}-${m}-${d}`;
-      }else{
+      } else {
         return ""
       }
     }
@@ -240,7 +247,7 @@ export default {
     this.init()
   },
   methods: {
-    handleInput(item){
+    handleInput(item) {
       if (item.putTotal == undefined || item.sendTotal == undefined) {
         return
       }
@@ -248,14 +255,17 @@ export default {
       const num = Number(item.putTotal);
 
       if (!isNaN(num) && num <= item.sendTotal) {
-        this.sectionInfo.putTotal = num;
-        this.sectionInfo.refundTotal =(this.sectionInfo.sendTotal - this.sectionInfo.putTotal).toFixed(2)
+        // 保留4位小数
+        this.sectionInfo.putTotal = parseFloat(num.toFixed(4));
+        // 自动计算退货数量，保留4位小数
+        const refundTotal = item.sendTotal - this.sectionInfo.putTotal;
+        this.sectionInfo.refundTotal = parseFloat(refundTotal.toFixed(4));
       } else {
         this.$toast('实收数量不能大于发货数量');
         this.sectionInfo.putTotal = 0;
       }
     },
-    handleInput1(item){
+    handleInput1(item) {
       if (item.refundTotal == undefined || item.sendTotal == undefined) {
         return
       }
@@ -263,14 +273,14 @@ export default {
       const num = Number(item.refundTotal);
       if (!isNaN(num) && num <= item.sendTotal) {
         this.sectionInfo.refundTotal = num;
-        this.sectionInfo.putTotal = (this.sectionInfo.sendTotal - this.sectionInfo.refundTotal).toFixed(2)
+        this.sectionInfo.putTotal = parseFloat((this.sectionInfo.sendTotal - this.sectionInfo.refundTotal).toFixed(4))
       } else {
         this.$toast('退货数量不能大于发货数量');
-        this.sectionInfo.refundTotal=0
+        this.sectionInfo.refundTotal = 0
       }
     },
     init() {
-      const { id = '', tabs = true, isLable = false, isView = false, takeStatus = ''} = this.$route.query
+      const { id = '', tabs = true, isLable = false, isView = false, takeStatus = '' } = this.$route.query
 
       this.id = id
       this.tabs = tabs == (true || 'true')
@@ -329,26 +339,27 @@ export default {
   padding-bottom: 60px;
 
   .detail-info-ul {
-        padding: 5px 16px 5px 16px;
+    padding: 5px 16px 5px 16px;
 
     li {
-        display: flex;
-        justify-content: space-between;
-        font-size: 13px;
-        color: #151b3e;
-        line-height: 26px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #151b3e;
+      line-height: 26px;
 
-        // & :nth-child(1){
-        //     min-width: 70px
-        // }
-        & :nth-child(2){
-            // width: calc(100% - 70px);
-            overflow: hidden;
-            text-align: right;
-            word-break: break-all;
-            flex: 1;
-        }
+      // & :nth-child(1){
+      //     min-width: 70px
+      // }
+      & :nth-child(2) {
+        // width: calc(100% - 70px);
+        overflow: hidden;
+        text-align: right;
+        word-break: break-all;
+        flex: 1;
+      }
     }
+
     // .li-item-overlength {
     //     & :nth-child(1){
     //         min-width: initial;
@@ -356,59 +367,65 @@ export default {
     //     }
     // }
     .li-item-remark {
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        margin-bottom: 5px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      margin-bottom: 5px;
 
-        .remark-detail {
-            box-sizing: border-box;
-            color: #272b31;
-            font-size: 13px;
-            line-height: 26px;
-            background: #f6f6f6;
-            border-radius: 3px;
-            width: 100%;
-            text-align: left;
-            padding: 8px 14px;
-            word-wrap:break-word;
-        }
+      .remark-detail {
+        box-sizing: border-box;
+        color: #272b31;
+        font-size: 13px;
+        line-height: 26px;
+        background: #f6f6f6;
+        border-radius: 3px;
+        width: 100%;
+        text-align: left;
+        padding: 8px 14px;
+        word-wrap: break-word;
+      }
     }
+
     .li-item-after::after {
-        content: '';
-        width: 5px;
-        height: 5px;
-        border-radius: 25%;
-        background: #028bff;
-        position: absolute;
-        left: -15px;
-        top: 10px;
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 25%;
+      background: #028bff;
+      position: absolute;
+      left: -15px;
+      top: 10px;
     }
+
     .van-cell {
-        padding: 8px 0px;
+      padding: 8px 0px;
     }
+
     .van-cell--required::before {
-        left: -15px;
+      left: -15px;
     }
-    .li-span-open{
+
+    .li-span-open {
       justify-content: end;
       padding-top: 5px;
-      i{
+
+      i {
         vertical-align: middle;
       }
     }
   }
 
-  .box-container-p{
-      font-size: 11px;
-      color: #4a4a4a;
-      text-align: center;
-      margin-top: 22px;
-      margin-bottom: 13px;
-      span{
-        vertical-align: middle;
-      }
+  .box-container-p {
+    font-size: 11px;
+    color: #4a4a4a;
+    text-align: center;
+    margin-top: 22px;
+    margin-bottom: 13px;
+
+    span {
+      vertical-align: middle;
     }
+  }
 
   .detail-list-ul-edited {
     margin: 0 7px;
@@ -542,12 +559,12 @@ export default {
     }
 
     .detail-ul-text2 {
-    width: 100%;
-    padding-top: 5px;
-    background: #ffffff;
-    padding: 10px 5px;
+      width: 100%;
+      padding-top: 5px;
+      background: #ffffff;
+      padding: 10px 5px;
 
-    .detail-title-content {
+      .detail-title-content {
         width: 100%;
         // height: 34px;
         margin-top: 10px;
@@ -559,25 +576,27 @@ export default {
         box-sizing: border-box;
 
         img {
-            width: 18px;
-            height: 18px;
+          width: 18px;
+          height: 18px;
         }
-        & span:nth-child(2){
-            margin-left: 6px;
-            color: #151b3e;
-            font-size: 15px;
-            font-weight: 600;
-            line-height: 20px;
+
+        & span:nth-child(2) {
+          margin-left: 6px;
+          color: #151b3e;
+          font-size: 15px;
+          font-weight: 600;
+          line-height: 20px;
         }
-        & span:nth-child(3){
-            color: #151b3e;
-            font-size: 15px;
-            font-weight: 600;
-            flex: 1;
-            word-break: break-all;
-            line-height: 20px;
+
+        & span:nth-child(3) {
+          color: #151b3e;
+          font-size: 15px;
+          font-weight: 600;
+          flex: 1;
+          word-break: break-all;
+          line-height: 20px;
         }
-    }
+      }
     }
 
     .detail-title-edited-p {
@@ -612,7 +631,8 @@ export default {
   }
 }
 
-/deep/.van-calendar__popup.van-popup--bottom, .van-calendar__popup.van-popup--top{
-    height: 94% !important;
+/deep/.van-calendar__popup.van-popup--bottom,
+.van-calendar__popup.van-popup--top {
+  height: 94% !important;
 }
 </style>
