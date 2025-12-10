@@ -472,6 +472,7 @@ export default {
       this.$store.dispatch('public/setShipmentsInfo', {})
 
       this.$store.dispatch('public/setSelectGoodDataEdit', []);
+      sessionStorage.setItem('gysObj',JSON.stringify({ id: id, text: title,planId:planId ,goodData:JSON.stringify([])}))
       this.$router.push({ path: '/SendGoods', query: {goodData:JSON.stringify([]), id: id, text: title,planId:planId } })
     },
     //文件修改

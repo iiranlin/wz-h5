@@ -251,6 +251,7 @@ export default {
       this.$store.dispatch('public/setShipmentsInfo', {})
 
       this.$store.dispatch('public/setSelectGoodData', []);
+      sessionStorage.setItem('gysObj',JSON.stringify({ id: id, text: title }))
       this.$router.push({ path: '/selectGoods', query: { id: id, text: title } })
     },
     //查看物流

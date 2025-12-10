@@ -93,7 +93,12 @@ export default {
                     this.refreshLoading = false;
                 }
                 this.loading = false;
-                this.dataList = [...this.dataList, ...data.list];
+                 const arr = [...this.dataList, ...(data?.list || [])];
+
+                          // 按 id 去重
+                    const map = new Map();
+                    arr.forEach(v => map.set(v.id, v));
+                    this.dataList = [...map.values()];
 
                 if (data?.list?.length === 0) {
                     this.finished = true;

@@ -485,11 +485,10 @@ export default {
 
   methods: {
     init() {
-    this.text = this.$route.query.text;
-    this.goodsId = this.$route.query.id;
-    this.planId = this.$route.query.planId;
+    this.text = this.$route.query.text || JSON.parse(sessionStorage.getItem('gysObj')|| "{}" ).text ;
+    this.goodsId = this.$route.query.id || JSON.parse(sessionStorage.getItem('gysObj')|| "{}" ).id ;
+    this.planId = this.$route.query.planId || JSON.parse(sessionStorage.getItem('gysObj')|| "{}" ).planId ;
     
-
     //编辑
     if (this.text == "edit") {
       this.editDetails();
@@ -932,6 +931,7 @@ export default {
         demandSaveSendGoods(rest).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);
+            sessionStorage.removeItem('gysObj')
             this.$router.push({ path: "/Information" })
           }
         }).finally(() => {
@@ -941,6 +941,8 @@ export default {
         modifySendGoods(rest).then((res) => {
           if (res.code == 0) {
             Toast.success(res.data);
+            sessionStorage.removeItem('gysObj')
+
             this.$router.push({ path: "/Information" })
           }
         }).finally(() => {
