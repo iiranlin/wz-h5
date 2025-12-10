@@ -131,6 +131,7 @@ export default {
         this.$notify({ type: 'warning', message: '请选择合同' });
         return
       }
+      sessionStorage.setItem('xqObj',JSON.stringify({contractId, materialUsedRatio, type:this.$route.query.type,id:this.$route.query.id}))
       this.$router.push({ name: 'SelectMaterials', query: {contractId, materialUsedRatio} })
     }
   }

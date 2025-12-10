@@ -184,11 +184,12 @@ export default {
   },
   methods: {
     init() {
-      const { id = null, contractId = null, type = '', materialUsedRatio } = this.$route.query
-      this.queryId = id
-      this.contractId = contractId || this.contractId
-      this.queryType = type
-      this.materialUsedRatio = materialUsedRatio
+      const { id = JSON.parse( sessionStorage.getItem('xqObj') || '{}').id, contractId = null, type = JSON.parse( sessionStorage.getItem('xqObj') || '{}').type, materialUsedRatio } = this.$route.query
+
+      this.queryId = id || JSON.parse( sessionStorage.getItem('xqObj') || '{}').id
+      this.contractId = contractId || this.contractId || JSON.parse( sessionStorage.getItem('xqObj') || '{}').contractId
+      this.queryType = type || JSON.parse( sessionStorage.getItem('xqObj') || '{}').type
+      this.materialUsedRatio = materialUsedRatio || JSON.parse( sessionStorage.getItem('xqObj') || '{}').materialUsedRatio
       this.materiaList = this.historyCache({ addr: '', field0: '', field1: '' }, 0)
       this.$store.dispatch('public/setMateriaList', this.materiaList)
       const demandPlanningInfo = this.$store.state.public.demandPlanningInfo || {}
@@ -307,6 +308,7 @@ export default {
       materialDemandPlanRestSaveModify(data, type).then(({ data, message }) => {
         id = data || id
         this.$toast(message)
+        sessionStorage.removeItem('xqObj')
         this.$router.push({ name: 'PlannedManagementList' })
       })
     },

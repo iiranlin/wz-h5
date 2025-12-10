@@ -242,6 +242,7 @@ export default {
       this.$store.dispatch('public/setInterfaceMateriaList', [])
       this.$store.dispatch('public/setDemandPlanningInfo', {})
       if (item) {
+        sessionStorage.setItem('xqObj',JSON.stringify({ id: item.id, contractId: item.contractId, type: 'update' } ))
         this.$router.push({ name: 'SaveMaterials', query: { id: item.id, contractId: item.contractId, type: 'update' } })
         return
       }
