@@ -381,7 +381,8 @@ export default {
 
         this.$store.dispatch(path, data)
       }
-      this.$router.push({ name: 'SendGoods', query: { text: this.queryType, id: this.queryId, planId: this.planId } })
+      // this.$router.push({ name: 'SendGoods', query: { text: this.queryType, id: this.queryId, planId: this.planId } })
+      this.$router.go(-1)
     },
     applicationAllClick (obj) {
       this.$dialog.confirm({

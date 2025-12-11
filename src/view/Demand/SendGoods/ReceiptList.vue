@@ -1,26 +1,24 @@
 <template>
     <div class="detail-button-container">
         <div class="detail-floor-content">
-            <img src="/static/icon-receipt.png"/>
+            <img src="/static/icon-receipt.png" />
             <span>选择发货信息</span>
         </div>
         <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
-            <van-list 
-                v-model="loading" 
-                :finished="finished" 
-                finished-text="没有更多了..." 
-                @load="getList">
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了..." @load="getList">
 
-                <div v-for="(item,index) in dataList" :key="index" class="box-container" @click="handleItemClick(index)">
+                <div v-for="(item, index) in dataList" :key="index" class="box-container"
+                    @click="handleItemClick(index)">
                     <div class="single-list-title">
-                        <img :src="currentIndex == index?'/static/icon-checked.png':'/static/icon-check-normal.png'"/>
-                        <span>{{item.receiver}}</span>
-                        <span>{{item.phone}}</span>
+                        <img
+                            :src="currentIndex == index ? '/static/icon-checked.png' : '/static/icon-check-normal.png'" />
+                        <span>{{ item.receiver }}</span>
+                        <span>{{ item.phone }}</span>
                     </div>
                     <ul class="single-list-ul">
                         <li>
                             <span>发货地址：</span>
-                            <span>{{item.receiveraddress}}</span>
+                            <span>{{ item.receiveraddress }}</span>
                         </li>
                         <!-- <li>
                             <span>使用地点：</span>
@@ -41,27 +39,28 @@
             </van-list>
         </van-pull-refresh>
         <div class="default-button-container">
-            <van-button class="button-info" block type="default" round icon="plus" @click="handleCreate()">新建发货人</van-button>
+            <van-button class="button-info" block type="default" round icon="plus"
+                @click="handleCreate()">新建发货人</van-button>
             <van-button class="button-info" block type="info" round @click="handleConfirm()">确定</van-button>
         </div>
     </div>
 </template>
 <script>
 import keepPages from '@/view/mixins/keepPages'
-import {materialReceiverInformationList,materialReceiverInformationRemove} from '@/api/prodmgr-inv/receipt'
-
+import { materialReceiverInformationList, materialReceiverInformationRemove } from '@/api/prodmgr-inv/receipt'
+import {findLastByNameWithIndex} from '@/utils/router'
 export default {
     name: 'ReceiptList',
     mixins: [keepPages],
 
-    data () {
+    data() {
         return {
-            refreshLoading:false,
-            loading:false,
-            finished:false,
+            refreshLoading: false,
+            loading: false,
+            finished: false,
 
             //列表数据
-            dataList:[],
+            dataList: [],
             //当前选中角标
             currentIndex: null,
 
@@ -75,30 +74,30 @@ export default {
 
     },
     activated() {
-        if(this.$route.params.refresh){
+        if (this.$route.params.refresh) {
             this.onRefresh();
         }
     },
     methods: {
         //获取数据
-        getList(){
+        getList() {
             let toast = this.$toast.loading({
                 duration: 0,
                 message: "正在加载...",
                 forbidClick: true
             });
             materialReceiverInformationList(this.listQuery).then(({ data }) => {
-                if(this.refreshLoading){
+                if (this.refreshLoading) {
                     this.dataList = [];
                     this.refreshLoading = false;
                 }
                 this.loading = false;
-                 const arr = [...this.dataList, ...(data?.list || [])];
+                const arr = [...this.dataList, ...(data?.list || [])];
 
-                          // 按 id 去重
-                    const map = new Map();
-                    arr.forEach(v => map.set(v.id, v));
-                    this.dataList = [...map.values()];
+                // 按 id 去重
+                const map = new Map();
+                arr.forEach(v => map.set(v.id, v));
+                this.dataList = [...map.values()];
 
                 if (data?.list?.length === 0) {
                     this.finished = true;
@@ -113,7 +112,7 @@ export default {
             });
         },
         //删除条目
-        handleDelete(index){
+        handleDelete(index) {
             let toast = this.$toast.loading({
                 duration: 0,
                 message: "正在加载...",
@@ -133,11 +132,11 @@ export default {
             });
         },
         //条目点击
-        handleItemClick(index){
+        handleItemClick(index) {
             this.currentIndex = index;
         },
         //删除点击
-        handleDeleteClick(index){
+        handleDeleteClick(index) {
             this.$dialog.confirm({
                 message: '是否确认删除？',
                 confirmButtonText: '确认',
@@ -147,7 +146,7 @@ export default {
             })
         },
         //编辑点击
-        handleEditClick(index){
+        handleEditClick(index) {
             this.$router.push({
                 path: 'ReceiptOperates',
                 query: {
@@ -158,7 +157,7 @@ export default {
             })
         },
         //新建点击
-        handleCreate(){
+        handleCreate() {
             this.$router.push({
                 path: 'ReceiptOperates',
                 query: {
@@ -167,21 +166,34 @@ export default {
             })
         },
         //确定
-        handleConfirm(){
-          if(this.currentIndex == null){
-            this.$notify({
-                type: 'warning',
-                message: '请选择发货信息!',
-            });
-            return
-          }
-          const data = this.dataList[this.currentIndex]
-          this.$store.dispatch('public/setHistoryData', {receiver: data.receiver, phone: data.phone, receiveraddress: data.receiveraddress, addr: data.addr})
-          const { planId, type, id } = this.$route.query
-          this.$router.push({name: 'SendGoods', query: {planId, text: type, id}})
+        handleConfirm() {
+            if (this.currentIndex == null) {
+                this.$notify({
+                    type: 'warning',
+                    message: '请选择发货信息!',
+                });
+                return
+            }
+            const data = this.dataList[this.currentIndex]
+            this.$store.dispatch('public/setHistoryData', { receiver: data.receiver, phone: data.phone, receiveraddress: data.receiveraddress, addr: data.addr })
+            const { planId, type, id } = this.$route.query
+            // this.$router.push({
+            //     name: 'SendGoods', query: {
+            //         planId: planId || JSON.parse(sessionStorage.getItem('gysObj') || '{}').planId,
+            //         text: type || JSON.parse(sessionStorage.getItem('gysObj') || '{}').text,
+            //         id: id || JSON.parse(sessionStorage.getItem('gysObj') || '{}').id
+            //     }
+            // })
+
+           const {index,record} = findLastByNameWithIndex('SendGoods')
+           this.$router.push({
+            name:record.name,
+            query:record.query,
+            params:record.params
+           })
         },
         //列表刷新
-        onRefresh(){
+        onRefresh() {
             this.refreshLoading = true;
             this.loading = true;
             this.finished = false;
@@ -195,12 +207,15 @@ export default {
 .box-container {
     padding: 0px;
 }
+
 .button-info {
     width: 169px;
 }
+
 ::v-deep .van-button__icon {
     line-height: 34px;
 }
+
 .single-list-title {
     display: flex;
     align-items: center;
@@ -214,6 +229,7 @@ export default {
         width: 18px;
         height: 18px;
     }
+
     span {
         margin-right: 12px;
         color: #151b3e;
@@ -221,6 +237,7 @@ export default {
         font-weight: 600;
     }
 }
+
 .single-list-ul {
     padding-left: 30px;
     padding-right: 24px;
@@ -232,13 +249,14 @@ export default {
         color: #151b3e;
         line-height: 26px;
 
-        & :nth-child(2){
+        & :nth-child(2) {
             overflow: hidden;
             word-break: break-all;
             flex: 1;
         }
     }
 }
+
 .single-list-ul-button {
     width: 100%;
     height: 35px;
@@ -256,6 +274,7 @@ export default {
             width: 24px;
             height: 24px;
         }
+
         span {
             color: #151b3e;
             font-size: 12px;

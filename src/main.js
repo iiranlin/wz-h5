@@ -204,6 +204,10 @@ Vue.directive('decimal', {
   }
 })
 
+import { smartBack } from "@/permission"
+
+Vue.prototype.$smartBack = smartBack;
+
 new Vue({
   store,
   router,
