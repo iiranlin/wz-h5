@@ -267,7 +267,7 @@ export default {
     // 新增/修改
     handleSelfBuying(item) {
       const query = item ? { id: item.id, type: 'update' } : { type: 'create' };
-
+      sessionStorage.setItem('zghtCreate','true')
       this.$router.push({ name: 'perfectContract', query: query })
     },
 

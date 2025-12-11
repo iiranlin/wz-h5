@@ -27,8 +27,8 @@
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field readonly v-model="sectionInfo.amount" name="amount" type="number" label="合同金额"
-            placeholder="0" input-align="right" @input="handlerAmount">
+          <van-field readonly v-model="sectionInfo.amount" name="amount" type="number" label="合同金额" placeholder="0"
+            input-align="right" @input="handlerAmount">
             <template #button>
               <span style="color: #333;">万元</span>
             </template>
@@ -39,8 +39,8 @@
             placeholder="请输入合同编号" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.purchaseNo" required name="purchaseNo" label="采购编号"
-            placeholder="请输入采购编号" input-align="right" />
+          <van-field v-model="sectionInfo.purchaseNo" required name="purchaseNo" label="采购编号" placeholder="请输入采购编号"
+            input-align="right" />
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.name" readonly clickable required name="name" label="物资大类"
@@ -118,8 +118,8 @@
 " label="数量" placeholder="请输入数量" input-align="right" />
           </li>
           <li class="detail-list-li-input">
-            <van-field v-decimal="3" v-model="item.price" required name="price" type="number" label="单价" placeholder="请输入单价金额"
-              input-align="right">
+            <van-field v-decimal="3" v-model="item.price" required name="price" type="number" label="单价"
+              placeholder="请输入单价金额" input-align="right">
               <template #button>
                 <span style="color: #333;">元</span>
               </template>
@@ -134,7 +134,7 @@
             </van-field>
           </li>
           <li class="detail-list-li-input">
-            <van-field v-decimal="6"  type="number" v-model="item.totalAmount" required name="totalAmount
+            <van-field v-decimal="6" type="number" v-model="item.totalAmount" required name="totalAmount
 " label="合价" placeholder="请输入合价" input-align="right">
               <template #button>
                 <span style="color: #333;">万元</span>
@@ -343,8 +343,8 @@ export default {
       showUnitPicker: false,
     };
   },
- async activated() {
-   await this.init()
+  async activated() {
+    await this.init()
 
     const importedDetails = sessionStorage.getItem('perfectContract_imported_details');
 
@@ -371,63 +371,74 @@ export default {
   },
 
   methods: {
-   async init() {
+    async init() {
       this.getGeneraList();
       this.detailInfo = await this.getMaterialSectionProject();
       // 判断是编辑还是新增，查询展示信息和回显数据
       if (this.$route.query.type == 'create') {
-        this.sectionInfo = {
-          htfbsmj: [],
-          gyszlzscns: [],
-          hthbfj: [],
-          contractDetailsList: [
-            {
-              materialName: '',
-              specModel: '',
-              unit: '',
-              amount: '',
-              price: '',
-              vatRate: '',
-              totalAmount: '',
-              railwaySpecial: '0',
-              licenseCategory: '',
-              issuanceUnit: '',
-              quantity: '',
-              validPeriod: '',
-              startTime: '',
-              endTime: '',
-              brand: '',
-              technicalStandard: ''
-            }
-          ],
+        if (sessionStorage.getItem('zghtCreate') == 'true') {
+          this.sectionInfo = {
+            htfbsmj: [],
+            gyszlzscns: [],
+            hthbfj: [],
+            contractDetailsList: [
+              {
+                materialName: '',
+                specModel: '',
+                unit: '',
+                amount: '',
+                price: '',
+                vatRate: '',
+                totalAmount: '',
+                railwaySpecial: '0',
+                licenseCategory: '',
+                issuanceUnit: '',
+                quantity: '',
+                validPeriod: '',
+                startTime: '',
+                endTime: '',
+                brand: '',
+                technicalStandard: ''
+              }
+            ],
+          }
+          sessionStorage.removeItem('zghtCreate')
         }
+
         this.sectionInfo.projectId = this.detailInfo.projectId;
         this.sectionInfo.unitName = this.detailInfo.constructionCompany;
         this.sectionInfo.projefctName = this.detailInfo.sectionName;
       } else {
         try {
-          const data = await this.getGeneraDetail();
-
-          data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
-          data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
-          data.hthbfj = JSON.parse(data.files)?.hthbfj || [];
-          data.startTime = dayjs(data.startTime).format("YYYY-MM-DD");
-
-          data.contractDetailsList.forEach((el, index) => {
-            if (el.railwaySpecial == '1') {
-              el.validPeriod = el.startTime && el.endTime ? dayjs(el.startTime).format('YYYY-MM-DD') + ' 至 ' + dayjs(el.endTime).format('YYYY-MM-DD') : '';
-            }
-
-            this.activeNames.push(index);
-          })
+          if (sessionStorage.getItem('zghtCreate') == 'true') {
 
 
-          this.sectionInfo = data;
-          this.sectionInfo.projectId = this.detailInfo.projectId;
+            const data = await this.getGeneraDetail();
 
-          await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
-          await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
-          await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
+            data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
+            data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
+            data.hthbfj = JSON.parse(data.files)?.hthbfj || [];
+            data.startTime = dayjs(data.startTime).format("YYYY-MM-DD");
+
+            data.contractDetailsList.forEach((el, index) => {
+              if (el.railwaySpecial == '1') {
+                el.validPeriod = el.startTime && el.endTime ? dayjs(el.startTime).format('YYYY-MM-DD') + ' 至 ' + dayjs(el.endTime).format('YYYY-MM-DD') : '';
+              }
+
+              this.activeNames.push(index);
+            })
+
+
+            this.sectionInfo = data;
+            this.sectionInfo.projectId = this.detailInfo.projectId;
+
+            await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
+            await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
+            await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
+
+            sessionStorage.removeItem('zghtCreate')
+
+          }
         } catch (error) {
           console.log(error, "error")
         }

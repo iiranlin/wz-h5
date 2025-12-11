@@ -146,7 +146,7 @@ service.interceptors.response.use(
     }
 
     // 需要解密
-    if(response.config.deCode){
+    if(response.config.deCode && process.env.NODE_ENV !== 'development'){
       response.data = JSON.parse(decrypt(response.data, secretKey))
     }
     console.info(response.config.url, response.data)
