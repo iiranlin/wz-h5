@@ -44,6 +44,13 @@
         </ul>
       </div>
     </div>
+        <div class="detail-base-info detail-base-info-edited" v-if="detail.fileList[1]?.fileList.length">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>需求详情</span>
+      </div>
+      <file-download-view :fileList="detail.fileList[1]?.fileList || []"></file-download-view>
+    </div>
     <div class="detail-base-info detail-base-info-edited" v-if="detail.fileList[0]?.fileList.length">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
