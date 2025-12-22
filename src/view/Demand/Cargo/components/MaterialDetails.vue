@@ -28,6 +28,10 @@
             <span class="li-span-click">{{ item.planAmount }} {{ item.unit }}</span>
           </li>
           <li>
+            <span>累计发货数量(含本次)：</span>
+            <span class="li-span-click">{{ item.shippedTotal }} {{ item.unit }}</span>
+          </li>
+          <li>
             <span>发货数量：</span>
             <span class="li-span-click">{{ item.sendTotal }} {{ item.unit }}</span>
           </li>
