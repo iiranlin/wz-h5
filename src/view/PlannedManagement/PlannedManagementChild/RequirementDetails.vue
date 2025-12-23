@@ -47,7 +47,7 @@
         <div class="detail-base-info detail-base-info-edited" v-if="detail.fileList[1]?.fileList.length">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
-        <span>需求详情</span>
+        <span>需求计划表</span>
       </div>
       <file-download-view :fileList="detail.fileList[1]?.fileList || []"></file-download-view>
     </div>
