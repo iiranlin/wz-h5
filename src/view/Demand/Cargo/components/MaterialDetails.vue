@@ -32,7 +32,7 @@
             <span class="li-span-click">{{ item.shippedTotal }} {{ item.unit }}</span>
           </li>
           <li>
-            <span>发货数量：</span>
+            <span>本次发货数量：</span>
             <span class="li-span-click">{{ item.sendTotal }} {{ item.unit }}</span>
           </li>
         </ul>
