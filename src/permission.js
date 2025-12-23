@@ -3,6 +3,7 @@ import store from "./store"
 import { getToken, setToken } from "@/utils/auth"
 import { isAndroid } from "@/utils"
 import { popRoute,pushRoute } from "@/utils/router"
+import { BACK_TO_HOME_ROUTES } from "@/utils/constant"
 
 
 const whiteList = ["", "/deviceDetail"] // no redirect whitelist
@@ -55,6 +56,12 @@ router.beforeEach(async (to, from, next) => {
     setTimeout(() => {
       Android.sendMenuTitle(to.meta.title)
     }, 100)
+
+    // 通知安卓当前是否需要直接返回首页
+    const isBackToHome = BACK_TO_HOME_ROUTES.includes(to.name)
+    if (typeof Android.isBackToHome === 'function') {
+      Android.isBackToHome(isBackToHome)
+    }
   }
   if (whiteList.indexOf(to.path) !== -1) {
     next()
