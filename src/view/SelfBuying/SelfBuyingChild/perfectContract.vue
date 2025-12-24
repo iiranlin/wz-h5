@@ -121,7 +121,7 @@
             <van-field v-decimal="3" v-model="item.price" required name="price" type="number" label="单价"
               placeholder="请输入单价金额" input-align="right">
               <template #button>
-                <span style="color: #333;">元</span>
+                <span style="color: red">元</span>
               </template>
             </van-field>
           </li>
@@ -137,7 +137,7 @@
             <van-field v-decimal="6" type="number" v-model="item.totalAmount" required name="totalAmount
 " label="合价" placeholder="请输入合价" input-align="right">
               <template #button>
-                <span style="color: #333;">万元</span>
+                <span style="color: red;">万元</span>
               </template>
             </van-field>
           </li>
