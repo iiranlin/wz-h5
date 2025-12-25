@@ -36,13 +36,22 @@
               </ul>
             </div>
         </div>
+       <div class="detail-base-info detail-base-info-edited" v-if="detailInfo.fileList[1]?.fileList.length">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>需求计划表</span>
+      </div>
+      <file-download-view :fileList="detailInfo.fileList[1]?.fileList || []"></file-download-view>
+    </div>
         <div class="detail-base-info detail-base-info-edited" v-if="detailInfo.fileList[0]?.fileList.length">
           <div class="detail-title-content">
             <img src="/static/icon-file.png" />
-            <span>附件</span>
+            <span>计划附件</span>
           </div>
           <file-download-view :fileList="detailInfo.fileList[0]?.fileList || []"></file-download-view>
         </div>
+      
+        
         <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
           <div class="detail-title-content">
             <img src="@/assets/img/Icon-logistics.png" />
