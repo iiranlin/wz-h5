@@ -20,6 +20,7 @@
         </div>
         <div class="pdf-button-container" @click.self="handleClose">
           <van-button native-type="button" type="success" @click="prev()">上一页</van-button>
+          <span class="page-info">第 {{ currentPage }} 页 / 共 {{ pageCount }} 页</span>
           <van-button native-type="button" type="success" @click="next()">下一页</van-button>
         </div>
       </div>
@@ -121,7 +122,7 @@ export default {
       this.showType = true;
 
       minioDownload({ fileName, filePath }).then((data) => {
-        let url = window.URL.createObjectURL(new Blob([data]));
+        let url = window.URL.createObjectURL(new Blob([data],{ type: 'application/pdf' }));
         this.pdfUrl = url;
       })
     },
@@ -311,11 +312,21 @@ export default {
   display: flex;
   align-items:center;
   justify-content: center;
+  gap: 15px;
 
   .van-button {
     width: 80px;
     height: 30px;
-    margin-right: 20px;
+  }
+
+  .page-info {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 500;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 15px;
+    border-radius: 4px;
+    white-space: nowrap;
   }
 }
 
