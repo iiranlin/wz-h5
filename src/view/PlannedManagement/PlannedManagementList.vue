@@ -66,6 +66,10 @@
                 <span>供应时间：</span>
                 <span>{{ parseTime(item.supplyDate, '{y}-{m}-{d}') }}</span>
               </li>
+               <li>
+                <span>当前审核人：</span>
+                <span>{{ item.auditStatus == 2 ?'已完成': item.auditStatus == 3? '--' : item.currentHandlerUserNames || '--'  }} </span>
+              </li>
             </ul>
             <div class="list-ul-button">
               <van-button class="button-info" plain round type="info"
