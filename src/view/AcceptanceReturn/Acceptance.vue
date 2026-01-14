@@ -68,6 +68,10 @@
                     <span>发货时间：</span>
                     <span>{{ item.shippingDate | formatDate}}</span>
                   </li>
+                  <li>
+                    <span>当前审核人：</span>
+                    <span>{{ item.auditStatus == 2 ?'已完成': item.auditStatus == 3? '--' : item.currentHandlerUserNames || '--'  }} </span>
+                  </li>
                   <!-- <li v-if="item.takeStatus === '2'">
                     <span>收货时间：</span>
                     <span>{{ item.takeDate | formatToDate}}</span>
