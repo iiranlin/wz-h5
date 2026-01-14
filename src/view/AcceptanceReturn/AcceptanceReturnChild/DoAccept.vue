@@ -86,7 +86,7 @@
     <div class="detail-base-info detail-base-info-edited" v-if="!isView">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
-        <span>自检单</span>
+        <span>验收单</span>
       </div>
       <p class="box-container-p" v-if="!fileZjdList?.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
       <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileZjdList" businessType="01" />
@@ -114,7 +114,7 @@
       v-if="isView && filterList(dataList.fileByList, 'zjd')?.length > 0">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
-        <span>自检单</span>
+        <span>验收单</span>
       </div>
       <file-download-view class="outbound-field-uploader" :fileList="filterList(dataList.fileByList, 'zjd') || []" />
     </div>
@@ -705,7 +705,7 @@ export default {
       } else {
        return this.$notify({
             type: 'warning',
-            message: '请上传自检单!',
+            message: '请上传验收单!',
           });
       }
 
@@ -759,7 +759,7 @@ export default {
       if(!JSON.parse(params.fileByList).zjd){
          this.$notify({
             type: 'warning',
-            message: '请上传自检单!',
+            message: '请上传验收单!',
           });
          return
       }

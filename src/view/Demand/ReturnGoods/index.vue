@@ -62,7 +62,7 @@
         <span>初验信息</span>
       </div>
                <!-- <div class="box-container"> -->
-                    <file-download-view class="outbound-field-uploader" title="自检单："
+                    <file-download-view class="outbound-field-uploader" title="验收单："
                         :fileList="filterList(params.fileByList, 'zjd') || []" />
                     <file-download-view class="outbound-field-uploader" title="到货确认照片："
                         :fileList="filterList(params.fileByList, 'qtzl') || []" />
