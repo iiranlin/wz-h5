@@ -222,6 +222,7 @@ export default {
             } else if (item.businessType == 'CGWJ') {
                 this.$router.push({ name: 'perfectFile', query: { id: item.businessId, type: 'update' } });
             } else if (item.businessType == 'CGHT') {
+                sessionStorage.setItem('zghtCreate','true')
                 this.$router.push({ name: 'perfectContract', query: { id: item.businessId, type: 'update' } });
             }else if(item.businessType == 'SHLC'){
                 this.$store.dispatch('public/setGoodsReceiptInfo', {});
