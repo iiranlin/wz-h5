@@ -65,6 +65,10 @@
               <span>填报时间：</span>
               <span>{{ item.storeDate ? parseTime(item.storeDate, '{y}-{m}-{d} {h}:{i}') : '' }}</span>
             </li>
+            <li>
+              <span>当前审核人：</span>
+              <span>{{ item.auditStatus == 2 ?'已完成': item.auditStatus == 3? '--' : item.currentHandlerUserNames || '--'  }} </span>
+            </li>
             <!-- <li class="li-status">
               <template v-for="row in statusArr">
                 <van-tag :class="{ 'li-status-completed': ['2', '3'].includes(row.value) }"

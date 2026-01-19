@@ -75,6 +75,10 @@
                 <span>提交时间：</span>
                 <span>{{ item.createDate | formatToDate }}</span>
               </li>
+              <li>
+                <span>当前审核人：</span>
+                <span>{{ item.auditStatus == 2 ?'已完成': item.auditStatus == 3? '--' : item.currentHandlerUserNames || '--'  }} </span>
+              </li>
             </ul>
             <div class="list-ul-button">
               <!-- 未提交、已驳回可修改 -->

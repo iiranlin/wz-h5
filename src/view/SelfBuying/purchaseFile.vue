@@ -72,6 +72,10 @@
                 <span>预计采购完成日期：</span>
                 <span>{{ item.registrationDate | formatDate }}</span>
               </li>
+              <li>
+                <span>当前审核人：</span>
+                <span>{{ item.auditStatus == 2 ?'已完成': item.auditStatus == 3? '--' : item.currentHandlerUserNames || '--'  }} </span>
+              </li>
             </ul>
             <div class="list-ul-button">
               <!-- 未提交、已驳回可修改 -->
