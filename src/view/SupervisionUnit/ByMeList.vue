@@ -92,7 +92,7 @@ export default {
     name:'ByMeList',
     mixins: [keepPages,indexMixin],
     components: {BackToTop},
-    dicts: ['flowBusinessType','flowTaskStatus'],
+    dicts: ['flowBusinessType','flowTaskStatus','currency'],
     beforeRouteLeave (to, from, next) {
       this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
       next();
@@ -239,9 +239,12 @@ export default {
             const now = dayjs();
             const lastHandleTime = dayjs(item.lastHandleDate);
             const secondsDiff = now.diff(lastHandleTime, 'second'); // 改为秒级别计算
+
+            // 获取字典配置时间默认小时
+            const reminderTime = +this.dict.currency.find(x => x.code === 'reminderTime')?.remark
             
             // ⚠️ 测试配置: 5秒后显示催办按钮 (正式环境改为: 72 * 60 * 60 = 259200秒)
-            const URGE_THRESHOLD_SECONDS = 50; // 可手动调整此值进行测试
+            const URGE_THRESHOLD_SECONDS = reminderTime * 60 * 60; // 可手动调整此值进行测试
             
             console.log(`[催办] 业务编码: ${item.businessCode}, 时间差: ${secondsDiff}秒, 阈值: ${URGE_THRESHOLD_SECONDS}秒`);
             
