@@ -44,6 +44,26 @@
                         </ul>
                         <div class="list-ul-button">
                             <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
+                            <!-- 催办按钮 -->
+                            <van-button 
+                                v-if="shouldShowUrgeButton(item)" 
+                                class="button-info" 
+                                plain 
+                                round 
+                                type="warning"
+                                @click.stop="handleUrgeClick(item)">
+                                催办
+                            </van-button>
+                            <!-- 已催办按钮 -->
+                            <van-button 
+                                v-if="shouldShowUrgedButton(item)" 
+                                class="button-info" 
+                                plain 
+                                round 
+                                type="default"
+                                disabled>
+                                已催办
+                            </van-button>
                         </div>
                     </div>
                 </van-list>
@@ -62,6 +82,7 @@
 import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfTodoList } from '@/api/myToDoList'
+import { urge } from '@/api/prodmgr-inv/audit'
 import indexMixin from '@/view/mixins'
 import { FLOW_ROUTE } from '@/utils/constant'
 import dayjs from 'dayjs'
@@ -196,6 +217,85 @@ export default {
             this.finished = false;
             this.listQuery.pageNum = 1;
             this.getList();
+        },
+        
+        // 判断是否显示催办按钮
+        shouldShowUrgeButton(item) {
+            // 1. currentHandlerUserIds 得有值
+            if (!item.currentHandlerUserIds) {
+                return false;
+            }
+            
+            // 2. isReminder 等于 false 才显示催办
+            if (item.isReminder === true) {
+                return false;
+            }
+            
+            // 3. lastHandleDate 时间戳和当前时间大于指定秒数
+            if (!item.lastHandleDate) {
+                return false;
+            }
+            
+            const now = dayjs();
+            const lastHandleTime = dayjs(item.lastHandleDate);
+            const secondsDiff = now.diff(lastHandleTime, 'second'); // 改为秒级别计算
+            
+            // ⚠️ 测试配置: 5秒后显示催办按钮 (正式环境改为: 72 * 60 * 60 = 259200秒)
+            const URGE_THRESHOLD_SECONDS = 50; // 可手动调整此值进行测试
+            
+            console.log(`[催办] 业务编码: ${item.businessCode}, 时间差: ${secondsDiff}秒, 阈值: ${URGE_THRESHOLD_SECONDS}秒`);
+            
+            return secondsDiff > URGE_THRESHOLD_SECONDS;
+        },
+        
+        // 判断是否显示已催办按钮
+        shouldShowUrgedButton(item) {
+            // currentHandlerUserIds 有值且 isReminder 为 true 时显示已催办
+            return item.currentHandlerUserIds && item.isReminder === true;
+        },
+        
+        // 催办点击
+        async handleUrgeClick(item) {
+            try {
+                await this.$dialog.confirm({
+                    title: '催办确认',
+                    message: '确定要发送催办提醒吗？',
+                });
+                
+                const loading = this.$toast.loading({
+                    duration: 0,
+                    message: '正在发送催办...',
+                    forbidClick: true,
+                });
+                
+                const params = {
+                    businessId: item.businessId,
+                    businessCode: item.businessCode,
+                    businessType: item.businessType,
+                    currentHandlerUserIds: item.currentHandlerUserIds, 
+                };
+                
+                await urge(params);
+                
+                loading.clear();
+                
+                this.$notify({
+                    type: 'success',
+                    message: '催办成功',
+                });
+                
+                // 更新当前项的 isReminder 状态
+                item.isReminder = true;
+                
+            } catch (error) {
+                if (error !== 'cancel') {
+                    console.error('[催办] 催办失败:', error);
+                    this.$notify({
+                        type: 'warning',
+                        message: '催办失败,请重试',
+                    });
+                }
+            }
         },
     },
 };

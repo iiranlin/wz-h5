@@ -14,3 +14,12 @@ export const recall = (data) => {
 export const downloadHandoverAcceptanceForm = (params) => {
   return download(`${VUE_APP_PRODMGR_INV}/materialExport/handoverAcceptanceForm`, params, 'get')
 }
+
+// 催办功能
+export const urge = (data) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/audit/sendApprovalReminderSMS`,
+    method: 'post',
+    data
+  })
+}
