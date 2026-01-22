@@ -72,6 +72,8 @@
               </li>
             </ul>
             <div class="list-ul-button">
+                 <van-button v-if="['3', '6', '7', '8', '9', '10'].includes(item.planStatus)" class="button-info" round type="info"  @click.stop="handleDonwload(item)">下载</van-button>
+
               <van-button class="button-info" plain round type="info"
                 v-if="['6', '7', '8', '9'].includes(item.planStatus)"
                 @click="supplyOverviewClick(item)">供应概览</van-button>
@@ -112,6 +114,7 @@ import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { getUserInfo } from '@/utils/user-info'
+import {customDownload} from '@/api/prodmgr-inv/file'
 export default {
   name: 'PlannedManagementList',
   mixins: [indexMixin],
@@ -170,6 +173,14 @@ export default {
     this.getList();
   },
   methods: {
+      // 下载入库单-退货
+    async handleDonwload({id}) {
+      try {
+        await customDownload({businessType:11,businessData : id })
+      } catch (error) {
+      } finally {
+      }
+    },
     onSearch() {
       this.refreshLoading = true
       this.listQuery.pageNum = 1

@@ -57,6 +57,9 @@
               <span class="li-span-click">{{ item.createUserName }}</span>
             </li> -->
           </ul>
+           <div class="list-ul-button">
+                  <van-button class="button-info" round type="info"  @click.stop="handleDonwload(item)">下载</van-button>
+                </div>
         </div>
       </van-list>
     </van-pull-refresh>
@@ -72,6 +75,7 @@
 <script>
 import {listCrRetreat} from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { getUserInfo } from '@/utils/user-info'
+import {customDownload} from '@/api/prodmgr-inv/file'
 export default {
   name: 'RefundListContent',
   data() {
@@ -98,6 +102,14 @@ export default {
   activated() {
   },
   methods: {
+       // 下载入库单-退货
+    async handleDonwload({id}) {
+      try {
+        await customDownload({businessType:9,businessData : id })
+      } catch (error) {
+      } finally {
+      }
+    },
     //全部列表刷新
     allRefresh() {
       this.allRefreshLoading = true

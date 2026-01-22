@@ -245,6 +245,7 @@ export default {
         return recall({ businessId: item.id, businessType: 'RKLC' });
       }).then(() => {
         this.$toast('撤回成功');
+        this.onRefresh()
       })
     },
     //查看流程点击

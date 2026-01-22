@@ -60,6 +60,9 @@
               <span class="li-span-click">{{item.createUserName}}</span>
             </li> -->
           </ul>
+           <div class="list-ul-button">
+                  <van-button class="button-info" round type="info"  @click.stop="handleDonwload(item)">下载</van-button>
+                </div>
         </div>
       </van-list>
     </van-pull-refresh>
@@ -78,6 +81,7 @@
 import keepPages from '@/view/mixins/keepPages'
 import BackToTop from '@/components/BackToTop'
 import {listCyRetreat} from '@/api/prodmgr-inv/AcceptanceReturn'
+import {customDownload} from '@/api/prodmgr-inv/file'
 
 
 export default {
@@ -181,6 +185,14 @@ export default {
     }
   },
   methods: {
+       // 下载收货单-退货
+    async handleDonwload({id}) {
+      try {
+        await customDownload({businessType:10,businessData : id })
+      } catch (error) {
+      } finally {
+      }
+    },
       //收获列表
     getAllList(val){
       let params = {pageNum:this.allListQuery.pageNum,pageSize:this.allListQuery.pageSize,queryField:this.formData.keywords,takeStatus:val?val:''}
