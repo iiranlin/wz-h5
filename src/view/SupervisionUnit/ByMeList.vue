@@ -41,6 +41,10 @@
                                 <span>审核提交时间：</span>
                                 <span>{{item.startTime | formatTime}}</span>
                             </li>
+                             <li>
+                                <span>当前审核人：</span>
+                                 <span>{{ item.auditStatus == 2 ?'已完成': item.auditStatus == 3? '--' : item.currentHandlerUserNames || '--'  }} </span>
+                             </li>
                         </ul>
                         <div class="list-ul-button">
                             <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
