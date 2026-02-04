@@ -106,6 +106,10 @@
               <van-button class="button-info" plain round type="info" v-if="item.status != 1"
                 @click.stop="handleProcessClick(item)">查看流程</van-button>
 
+                 <!--  审核通过才能下载 -->
+              <van-button class="button-info" round type="info" v-if="[3].includes(item.status)"
+                @click.stop="handleDonwload(item)">下载</van-button>
+
               <!--  审核通过并且是铁路专用产品才能更新证书 -->
               <!-- <van-button class="button-info" round type="info"
                 v-if="[3].includes(item.status) && item.railwaySpecial == 1"
@@ -132,6 +136,7 @@ import keepPages from '@/view/mixins/keepPages'
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
+import {customDownload} from '@/api/prodmgr-inv/file'
 
 import { materialPurchaseContractList, batchRemoveContract, materialPurchaseContractSubmit } from '@/api/prodmgr-inv/SelfBuying'
 import { recall } from '@/api/prodmgr-inv/audit'
@@ -218,6 +223,14 @@ export default {
     this.allRefresh();
   },
   methods: {
+        // 下载
+    async handleDonwload({ id }) {
+      try {
+        await customDownload({businessType:111,businessData:id});
+      } catch (error) {
+      } finally {
+      }
+    },
     // 查看流程点击
     handleProcessClick(item) {
       this.$router.push({
