@@ -36,7 +36,8 @@
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.contractNumber" required name="contractNumber" label="合同编号"
-            placeholder="请输入合同编号" input-align="right" />
+            placeholder="请输入合同编号" input-align="right" :error="contractNumberDuplicate" @blur="checkContractNumberDuplicate" />
+          <div v-if="contractNumberDuplicate" class="contract-number-error">合同编号已存在，可重复提交</div>
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.purchaseNo" required name="purchaseNo" label="采购编号" placeholder="请输入采购编号"
@@ -259,7 +260,7 @@ import FileUploadView from "@/components/FileUploadView.vue";
 import Calendar from "@/layout/components/calendar.vue";
 import rangeCalendar from "./components/calendar.vue";
 import { parseTime } from '@/utils/index'
-import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify } from "@/api/prodmgr-inv/SelfBuying"
+import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify, countByContractNumber } from "@/api/prodmgr-inv/SelfBuying"
 import keepPages from '@/view/mixins/keepPages'
 import dayjs from "dayjs";
 export default {
@@ -327,6 +328,8 @@ export default {
         ],
       },
       contractLicenseIndex: 0,
+      // 合同编号重复标记
+      contractNumberDuplicate: false,
       // 物资大类
       showGeneraPicker: false,
       generaColumns: [],
@@ -363,6 +366,11 @@ export default {
       } catch (error) {
         console.log('解析批量导入物资明细失败', error);
       }
+    }
+
+    // 返回页面时，如果合同编号有值，重新检查重复状态
+    if (this.sectionInfo.contractNumber) {
+      this.checkContractNumberDuplicate();
     }
   },
 
@@ -402,8 +410,12 @@ export default {
               }
             ],
           }
-          sessionStorage.removeItem('zghtCreate')
+          sessionStorage.removeItem('zghtCreate') 
+          // 重置合同编号重复标记
+          this.contractNumberDuplicate = false;
         }
+
+
 
         this.sectionInfo.projectId = this.detailInfo.projectId;
         this.sectionInfo.unitName = this.detailInfo.constructionCompany;
@@ -462,6 +474,30 @@ export default {
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
+    },
+    // 检查合同编号是否重复
+    async checkContractNumberDuplicate() {
+      const contractNumber = this.sectionInfo.contractNumber;
+      if (!contractNumber) {
+        this.contractNumberDuplicate = false;
+        return;
+      }
+      
+      try {
+        const params = { contractNumber };
+        // 修改时传入 id
+        if (this.$route.query.type !== 'create' && this.$route.query.id) {
+          params.id = this.$route.query.id;
+        }
+        
+        const res = await countByContractNumber(params);
+        if (res.code === 0) {
+          // 返回值大于0表示有重复
+          this.contractNumberDuplicate = res.data > 0;
+        }
+      } catch (error) {
+        console.error('检查合同编号重复失败', error);
+      }
     },
     handleRailwaySpecial(name, index) {
       if (name == 0) {
@@ -1392,6 +1428,14 @@ export default {
       width: 50px;
     }
   }
+}
+
+.contract-number-error {
+  color: #ee0a24;
+  font-size: 12px;
+  padding: 5px 16px;
+  background: #fff;
+  text-align: right !important;
 }
 
 .default-button-container-box {

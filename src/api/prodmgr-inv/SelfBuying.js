@@ -183,3 +183,12 @@ export function addCertificate(data){
     data,
   });
 }
+
+// 检查合同编号重复
+export const countByContractNumber = (params) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialPurchaseContract/countByContractNumber`,
+    method: 'get',
+    params
+  })
+}
