@@ -36,7 +36,7 @@
       <div class="detail-ul-bottom-text">
         <ul class="detail-ul">
           <li>
-            <span>物资项目：<span class="li-span-click">{{ detail.demandPlanDetailsGyDTOList.length }}</span> 项</span>
+            <span>物资项目：<span class="li-span-click">{{ detail.details.length }}</span> 项</span>
             <span @click="handleLogClick(detail)"><img class="detail-ul-bottom-text-log" src="@/assets/img/Icon-log.png" /> <span
                 class="detail-ul-bottom-text-span">查看日志</span> <img class="detail-ul-bottom-text-Arrow"
                 src="@/assets/img/Arrow-R.png" /></span>
@@ -178,8 +178,8 @@ export default {
   },
   computed: {
     filteredList() {
-      if (!this.searchValue) return this.detail.demandPlanDetailsGyDTOList; // 如果搜索值为空，返回所有数据
-      return this.detail.demandPlanDetailsGyDTOList.filter(item => item.specModel.includes(this.searchValue) ||
+      if (!this.searchValue) return this.detail.details; // 如果搜索值为空，返回所有数据
+      return this.detail.details.filter(item => item.specModel.includes(this.searchValue) ||
         item.materialName.includes(this.searchValue) ||
         item.unit.includes(this.searchValue) ||
         item.receiver.includes(this.searchValue)
@@ -225,7 +225,7 @@ export default {
       const params = { pageNum: 1, pageSize: -1, id }
       // const GyMxData = await materialDemandPlanRestDetailGyMx(params)
       // console.log(GyMxData.data.demandPlanDetailsGyDTOList)
-      materialDemandPlanRestDetailGyMx(params).then(({ data }) => {
+      materialDemandPlanRestDetail(params.id).then(({ data }) => {
         this.detail = data
       }).finally((err) => {
         toast.clear()

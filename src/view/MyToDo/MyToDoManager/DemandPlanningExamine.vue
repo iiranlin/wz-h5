@@ -28,7 +28,7 @@
             <div class="detail-ul-bottom-text">
               <ul class="detail-ul">
                 <li>
-                  <span>物资项目：<span class="li-span-click">{{ detailInfo.demandPlanDetailsGyDTOList.length }}</span> 项</span>
+                  <span>物资项目：<span class="li-span-click">{{ detailInfo.details.length }}</span> 项</span>
                   <span @click="handleLogClick(detailInfo)"><img class="detail-ul-bottom-text-log" src="@/assets/img/Icon-log.png" /> <span
                       class="detail-ul-bottom-text-span">查看日志</span> <img class="detail-ul-bottom-text-Arrow"
                       src="@/assets/img/Arrow-R.png" /></span>
@@ -293,8 +293,8 @@ export default {
     },
     computed: {
       filteredList() {
-        if (!this.searchValue) return this.detailInfo.demandPlanDetailsGyDTOList; // 如果搜索值为空，返回所有数据
-        return this.detailInfo.demandPlanDetailsGyDTOList.filter(item => item.specModel.includes(this.searchValue) ||
+        if (!this.searchValue) return this.detailInfo.details; // 如果搜索值为空，返回所有数据
+        return this.detailInfo.details.filter(item => item.specModel.includes(this.searchValue) ||
           item.materialName.includes(this.searchValue) ||
           item.unit.includes(this.searchValue) ||
           item.receiver.includes(this.searchValue)
@@ -348,7 +348,7 @@ export default {
                 forbidClick: true
             });
             console.log("params", params)
-            materialDemandPlanRestDetailGyMx(params).then(({data}) => {
+            materialDemandPlanRestDetail(params.id).then(({data}) => {
                 this.detailInfo = data;
                 this.detailList = data.details;
             }).catch((err) => {
