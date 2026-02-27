@@ -85,7 +85,7 @@
               <van-button class="button-info" plain round type="danger"
                 v-if="['1', '0', '5', '10'].includes(item.planStatus) && isJL" @click="deleteClick(item)">删除</van-button>
               <van-button class="button-info" plain round type="info"
-                v-if="['3', '4', '0', '2'].includes(item.planStatus)"
+                v-if="['0', '3', '2', '4','6','7','8','9','10'].includes(item.planStatus)"
                 @click="handleProcessClick(item)">查看流程</van-button>
               <van-button class="button-info" plain round type="default"
                 v-if="['1', '4', '0', '5', '10'].includes(item.planStatus) && isJL" @click="addClick(item)">编辑</van-button>
