@@ -70,6 +70,10 @@
           <span>累计入库数量：</span>
           <span>{{item.storeTotal}} {{item.unit}}</span>
         </li>
+         <li class="li-item-overlength">
+          <span>累计出库数量：</span>
+          <span>{{item.outCkTotal}} {{item.unit}}</span>
+        </li>
         <li>
           <span>当前库存：</span>
           <span>{{item.stockStatus}} {{item.unit}}</span>
