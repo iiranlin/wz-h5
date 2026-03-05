@@ -224,7 +224,7 @@ export default {
       this.activeNegativeKey = this.getItemKey(item)
       this.currentNegativeMaterial = item
       this.negativePopupVisible = true
-      this.loadNegativeContracts(item.id)
+      this.loadNegativeContracts(item.uniqueNumber || item.allocationUniqueNumber)
     },
     loadNegativeContracts(masterDetailId) {
       if (!masterDetailId) {
@@ -232,7 +232,7 @@ export default {
       }
       this.negativePopupLoading = true
       this.negativeContractList = []
-      mainItemList({ masterDetailId }).then((res) => {
+      mainItemList({ uniqueNumber:masterDetailId }).then((res) => {
         const responseData = res && res.data !== undefined ? res.data : {}
         const list = Array.isArray(responseData.list) ? responseData.list : (Array.isArray(responseData) ? responseData : [])
         this.negativeContractList = list
