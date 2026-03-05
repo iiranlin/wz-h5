@@ -66,7 +66,17 @@
               </li>
               <li>
                 <span>合同数量：</span>
-                <span>{{ item.amount }}</span>
+                <span>
+                  <span class="li-span-click">{{ item.amount }}</span>
+                  <span class="negative-warning-trigger" @click.stop="handleNegativeClick(item)">
+                        <van-icon
+                        v-if="item.negative && item.negative < 0"
+                          class="negative-warning-icon"
+                          name="warning-o"
+                          color="#ee0a24"
+                        />
+                      </span>
+                </span>
               </li>
               <li>
                 <span>已累计计划数量：</span>
@@ -106,13 +116,53 @@
     </div>
     <back-to-top className=".default-container"></back-to-top>
     <selected-list ref="selectedList" :selectedData="materiaList" @deleteCallback="deleteCallback"></selected-list>
+    <van-popup
+      v-model="negativePopupVisible"
+      class="negative-popup"
+      round
+      position="bottom"
+      :style="{ height: '72vh' }"
+      @close="handleNegativePopupClose"
+    >
+      <div class="negative-popup-header">
+        <span class="negative-popup-title">补充合同负数物资</span>
+        <van-icon name="cross" @click="negativePopupVisible = false" />
+      </div>
+      <div class="negative-popup-summary" v-if="currentNegativeMaterial">
+        当前负合同总数：{{ currentNegativeMaterial.negative }}
+      </div>
+      <div class="negative-popup-content">
+        <div v-if="negativePopupLoading" class="negative-popup-loading">
+          <van-loading size="24px" type="spinner" color="#1989fa">加载中...</van-loading>
+        </div>
+        <div v-else-if="negativeContractList.length" class="negative-contract-list">
+          <div
+            class="negative-contract-item"
+            v-for="(contract, index) in negativeContractList"
+            :key="getNegativeContractKey(contract, index)"
+          >
+            <div class="negative-contract-item-title">{{ index + 1 }}. {{ contract.contractName || '--' }}</div>
+            <ul class="negative-contract-item-fields">
+              <li><span>标段名称：</span><span>{{ contract.sectionName || '--' }}</span></li>
+              <li>
+                <span>合同数量：</span>
+                <span :class="{ 'negative-amount-text': Number(contract.amount) < 0 }">{{ contract.amount }}</span>
+              </li>
+              <li><span>物资名称：</span><span>{{ contract.materialName || '--' }}</span></li>
+              <li><span>规格型号：</span><span>{{ contract.specModel || '--' }}</span></li>
+            </ul>
+          </div>
+        </div>
+        <van-empty v-else image="/empty-image-default.png" description="暂无负数补充合同数据" />
+      </div>
+    </van-popup>
   </div>
 </template>
 <script>
 import BackToTop from '@/components/BackToTop'
 import selectedList from './components/selectedList'
 import { materialContractDetail } from '@/api/prodmgr-inv/materialContract'
-import { getListBySectionId } from '@/api/prodmgr-inv/materialSectionAllocation'
+import { getListBySectionId, mainItemList } from '@/api/prodmgr-inv/materialSectionAllocation'
 export default {
   name: 'SelectMaterials',
   components: { BackToTop, selectedList },
@@ -131,7 +181,12 @@ export default {
       contractData: {},
       queryType: '',
       allChecked: false,
-      materialUsedRatio: ''
+      materialUsedRatio: '',
+      activeNegativeKey: '',
+      negativePopupVisible: false,
+      negativePopupLoading: false,
+      negativeContractList: [],
+      currentNegativeMaterial: null
     }
   },
   computed: {
@@ -161,6 +216,38 @@ export default {
     },
     onSearch() {
 
+    },
+    getItemKey(item) {
+      return item.uniqueNumber || item.allocationUniqueNumber
+    },
+    handleNegativeClick(item) {
+      this.activeNegativeKey = this.getItemKey(item)
+      this.currentNegativeMaterial = item
+      this.negativePopupVisible = true
+      this.loadNegativeContracts(item.id)
+    },
+    loadNegativeContracts(masterDetailId) {
+      if (!masterDetailId) {
+        return
+      }
+      this.negativePopupLoading = true
+      this.negativeContractList = []
+      mainItemList({ masterDetailId }).then((res) => {
+        const responseData = res && res.data !== undefined ? res.data : {}
+        const list = Array.isArray(responseData.list) ? responseData.list : (Array.isArray(responseData) ? responseData : [])
+        this.negativeContractList = list
+      }).catch(() => {
+      }).finally(() => {
+        this.negativePopupLoading = false
+      })
+    },
+    getNegativeContractKey(contract, index) {
+      return contract.id || `${index}-${contract.contractName || ''}`
+    },
+    handleNegativePopupClose() {
+      this.negativePopupLoading = false
+      this.negativeContractList = []
+      this.currentNegativeMaterial = null
     },
     getListBySectionId(contractId) {
       this.loading = true
@@ -397,5 +484,104 @@ export default {
     border: 1px solid #289fec;
     color: #1d93ff;
   }
+}
+
+.contract-amount-wrapper {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.negative-warning-icon {
+  font-size: 16px;
+}
+
+.negative-warning-trigger {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.negative-popover-text {
+  max-width: 260px;
+  word-break: break-all;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.negative-popup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
+.negative-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 16px;
+  color: #151b3e;
+}
+
+.negative-popup-title {
+  font-weight: 600;
+}
+
+.negative-popup-summary {
+  padding: 10px 16px;
+  color: #ee0a24;
+  font-size: 13px;
+  border-bottom: 1px solid #f6f6f6;
+}
+
+.negative-popup-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px 16px;
+  background: #f8f8f8;
+}
+
+.negative-popup-loading {
+  display: flex;
+  justify-content: center;
+  padding-top: 80px;
+}
+
+.negative-contract-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.negative-contract-item {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 5px rgba(32, 30, 74, 0.08);
+}
+
+.negative-contract-item-title {
+  font-weight: 600;
+  color: #151b3e;
+  margin-bottom: 8px;
+}
+
+.negative-contract-item-fields {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    line-height: 1.7;
+    font-size: 12px;
+    color: #666;
+  }
+}
+
+.negative-amount-text {
+  color: #ee0a24;
 }
 </style>

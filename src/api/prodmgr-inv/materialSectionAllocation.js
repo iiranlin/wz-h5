@@ -9,3 +9,16 @@ export function getListBySectionId(params) {
     params
   })
 }
+
+/**
+ * 查询主合同物资明细列表
+ * @param {*} params 
+ * @returns 
+ */
+export const mainItemList = (params) => {
+    return request({
+        url: `${VUE_APP_PRODMGR_INV}/materialSectionAllocation/getLatestVersionList`,
+        method: 'get',
+        params
+    })
+}
