@@ -51,7 +51,11 @@ import { materialReceiverInformationList, materialReceiverInformationRemove } fr
 export default {
     name: 'ReceiptList',
     mixins: [keepPages],
-
+    computed: {
+        contractId() {
+            return this.$route.query.contractId;
+        },
+    },
     data() {
         return {
             refreshLoading: false,
@@ -151,6 +155,7 @@ export default {
                     type: 'update',
                     position: index,
                     obj: JSON.stringify(this.dataList[index]),
+                    contractId: this.contractId,
                 },
             })
         },
@@ -160,6 +165,7 @@ export default {
                 path: 'ReceiptOperate',
                 query: {
                     type: 'create',
+                    contractId: this.contractId,
                 },
             })
         },

@@ -46,7 +46,11 @@ import {materialReceiverInformationCreate,materialReceiverInformationModify} fro
 
 export default {
     name: '',
-    
+    computed: {
+        contractId() {
+            return this.$route.query.contractId;
+        },
+    },
     data () {
         return {
             pattern: /^1[3456789]\d{9}$/,
@@ -146,6 +150,9 @@ export default {
                     params: {
                         refresh: true,
                     },
+                    query: {
+                        contractId: this.contractId,
+                    },
                 });
             }).catch((error) => {
 
@@ -169,6 +176,9 @@ export default {
                     name: "ReceiptList",
                     params: {
                         refresh: true,
+                    },
+                    query: {
+                        contractId: this.contractId,
                     },
                 });
             }).catch((error) => {
