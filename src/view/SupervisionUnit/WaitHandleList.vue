@@ -198,6 +198,15 @@ export default {
                     },
                 });
             }
+            else if(item.businessType == 'WZCJ'){
+                this.$router.push({
+                    name: "SpotCheck",
+                    query: {
+                        id: item.businessId,
+                        type: 'view',
+                    },
+                });
+            }
             
             else {
                 this.$router.push({

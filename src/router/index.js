@@ -180,6 +180,13 @@ export const routes = [
         meta: { title: "修改密码" },
         component: () => import("@/view/homePage/components/editPassword.vue"),
       },
+      // 抽检详情
+      {
+        path: "SpotCheck",
+        name: "SpotCheck",
+        meta: { title: "抽检详情" },
+        component: () => import("@/view/SpotCheck/index.vue"),
+      },
     ],
   },
   {

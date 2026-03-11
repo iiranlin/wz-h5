@@ -71,7 +71,7 @@ import { detailTakeBack, detailTake } from "@/api/prodmgr-inv/receive";
 import {detailBySend} from '@/api/demand/sendGoods'
 import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
 import {detailByStore} from '@/api/prodmgr-inv/materialCirculationTableRest'
-
+import {detail} from '@/api/prodmgr-inv/spok'
 export default {
   name: 'RequirementDetails',
   components: { IndexDetail, },
@@ -109,6 +109,9 @@ export default {
       }
       if(this.businessType === "CGHT"){
         return materialPurchaseContractdetail
+      }
+      if(this.businessType === 'WZCJ'){
+        return detail
       }
       
       return materialDemandPlanRestDetail

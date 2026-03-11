@@ -6,6 +6,7 @@ export const FLOW_ROUTE = {
     FHLC:'cargoDetails', // 发货
     CGHT:'perfectContractDetail',// 采购合同
     CGWJ:'perfectFileDetail',// 采购文件
+    WZCJ:'SpotCheck', // 物资抽检
 }
 
 // 点击安卓返回键时需要直接返回首页的路由名称列表
