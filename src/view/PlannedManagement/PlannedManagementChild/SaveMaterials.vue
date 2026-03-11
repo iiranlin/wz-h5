@@ -129,8 +129,19 @@
         <span class="negative-popup-title">补充合同负数物资</span>
         <van-icon name="cross" @click="negativePopupVisible = false" />
       </div>
-      <div class="negative-popup-summary" v-if="currentNegativeMaterial">
-        当前负合同总数：{{ currentNegativeMaterial.negative }}
+      <div class="negative-popup-overview" v-if="currentNegativeMaterial">
+        <div class="negative-popup-overview-item">
+          <span class="negative-popup-overview-label">原合同数</span>
+          <span class="negative-popup-overview-value original-amount">{{ getNegativeContractSummary(currentNegativeMaterial).originalAmount }}</span>
+        </div>
+        <div class="negative-popup-overview-item">
+          <span class="negative-popup-overview-label">当前数量</span>
+          <span class="negative-popup-overview-value current-amount">{{ getNegativeContractSummary(currentNegativeMaterial).currentAmount }}</span>
+        </div>
+        <div class="negative-popup-overview-item">
+          <span class="negative-popup-overview-label">当前负合同总数</span>
+          <span class="negative-popup-overview-value negative-total">{{ currentNegativeMaterial.negative }}</span>
+        </div>
       </div>
       <div class="negative-popup-content">
         <div v-if="negativePopupLoading" class="negative-popup-loading">
@@ -160,6 +171,7 @@
   </div>
 </template>
 <script>
+import Decimal from 'decimal.js'
 import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
 import editedList from './components/editedList'
@@ -459,6 +471,23 @@ export default {
     getNegativeContractKey(contract, index) {
       return contract.id || `${index}-${contract.contractName || ''}`
     },
+    toNumber(value) {
+      const numberValue = Number(value)
+      return Number.isFinite(numberValue) ? numberValue : 0
+    },
+    getNegativeContractSummary(source = {}) {
+      const currentAmount = this.toNumber(source.amount)
+      const negativeAmount = this.toNumber(source.negative)
+      const originalAmount = new Decimal(currentAmount)
+        .plus(new Decimal(negativeAmount).abs())
+        .toNumber()
+
+      return {
+        currentAmount,
+        negativeAmount,
+        originalAmount
+      }
+    },
     handleNegativePopupClose() {
       this.negativePopupLoading = false
       this.negativeContractList = []
@@ -673,11 +702,45 @@ export default {
   font-weight: 600;
 }
 
-.negative-popup-summary {
-  padding: 10px 16px;
-  color: #ee0a24;
-  font-size: 13px;
+.negative-popup-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px 10px;
   border-bottom: 1px solid #f6f6f6;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.negative-popup-overview-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(21, 27, 62, 0.06);
+}
+
+.negative-popup-overview-label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.negative-popup-overview-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.original-amount {
+  color: #1565d8;
+}
+
+.current-amount {
+  color: #ed6a0c;
+}
+
+.negative-total {
+  color: #ee0a24;
 }
 
 .negative-popup-content {
