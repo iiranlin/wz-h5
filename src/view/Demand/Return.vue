@@ -134,7 +134,8 @@ components:{BackToTop},
       statusArr: [
         { text: '全部', value: '', color: '' },
         { text: '质检不通过', value: '2', color: '#FC5937' },
-        { text: '收货不通过', value: '1', color: '#FC5937' }
+        { text: '收货不通过', value: '1', color: '#FC5937' },
+        { text: '抽检不通过', value: '3', color: '#FC5937'}
       ],
     };
   },
@@ -189,7 +190,11 @@ components:{BackToTop},
     },
     //全部列表条目点击
     handleDetailsItemClick(item) {
-      this.$router.push({ path: '/returnDetails', query: { id: item.id, issueType: item.issueType  } })
+      if(item.issueType == 3){
+        this.$router.push({ name: 'SpotCheck', query: { id: item.id,  from:'THXQ' } })
+      }else{
+        this.$router.push({ path: '/returnDetails', query: { id: item.id, issueType: item.issueType  } })
+      }
     },
     //全部列表刷新
     allRefresh() {

@@ -9,6 +9,10 @@
           </template>
         </van-search>
       </div>
+      <van-tabs v-model="activeTab" @change="onTabChange" class="refund-tabs">
+        <van-tab title="质检退货" :name="'2'" />
+        <van-tab title="抽检退货" :name="'3'" />
+      </van-tabs>
     </van-sticky>
 <div v-if="dataList.length > 0">
     <van-pull-refresh v-model="allRefreshLoading" @refresh="allRefresh" success-text="刷新成功">
@@ -76,11 +80,14 @@
 import {listCrRetreat} from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { getUserInfo } from '@/utils/user-info'
 import {customDownload} from '@/api/prodmgr-inv/file'
+import keepPages from '@/view/mixins/keepPages'
 export default {
   name: 'RefundListContent',
+  mixins:[keepPages],
   data() {
     return {
       activeIndex: 0,
+      activeTab: '2',
       formData: {
         queryField: ''
       },
@@ -124,7 +131,7 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-      listCrRetreat(Object.assign({},this.allListQuery,this.formData, {deptId: this.userInfo.deptId})).then(({ data }) => {
+      listCrRetreat(Object.assign({},this.allListQuery,this.formData, {deptId: this.userInfo.deptId, isQualNode: this.activeTab})).then(({ data }) => {
         if(this.allRefreshLoading){
           this.dataList = [];
           this.allRefreshLoading = false;
@@ -146,7 +153,11 @@ export default {
     },
     handleWaitItemClick (item) {
       // this.$router.push({ name: 'SubmitStore', query: {type: 'view'} })
-      this.$router.push({name: 'DoReturn',query:{id: item.id, backNode: '1'}})
+      if(item.isQualNode == 3){
+        this.$router.push({name: 'SpotCheck',query:{id: item.id, from:'THXQ'}})
+      }else{
+        this.$router.push({name: 'DoReturn',query:{id: item.id, backNode: '1'}})
+      }
     },
     detailsClick (item) {
       this.$store.dispatch('public/setSelectGoodData', []);
@@ -155,6 +166,9 @@ export default {
       this.$router.push({ name: 'DoAcceptDetail', query: {id: item.id, takeStatus: item.takeStatus}  })
     },
     handeSearchClick () {
+      this.allRefresh()
+    },
+    onTabChange() {
       this.allRefresh()
     }
   },
@@ -170,11 +184,15 @@ export default {
     z-index: 1;
     display: flex;
     background: #eef6ff;
-    margin-bottom: 10px;
 
     .van-search {
       flex: 1;
     }
+  }
+
+  .refund-tabs {
+    background: #fff;
+    margin-bottom: 10px;
   }
 }
 </style>

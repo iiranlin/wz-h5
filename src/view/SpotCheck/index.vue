@@ -160,7 +160,6 @@ const SAMPLING_STATUS_MAP = {
 export default {
   name: 'SpotCheck',
   components: { FileDownloadView, BackToTop },
-
   data() {
     return {
       multiple: false,
@@ -193,6 +192,9 @@ export default {
     },
     samplingStatusText() {
       return SAMPLING_STATUS_MAP[this.detailInfo.samplingStatus] || ''
+    },
+    from(){
+      return this.$route.query.from
     }
   },
 
@@ -355,7 +357,7 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-      detail(this.id).then(({ data }) => {
+      detail(this.id,{detailStatus:this.from ==='THXQ'?'2':''}).then(({ data }) => {
         this.detailInfo = data || {};
         this.fileList = this.safeParseFileList(data && data.fileList);
         this.detailList = ((data && data.materialCirSamplingDetailList) || []).map((item, index) => {

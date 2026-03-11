@@ -38,7 +38,7 @@
           </div>
           <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/RefundListContent')">
             <img :src="CreditOrder">
-            质检退货
+            质/抽检退货
           </div>
         </div>
       </div>

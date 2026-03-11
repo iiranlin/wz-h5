@@ -114,7 +114,7 @@ export const routes = [
       {
         path: "/RefundListContent",
         name: "RefundListContent",
-        meta: { title: "质检退货", isTabbar: true },
+        meta: { title: "质/抽检退货", isTabbar: true },
         component: () =>
           import("@/view/InOutManagement/components/RefundListContent.vue"),
       },
