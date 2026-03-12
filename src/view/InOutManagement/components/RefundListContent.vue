@@ -163,7 +163,7 @@ export default {
       this.$store.dispatch('public/setSelectGoodData', []);
       this.$store.dispatch('public/setGoodsReceiptInfo', {});
 
-      this.$router.push({ name: 'DoAcceptDetail', query: {id: item.id, takeStatus: item.takeStatus}  })
+      this.$router.push({ name: 'DoAcceptDetail', query: {id: item.isQualNode == 3 ? item.cirId : item.id, takeStatus: item.takeStatus}  })
     },
     handeSearchClick () {
       this.allRefresh()

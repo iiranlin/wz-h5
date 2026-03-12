@@ -51,7 +51,7 @@
 
               <li>
                 <span>发货单号:</span>
-                <span class="text li-span-click" @click.stop="handleCarGoClick(item.id)">{{ item.shipmentBatchNumber }}</span>
+                <span class="text li-span-click" @click.stop="handleCarGoClick(item.isQualNode == 3? item.cirId: item.id)">{{ item.shipmentBatchNumber }}</span>
               </li>
               <!-- <li>
                 <span style="min-width: 2.4rem;">需求项目:</span>
