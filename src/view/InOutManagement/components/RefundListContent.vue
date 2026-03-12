@@ -53,15 +53,15 @@
               <span>{{ item.sellerName }}</span>
             </li>
             <li>
-              <span>退货时间：</span>
-              <span>{{  item.backNode == '2'?item.backDate && parseTime(item.backDate, '{y}-{m}-{d} {h}:{i}'):item.backQualDate && parseTime(item.backQualDate, '{y}-{m}-{d} {h}:{i}') }}</span>
+              <span>{{ timeLabel }}：</span>
+              <span>{{ getTimeText(item) }}</span>
             </li>
             <!-- <li>
               <span>操作人：</span>
               <span class="li-span-click">{{ item.createUserName }}</span>
             </li> -->
           </ul>
-           <div class="list-ul-button">
+           <div v-if="showDownloadButton" class="list-ul-button">
                   <van-button class="button-info" round type="info"  @click.stop="handleDonwload(item)">下载</van-button>
                 </div>
         </div>
@@ -108,7 +108,19 @@ export default {
   },
   activated() {
   },
+  computed: {
+    timeLabel() {
+      return this.activeTab === '3' ? '抽检时间' : '退货时间'
+    },
+    showDownloadButton() {
+      return this.activeTab !== '3'
+    }
+  },
   methods: {
+    getTimeText(item) {
+      const time = item.backNode == '2' ? item.backDate : item.backQualDate
+      return time ? this.parseTime(time, '{y}-{m}-{d} {h}:{i}') : ''
+    },
        // 下载入库单-退货
     async handleDonwload({id}) {
       try {
@@ -144,7 +156,7 @@ export default {
           return;
         }
         this.allListQuery.pageNum = this.allListQuery.pageNum + 1;
-      }).catch((error) => {
+      }).catch(() => {
         this.allLoading = false;
         this.allFinished = true;
       }).finally(() => {
