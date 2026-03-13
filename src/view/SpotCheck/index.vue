@@ -83,9 +83,19 @@
         <div class="material-divider"></div>
 
         <ul class="detail-info-ul">
-          <li v-for="field in getExpandedFields(item)" :key="field.label">
+          <li
+            v-for="field in getExpandedFields(item)"
+            :key="field.label"
+            :class="{ 'detail-info-item-tag': field.type === 'result' }"
+          >
             <span>{{ field.label }}：</span>
-            <span>{{ field.value }}</span>
+            <span
+              v-if="field.type === 'result'"
+              :class="['result-tag', 'detail-value-tag', field.status === '2' ? 'result-tag-danger' : 'result-tag-pass']"
+            >
+              {{ field.value }}
+            </span>
+            <span v-else>{{ field.value }}</span>
           </li>
         </ul>
 
@@ -443,7 +453,7 @@ export default {
         { label: '生产日期', value: this.formatDate(item.manufactureDate) },
         { label: '有效截止日期', value: this.formatDate(item.expirationDate) },
         { label: '当前库存数量', value: this.formatAmount(item.remainingStock, item.unit) },
-        { label: '抽检结果', value: this.getSamplingResultText(item.detailStatus) },
+        { label: '抽检结果', value: this.getSamplingResultText(item.detailStatus), type: 'result', status: item.detailStatus },
         { label: '结果处理', value: item.detailStatus === '2' ? this.getDealResultText(item.status) : '无处理' },
         { label: '退换货数量', value: this.formatAmount(this.getReturnAmount(item), item.unit) },
       ]
@@ -566,6 +576,15 @@ export default {
       flex: 1;
     }
   }
+}
+
+.detail-info-item-tag {
+  align-items: center;
+}
+
+.detail-value-tag {
+  flex: none !important;
+  text-align: center !important;
 }
 
 .remark-panel {

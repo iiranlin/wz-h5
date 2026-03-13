@@ -119,7 +119,7 @@ export default {
   methods: {
     getTimeText(item) {
       const time = item.backNode == '2' ? item.backDate : item.backQualDate
-      return time ? this.parseTime(time, '{y}-{m}-{d} {h}:{i}') : ''
+      return time ? this.parseTime(time, '{y}-{m}-{d}') : ''
     },
        // 下载入库单-退货
     async handleDonwload({id}) {
