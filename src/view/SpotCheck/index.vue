@@ -196,8 +196,9 @@ export default {
         { label: '发货日期', value: this.formatDate(this.detailInfo.shippingDate) },
         { label: '入库单号', value: this.detailInfo.storeNumber },
         { label: '入库日期', value: this.formatDate(this.detailInfo.storeDate) },
-        { label: '提交时间', value: this.formatDate(this.detailInfo.submitDate, '{y}-{m}-{d} {h}:{i}') },
+        { label: '提交时间', value: this.formatDate(this.detailInfo.submitDate, '{y}-{m}-{d}') },
         { label: '抽检人', value: this.detailInfo.createUserName },
+        { label: '抽检时间', value: this.formatDate(this.detailInfo.samplingDate, '{y}-{m}-{d}') }
       ]
     },
     samplingStatusText() {
