@@ -10,9 +10,10 @@
             <div class="pdfContainer" style="height: 100%;" @touchstart="handleTouchStart" @touchmove="handleTouchMove"
               @touchend="handleTouchEnd">
               <div class="pdf" :style="{
-                transform: 'translate(' + translateX + 'px,' + translateY + 'px) scale(' + currentScale + ')',
+                transform: 'translate(' + translateX + 'px,' + translateY + 'px) scale(' + currentScale + ') rotate(' + pageRotate + 'deg)',
+                transition: isTransforming ? 'none' : 'transform 0.1s ease-out',
               }">
-                <pdf ref="pdf" :src="pdfUrl" :page="currentPage" :rotate="pageRotate" @num-pages="pageCount = $event"
+                <pdf ref="pdf" :src="pdfUrl" :page="currentPage" @num-pages="pageCount = $event"
                   @page-loaded="currentPage = $event" @loaded="loadPdfHandler"></pdf>
               </div>
             </div>
@@ -76,25 +77,28 @@ export default {
       currentScale: 1,
       initialScale: 1,
       initialDistance: 0,
+      initialRotation: 0,
+      initialAngle: 0,
       translateX: 0,
-    translateY: 0,
-    lastTranslateX: 0,
-    lastTranslateY: 0,
-    isPanning: false,
-    startX: 0,
-    startY: 0,
+      translateY: 0,
+      lastTranslateX: 0,
+      lastTranslateY: 0,
+      isPanning: false,
+      isTransforming: false,
+      startX: 0,
+      startY: 0,
     };
   },
   watch: {
-  currentScale(newVal) {
-    if (newVal === 1) {
-      this.translateX = 0;
-      this.translateY = 0;
-      this.lastTranslateX = 0;
-      this.lastTranslateY = 0;
+    currentScale(newVal) {
+      if (newVal === 1) {
+        this.translateX = 0;
+        this.translateY = 0;
+        this.lastTranslateX = 0;
+        this.lastTranslateY = 0;
+      }
     }
-  }
-},
+  },
   methods: {
     init(fileName, filePath) {
       let type = fileName.substr(fileName.lastIndexOf('.') + 1);
@@ -120,6 +124,7 @@ export default {
     //预览pdf
     showPdf(fileName, filePath) {
       this.showType = true;
+      this.resetPdfViewState();
 
       minioDownload({ fileName, filePath }).then((data) => {
         let url = window.URL.createObjectURL(new Blob([data],{ type: 'application/pdf' }));
@@ -171,51 +176,74 @@ export default {
       this.currentPage = 1; // 加载的时候先加载第一页
     },
     getDistance(touches) {
-    const [touch1, touch2] = touches;
-    return Math.sqrt(
-      Math.pow(touch2.clientX - touch1.clientX, 2) +
-      Math.pow(touch2.clientY - touch1.clientY, 2)
-    );
-  },
+      const [touch1, touch2] = touches;
+      return Math.sqrt(
+        Math.pow(touch2.clientX - touch1.clientX, 2) +
+        Math.pow(touch2.clientY - touch1.clientY, 2)
+      );
+    },
+    getAngle(touches) {
+      const [touch1, touch2] = touches;
+      return Math.atan2(
+        touch2.clientY - touch1.clientY,
+        touch2.clientX - touch1.clientX
+      ) * 180 / Math.PI;
+    },
     handleTouchStart(event) {
-    if (event.touches.length === 2) {
-      // 双指缩放开始
-      event.preventDefault();
-      this.initialDistance = this.getDistance(event.touches);
-      this.initialScale = this.currentScale;
-    } else if (event.touches.length === 1 && this.currentScale > 1) {
-      // 单指拖动开始
-      this.isPanning = true;
-      this.startX = event.touches[0].clientX - this.lastTranslateX;
-      this.startY = event.touches[0].clientY - this.lastTranslateY;
-    }
-  },
-     handleTouchMove(event) {
-    if (event.touches.length === 2) {
-      // 缩放中
-      event.preventDefault();
-      const currentDistance = this.getDistance(event.touches);
-      const scale = (currentDistance / this.initialDistance) * this.initialScale;
-      this.currentScale = Math.max(1, Math.min(scale, 3)); // 限制缩放比例
-    } else if (event.touches.length === 1 && this.isPanning) {
-      // 拖动中
-      event.preventDefault();
-      const touch = event.touches[0];
-      this.translateX = touch.clientX - this.startX;
-      this.translateY = touch.clientY - this.startY;
-    }
-  },
+      if (event.touches.length === 2) {
+        // 双指开始时同时记录缩放和旋转基准
+        event.preventDefault();
+        this.isTransforming = true;
+        this.isPanning = false;
+        this.initialDistance = this.getDistance(event.touches);
+        this.initialScale = this.currentScale;
+        this.initialAngle = this.getAngle(event.touches);
+        this.initialRotation = this.pageRotate;
+      } else if (event.touches.length === 1 && this.currentScale > 1) {
+        // 单指拖动开始
+        this.isTransforming = true;
+        this.isPanning = true;
+        this.startX = event.touches[0].clientX - this.lastTranslateX;
+        this.startY = event.touches[0].clientY - this.lastTranslateY;
+      }
+    },
+    handleTouchMove(event) {
+      if (event.touches.length === 2) {
+        // 双指缩放 + 自由旋转
+        event.preventDefault();
+        const currentDistance = this.getDistance(event.touches);
+        const scale = (currentDistance / this.initialDistance) * this.initialScale;
+        const currentAngle = this.getAngle(event.touches);
+        this.currentScale = Math.max(1, Math.min(scale, 3));
+        this.pageRotate = this.initialRotation + (currentAngle - this.initialAngle);
+      } else if (event.touches.length === 1 && this.isPanning) {
+        // 拖动中
+        event.preventDefault();
+        const touch = event.touches[0];
+        this.translateX = touch.clientX - this.startX;
+        this.translateY = touch.clientY - this.startY;
+      }
+    },
     handleTouchEnd(event) {
-    if (event.touches.length === 0) {
-      // 拖动结束，记录上次偏移量
-      this.isPanning = false;
-      this.lastTranslateX = this.translateX;
-      this.lastTranslateY = this.translateY;
-    }
-    if (event.touches.length < 2) {
-      this.initialDistance = 0;
-    }
-  },
+      if (event.touches.length === 0) {
+        // 手势结束，记录当前位移
+        this.isPanning = false;
+        this.isTransforming = false;
+        this.lastTranslateX = this.translateX;
+        this.lastTranslateY = this.translateY;
+      }
+      if (event.touches.length < 2) {
+        this.initialDistance = 0;
+        this.initialAngle = 0;
+        this.initialRotation = this.pageRotate;
+      }
+      if (event.touches.length === 1 && this.currentScale > 1) {
+        this.isTransforming = true;
+        this.isPanning = true;
+        this.startX = event.touches[0].clientX - this.lastTranslateX;
+        this.startY = event.touches[0].clientY - this.lastTranslateY;
+      }
+    },
     //上一页
     prev() {
       if (this.currentPage > 1) {
@@ -228,9 +256,29 @@ export default {
         this.currentPage++;
       }
     },
+    resetPdfViewState() {
+      this.currentPage = 0;
+      this.pageCount = 0;
+      this.pageRotate = 0;
+      this.currentScale = 1;
+      this.initialScale = 1;
+      this.initialDistance = 0;
+      this.initialRotation = 0;
+      this.initialAngle = 0;
+      this.translateX = 0;
+      this.translateY = 0;
+      this.lastTranslateX = 0;
+      this.lastTranslateY = 0;
+      this.isPanning = false;
+      this.isTransforming = false;
+      this.startX = 0;
+      this.startY = 0;
+    },
     //关闭
     handleClose() {
+      this.resetPdfViewState();
       this.showType = false;
+      this.pdfUrl = "";
     },
     rendered() {
       console.log("渲染完成")
