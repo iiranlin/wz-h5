@@ -179,6 +179,7 @@ export default {
     return {
       detailInfo: {},
       sectionInfo: {
+        sectionId: '',
         registration: [],
         bidDocument: [],
         name: '',
@@ -234,6 +235,7 @@ export default {
       this.sectionInfo.unitName = this.detailInfo.constructionCompany;
       this.sectionInfo.projectId = this.detailInfo.projectId;
       this.sectionInfo.projefctName = this.detailInfo.sectionName;
+      this.sectionInfo.sectionId = this.detailInfo.id;
     } else {
       const data = await this.getGeneraDetail();
 

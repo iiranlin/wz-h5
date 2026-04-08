@@ -420,6 +420,7 @@ export default {
         this.sectionInfo.projectId = this.detailInfo.projectId;
         this.sectionInfo.unitName = this.detailInfo.constructionCompany;
         this.sectionInfo.projefctName = this.detailInfo.sectionName;
+        this.sectionInfo.sectionId = this.detailInfo.id;
       } else {
         try {
           if (sessionStorage.getItem('zghtCreate') == 'true') {
