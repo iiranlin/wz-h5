@@ -198,12 +198,12 @@ export default {
 			} else if (code == 'JL') {
 				// 跳转到监理单位首页
 				if (this.$route.path === '/') {
-					this.$router.push({ path: '/supervisorPage' });
+					this.$router.push({ path: '/jlHome' });
 				}
 				// supervisorPage should not have tabbar
-				if (this.$route.path !== '/supervisorPage') {
-					return this.supervisionUnit;
-				}
+				// if (this.$route.path !== '/supervisorPage') {
+				// 	return this.supervisionUnit;
+				// }
 			} else if (code == 'GYS') {
 			  // 跳转到供应商首页
 				this.$router.push({ path: '/supplierPage' })

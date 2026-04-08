@@ -47,6 +47,12 @@ export const routes = [
         component: () => import("@/view/homePage/constructionUnitsPage.vue"),
       },
       {
+        path: "jlHome",
+        name: "jlHome",
+        meta: { title: "监理首页", isTabbar: true },
+        component: () => import("@/view/homePage/jlHome.vue"),
+      },
+      {
         path: "supervisorPage",
         name: "supervisorPage",
         // 监理首页
@@ -71,6 +77,12 @@ export const routes = [
         name: "purchaseContract",
         meta: { title: "采购合同核备", isTabbar: true },
         component: () => import("@/view/SelfBuying/purchaseContract.vue"),
+      },
+      {
+        path: "/selfContractSelect",
+        name: "selfContractSelect",
+        meta: { title: "自购物资合同", isTabbar: true },
+        component: () => import("@/view/SelfBuying/SelfContractSelect/index.vue"),
       },
       {
         path: "/AcceptanceReturn",

@@ -70,12 +70,14 @@ export default {
 			if (code == 'FB' || code == 'ZB') {
 				// 跳转到施工单位首页
 				this.$router.push({ path: '/constructionUnitsPage' })
-			} else if (code == 'JL' || code == 'SN' || code == 'WZDL' || code == 'WD') {
+			} else if (code == 'SN' || code == 'WZDL' || code == 'WD') {
 			  // 跳转到监理单位首页
 				this.$router.push({ path: '/supervisorPage' })
 			} else if (code == 'GYS') {
 			  // 跳转到供应商首页
 				this.$router.push({ path: '/supplierPage' })
+			} else if(code == 'JL') {
+				this.$router.push({ path: '/jlHome' })
 			} else {
         this.$notify({
           type: 'warning',
