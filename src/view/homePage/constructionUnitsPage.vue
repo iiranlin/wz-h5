@@ -56,6 +56,16 @@
         </div>
       </div>
 
+      <div style="margin-bottom: 10px;" @click="handleRouter('/ProjectExecutionStatistics')">
+        <div class="statisticsEntry">
+          <div class="statisticsEntry__content">
+            <img :src="DemandInventory">
+            <span>项目执行统计</span>
+          </div>
+          <van-icon name="arrow" />
+        </div>
+      </div>
+
       <div style="margin-bottom: 20px;">
         <div class="selfBuying">
           <div class="selfTitle">
@@ -78,8 +88,6 @@
 </template>
 
 <script>
-import keepPages from '@/view/mixins/keepPages'
-
 const Receiving = require('@/assets/img/Receiving.png');
 const returns = require('@/assets/img/returns.png');
 const warehousing = require('@/assets/img/warehousing.png');
@@ -256,6 +264,41 @@ export default {
     width: 40px;
     height: 40px;
     vertical-align: middle;
+  }
+}
+
+.statisticsEntry {
+  width: 94%;
+  height: 70px;
+  margin: 0 auto;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: #fff;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #333;
+
+  .van-icon {
+    font-size: 18px;
+    color: #999;
+  }
+}
+
+.statisticsEntry__content {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+
+  span {
+    font-weight: 600;
   }
 }
 </style>

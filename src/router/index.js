@@ -9,7 +9,6 @@ import Layout from "@/layout";
 
 const typeName = {
   submit: "提交",
-  update: "修改",
   view: "详情",
   create: "新增",
   update: "编辑",
@@ -136,6 +135,13 @@ export const routes = [
         meta: { title: "出库单", isTabbar: true },
         component: () =>
           import("@/view/InOutManagement/components/OutListContent.vue"),
+      },
+      {
+        path: "/ProjectExecutionStatistics",
+        name: "ProjectExecutionStatistics",
+        meta: { title: "项目执行统计", isTabbar: true },
+        component: () =>
+          import("@/view/homePage/projectExecutionStatistics.vue"),
       },
       {
         path: "/WaitExamineList",
