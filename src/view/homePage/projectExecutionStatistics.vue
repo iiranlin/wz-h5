@@ -280,6 +280,23 @@ export default {
 
 .statistics-card {
   padding-bottom: 0;
+
+  ::v-deep .list-ul li {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  ::v-deep .list-ul li span:first-child {
+    flex: 0 0 auto;
+  }
+
+  ::v-deep .list-ul li span:last-child {
+    flex: 1;
+    white-space: normal;
+    word-break: break-all;
+    overflow: visible;
+    text-overflow: initial;
+  }
 }
 
 .expand-action {
