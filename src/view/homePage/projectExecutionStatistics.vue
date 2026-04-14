@@ -109,7 +109,7 @@ const FIELD_LIST = [
   { key: 'stockTotal', label: '实时库存' }
 ]
 
-const DEFAULT_SHOW_COUNT = 7
+const DEFAULT_SHOW_COUNT = 8
 
 export default {
   name: 'ProjectExecutionStatistics',
@@ -194,7 +194,23 @@ export default {
       this.showDatePicker = true
     },
     handleDateConfirm() {
-      this.formData[this.pickerType] = this.formatDate(this.pickerDate)
+      const selectedDate = this.formatDate(this.pickerDate)
+
+      if (this.pickerType === 'startDate') {
+        this.formData.startDate = selectedDate
+
+        if (dayjs(this.formData.endDate).isBefore(selectedDate)) {
+          this.formData.endDate = selectedDate
+        }
+      } else {
+        if (dayjs(selectedDate).isBefore(this.formData.startDate)) {
+          this.$toast('结束日期不能早于开始日期')
+          return
+        }
+
+        this.formData.endDate = selectedDate
+      }
+
       this.showDatePicker = false
       this.allRefresh()
     },
