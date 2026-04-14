@@ -8,10 +8,16 @@
             placeholder="输入关键字搜索"
             shape="round"
             left-icon="none"
+            show-action
             @search="handleSearch"
           >
             <template slot="right-icon">
               <van-icon name="search" @click="handleSearch" />
+            </template>
+            <template slot="action">
+              <van-button class="export-button" type="info" round size="small" @click="handleExport">
+                导出
+              </van-button>
             </template>
           </van-search>
         </div>
@@ -85,22 +91,19 @@
 
 <script>
 import dayjs from 'dayjs'
+import * as FileApi from '@/api/prodmgr-inv/file'
 import { materialDetailsQueryList } from '@/api/prodmgr-inv/materialsPlans'
 
 const FIELD_LIST = [
-  { key: 'projectName', label: '建设项目' },
-  { key: 'projectShortName', label: '标段项目' },
+  
   { key: 'contractNo', label: '合同编号' },
   { key: 'contractName', label: '合同名称' },
-  { key: 'buyer', label: '买方' },
   { key: 'sellerName', label: '卖方' },
   { key: 'materialName', label: '物资名称' },
   { key: 'specModel', label: '规格型号' },
   { key: 'unit', label: '计量单位' },
   { key: 'amount', label: '合同数量' },
-  { key: 'price', label: '到站不含税单价（元）' },
   { key: 'vatRate', label: '增值税率%' },
-  { key: 'taxPrice', label: '到站含税单价（元）' },
   { key: 'cumulativeAmount', label: '累计下达数量' },
   { key: 'sendTotal', label: '累计发货数量' },
   { key: 'putTotal', label: '累计收货数量' },
@@ -109,7 +112,7 @@ const FIELD_LIST = [
   { key: 'stockTotal', label: '实时库存' }
 ]
 
-const DEFAULT_SHOW_COUNT = 8
+const DEFAULT_SHOW_COUNT = 7
 
 export default {
   name: 'ProjectExecutionStatistics',
@@ -188,6 +191,20 @@ export default {
     handleSearch() {
       this.allRefresh()
     },
+    async handleExport() {
+      try {
+        await FileApi.customDownload({
+          businessType: 15,
+          businessData: JSON.stringify({
+            queryField: this.formData.queryField,
+            startDate: this.formData.startDate,
+            endDate: this.formData.endDate
+          })
+        })
+      } catch (error) {
+        this.$toast('导出失败')
+      }
+    },
     openDatePicker(type) {
       this.pickerType = type
       this.pickerDate = this.formData[type] ? new Date(this.formData[type]) : new Date()
@@ -243,12 +260,12 @@ export default {
     top: 0;
     left: 0;
     z-index: 1;
-    display: flex;
-
-    .van-search {
-      flex: 1;
-    }
   }
+}
+
+.export-button {
+  padding: 0 12px;
+  margin-top: 2px;
 }
 
 .date-range-container {

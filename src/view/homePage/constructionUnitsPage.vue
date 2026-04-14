@@ -56,15 +56,7 @@
         </div>
       </div>
 
-      <div style="margin-bottom: 10px;" @click="handleRouter('/ProjectExecutionStatistics')">
-        <div class="statisticsEntry">
-          <div class="statisticsEntry__content">
-            <img :src="DemandInventory">
-            <span>项目执行统计</span>
-          </div>
-          <van-icon name="arrow" />
-        </div>
-      </div>
+   
 
       <div style="margin-bottom: 20px;">
         <div class="selfBuying">
@@ -81,6 +73,16 @@
               <img :src="BuyerPact">
             </template>
           </van-cell>
+        </div>
+      </div>
+
+         <div style="margin-bottom: 10px;" @click="handleRouter('/ProjectExecutionStatistics')">
+        <div class="statisticsEntry">
+          <div class="statisticsEntry__content">
+            <img :src="DemandInventory">
+            <span>项目执行统计</span>
+          </div>
+          <van-icon name="arrow" />
         </div>
       </div>
     </van-pull-refresh>
