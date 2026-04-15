@@ -8,6 +8,10 @@
         </div>
         <ul class="detail-list-ul">
           <li>
+            <span>供应商111：</span>
+            <span>{{ item.sellerName }}</span>
+          </li>
+          <li>
             <span>规格型号：</span>
             <span>{{ item.specModel }}</span>
           </li>
