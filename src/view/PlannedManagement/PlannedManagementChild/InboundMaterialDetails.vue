@@ -60,6 +60,26 @@
     </div>
     <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
+        <img src="@/assets/img/Icon-time.png" />
+        <span>质检情况</span>
+      </div>
+      <ul class="detail-ul detail-ul-border">
+        <li>
+          <span>质检结果：</span>
+          <span>{{ qualityStatusText }}</span>
+        </li>
+        <li>
+          <span>通过数量：</span>
+          <span class="li-span-click">{{ sectionInfo.storeTotal || 0 }} {{ sectionInfo.unit }}</span>
+        </li>
+        <li>
+          <span>退货数量：</span>
+          <span style="color: #e4393c;">{{ sectionInfo.refundZjTotal || 0 }} {{ sectionInfo.unit }}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="detail-base-info detail-base-info-edited">
+      <div class="detail-title-content">
         <img src="@/assets/img/Icon-address.png" />
         <span>其他信息</span>
       </div>
@@ -86,11 +106,18 @@
           <file-download-view :fileList="fileList1 || []"></file-download-view>
         </div>
          <div class="detail-base-info detail-base-info-edited" v-if="fileList2.length">
-          <div class="detail-title-content">
+         <div class="detail-title-content">
             <img src="/static/icon-file.png" />
             <span>厂检报告附件</span>
           </div>
           <file-download-view :fileList="fileList2 || []"></file-download-view>
+        </div>
+        <div class="detail-base-info detail-base-info-edited" v-if="isAllRejected && fileList3.length">
+          <div class="detail-title-content">
+            <img src="/static/icon-file.png" />
+            <span>退货附件</span>
+          </div>
+          <file-download-view :fileList="fileList3 || []"></file-download-view>
         </div>
         <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
@@ -111,15 +138,28 @@
 <script>
 import { materialDemandPlanDetailsDetail } from '@/api/prodmgr-inv/materialDemandPlanDetails'
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import { resolveDefaultRadioByTotals } from '@/view/InOutManagement/utils/qualityStatus';
 export default {
   // 入库-物资详情
   name: 'InboundMaterialDetails',
   components: { FileDownloadView },
+  computed: {
+    qualityStatus() {
+      return resolveDefaultRadioByTotals(this.sectionInfo);
+    },
+    qualityStatusText() {
+      return this.qualityStatus === '2' ? '全部退货' : '全部通过';
+    },
+    isAllRejected() {
+      return this.qualityStatus === '2';
+    }
+  },
   data() {
     return {
       sectionInfo: {},
       fileList1: [],
       fileList2: [],
+      fileList3: [],
     }
   },
   mounted() {
@@ -127,11 +167,11 @@ export default {
   },
   methods: {
     init() {
-      const { id = '' } = this.$route.query
       this.sectionInfo = this.$route.params
-      let fileByList = JSON.parse(this.sectionInfo.fileByList)
-      this.fileList1 = fileByList.hgz
-      this.fileList2 = fileByList.cjbg
+      const fileByList = this.sectionInfo.fileByList ? JSON.parse(this.sectionInfo.fileByList) : {}
+      this.fileList1 = fileByList.hgz || []
+      this.fileList2 = fileByList.cjbg || []
+      this.fileList3 = fileByList.thfj_im || []
       // this.materialDemandPlanDetailsDetail(id)
     },
     materialDemandPlanDetailsDetail(id) {
@@ -142,7 +182,7 @@ export default {
       });
       materialDemandPlanDetailsDetail(id).then(({ data }) => {
         this.sectionInfo = data
-      }).finally((err) => {
+      }).finally(() => {
         toast.clear()
       })
     },

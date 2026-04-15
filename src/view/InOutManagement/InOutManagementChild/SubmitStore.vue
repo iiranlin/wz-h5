@@ -139,6 +139,7 @@ import keepPages from "@/view/mixins/keepPages";
 import indexMixin from '@/view/mixins'
 import { detailByStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
+import { getDismissedDetails } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { materialStoreTableRestSubmit } from '@/api/prodmgr-inv/materialStoreTableRest'
 import FilePreview from "@/components/FilePreview.vue";
 import activitiAssignee from '@/components/activitiAssignee'
@@ -296,7 +297,7 @@ export default {
     },
     detailByStore(id, storeStatus) {
       console.log(storeStatus,'storeStatusstoreStatusstoreStatus');
-      const url = storeStatus == "5" || storeStatus == "6" || storeStatus == '0' ? detailStoreBack : detailByStore
+      const url = storeStatus == '0' ? getDismissedDetails : storeStatus == "5" || storeStatus == "6"  ? detailStoreBack : detailByStore
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
@@ -304,8 +305,9 @@ export default {
       });
       url(id).then(({ data }) => {
         data.materialCirculationDetailsTableDTOS.forEach(item => {
-          item.storeTotal = this.queryType == "submit" ? item.putTotal : item.storeTotal; //新增默认入库数量=收货数量
-          item.defaultRadio = '1';
+          item.storeTotal = data.storeStatus === '0' ? item.storeTotal:  this.queryType == "submit" ? item.putTotal : item.storeTotal; //新增默认入库数量=收货数量
+          item.refundZjTotal = data.storeStatus === '0' ? item.refundZjTotal:  this.queryType == "submit" ? 0 : item.refundZjTotal; 
+          // item.defaultRadio = '1';
         })
 
         const selectStoreData = this.$store.state.public.selectStoreData || [];

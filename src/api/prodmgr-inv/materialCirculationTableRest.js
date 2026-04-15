@@ -18,6 +18,17 @@ export const detailWlgz = (id) => {
 }
 
 /**
+ * 驳回明细查看
+ */
+export const getDismissedDetails = (id) => {
+    return request({
+        url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/getDismissedDetails`,
+        method:'get',
+        params:{id}
+    })
+}
+
+/**
  * 入库列表
  * @param {*} params 
  * @returns 

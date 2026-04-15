@@ -309,7 +309,7 @@ import BackToTop from '@/components/BackToTop'
 import indexMixin from '@/view/mixins'
 import keepPages from "@/view/mixins/keepPages";
 import {saveTake,defaultTake, detailTakeBack} from '@/api/prodmgr-inv/AcceptanceReturn'
-import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { listPc,getDismissedDetails } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import FilePreview from "@/components/FilePreview.vue";
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
@@ -617,7 +617,7 @@ export default {
         forbidClick: true
       });
       console.log(this.takeStatus,'this.takeStatus');
-      const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 || this.takeStatus == 0 ? detailTakeBack : defaultTake;
+      const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 || this.takeStatus == 0 ? detailTakeBack : getDismissedDetails;
        getDetailApi(this.id).then((res)=>{
           if(res.success){
             const GoodsReceiptInfo = this.$store.state.public.GoodsReceiptInfo || {};
@@ -643,7 +643,7 @@ export default {
             if(this.isView==false){
               data.forEach(el => {
                 if (this.$store.state.public.selectGoodData?.length == 0) {
-                  el.putTotal = el.sendTotal
+                  el.putTotal = res.data.takeStatus == 0 ? el.putTotal : el.sendTotal
                 }
                   el.values = el.values?.length > 0 ? el.values : []
                   this.fileTHList.push({id:el.id,value:[]})

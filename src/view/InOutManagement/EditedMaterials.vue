@@ -198,6 +198,7 @@ import keepPages from '@/view/mixins/keepPages'
 import indexMixin from '@/view/mixins'
 import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
+import { resolveDefaultRadioByTotals } from './utils/qualityStatus';
 export default {
   name: 'EditedMaterials',
   mixins: [keepPages, indexMixin],
@@ -296,8 +297,10 @@ export default {
 
 
       const data = Object.assign({}, this.$store.state.public.materiaData || {})
-
-      this.sectionInfo = data;
+      this.sectionInfo = {
+        ...data,
+        defaultRadio: resolveDefaultRadioByTotals(data),
+      };
     },
     boolExceptZero(val) {
       return val === 0 || Boolean(val);
