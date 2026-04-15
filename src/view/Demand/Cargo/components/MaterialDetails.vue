@@ -8,7 +8,7 @@
         </div>
         <ul class="detail-list-ul">
           <li>
-            <span>供应商111：</span>
+            <span>供应商：</span>
             <span>{{ item.sellerName }}</span>
           </li>
           <li>
