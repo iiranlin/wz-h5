@@ -103,7 +103,7 @@ const FIELD_LIST = [
   { key: 'specModel', label: '规格型号' },
   { key: 'unit', label: '计量单位' },
   { key: 'amount', label: '合同数量' },
-  { key: 'vatRate', label: '增值税率%' },
+  // { key: 'vatRate', label: '增值税率%' },
   { key: 'cumulativeAmount', label: '累计下达数量' },
   { key: 'sendTotal', label: '累计发货数量' },
   { key: 'putTotal', label: '累计收货数量' },
