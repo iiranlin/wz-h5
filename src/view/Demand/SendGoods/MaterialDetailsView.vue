@@ -7,7 +7,11 @@
         <span>{{ detailInfo.materialName }}</span>
       </div>
       <ul class="detail-list-ul">
-                    <li>
+            <li>
+              <span>供应商：</span>
+              <span>{{ detailInfo.sellerName }}</span>
+            </li>
+            <li>
               <span>规格型号：</span>
               <span>{{ detailInfo.specModel }}</span>
             </li>
