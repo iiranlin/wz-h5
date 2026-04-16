@@ -80,6 +80,10 @@
             <img v-if="queryType === 'submit'" :src="boolExceptZero(item.putTotal) && boolExceptZero(item.refundTotal) ? editedStatus : editStatus" />
           </li>
           <li>
+            <span>供应商：</span>
+            <span>{{ item.sellerName }}</span>
+          </li>
+          <li>
             <span>规格型号：</span>
             <span>{{ item.specModel }}</span>
           </li>

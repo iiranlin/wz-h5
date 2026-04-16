@@ -7,6 +7,10 @@
       </div>
       <ul class="detail-list-ul">
         <li>
+          <span>供应商：</span>
+          <span>{{ sectionInfo.sellerName }}</span>
+        </li>
+        <li>
           <span>规格型号：</span>
           <span>{{ sectionInfo.specModel }}</span>
         </li>
