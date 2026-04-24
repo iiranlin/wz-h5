@@ -538,6 +538,13 @@ export const routes = [
         path: "EditedMaterialSubmitStore",
         name: "EditedMaterialSubmitStore",
         meta: { title: "编辑物资" },
+        beforeEnter(to, from, next) {
+          to.meta.title =
+            to.query.queryType == "view"
+              ? `物资详情`
+              : `编辑物资`;
+          next();
+        },
         component: () => import("@/view/InOutManagement/EditedMaterials.vue"),
       },
       {

@@ -74,6 +74,10 @@
           <span class="li-span-click">{{ sectionInfo.storeTotal }}</span>
         </li>
         <li>
+          <span>累计入库：</span>
+          <span class="li-span-click">{{ sectionInfo.storeSum }}</span>
+        </li>
+        <li>
           <span>退货数量：</span>
           <span style="color: #e4393c;">{{ sectionInfo.refundZjTotal }}</span>
         </li>

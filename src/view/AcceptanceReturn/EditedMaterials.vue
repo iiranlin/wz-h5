@@ -23,6 +23,10 @@
           <span>{{ sectionInfo.planAmount }}</span>
         </li>
         <li>
+          <span>累计收货：</span>
+          <span>{{ sectionInfo.putSum }}</span>
+        </li>
+        <li>
           <span>包装方式：</span>
           <span>{{ sectionInfo.packagingFm }}</span>
         </li>
