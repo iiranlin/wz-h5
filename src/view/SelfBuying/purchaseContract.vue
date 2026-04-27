@@ -158,7 +158,7 @@ export default {
         { title: '全部', status: '', color: '' },
         { title: '未提交', status: 1, color: '#134daa' },
         { title: '审核中', status: 2, color: '#134daa' },
-        { title: '已通过', status: 3, color: '#51CA40' },
+        { title: '已完成', status: 3, color: '#51CA40' },
         { title: '已驳回', status: 0, color: '#CE2320' },
       ],
       dataList: [],
