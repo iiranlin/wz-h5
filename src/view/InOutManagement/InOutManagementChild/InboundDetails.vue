@@ -26,6 +26,13 @@
           </div>
           <file-download-view :fileList="fileList"></file-download-view>
         </div>
+         <div class="detail-base-info detail-base-info-edited" v-if="rkd.length">
+          <div class="detail-title-content">
+            <img src="/static/icon-file.png" />
+            <span>入库单附件</span>
+          </div>
+          <file-download-view :fileList="rkd"></file-download-view>
+        </div>
     <div class="detail-floor-content">
       <img src="/static/icon-return.png"/>
       <span>物资明细（共{{detailList.length}}项）</span>
@@ -118,6 +125,7 @@ export default {
       detailInfo:{},
       detailList:[],
       fileList:[],
+      rkd:[],
       from: "",
       //是否显示选择审批人弹框
       assigneePopupShow:false,
@@ -303,6 +311,7 @@ export default {
         this.detailList = data.materialCirculationDetailsTableDTOS;
         console.log(this.detailList, "this.detailList");
         this.fileList = JSON.parse(data.fileByList).jcbg;
+        this.rkd = JSON.parse(data.fileByList).rkd;
 
         // this.fileList = [...this.fileList,...this.fileList]
       }).catch((error) => {

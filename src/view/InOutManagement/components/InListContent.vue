@@ -268,7 +268,7 @@ export default {
 
             this.$store.dispatch('public/setSelectStoreData', []);
 
-            this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.storeMiddleId? item.storeMiddleId : item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
+            this.$router.push({ name: 'SubmitStore', query: { type: 'view', id: item.storeMiddleId? item.storeMiddleId : item.id, supplyId: item.planId, storeStatus: item.storeStatus, from:'list' } })
           } else {
             this.$toast('入库完成才能查看详情');
           }

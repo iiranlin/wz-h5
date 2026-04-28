@@ -44,12 +44,31 @@
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="formData.fileList01 || []" businessType="01" />
     </div>
 
+
     <div class="detail-base-info detail-base-info-edited" v-if="queryType != 'submit' && formData.fileList01?.length">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
         <span>报检结果</span>
       </div>
       <file-download-view :fileList="formData.fileList01 || []" />
+    </div>
+
+    <div class="detail-base-info detail-base-info-edited" v-if="queryType === 'submit'|| queryType === 'view' && from === 'list' " >
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>入库单附件</span>
+      </div>
+      <p class="box-container-p" v-if="!formData.rkd?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="formData.rkd || []" businessType="01" />
+    </div>
+
+    <!-- 审核页面预览 -->
+    <div class="detail-base-info detail-base-info-edited" v-if="queryType != 'submit' && formData.rkd?.length && from !== 'list'">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>入库单附件</span>
+      </div>
+      <file-download-view :fileList="formData.rkd || []" />
     </div>
 
     <div v-if="queryType === 'submit'" class="detail-floor-content">
@@ -129,6 +148,15 @@
         </p>
       </div>
     </div>
+
+    <!-- 列表预览则可以保存入库单 -->
+    <div class="default-button-container" v-if="queryType === 'view' && from === 'list'">
+     
+      <div style="margin: auto;">
+
+        <van-button  class="button-info" round type="info" @click="onSave">保存</van-button>
+      </div>
+    </div>
     <!-- 附件预览 -->
     <file-preview ref="filePreview"></file-preview>
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
@@ -141,7 +169,7 @@ import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
 import keepPages from "@/view/mixins/keepPages";
 import indexMixin from '@/view/mixins'
-import { detailByStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { detailByStore ,updateFileList} from '@/api/prodmgr-inv/materialCirculationTableRest'
 import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
 import { getDismissedDetails } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { materialStoreTableRestSubmit } from '@/api/prodmgr-inv/materialStoreTableRest'
@@ -195,6 +223,9 @@ export default {
       })
 
       return flag;
+    },
+    from(){
+      return this.$route.query.from || '';
     }
   },
   data() {
@@ -328,6 +359,7 @@ export default {
           fileList01: data.fileByList ? JSON.parse(data.fileByList).jcbg || [] : [], //检测报告
           fileList02: data.fileByList ? JSON.parse(data.fileByList).zlzm || [] : [], //证明文件
           fileList03: data.fileByList ? JSON.parse(data.fileByList).byjg || [] : [], //报验结果
+          rkd: data.fileByList ? JSON.parse(data.fileByList).rkd || [] : [], //入库单附件
         }
         }
 
@@ -342,6 +374,7 @@ export default {
             fileList01: item.fileByList ? JSON.parse(item.fileByList).hgz || [] : [], //合格证
             fileList02: item.fileByList ? JSON.parse(item.fileByList).cjbg || [] : [], //厂检报告
             fileList03: item.fileByList ? JSON.parse(item.fileByList).thfj_im || [] : [], //退货附件
+            rkd: item.fileByList ? JSON.parse(item.fileByList).rkd || [] : [], //入库单附件
           }))
         }
 
@@ -462,6 +495,10 @@ export default {
       if (this.formData.fileList03.length > 0) {
         this.$set(fileByList, "byjg", this.formData.fileList03);
       }
+      // 入库单
+   
+        this.$set(fileByList, "rkd", this.formData.rkd);
+      
       this.formData.fileByList = JSON.stringify(fileByList);
 
       this.$dialog.confirm({
@@ -471,6 +508,38 @@ export default {
       }).then(() => {
         this.$refs.activitiAssignee.init('RKLC', this.formData)
       })
+    },
+    async onSave(){
+      //组装附件
+      let fileByList = this.formData.fileByList ? JSON.parse(this.formData.fileByList) : {};
+      //检测报告
+      if (this.formData.fileList01.length > 0) {
+        this.$set(fileByList, "jcbg", this.formData.fileList01);
+      } else {
+        this.$notify({
+          type: 'warning',
+          message: "请上传报检结果附件"
+        });
+        return
+      }
+      //质量证明文件
+      if (this.formData.fileList02.length > 0) {
+        this.$set(fileByList, "zlzm", this.formData.fileList02);
+      }
+      //报验结果
+      if (this.formData.fileList03.length > 0) {
+        this.$set(fileByList, "byjg", this.formData.fileList03);
+      }
+      // 入库单
+      
+        this.$set(fileByList, "rkd", this.formData.rkd);
+      
+      this.formData.fileByList = JSON.stringify(fileByList);
+      const res = await updateFileList({...this.formData,id:this.id})
+      if(res.code == 0){
+        this.$toast('保存成功')
+        this.$router.go(-1)
+      }
     },
     //选择审核人回调
     optionsSuccess(assignee, { id, planType }) {
