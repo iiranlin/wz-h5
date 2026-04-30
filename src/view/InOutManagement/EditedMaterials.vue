@@ -74,7 +74,7 @@
           <span class="li-span-click">{{ sectionInfo.storeTotal }}</span>
         </li>
         <li>
-          <span>累计入库：</span>
+          <span>累计入库(不含本次)：</span>
           <span class="li-span-click">{{ sectionInfo.storeSum }}</span>
         </li>
         <li>

@@ -23,7 +23,7 @@
           <span>{{ sectionInfo.planAmount }}</span>
         </li>
         <li>
-          <span>累计收货：</span>
+          <span>累计收货(不含本次)：</span>
           <span>{{ sectionInfo.putSum }}</span>
         </li>
         <li>
