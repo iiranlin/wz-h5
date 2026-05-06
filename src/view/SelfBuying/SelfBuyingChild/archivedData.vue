@@ -78,14 +78,14 @@
 
     <div class="detail-base-info detail-base-info-edited" style="margin-bottom: 8px;background-color: #F2F4F8;">
       <div class="detail-title-content">
-        <span style="font-size: 16px;">招标归档文件</span>
+        <span style="font-size: 16px;">采购归档文件</span>
       </div>
     </div>
 
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
-        <span>招标公告网页版</span>
+        <span>采购公告网页版</span>
       </div>
       <p class="box-container-p" v-if="!formData.tenderAnnouncement?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
       <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.tenderAnnouncement" businessType="01" />
@@ -94,7 +94,7 @@
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
-        <span>招标文件答疑、补遗</span>
+        <span>采购文件答疑、补遗</span>
       </div>
       <p class="box-container-p" v-if="!formData.bidAddendum?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
       <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="formData.bidAddendum" businessType="02" />

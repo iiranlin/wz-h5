@@ -137,7 +137,7 @@
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
-        <span>采购方案或招标计划</span>
+        <span>采购方案或采购计划</span>
       </div>
       <file-download-view :fileList="formData.fileList01 || []" />
     </div>
@@ -145,7 +145,7 @@
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 65px;">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
-        <span>招标文件（含技术规格书）</span>
+        <span>采购文件（含技术规格书）</span>
       </div>
       <file-download-view :fileList="formData.fileList02 || []" />
     </div>
