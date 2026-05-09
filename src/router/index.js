@@ -226,7 +226,7 @@ export const routes = [
       {
         path: "perfectFileDetail",
         name: "perfectFileDetail",
-        meta: { title: "文件核备详情" },
+        meta: { title: "采购文件核备详情" },
         component: () =>
           import("@/view/SelfBuying/SelfBuyingChild/perfectFileDetail.vue"),
       },
@@ -265,7 +265,7 @@ export const routes = [
       {
         path: "perfectContractDetail",
         name: "perfectContractDetail",
-        meta: { title: "合同核备详情" },
+        meta: { title: "采购合同核备详情" },
         component: () =>
           import("@/view/SelfBuying/SelfBuyingChild/perfectContractDetail.vue"),
       },
