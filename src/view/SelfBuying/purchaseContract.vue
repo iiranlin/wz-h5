@@ -64,6 +64,10 @@
                 <span>{{ item.railwaySpecial == '1' ? '是' : '否' }}</span>
               </li> -->
               <li>
+                <span>关联采购文件：</span>
+                <span class="li-span-click" @click.stop="handlePurchaseFileDetail(item)">{{ item.purchaseFileNumber || '--' }}</span>
+              </li>
+              <li>
                 <span>合同金额(万元)：</span>
                 <span>{{ item.amount }}</span>
               </li>
@@ -136,7 +140,7 @@ import keepPages from '@/view/mixins/keepPages'
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
-import {customDownload} from '@/api/prodmgr-inv/file'
+import { customDownload } from '@/api/prodmgr-inv/file'
 
 import { materialPurchaseContractList, batchRemoveContract, materialPurchaseContractSubmit } from '@/api/prodmgr-inv/SelfBuying'
 import { recall } from '@/api/prodmgr-inv/audit'
@@ -223,13 +227,9 @@ export default {
     this.allRefresh();
   },
   methods: {
-        // 下载
+    // 下载
     async handleDonwload({ id }) {
-      try {
-        await customDownload({businessType:111,businessData:id});
-      } catch (error) {
-      } finally {
-      }
+      await customDownload({ businessType: 111, businessData: id }).catch(() => undefined);
     },
     // 查看流程点击
     handleProcessClick(item) {
@@ -279,6 +279,15 @@ export default {
     // 详情
     handleDetail(item) {
       this.$router.push({ name: 'perfectContractDetail', query: { ...item } });
+    },
+
+    // 查看关联采购文件详情
+    handlePurchaseFileDetail(item) {
+      if (!item || !item.purchaseFileId) {
+        this.$toast('未关联采购文件');
+        return;
+      }
+      this.$router.push({ name: 'perfectFileDetail', query: { id: item.purchaseFileId } });
     },
 
     // 新增/修改

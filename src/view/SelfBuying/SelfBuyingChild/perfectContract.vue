@@ -23,9 +23,14 @@
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
+          <van-field v-model="sectionInfo.purchaseFileNumber" readonly clickable required name="purchaseFileNumber"
+            label="关联采购文件核备" placeholder="请选择关联采购文件核备" right-icon="arrow" input-align="right" @click="openPurchaseFilePopup" />
+        </li>
+        <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.contractName" required name="contractName" label="合同名称" placeholder="请输入合同名称"
             input-align="right" />
         </li>
+
         <li class="detail-list-li-input">
           <van-field readonly v-model="sectionInfo.amount" name="amount" type="number" label="合同金额" placeholder="0"
             input-align="right" @input="handlerAmount">
@@ -36,7 +41,8 @@
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.contractNumber" required name="contractNumber" label="合同编号"
-            placeholder="请输入合同编号" input-align="right" :error="contractNumberDuplicate" @blur="checkContractNumberDuplicate" />
+            placeholder="请输入合同编号" input-align="right" :error="contractNumberDuplicate"
+            @blur="checkContractNumberDuplicate" />
           <div v-if="contractNumberDuplicate" class="contract-number-error">合同编号已存在，可重复提交</div>
         </li>
         <li class="detail-list-li-input">
@@ -248,6 +254,48 @@
     <van-popup v-model="showUnitPicker" round position="bottom">
       <van-picker show-toolbar :columns="unitColumns" @cancel="showUnitPicker = false" @confirm="onUnitConfirm" />
     </van-popup>
+    <!-- 关联采购文件核备 -->
+    <van-popup v-model="showPurchaseFilePopup" round position="bottom" @close="handlePurchaseFilePopupClose">
+      <div class="purchase-file-popup detail-base-info detail-base-info-edited">
+        <div class="detail-title-content">
+          <img src="/static/icon-file.png">
+          <span>选择关联采购文件核备</span>
+        </div>
+        <van-list v-model="purchaseFileLoading" :finished="purchaseFileFinished" finished-text="没有更多了..."
+          :immediate-check="false" @load="loadMorePurchaseFiles">
+          <van-radio-group v-model="selectedPurchaseFileId">
+            <div v-for="item in purchaseFileList" :key="item.id" class="purchase-file-item"
+              @click="handlePurchaseFileRowClick(item)">
+              <div class="purchase-file-item-title">
+                <span>单据ID：{{ item.purchaseNumber }}</span>
+                <van-radio :name="String(item.id)" />
+              </div>
+              <ul class="detail-ul">
+                <li>
+                  <span>物资名称：</span>
+                  <span>{{ item.purchaseFileName || '--' }}</span>
+                </li>
+                <li>
+                  <span>物资种类：</span>
+                  <span>{{ item.purchaseTypeName || '--' }}</span>
+                </li>
+                <li>
+                  <span>预算金额：</span>
+                  <span class="li-span-click">{{ item.amount || 0 }}</span>
+                  <span>万元</span>
+                </li>
+              </ul>
+            </div>
+          </van-radio-group>
+        </van-list>
+        <van-empty v-if="!purchaseFileLoading && !purchaseFileList.length" image="/empty-image-default.png"
+          description="暂无数据" />
+        <div class="purchase-file-popup-footer">
+          <van-button class="button-info" round @click="showPurchaseFilePopup = false">取消</van-button>
+          <van-button class="button-info" round type="info" @click="confirmPurchaseFile">确认</van-button>
+        </div>
+      </div>
+    </van-popup>
     <!-- 合同签订日期 -->
     <Calendar ref="calendar" @onConfirm="handleDataConfirm" :unlimited="true" />
     <!-- 有效期限 -->
@@ -259,8 +307,7 @@
 import FileUploadView from "@/components/FileUploadView.vue";
 import Calendar from "@/layout/components/calendar.vue";
 import rangeCalendar from "./components/calendar.vue";
-import { parseTime } from '@/utils/index'
-import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify, countByContractNumber } from "@/api/prodmgr-inv/SelfBuying"
+import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseFileList, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify, countByContractNumber } from "@/api/prodmgr-inv/SelfBuying"
 import keepPages from '@/view/mixins/keepPages'
 import dayjs from "dayjs";
 export default {
@@ -303,6 +350,8 @@ export default {
       activeNames: [0],
       detailInfo: {},
       sectionInfo: {
+        purchaseFileId: '',
+        purchaseFileNumber: '',
         htfbsmj: [],
         gyszlzscns: [],
         hthbfj: [],
@@ -344,6 +393,18 @@ export default {
       varietyColumns: [],
       // 计量单位
       showUnitPicker: false,
+      // 关联采购文件核备
+      showPurchaseFilePopup: false,
+      purchaseFileList: [],
+      purchaseFileTotal: 0,
+      purchaseFileLoading: false,
+      purchaseFileFinished: false,
+      selectedPurchaseFileId: null,
+      selectedPurchaseFile: null,
+      purchaseFileQuery: {
+        pageNum: 1,
+        pageSize: 10,
+      },
     };
   },
   async activated() {
@@ -386,6 +447,8 @@ export default {
       if (this.$route.query.type == 'create') {
         if (sessionStorage.getItem('zghtCreate') == 'true') {
           this.sectionInfo = {
+            purchaseFileId: '',
+            purchaseFileNumber: '',
             htfbsmj: [],
             gyszlzscns: [],
             hthbfj: [],
@@ -410,7 +473,7 @@ export default {
               }
             ],
           }
-          sessionStorage.removeItem('zghtCreate') 
+          sessionStorage.removeItem('zghtCreate')
           // 重置合同编号重复标记
           this.contractNumberDuplicate = false;
         }
@@ -469,6 +532,100 @@ export default {
         }
       });
     },
+    openPurchaseFilePopup() {
+      if (!this.detailInfo?.id) {
+        this.$notify({
+          type: 'warning',
+          message: '未获取到当前标段',
+        });
+        return;
+      }
+
+      this.selectedPurchaseFileId = this.sectionInfo.purchaseFileId ? String(this.sectionInfo.purchaseFileId) : null;
+      this.selectedPurchaseFile = null;
+      this.purchaseFileList = [];
+      this.purchaseFileTotal = 0;
+      this.purchaseFileFinished = false;
+      this.purchaseFileQuery.pageNum = 1;
+      this.showPurchaseFilePopup = true;
+      this.getPurchaseFileList(true);
+    },
+    async getPurchaseFileList(isRefresh = false, isLoadMore = false) {
+      if (this.purchaseFileLoading && !isLoadMore) return;
+
+      if (!this.detailInfo?.id) {
+        this.purchaseFileList = [];
+        this.purchaseFileTotal = 0;
+        this.purchaseFileFinished = true;
+        this.$notify({
+          type: 'warning',
+          message: '未获取到当前标段',
+        });
+        return;
+      }
+
+      this.purchaseFileLoading = true;
+      try {
+        const res = await materialPurchaseFileList({
+          pageNum: this.purchaseFileQuery.pageNum,
+          pageSize: this.purchaseFileQuery.pageSize,
+          isAsc: '',
+          orderByColumn: '',
+          status: 3,
+          sectionId: this.detailInfo.id,
+        });
+        const data = res?.data || {};
+        const list = data.list || data.rows || data.records || [];
+
+        this.purchaseFileList = isRefresh ? list : [...this.purchaseFileList, ...list];
+        this.purchaseFileTotal = data.total || this.purchaseFileList.length;
+        this.purchaseFileFinished = this.purchaseFileList.length >= this.purchaseFileTotal || list.length < this.purchaseFileQuery.pageSize;
+
+        if (this.selectedPurchaseFileId) {
+          this.selectedPurchaseFile = this.purchaseFileList.find(
+            item => String(item.id) === this.selectedPurchaseFileId
+          ) || this.selectedPurchaseFile;
+        }
+      } finally {
+        this.purchaseFileLoading = false;
+      }
+    },
+    async loadMorePurchaseFiles() {
+      if (this.purchaseFileFinished) return;
+      const nextPageNum = this.purchaseFileQuery.pageNum + 1;
+      this.purchaseFileQuery.pageNum = nextPageNum;
+
+      try {
+        await this.getPurchaseFileList(false, true);
+      } catch (error) {
+        this.purchaseFileQuery.pageNum = nextPageNum - 1;
+        throw error;
+      }
+    },
+    handlePurchaseFileRowClick(row) {
+      this.selectedPurchaseFileId = String(row.id);
+      this.selectedPurchaseFile = row;
+    },
+    handlePurchaseFilePopupClose() {
+      this.selectedPurchaseFile = null;
+    },
+    confirmPurchaseFile() {
+      const row = this.purchaseFileList.find(
+        item => String(item.id) === this.selectedPurchaseFileId
+      ) || this.selectedPurchaseFile;
+
+      if (!row) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择关联采购文件核备',
+        });
+        return;
+      }
+
+      this.sectionInfo.purchaseFileId = row.id;
+      this.sectionInfo.purchaseFileNumber = row.purchaseNumber;
+      this.showPurchaseFilePopup = false;
+    },
     formatTimestamp(timestamp) {
       const date = new Date(timestamp);
       const year = date.getFullYear();
@@ -483,14 +640,14 @@ export default {
         this.contractNumberDuplicate = false;
         return;
       }
-      
+
       try {
         const params = { contractNumber };
         // 修改时传入 id
         if (this.$route.query.type !== 'create' && this.$route.query.id) {
           params.id = this.$route.query.id;
         }
-        
+
         const res = await countByContractNumber(params);
         if (res.code === 0) {
           // 返回值大于0表示有重复
@@ -767,7 +924,7 @@ export default {
       };
     },
     handlerfix(str) {
-      const [i, d] = String(str).split('.');
+      const [, d] = String(str).split('.');
       return d && d.length >= 6;
     },
     handlerAmount(value) {
@@ -781,6 +938,13 @@ export default {
           this.$notify({
             type: 'warning',
             message: '请输入合同名称!',
+          });
+          return
+        }
+        if (!this.sectionInfo.purchaseFileNumber) {
+          this.$notify({
+            type: 'warning',
+            message: '请选择关联采购文件核备!',
           });
           return
         }
@@ -1386,6 +1550,109 @@ export default {
     .button-info {
       width: 169px;
       height: 34px;
+    }
+  }
+
+  .purchase-file-popup {
+    height: 80vh;
+    margin: 0 !important;
+    border-radius: 16px 16px 0 0 !important;
+    box-shadow: none !important;
+    padding-top: 10px;
+
+    .detail-title-content {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .van-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 16px 70px;
+    }
+
+    .van-empty {
+      flex: 1;
+    }
+
+    .purchase-file-item {
+      background: #f7f8fa;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+
+      .purchase-file-item-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #ebedf0;
+        margin-bottom: 8px;
+
+        span {
+          font-size: 14px;
+          font-weight: 500;
+          color: #323233;
+        }
+      }
+
+      .detail-ul {
+        padding: 0;
+        border: none;
+
+        li {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 4px;
+          font-size: 13px;
+          line-height: 20px;
+
+          span:first-child {
+            color: #969799;
+            width: 70px;
+            flex-shrink: 0;
+            text-align: left;
+          }
+
+          span:nth-child(2) {
+            color: #323233;
+            flex: 1;
+            word-break: break-all;
+            text-align: left;
+          }
+
+          span:nth-child(3) {
+            color: #323233;
+            margin-left: 5px;
+          }
+
+          .li-span-click {
+            color: #ee0a24;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    .purchase-file-popup-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 10px 16px;
+      background: #ffffff;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      box-sizing: border-box;
+      z-index: 10;
+
+      .button-info {
+        flex: 1;
+        height: 40px;
+        margin: 0 5px;
+        width: auto !important;
+      }
     }
   }
 }

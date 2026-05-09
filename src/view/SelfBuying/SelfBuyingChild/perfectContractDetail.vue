@@ -35,6 +35,10 @@
           <span>{{ formData.purchaseNo }}</span>
         </li>
         <li>
+          <span>关联采购文件核备：</span>
+          <span class="li-span-click" @click="handlePurchaseFileDetail(formData)">{{ formData.purchaseFileNumber || formData.purchaseNumber || '--' }}</span>
+        </li>
+        <li>
           <span>买方单位：</span>
           <span>{{ formData.unitName }}</span>
         </li>
@@ -362,6 +366,15 @@ export default {
     handleProcessClick(item) {
       this.$router.push({ name: "MyProcess", params: { businessId: item.id, businessType: "CGHT", } })
     },
+    // 查看关联采购文件详情
+    handlePurchaseFileDetail(item) {
+      if (!item || !item.purchaseFileId) {
+        this.$toast('未关联采购文件');
+        return;
+      }
+
+      this.$router.push({ name: 'perfectFileDetail', query: { id: item.purchaseFileId } });
+    },
     //通过请求
     approvalRequest() {
       let toast = this.$toast.loading({
@@ -383,7 +396,7 @@ export default {
           message: message
         });
         this.$router.push({ name: this.from });
-      }).catch((error) => {
+      }).catch(() => {
 
       }).finally(() => {
         toast.clear();
@@ -432,7 +445,7 @@ export default {
         } else {
           this.approvalRequest();
         }
-      }).catch((error) => {
+      }).catch(() => {
 
       }).finally(() => {
         toast.clear();
@@ -460,7 +473,7 @@ export default {
           message: message
         });
         this.$router.push({ name: this.from });
-      }).catch((error) => {
+      }).catch(() => {
 
       }).finally(() => {
         toast.clear();

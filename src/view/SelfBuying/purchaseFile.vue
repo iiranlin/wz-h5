@@ -64,6 +64,11 @@
                 <span>{{ item.createUserName }}</span>
               </li>
               <li>
+                <span>关联采购合同核备：</span>
+                <span class="li-span-click" style="text-decoration: underline;"
+                  @click.stop="handleLookContractList(item)">{{ getContractsCount(item) }}</span>
+              </li>
+              <li>
                 <span>归档资料：</span>
                 <span class="li-span-click" style="text-decoration: underline;"
                   @click.stop="handleLookarchivedData(item)">查看</span>
@@ -74,7 +79,9 @@
               </li>
               <li>
                 <span>当前审核人：</span>
-                <span>{{ item.auditStatus == 2 ?'已完成': item.auditStatus == 3? '--' : item.currentHandlerUserNames || '--'  }} </span>
+                <span>{{ item.auditStatus == 2 ? '已完成' : item.auditStatus == 3 ? '--' : item.currentHandlerUserNames ||
+                  '--' }}
+                </span>
               </li>
             </ul>
             <div class="list-ul-button">
@@ -119,6 +126,42 @@
     <van-icon name="plus" @click="handleSelfBuying()" />
     <back-to-top :className="className"></back-to-top>
     <activiti-assignee ref="activitiAssignee" @optionsSuccess="optionsSuccess"></activiti-assignee>
+
+    <van-popup v-model="contractPopupVisible" round position="bottom" class="contract-popup">
+      <div class="contract-popup-header">
+        <span>关联采购合同核备</span>
+        <van-icon name="cross" @click="handleContractPopupClose" />
+      </div>
+      <div class="contract-popup-content">
+        <div v-for="(contract, index) in contractDialogList" :key="contract.id || index" class="contract-popup-item">
+          <div class="contract-popup-item-title">
+            <span>{{ index + 1 }}. {{ contract.contractName || '--' }}</span>
+          </div>
+          <ul class="contract-popup-fields">
+            <li>
+              <span>合同ID：</span>
+              <span class="contract-link" @click="handleContractDetail(contract)">{{ contract.purchaseNumber || '--' }}</span>
+            </li>
+            <li>
+              <span>合同编号：</span>
+              <span>{{ contract.contractNumber || '--' }}</span>
+            </li>
+            <li>
+              <span>物资种类：</span>
+              <span>{{ contract.purchaseTypeName || '--' }}</span>
+            </li>
+            <li>
+              <span>供应商：</span>
+              <span>{{ contract.supplierName || '--' }}</span>
+            </li>
+            <li>
+              <span>合同金额(万元)：</span>
+              <span>{{ contract.amount || '--' }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -129,8 +172,7 @@ import activitiAssignee from '@/components/activitiAssignee'
 
 import { materialPurchaseFileList, batchRemove, materialPurchaseFileSubmit } from '@/api/prodmgr-inv/SelfBuying'
 import { recall } from '@/api/prodmgr-inv/audit'
-import { downloadexport } from '@/api/prodmgr-inv/file'
-import {customDownload} from '@/api/prodmgr-inv/file'
+import { customDownload } from '@/api/prodmgr-inv/file'
 
 export default {
   name: 'purchaseFile',
@@ -160,6 +202,8 @@ export default {
         pageNum: 0,
         pageSize: 10
       },
+      contractPopupVisible: false,
+      contractDialogList: [],
     }
   },
   computed: {
@@ -272,6 +316,44 @@ export default {
       this.$router.push({ name: 'archivedData', query: { ...item } });
     },
 
+    // 查看关联采购合同核备
+    handleLookContractList(item) {
+      const contracts = Array.isArray(item && item.contracts) ? item.contracts : [];
+      if (!contracts.length) {
+        return;
+      }
+      this.contractDialogList = this.formatContractDialogData(contracts);
+      this.contractPopupVisible = true;
+    },
+
+    getContractsCount(item) {
+      return Array.isArray(item && item.contracts) ? item.contracts.length : 0;
+    },
+
+    formatContractDialogData(contracts) {
+      return contracts.map(item => ({
+        contractName: item.contractName,
+        contractNumber: item.contractNumber,
+        purchaseNumber: item.purchaseNumber,
+        id: item.id,
+        purchaseTypeName: item.purchaseTypeName,
+        supplierName: item.supplierName,
+        amount: item.amount,
+      }));
+    },
+
+    handleContractDetail(contract) {
+      if (!contract || !contract.id) {
+        return;
+      }
+      this.handleContractPopupClose();
+      this.$router.push({ name: 'perfectContractDetail', query: { ...contract } });
+    },
+
+    handleContractPopupClose() {
+      this.contractPopupVisible = false;
+    },
+
     // 提交审核点击
     handleDoAccept(item) {
       this.$dialog.confirm({
@@ -377,11 +459,7 @@ export default {
 
     // 下载
     async handleDonwload({ id }) {
-      try {
-        await customDownload({businessType:7,businessData:id});
-      } catch (error) {
-      } finally {
-      }
+      await customDownload({ businessType: 7, businessData: id }).catch(() => undefined);
     },
   }
 }
@@ -466,5 +544,90 @@ export default {
   text-align: center;
   line-height: 30px;
   color: #fff;
+}
+
+.contract-popup {
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+
+  .contract-popup-header {
+    flex: none;
+    height: 48px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ebedf0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2329;
+
+    .van-icon {
+      color: #646566;
+      font-size: 18px;
+    }
+  }
+
+  .contract-popup-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 12px 12px 18px;
+    background: #f5f7fb;
+  }
+
+  .contract-popup-item {
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(31, 35, 41, 0.06);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .contract-popup-item-title {
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2329;
+    line-height: 22px;
+    word-break: break-all;
+  }
+
+  .contract-popup-fields {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      margin-top: 6px;
+      font-size: 13px;
+      line-height: 20px;
+      color: #646566;
+
+      span:first-child {
+        flex: none;
+        color: #969799;
+      }
+
+      span:last-child {
+        flex: 1;
+        min-width: 0;
+        color: #323233;
+        word-break: break-all;
+      }
+    }
+  }
+
+  .contract-link {
+    color: #1989fa !important;
+    text-decoration: underline;
+  }
 }
 </style>
