@@ -39,6 +39,10 @@
                 <span class="font-weight">物资名称：{{ item.purchaseFileName }}</span>
               </li>
               <li>
+                <span>文件单据ID：</span>
+                <span>{{ item.purchaseNumber }}</span>
+              </li>
+              <li>
                 <span>标段项目：</span>
                 <span>{{ item.projefctName }}</span>
               </li>

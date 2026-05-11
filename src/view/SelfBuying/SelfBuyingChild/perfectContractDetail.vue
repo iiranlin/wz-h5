@@ -36,7 +36,7 @@
         </li>
         <li>
           <span>关联采购文件核备：</span>
-          <span class="li-span-click" @click="handlePurchaseFileDetail(formData)">{{ formData.purchaseFileNumber || formData.purchaseNumber || '--' }}</span>
+          <span class="li-span-click" @click="handlePurchaseFileDetail(formData)">{{ formData.purchaseFileNumber || '--' }}</span>
         </li>
         <li>
           <span>买方单位：</span>

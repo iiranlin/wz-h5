@@ -35,8 +35,14 @@
               </div>
             </div>
             <ul class="list-ul">
+             
               <li>
                 <span class="font-weight">合同名称：{{ item.contractName
+                }}</span>
+              </li>
+              <li>
+                <span>合同单据ID：</span>
+                <span>{{ item.purchaseNumber
                   }}</span>
               </li>
               <li>
