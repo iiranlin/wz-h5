@@ -24,7 +24,7 @@
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.purchaseFileNumber" readonly clickable required name="purchaseFileNumber"
-            label="关联采购文件核备" placeholder="请选择关联采购文件核备" right-icon="arrow" input-align="right" @click="openPurchaseFilePopup" />
+            label="关联采购文件核备" placeholder="请选择关联采购文件" right-icon="arrow" input-align="right" @click="openPurchaseFilePopup" />
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.contractName" required name="contractName" label="合同名称" placeholder="请输入合同名称"
@@ -259,7 +259,7 @@
       <div class="purchase-file-popup detail-base-info detail-base-info-edited">
         <div class="detail-title-content">
           <img src="/static/icon-file.png">
-          <span>选择关联采购文件核备</span>
+          <span>选择关联采购文件</span>
         </div>
         <van-list v-model="purchaseFileLoading" :finished="purchaseFileFinished" finished-text="没有更多了..."
           :immediate-check="false" @load="loadMorePurchaseFiles">
@@ -617,7 +617,7 @@ export default {
       if (!row) {
         this.$notify({
           type: 'warning',
-          message: '请选择关联采购文件核备',
+          message: '请选择关联采购文件',
         });
         return;
       }
@@ -944,7 +944,7 @@ export default {
         if (!this.sectionInfo.purchaseFileNumber) {
           this.$notify({
             type: 'warning',
-            message: '请选择关联采购文件核备!',
+            message: '请选择关联采购文件!',
           });
           return
         }
