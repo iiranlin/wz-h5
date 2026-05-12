@@ -155,7 +155,7 @@
       <van-picker show-toolbar :columns="unitColumns" @cancel="showUnitPicker = false" @confirm="onUnitConfirm" />
     </van-popup>
     <!-- 预计采购完成日期 -->
-    <Calendar ref="calendar" @onConfirm="handleDataConfirm" />
+    <Calendar ref="calendar" :unlimited="true" @onConfirm="handleDataConfirm" />
     <!-- 采购方式 -->
     <van-popup v-model="showprocurementPicker" round position="bottom">
       <van-picker show-toolbar :columns="procurementColumns" @cancel="showprocurementPicker = false"
