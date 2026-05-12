@@ -310,6 +310,7 @@ import rangeCalendar from "./components/calendar.vue";
 import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseFileList, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify, countByContractNumber } from "@/api/prodmgr-inv/SelfBuying"
 import keepPages from '@/view/mixins/keepPages'
 import dayjs from "dayjs";
+import Decimal from 'decimal.js'
 export default {
   name: 'PerfectFile',
   mixins: [keepPages],
@@ -328,8 +329,8 @@ export default {
 
       return list.reduce((total, el) => {
         const amount = el && el.totalAmount ? el.totalAmount : 0;
-        return total + Number(amount);
-      }, 0);
+        return total.plus(new Decimal(amount || 0));
+      }, new Decimal(0)).toString();
     },
   },
 
@@ -1052,8 +1053,6 @@ export default {
 
         // 判断新增或编辑调用不同接口，成功后跳转回列表页面
         const time = new Date(this.sectionInfo.startTime);
-
-        this.sectionInfo.amount = +this.sectionInfo.amount;
 
         if (this.$route.query.type == 'create') {
 
