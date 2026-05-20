@@ -23,8 +23,9 @@
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.purchaseFileNumber" readonly clickable required name="purchaseFileNumber"
-            label="关联采购文件核备" placeholder="请选择关联采购文件" right-icon="arrow" input-align="right" @click="openPurchaseFilePopup" />
+          <van-field v-model="sectionInfo.purchaseFileNumber" readonly clickable :required="isPurchaseFileRequired"
+            name="purchaseFileNumber" label="关联采购文件核备" placeholder="请选择关联采购文件" right-icon="arrow"
+            input-align="right" @click="openPurchaseFilePopup" />
         </li>
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.contractName" required name="contractName" label="合同名称" placeholder="请输入合同名称"
@@ -332,6 +333,9 @@ export default {
         return total.plus(new Decimal(amount || 0));
       }, new Decimal(0)).toString();
     },
+    isPurchaseFileRequired() {
+      return this.sectionInfo.name === 'A类';
+    },
   },
 
   watch: {
@@ -604,7 +608,16 @@ export default {
       }
     },
     handlePurchaseFileRowClick(row) {
-      this.selectedPurchaseFileId = String(row.id);
+      const rowId = String(row.id);
+      const isSameRow = this.selectedPurchaseFileId === rowId;
+
+      if (!this.isPurchaseFileRequired && isSameRow) {
+        this.selectedPurchaseFileId = null;
+        this.selectedPurchaseFile = null;
+        return;
+      }
+
+      this.selectedPurchaseFileId = rowId;
       this.selectedPurchaseFile = row;
     },
     handlePurchaseFilePopupClose() {
@@ -616,6 +629,13 @@ export default {
       ) || this.selectedPurchaseFile;
 
       if (!row) {
+        if (!this.isPurchaseFileRequired) {
+          this.sectionInfo.purchaseFileId = '';
+          this.sectionInfo.purchaseFileNumber = '';
+          this.showPurchaseFilePopup = false;
+          return;
+        }
+
         this.$notify({
           type: 'warning',
           message: '请选择关联采购文件',
@@ -942,7 +962,7 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.purchaseFileNumber) {
+        if (this.isPurchaseFileRequired && !this.sectionInfo.purchaseFileNumber) {
           this.$notify({
             type: 'warning',
             message: '请选择关联采购文件!',
