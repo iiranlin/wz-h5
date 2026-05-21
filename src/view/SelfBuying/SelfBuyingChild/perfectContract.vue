@@ -269,7 +269,7 @@
               @click="handlePurchaseFileRowClick(item)">
               <div class="purchase-file-item-title">
                 <span>单据ID：{{ item.purchaseNumber }}</span>
-                <van-radio :name="String(item.id)" />
+                <van-radio :name="String(item.id)" @click.native.stop="handlePurchaseFileRadioClick(item)" />
               </div>
               <ul class="detail-ul">
                 <li>
@@ -357,6 +357,14 @@ export default {
       sectionInfo: {
         purchaseFileId: '',
         purchaseFileNumber: '',
+        name: '',
+        code: '',
+        purchaseName: '',
+        purchaseCode: '',
+        purchaseDetailName: '',
+        purchaseDetailCode: '',
+        purchaseTypeName: '',
+        purchaseTypeCode: '',
         htfbsmj: [],
         gyszlzscns: [],
         hthbfj: [],
@@ -454,6 +462,14 @@ export default {
           this.sectionInfo = {
             purchaseFileId: '',
             purchaseFileNumber: '',
+            name: '',
+            code: '',
+            purchaseName: '',
+            purchaseCode: '',
+            purchaseDetailName: '',
+            purchaseDetailCode: '',
+            purchaseTypeName: '',
+            purchaseTypeCode: '',
             htfbsmj: [],
             gyszlzscns: [],
             hthbfj: [],
@@ -620,6 +636,11 @@ export default {
       this.selectedPurchaseFileId = rowId;
       this.selectedPurchaseFile = row;
     },
+    handlePurchaseFileRadioClick(row) {
+      this.$nextTick(() => {
+        this.handlePurchaseFileRowClick(row);
+      });
+    },
     handlePurchaseFilePopupClose() {
       this.selectedPurchaseFile = null;
     },
@@ -737,14 +758,14 @@ export default {
     },
     // 物资大类确认事件
     async onGeneraConfirm(value, flag = true) {
-      this.sectionInfo.name = value.text;
-      this.sectionInfo.code = value.code;
+      this.$set(this.sectionInfo, 'name', value.text);
+      this.$set(this.sectionInfo, 'code', value.code);
       this.showGeneraPicker = false;
 
       if (flag) {
-        this.sectionInfo.purchaseName = '';
-        this.sectionInfo.purchaseDetailName = '';
-        this.sectionInfo.purchaseTypeName = '';
+        this.$set(this.sectionInfo, 'purchaseName', '');
+        this.$set(this.sectionInfo, 'purchaseDetailName', '');
+        this.$set(this.sectionInfo, 'purchaseTypeName', '');
         this.categoryColumns = [];
         this.detailColumns = [];
         this.varietyColumns = [];
