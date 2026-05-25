@@ -5,7 +5,7 @@
                 message-align="left"  confirm-button-text="立即更新" :show-confirm-button="false"
                 :close-on-click-overlay="false" :show-cancel-button="false"  >
                 <div class="force-update-content">
-                    <p>您当前版本过旧，必须升级才能继续使用</p>
+                    <p>当前版本过低，升级后可享更优体验</p>
                     <p class="update-description">{{ versionInfo.updateDescription }}</p>
                     <!-- 关键：这是一个标准的HTML下载链接，样式化成一个按钮 -->
                     <div class="force-update-button" @click="handleSmartUpdateConfirm">
