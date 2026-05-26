@@ -191,7 +191,7 @@
       <van-button class="button-info" round type="info" @click="sureClick(true)">确定</van-button>
     </div>
     <!-- 生产日期 -->
-    <Calendar ref="calendar" @onConfirm="createConfirm" />
+    <Calendar ref="calendar" @onConfirm="createConfirm" :unlimited="true" />
     <Calendar ref="calendar2" @onConfirm="createConfirm" />
     <!-- <van-calendar v-model="showCreateDates" @confirm="createConfirm" :min-date='minDate' :max-date="maxDate"/>
     <van-calendar v-model="showCalendar" @confirm="createConfirm" /> -->
