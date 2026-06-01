@@ -7,8 +7,10 @@
 <script>
 import DoAccept from '@/view/AcceptanceReturn/AcceptanceReturnChild/DoAccept.vue'
 import BackToTop from '@/components/BackToTop'
+import keepPages from '@/view/mixins/keepPages'
 export default {
   name: 'DoAcceptDetail',
+  mixins: [keepPages],
   components: {DoAccept,BackToTop}
 
 }
