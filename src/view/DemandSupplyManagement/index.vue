@@ -8,6 +8,9 @@
             <template slot='right-icon'>
               <van-icon name="search" @click="statusChange()" />
             </template>
+            <template slot="action">
+              <span class="search-action" @click="handleExport">导出</span>
+            </template>
           </van-search>
         </div>
         <van-tabs v-model="statusValue" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
@@ -17,9 +20,9 @@
         </van-tabs>
       </van-sticky>
     </div>
-    <div class="planned-management-list">
+    <div class="planned-management-list" v-if="list.length > 0">
       <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :error.sync="error"
+        <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" :error.sync="error"
           error-text="请求失败，点击重新加载" @load="onLoad">
           <div v-for="(item, index) in list" :key="index" class="box-container">
             <div class="list-title-content">
@@ -27,7 +30,7 @@
               <span class="li-span-grey">{{ item.planNumber }}</span>
               <div class="li-title-status">
                 <img v-if="checkStatusText(item.status)" :src="checkAuditStatus(item.status)" />
-                <span :style="handlerTextColor(statusArr, 'value', item.status)">{{ checkStatusText(item.status) }}</span>
+                <span :style="handlerTextColor(statusArr, 'value', String(item.status))">{{ checkStatusText(item.status) }}</span>
               </div>
             </div>
             <ul class="list-ul" @click="handleWaitItemClick(item)">
@@ -37,7 +40,7 @@
               <li>
                 <span>建设项目：</span>
                 <span>{{ item.projectName }}</span>
-              </li> 
+              </li>
               <li>
                 <span>标段项目：</span>
                 <span>{{ item.sectionName }}</span>
@@ -54,39 +57,45 @@
                 <span>提报时间：</span>
                 <span>{{ item.createDate && parseTime(item.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
               </li>
+              <li>
+                <span>确认消息：</span>
+                <span>{{ item.confirmValidate || '--' }}</span>
+              </li>
             </ul>
             <div class="list-ul-button">
               <van-button class="button-info" plain round type="info"
-                v-if="!['0', '2'].includes(item.status)"
+                v-if="isSupplyActionVisible(item)"
                 @click="supplyOverviewClick(item)">供应概览</van-button>
               <van-button class="button-info" plain round type="info"
-                v-if="!['0', '2'].includes(item.status)"
+                v-if="isSupplyActionVisible(item)"
                 @click="logisticsViewClick(item)">物流查看</van-button>
-              <van-button class="button-info" plain round type="info" v-if="['2'].includes(item.status)"
+              <van-button class="button-info" plain round type="info" v-if="['2'].includes(String(item.status))"
                 @click="recallClick(item)">撤回</van-button>
-              <van-button class="button-info" round v-if="['0'].includes(item.status)" @click="returnClick(item)">退回经办人</van-button>
-              <van-button class="button-info" plain round type="info" v-if="['0'].includes(item.status)" @click="submitClick(item)">提交供应商</van-button>
+              <van-button class="button-info" round v-if="['0'].includes(String(item.status))" @click="returnClick(item)">退回经办人</van-button>
+              <van-button class="button-info" plain round type="info" v-if="['0'].includes(String(item.status))" @click="submitClick(item)">提交供应商</van-button>
               <van-button class="button-info" round type="info" @click="fileDownLoadStream(item)">下载需求计划表</van-button>
             </div>
           </div>
         </van-list>
       </van-pull-refresh>
     </div>
+    <div class="planned-management-empty" v-else>
+      <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" success-text="刷新成功">
+        <van-empty image="/empty-image-default.png" description="暂无数据" />
+      </van-pull-refresh>
+    </div>
     <back-to-top :className="className"></back-to-top>
-    <file-preview ref="filePreview"></file-preview>
   </div>
 </template>
 <script>
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
-import activitiAssignee from '@/components/activitiAssignee'
-import { materialDemandPlanRestList, downloadPlan, recall } from '@/api/prodmgr-inv/materialDemandPlanRest'
-import { getUserInfo } from '@/utils/user-info'
-import FilePreview from "@/components/FilePreview.vue"
+import { materialDemandPlanRestList, recall } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { customDownload } from '@/api/prodmgr-inv/file'
 export default {
   name: 'DemandSupplyManagement',
   mixins: [indexMixin],
-  components: { BackToTop, activitiAssignee, FilePreview },
+  components: { BackToTop },
   beforeRouteLeave (to, from, next) {
     from.meta.plannedManagementIndex = this.statusValue
     this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
@@ -95,12 +104,13 @@ export default {
   data() {
     return {
       searchValue: '',
-      showAction: false,
+      showAction: true,
       list: [],
       refreshLoading: false,
       loading: false,
       finished: false,
       error: false,
+      total: 0,
       statusValue: '',
       statusArr: [
         { text: '全部', value: '', color: '' },
@@ -114,9 +124,7 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
-      businessCode: { '1': 'FBYLXQ', '2': 'FBYLJH', '3': 'YLXQ', '4': 'YLJH' },
       className: '.planned-management',
-      userInfo: getUserInfo(),
 
     }
   },
@@ -126,6 +134,7 @@ export default {
     }
   },
   mounted() {
+    this.getList()
   },
   methods: {
     onSearch() {
@@ -157,6 +166,7 @@ export default {
       this.error = false
       if (this.refreshLoading) {
         this.list = [];
+        this.finished = false
         this.refreshLoading = false;
       }
       const params = {
@@ -171,15 +181,17 @@ export default {
         forbidClick: true
       });
       materialDemandPlanRestList(params).then(({ data }) => {
-        this.list.push(...(data.list || []))
+        const rows = data.list || []
+        this.total = data.total || 0
+        this.list.push(...rows)
+        this.listQuery.pageNum++
         // 数据全部加载完成
-        if (this.list.length >= data.total) {
+        if (!rows.length || this.list.length >= this.total) {
           this.finished = true
           return
         }else{
           this.finished = false
         }
-        this.listQuery.pageNum++
       }).catch(() => {
         this.finished = true
         this.error = true
@@ -207,8 +219,9 @@ export default {
     },
     checkStatusText(status) {
       let name = ''
+      const statusValue = String(status)
       this.statusArr.forEach(item => {
-        if (item.value === status) {
+        if (item.value === statusValue) {
           name = item.text
         }
       })
@@ -245,8 +258,28 @@ export default {
     submitClick (item) {
       this.$router.push({name: 'SubmitSupplier', query: {id: item.id}})
     },
-    fileDownLoadStream (item) {
-      downloadPlan(item.id)
+    isSupplyActionVisible(item) {
+      return ['6', '7', '8', '9'].includes(String(item.planStatus))
+    },
+    async fileDownLoadStream (item) {
+      try {
+        await customDownload({ businessType: 1, businessData: item.id })
+      } catch (error) {
+        this.$toast('下载失败')
+      }
+    },
+    async handleExport () {
+      const params = {
+        pageStatus: '1',
+        status: this.statusValue,
+        queryField: this.searchValue,
+        idList: null
+      }
+      try {
+        await customDownload({ businessType: 131, businessData: JSON.stringify(params) })
+      } catch (error) {
+        this.$toast('导出失败')
+      }
     }
   }
 }
@@ -280,10 +313,23 @@ export default {
         font-size: 12px;
       }
     }
+
+    .search-action {
+      display: inline-block;
+      padding: 0 12px 0 4px;
+      color: #0571ff;
+      font-size: 14px;
+      line-height: 34px;
+    }
   }
 
   .planned-management-list {
     flex: 1;
+  }
+
+  .planned-management-empty {
+    flex: 1;
+    background: #f8f8f8;
   }
 
   ::v-deep .van-dropdown-menu__bar {

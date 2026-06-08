@@ -188,7 +188,7 @@ export const routes = [
       {
         path: "/DemandSupplyManagement",
         name: "DemandSupplyManagement",
-        meta: { title: "需求供应管理", isTabbar: true },
+        meta: { title: "需求供应管理" },
         component: () => import("@/view/DemandSupplyManagement/index.vue"),
       },
       {

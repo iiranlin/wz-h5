@@ -21,6 +21,16 @@
           </div>
         </div>
       </div>
+
+      <div v-if="isDemandSupplyEntryVisible" style="margin-bottom: 20px;" @click="handleRouter('/DemandSupplyManagement')">
+        <div class="statisticsEntry">
+          <div class="statisticsEntry__content">
+            <img :src="demandSupplyIcon">
+            <span>需求供应管理</span>
+          </div>
+          <van-icon name="arrow" />
+        </div>
+      </div>
     </van-pull-refresh>
 
   </div>
@@ -35,6 +45,10 @@ Vue.use(Toast);
 
 import { getTodoCount } from './api/homePage.js'
 import VideoArea from './components/VideoArea.vue';
+import { getUserInfo } from '@/utils/user-info'
+
+const demandSupplyIcon = require('@/assets/img/DemandInventory.png');
+
 export default {
   name: 'supervisorPage',
   mixins: [keepPages],
@@ -53,8 +67,17 @@ export default {
   data() {
     return {
       refreshLoading: false,
-      checkInfo: {}
+      checkInfo: {},
+      demandSupplyIcon,
+      userInfo: getUserInfo()
     };
+  },
+
+  computed: {
+    isDemandSupplyEntryVisible() {
+      const deptCode = this.userInfo.deptCode || ''
+      return deptCode.startsWith('WZDL') || deptCode.startsWith('WD')
+    }
   },
 
   mounted() {
@@ -165,5 +188,40 @@ export default {
   font-weight: 600;
   color: #2053C4;
   vertical-align: bottom;
+}
+
+.statisticsEntry {
+  width: 94%;
+  height: 70px;
+  margin: 0 auto;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: #fff;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #333;
+
+  .van-icon {
+    font-size: 18px;
+    color: #999;
+  }
+}
+
+.statisticsEntry__content {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+
+  span {
+    font-weight: 600;
+  }
 }
 </style>

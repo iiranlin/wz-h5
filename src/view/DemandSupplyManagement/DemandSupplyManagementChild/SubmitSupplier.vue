@@ -20,7 +20,7 @@
         <span>需求计划表附件</span>
       </div>
       <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01" />
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="51" />
     </div>
     <div class="default-button-container">
       <van-button class="button-info" round @click="cancelClick">取消</van-button>
@@ -71,7 +71,7 @@ export default {
       }
       const params = {
         ...this.detail,
-        fileList: [{ fileList: this.fileList }]
+        fileList: [...(this.detail.fileList || []), { fileList: this.normalizeSupplyFiles() }]
       }
       let toast = this.$toast.loading({
         duration: 0,
@@ -84,6 +84,18 @@ export default {
       }).finally(() => {
         toast.clear()
       })
+    },
+    normalizeSupplyFiles () {
+      return this.fileList.map((file, index) => ({
+        id: file.id || '',
+        fileName: file.fileName,
+        filePath: file.filePath,
+        businessType: file.businessType ,
+        groupId: file.groupId || '',
+        sort: file.sort === 0 || file.sort ? file.sort : 0,
+        uid: file.uid || Date.now() + index,
+        status: file.status || 'success'
+      }))
     },
     cancelClick () {
       this.$router.go(-1)
@@ -133,12 +145,12 @@ export default {
       }
     }
   }
-  
+
   .box-container{
     padding: 0;
     margin-bottom: 0;
     margin-top: 8px;
-  
+
     .detail-title-contentA {
       width: 100%;
       height: 34px;
