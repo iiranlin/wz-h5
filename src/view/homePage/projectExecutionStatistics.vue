@@ -131,6 +131,7 @@ const FIELD_LIST = [
   { key: 'amount', label: '合同数量' },
   // { key: 'vatRate', label: '增值税率%' },
   { key: 'cumulativeAmount', label: '累计下达数量' },
+  { key: 'newAmount', label: '期间新增下达数量' },
   { key: 'sendTotal', label: '累计发货数量' },
   { key: 'putTotal', label: '累计收货数量' },
   { key: 'storeTotal', label: '累计入库数量' },
