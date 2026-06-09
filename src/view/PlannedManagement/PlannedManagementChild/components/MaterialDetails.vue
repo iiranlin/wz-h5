@@ -24,6 +24,14 @@
             <span class="li-span-click">{{ item.amount }}</span>
           </li>
           <li class="li-item-overlength">
+            <span>累计发货量(本次计划前)：</span>
+            <span class="li-span-click">{{ item.sendTotal }}</span>
+          </li>
+          <li class="li-item-overlength">
+            <span>累计收货量(本次计划前)：</span>
+            <span class="li-span-click">{{ item.putTotal }}</span>
+          </li>
+          <li class="li-item-overlength">
             <span>累计计划量(含本次)：</span>
             <span class="li-span-click">{{ item.cumulativeAmount }}</span>
           </li>
