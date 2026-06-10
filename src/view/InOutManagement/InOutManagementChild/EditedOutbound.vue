@@ -254,6 +254,9 @@ export default {
         color: #151b3e;
 
       }
+      ::v-deep .van-stepper__input {
+        width: 80px !important;
+      }
     }
     .detail-title-content-field {
       .van-cell{
