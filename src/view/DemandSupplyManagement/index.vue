@@ -259,7 +259,7 @@ export default {
       this.$router.push({name: 'SubmitSupplier', query: {id: item.id}})
     },
     isSupplyActionVisible(item) {
-      return ['6', '7', '8', '9'].includes(String(item.planStatus))
+      return [ '4', '5'].includes(String(item.status))
     },
     async fileDownLoadStream (item) {
       try {

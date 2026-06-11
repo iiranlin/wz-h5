@@ -185,6 +185,7 @@ import { mainItemList } from '@/api/prodmgr-inv/materialSectionAllocation'
 import { getUserInfo } from '@/utils/user-info'
 import dayjs from 'dayjs'
 import FileUploadView from "@/components/FileUploadView.vue"
+import { findByBusinessType } from '@/utils/index.js'
 export default {
   name: 'SaveMaterials',
   mixins: [keepPages],
@@ -308,7 +309,7 @@ export default {
           sectionName: data.sectionName,
           title: dayjs().format('YYYY年MM月') + '甲供物资计划申请表',
           deptName: data.deptName,
-          fileList: data.fileList[0]?.fileList || []
+          fileList: findByBusinessType(data.fileList || [], '54')
         }
         this.$store.dispatch('public/setDemandPlanningInfo', this.sectionInfo)
         this.materiaList = data.details.map((item) => {
@@ -368,7 +369,7 @@ export default {
       const data = {
         id,
         contractId: this.contractId,
-        fileList: [{ fileList: this.sectionInfo.fileList }],
+        fileList: [{ fileList: this.normalizePlanFiles() }],
         detailsModifyParams: this.materiaList.map(item => ({ ...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber }))
       }
       materialDemandPlanRestSaveModify(data, type).then(({ data, message }) => {
@@ -381,6 +382,16 @@ export default {
     returnClick() {
       const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId, materialUsedRatio: this.materialUsedRatio } : { contractId: this.contractId, materialUsedRatio: this.materialUsedRatio }
       this.$router.push({ name: 'SelectMaterials', query })
+    },
+    normalizePlanFiles() {
+      return (this.sectionInfo.fileList || []).map((file, index) => ({
+        ...file,
+        businessType: '54',
+        groupId: file.groupId || '',
+        sort: file.sort === 0 || file.sort ? file.sort : index,
+        uid: file.uid || Date.now() + index,
+        status: file.status || 'success'
+      }))
     },
     onCheck(tableData) {
       let errors = []

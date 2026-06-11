@@ -44,19 +44,19 @@
         </ul>
       </div>
     </div>
-        <div class="detail-base-info detail-base-info-edited" v-if="detail.fileList[1]?.fileList.length">
+        <div class="detail-base-info detail-base-info-edited" v-if="supplierFileList.length">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
         <span>需求计划表</span>
       </div>
-      <file-download-view :fileList="detail.fileList[1]?.fileList || []"></file-download-view>
+      <file-download-view :fileList="supplierFileList"></file-download-view>
     </div>
-    <div class="detail-base-info detail-base-info-edited" v-if="detail.fileList[0]?.fileList.length">
+    <div class="detail-base-info detail-base-info-edited" v-if="planFileList.length">
       <div class="detail-title-content">
         <img src="/static/icon-file.png" />
         <span>计划附件</span>
       </div>
-      <file-download-view :fileList="detail.fileList[0]?.fileList || []"></file-download-view>
+      <file-download-view :fileList="planFileList"></file-download-view>
     </div>
     <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
       <div class="detail-title-content">
@@ -140,7 +140,7 @@ import { listPc } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { wfHistoryList } from '@/api/myToDoList'
 import FileDownloadView from "@/components/FileDownloadView.vue"
 import { getUserInfo } from '@/utils/user-info'
-import { mergeByActId } from '@/utils/index.js'
+import { mergeByActId, findByBusinessType } from '@/utils/index.js'
 export default {
   name: 'RequirementDetails',
   components: { MaterialDetails, LogRecording, activitiAssignee, BackToTop, FileDownloadView },
@@ -184,6 +184,12 @@ export default {
         item.unit.includes(this.searchValue) ||
         item.receiver.includes(this.searchValue)
       ); // 过滤匹配的数据项
+    },
+    supplierFileList() {
+      return findByBusinessType(this.detail.fileList || [], '51')
+    },
+    planFileList() {
+      return findByBusinessType(this.detail.fileList || [], '54')
     },
     isJL() {
       const deptCode = this.userInfo.deptCode

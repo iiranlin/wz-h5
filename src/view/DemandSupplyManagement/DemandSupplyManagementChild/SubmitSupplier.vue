@@ -43,13 +43,16 @@ export default {
   created() {
   },
   activated() {
+    this.fileList = []
   },
   mounted() {
     const { id = null } = this.$route.query
+    this.fileList = []
     id && this.materialDemandPlanRestDetail(id)
   },
   methods: {
     materialDemandPlanRestDetail(id) {
+      this.fileList = []
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
@@ -69,9 +72,12 @@ export default {
         });
         return
       }
+      const otherFileList = (this.detail.fileList || []).filter(item =>
+        !item.fileList?.some(file => file.businessType === '51')
+      )
       const params = {
         ...this.detail,
-        fileList: [...(this.detail.fileList || []), { fileList: this.normalizeSupplyFiles() }]
+        fileList: [...otherFileList, { fileList: this.normalizeSupplyFiles() }]
       }
       let toast = this.$toast.loading({
         duration: 0,
@@ -90,7 +96,7 @@ export default {
         id: file.id || '',
         fileName: file.fileName,
         filePath: file.filePath,
-        businessType: file.businessType ,
+        businessType: '51',
         groupId: file.groupId || '',
         sort: file.sort === 0 || file.sort ? file.sort : 0,
         uid: file.uid || Date.now() + index,
