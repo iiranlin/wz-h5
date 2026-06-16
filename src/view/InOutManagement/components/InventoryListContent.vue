@@ -10,7 +10,7 @@
       </div>
       <van-tabs sticky v-model="formData.planCompleteStatus" color="#0571ff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" @change="tabsChange">
-        <van-tab v-for="item in option1" :title="item.text" :name="item.value" :key="item.value">
+        <van-tab v-for="item in option2" :title="item.text" :name="item.value" :key="item.value">
         </van-tab>
       </van-tabs>
     </van-sticky>
@@ -23,7 +23,7 @@
             <span style="color:#73768b">{{item.planNumber}}</span>
             <div class="li-title-status">
               <img :src="checkAuditStatus(item.planCompleteStatus)"/>
-              <span :style="handlerTextColor(option1, 'value', item.planCompleteStatus)">{{item.planCompleteStatus == '1'?'已完成':'未完成'}}</span>
+              <span :style="handlerTextColor(option1, 'value', item.planCompleteStatus)">{{ item.planCompleteStatus | statusFilter(option1) }}</span>
             </div>
           </div>
           <ul class="list-ul" @click="detailsClick(item)">
@@ -97,6 +97,12 @@ export default {
         { text: '全部', value: '', color: '' },
         { text: '未完成', value: '0', color: '#134daa' },
         { text: '已完成', value: '1', color: '#51CA40' },
+        { text: '有库存', value: '2', color: '#134daa' },
+      ],
+      option2: [
+        { text: '全部', value: '', color: '' },
+        { text: '有库存', value: '2', color: '#134daa' },
+        { text: '已完成', value: '1', color: '#51CA40' },
       ],
       allRefreshLoading: false,
       allLoading: false,
@@ -107,6 +113,11 @@ export default {
         pageSize: 10,
       },
     };
+  },
+    filters: {
+    statusFilter(value, tabList) {
+      return tabList.find(item => item.value === value)?.text
+    },
   },
   created() {
     this.allRefresh();
@@ -131,7 +142,15 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
-      materialDemandPlanRestListStock(Object.assign({},this.allListQuery,this.formData)).then(({ data }) => {
+      // 有库存查询赋值
+      const newFormData = { ...this.formData };
+      if (this.formData.planCompleteStatus == '2') { 
+        newFormData.relatedCount = '1'
+        newFormData.planCompleteStatus = ''
+      } else {
+        newFormData.relatedCount = ''
+      }
+      materialDemandPlanRestListStock(Object.assign({},this.allListQuery,newFormData)).then(({ data }) => {
         if(this.allRefreshLoading){
           this.dataList = [];
           this.allRefreshLoading = false;
