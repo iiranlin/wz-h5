@@ -15,12 +15,36 @@
             </ul>
         </div>
         <div class="file-add" v-if="fileList.length < maxCount && isShowButton">
-            <van-uploader :preview-imag='false' :after-read="afterReadTransfer" :before-read="beforeRead"
-                :accept="accept">
-                <van-button class="button-info" type="default" round block><img class="file-download"
-                        src="@/assets/img/Icon-download.png" /><span>上传附件</span></van-button>
-            </van-uploader>
+            <van-button class="button-info" type="default" round block @click="showUploadPopup = true"><img class="file-download"
+                    src="@/assets/img/Icon-download.png" /><span>上传附件</span></van-button>
+            <van-uploader ref="fileUploader" class="hidden-uploader" :preview-imag='false' :after-read="afterReadTransfer" :before-read="beforeRead"
+                :accept="uploaderAccept || accept" multiple />
+            <van-uploader ref="cameraUploader" class="hidden-uploader" :preview-imag='false' :after-read="afterReadTransfer" :before-read="beforeRead"
+                accept="image/*" capture="camera" />
         </div>
+        <van-popup v-model="showUploadPopup" position="bottom" round class="upload-source-popup">
+            <div class="upload-source-panel">
+                <div class="upload-source-title">上传附件</div>
+                <div class="upload-source-subtitle">请选择上传方式</div>
+                <div class="upload-source-options">
+                    <button type="button" class="upload-source-option" @click="handleChooseFile">
+                        <span class="upload-source-icon upload-source-icon-file"></span>
+                        <span class="upload-source-text">
+                            <strong>选择附件</strong>
+                            <em>从手机文件或相册中选择</em>
+                        </span>
+                    </button>
+                    <button type="button" class="upload-source-option" @click="handleTakePhoto">
+                        <span class="upload-source-icon upload-source-icon-camera"></span>
+                        <span class="upload-source-text">
+                            <strong>拍照上传</strong>
+                            <em>调用相机拍照后上传</em>
+                        </span>
+                    </button>
+                </div>
+                <button type="button" class="upload-source-cancel" @click="showUploadPopup = false">取消</button>
+            </div>
+        </van-popup>
         <!-- 附件预览 -->
         <file-preview ref="filePreview"></file-preview>
     </div>
@@ -55,6 +79,10 @@ export default {
             type: String,
             default: '.pdf',
         },
+        uploaderAccept: {
+            type: String,
+            default: '',
+        },
         isFileList: {
             type: Boolean,
             default: true,
@@ -67,9 +95,22 @@ export default {
     data() {
         return {
             uploadingNotify: null,  // 保存上传中的提示实例
+            showUploadPopup: false,
         }
     },
     methods: {
+        handleChooseFile() {
+            this.showUploadPopup = false;
+            this.$nextTick(() => {
+                this.$refs.fileUploader && this.$refs.fileUploader.chooseFile();
+            });
+        },
+        handleTakePhoto() {
+            this.showUploadPopup = false;
+            this.$nextTick(() => {
+                this.$refs.cameraUploader && this.$refs.cameraUploader.chooseFile();
+            });
+        },
         //附件上传前
         beforeRead(file) {
             // 🔑 统一处理为数组（兼容单个文件和多个文件）
@@ -411,6 +452,168 @@ export default {
             vertical-align: middle;
         }
     }
+
+    .hidden-uploader {
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+.upload-source-popup {
+    background: transparent;
+}
+
+.upload-source-panel {
+    padding: 18px 18px 12px;
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    box-sizing: border-box;
+}
+
+.upload-source-title {
+    font-size: 18px;
+    line-height: 25px;
+    font-weight: 600;
+    color: #111827;
+    text-align: center;
+}
+
+.upload-source-subtitle {
+    margin-top: 4px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 18px;
+    color: #8a94a6;
+    text-align: center;
+}
+
+.upload-source-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.upload-source-option {
+    width: 100%;
+    min-height: 68px;
+    border: 1px solid #e6edf7;
+    border-radius: 10px;
+    background: #f8fbff;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.upload-source-option + .upload-source-option {
+    margin-top: 10px;
+}
+
+.upload-source-option:active {
+    background: #eef6ff;
+}
+
+.upload-source-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+    position: relative;
+    flex: 0 0 40px;
+}
+
+.upload-source-icon-file {
+    background: #eaf3ff;
+}
+
+.upload-source-icon-file::before {
+    content: '';
+    width: 18px;
+    height: 22px;
+    border: 2px solid #0571ff;
+    border-radius: 3px;
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    box-sizing: border-box;
+}
+
+.upload-source-icon-file::after {
+    content: '';
+    width: 9px;
+    height: 2px;
+    background: #0571ff;
+    position: absolute;
+    left: 15px;
+    top: 18px;
+    box-shadow: 0 5px 0 #0571ff;
+}
+
+.upload-source-icon-camera {
+    background: #eaf8f1;
+}
+
+.upload-source-icon-camera::before {
+    content: '';
+    width: 22px;
+    height: 16px;
+    border: 2px solid #12a86b;
+    border-radius: 5px;
+    position: absolute;
+    left: 9px;
+    top: 13px;
+    box-sizing: border-box;
+}
+
+.upload-source-icon-camera::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border: 2px solid #12a86b;
+    border-radius: 50%;
+    position: absolute;
+    left: 16px;
+    top: 17px;
+    box-sizing: border-box;
+}
+
+.upload-source-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.upload-source-text strong {
+    font-size: 15px;
+    line-height: 21px;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.upload-source-text em {
+    margin-top: 3px;
+    font-size: 12px;
+    line-height: 17px;
+    color: #8a94a6;
+    font-style: normal;
+}
+
+.upload-source-cancel {
+    width: 100%;
+    height: 44px;
+    margin-top: 12px;
+    border: 0;
+    border-radius: 22px;
+    background: #f2f4f7;
+    color: #4b5563;
+    font-size: 15px;
+}
+
+.upload-source-cancel:active {
+    background: #e8ebf0;
 }
 
 .file-add-a {
