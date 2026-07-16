@@ -7,6 +7,7 @@
       :show-subtitle="false"
       type="single"
       @confirm="onConfirm"
+      @opened="onCalendarOpened"
       :min-date="minDateComp"
       :max-date="maxDateComp"
     >
@@ -57,7 +58,7 @@ export default {
       //当前选择时间
       date: defaultDate,
       // 日期选择范围
-      maxDateRange: [],
+      maxDateRange,
       // 日历弹窗是否展示
       show: false,
       signalArrow,
@@ -91,11 +92,26 @@ export default {
     handleCalendarShow(num = 0) {
       this.flagNum = num;
       this.maxDateRange = this.flagNum == 0 ? maxDateRange : maxDateRange2;
-      this.show = true;
+      this.$nextTick(() => {
+        this.show = true;
+      });
+    },
+    // 弹窗完全打开后再定位，避免部分 Android WebView 首次计算不到可见月份
+    onCalendarOpened() {
+      const calendar = this.$refs.calendar;
+      calendar?.scrollToDate(new Date());
+
       setTimeout(() => {
-        //设置日历转到最新日期的展示界面
-      }, 300);
-      this.$refs.calendar.scrollToDate(new Date());
+        const body = calendar?.$refs?.body;
+        if (!body) return;
+
+        const scrollTop = body.scrollTop;
+        body.scrollTop = scrollTop > 0 ? scrollTop - 2 : scrollTop + 2;
+
+        setTimeout(() => {
+          body.scrollTop = scrollTop;
+        }, 500);
+      }, 100);
     },
     //选择日期触发方法
     onConfirm(date) {

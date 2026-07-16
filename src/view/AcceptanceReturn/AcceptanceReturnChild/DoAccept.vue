@@ -438,7 +438,7 @@ export default {
   },
   methods: {
     handlerShowCalendar(elementName) {
-      this.$refs[elementName]?.handleCalendarShow();
+      this.$refs[elementName]?.handleCalendarShow(1);
     },
     //通过请求
     approvalRequest(){
