@@ -148,6 +148,7 @@ import FileDownloadView from "@/components/FileDownloadView.vue";
 import BackToTop from '@/components/BackToTop'
 import { auditReject, wfNextAssigneeMore, auditApprove } from '@/api/myToDoList'
 import eventBus from '@/utils/eventBus.js'
+import keepPages from '@/view/mixins/keepPages'
 
 const SAMPLING_RESULT_MAP = {
   '1': '合格',
@@ -169,6 +170,7 @@ const SAMPLING_STATUS_MAP = {
 
 export default {
   name: 'SpotCheck',
+  mixins: [keepPages],
   components: { FileDownloadView, BackToTop },
   data() {
     return {

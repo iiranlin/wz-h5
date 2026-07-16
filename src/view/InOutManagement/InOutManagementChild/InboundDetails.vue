@@ -112,10 +112,12 @@ import FileDownloadView from "@/components/FileDownloadView.vue";
 import BackToTop from '@/components/BackToTop'
 import { auditReject,wfNextAssigneeMore,auditApprove } from '@/api/myToDoList'
 import eventBus from '@/utils/eventBus.js'
+import keepPages from '@/view/mixins/keepPages'
 
 export default {
   //入库详情
   name: 'InboundDetails',
+  mixins: [keepPages],
   components: {FilePreview,FileDownloadView,BackToTop},
 
   data() {
