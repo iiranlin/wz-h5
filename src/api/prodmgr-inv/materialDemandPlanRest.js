@@ -11,10 +11,11 @@ export function materialDemandPlanRestList(params) {
 }
 
 //需求计划详情
-export function materialDemandPlanRestDetail(id) {
+export function materialDemandPlanRestDetail(id,params={}) {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/detail/${id}`,
     method: 'get',
+    params
   })
 }
 

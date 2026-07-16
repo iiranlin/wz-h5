@@ -231,7 +231,7 @@ export default {
       const params = { pageNum: 1, pageSize: -1, id }
       // const GyMxData = await materialDemandPlanRestDetailGyMx(params)
       // console.log(GyMxData.data.demandPlanDetailsGyDTOList)
-      materialDemandPlanRestDetail(params.id).then(({ data }) => {
+      materialDemandPlanRestDetail(params.id,{type:2}).then(({ data }) => {
         this.detail = data
       }).finally((err) => {
         toast.clear()
