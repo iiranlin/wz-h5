@@ -150,9 +150,11 @@ export default {
       searchValue: '',
       showAction: false,
       detail: {
+        details: [],
         demandPlanDetailsGyDTOList: [],
         fileList: []
       },
+      supplyOverviewList: [],
       statusArr: [
         { text: '全部', value: '' },
         { text: '已驳回', value: '0' },
@@ -178,11 +180,13 @@ export default {
   },
   computed: {
     filteredList() {
-      if (!this.searchValue) return this.detail.details; // 如果搜索值为空，返回所有数据
-      return this.detail.details.filter(item => item.specModel.includes(this.searchValue) ||
-        item.materialName.includes(this.searchValue) ||
-        item.unit.includes(this.searchValue) ||
-        item.receiver.includes(this.searchValue)
+      const showSupplyOverview = this.searchChecked && ['6', '7', '8', '9'].includes(this.detail.planStatus)
+      const list = showSupplyOverview ? this.supplyOverviewList : (this.detail.details || [])
+      if (!this.searchValue) return list; // 如果搜索值为空，返回所有数据
+      return list.filter(item => (item.specModel || '').includes(this.searchValue) ||
+        (item.materialName || '').includes(this.searchValue) ||
+        (item.unit || '').includes(this.searchValue) ||
+        (item.receiver || '').includes(this.searchValue)
       ); // 过滤匹配的数据项
     },
     supplierFileList() {
@@ -229,13 +233,18 @@ export default {
         forbidClick: true
       });
       const params = { pageNum: 1, pageSize: -1, id }
-      // const GyMxData = await materialDemandPlanRestDetailGyMx(params)
-      // console.log(GyMxData.data.demandPlanDetailsGyDTOList)
-      materialDemandPlanRestDetail(params.id,{type:2}).then(({ data }) => {
-        this.detail = data
-      }).finally((err) => {
+      try {
+        await Promise.all([
+          materialDemandPlanRestDetail(params.id, { type: 2 }).then(({ data }) => {
+            this.detail = data
+          }),
+          materialDemandPlanRestDetailGyMx(params).then(({ data }) => {
+            this.supplyOverviewList = data.demandPlanDetailsGyDTOList || []
+          })
+        ])
+      } finally {
         toast.clear()
-      })
+      }
     },
     //去审核点击
     handleExamineClick(item) {
