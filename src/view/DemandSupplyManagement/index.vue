@@ -209,7 +209,7 @@ export default {
       this.onLoad();
     },
     handleWaitItemClick(item) {
-      this.$router.push({ name: 'RequirementDetails', query: { id: item.id, name: 'DemandSupplyManagement' } })
+      this.$router.push({ name: 'RequirementDetails', query: { id: item.id, name: 'DemandSupplyManagement',from:'gyxqList' } })
     },
     supplyOverviewClick(item) {
       this.$router.push({ name: 'SupplyOverview', query: { id: item.id } })

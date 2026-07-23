@@ -235,7 +235,7 @@ export default {
       const params = { pageNum: 1, pageSize: -1, id }
       try {
         await Promise.all([
-          materialDemandPlanRestDetail(params.id, { type: 2 }).then(({ data }) => {
+          materialDemandPlanRestDetail(params.id,  this.$route.query?.from == 'gyxqList' ? {type:2} : {}).then(({ data }) => {
             this.detail = data
           }),
           materialDemandPlanRestDetailGyMx(params).then(({ data }) => {
