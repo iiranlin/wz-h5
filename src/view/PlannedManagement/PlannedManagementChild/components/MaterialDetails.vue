@@ -50,31 +50,32 @@
           </li>
         </ul>
         <div class="detail-ul-text" v-if="searchChecked && ['6', '7', '8', '9'].includes(planStatus)">
+          <div class="detail-overview-title">本次计划概览</div>
           <ul class="detail-ul">
             <li>
               <p>
                 <span>已发货：</span>
-                <span>{{ item.sendTotal }}</span>
+                <span>{{ getSupplyOverview(item).sendTotal }}</span>
               </p>
               <p>
                 <span>已验收：</span>
-                <span>{{ item.putTotal }}</span>
+                <span>{{ getSupplyOverview(item).putTotal }}</span>
               </p>
             </li>
             <li>
               <p>
                 <span>已入库：</span>
-                <span>{{ item.storeTotal }}</span>
+                <span>{{ getSupplyOverview(item).storeTotal }}</span>
               </p>
               <p>
                 <span>已出库：</span>
-                <span>{{ item.outCkTotal }}</span>
+                <span>{{ getSupplyOverview(item).outCkTotal }}</span>
               </p>
             </li>
             <li>
               <p>
                 <span>已退回：</span>
-                <span>{{ item.refundAllTotle }}</span>
+                <span>{{ getSupplyOverview(item).refundAllTotle }}</span>
               </p>
             </li>
           </ul>
@@ -90,6 +91,12 @@ export default {
   components: {},
   props: {
     list: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
+    supplyOverviewList: {
       type: Array,
       default: () => {
         return []
@@ -116,7 +123,18 @@ export default {
   },
   mounted() {
   },
+  computed: {
+    supplyOverviewMap() {
+      return this.supplyOverviewList.reduce((result, item) => {
+        result[String(item.id)] = item
+        return result
+      }, {})
+    }
+  },
   methods: {
+    getSupplyOverview(item) {
+      return this.supplyOverviewMap[String(item.id)] || {}
+    },
     detailsClick (item) {
       console.log(item)
       this.$router.push({name: 'ViewMaterials', query: {id: item.id}})
@@ -162,6 +180,13 @@ export default {
     margin-top: 0;
     background: #f0f2f6;
     border-radius: 5px;
+
+    .detail-overview-title {
+      padding: 10px 20px 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: #151b3e;
+    }
 
     .detail-ul {
       padding: 10px 12px;

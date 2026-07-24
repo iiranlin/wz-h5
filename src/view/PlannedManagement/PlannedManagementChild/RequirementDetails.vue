@@ -117,7 +117,12 @@
       </div>
     </van-sticky>
     <div style="padding-bottom: 55px;">
-      <material-details :list="filteredList" :planStatus="detail.planStatus" :searchChecked="searchChecked"></material-details>
+      <material-details
+        :list="filteredList"
+        :supplyOverviewList="supplyOverviewList"
+        :planStatus="detail.planStatus"
+        :searchChecked="searchChecked"
+      ></material-details>
     </div>
     <div class="default-button-container" v-if="queryName === 'DemandSupplyManagement' && ['0'].includes(detail.status)">
       <van-button class="button-info" round @click="returnClick(detail)"><img src="@/assets/img/Icon-detailInfo.png"/>退回经办人</van-button>
@@ -180,8 +185,7 @@ export default {
   },
   computed: {
     filteredList() {
-      const showSupplyOverview = this.searchChecked && ['6', '7', '8', '9'].includes(this.detail.planStatus)
-      const list = showSupplyOverview ? this.supplyOverviewList : (this.detail.details || [])
+      const list = this.detail.details || []
       if (!this.searchValue) return list; // 如果搜索值为空，返回所有数据
       return list.filter(item => (item.specModel || '').includes(this.searchValue) ||
         (item.materialName || '').includes(this.searchValue) ||
@@ -234,14 +238,16 @@ export default {
       });
       const params = { pageNum: 1, pageSize: -1, id }
       try {
-        await Promise.all([
-          materialDemandPlanRestDetail(params.id,  this.$route.query?.from == 'gyxqList' ? {type:2} : {}).then(({ data }) => {
-            this.detail = data
-          }),
-          materialDemandPlanRestDetailGyMx(params).then(({ data }) => {
-            this.supplyOverviewList = data.demandPlanDetailsGyDTOList || []
-          })
-        ])
+        const { data } = await materialDemandPlanRestDetail(params.id, this.$route.query?.from == 'gyxqList' ? { type: 2 } : {})
+        this.detail = data
+        if (['6', '7', '8', '9'].includes(data.planStatus)) {
+          try {
+            const { data: supplyOverviewData } = await materialDemandPlanRestDetailGyMx(params)
+            this.supplyOverviewList = supplyOverviewData.demandPlanDetailsGyDTOList || []
+          } catch (error) {
+            this.supplyOverviewList = []
+          }
+        }
       } finally {
         toast.clear()
       }
