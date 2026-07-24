@@ -409,7 +409,7 @@ export default {
             if(type == 'reject'){
                 this.rejectRequest();
             }else if(type == 'editAdopt'){
-                this.getNextAssignee();
+                this.approvalEditRequest();
             }else if(type == 'adopt'){
                 this.getNextAssignee();
             }
