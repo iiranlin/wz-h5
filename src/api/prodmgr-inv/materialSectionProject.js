@@ -8,3 +8,11 @@ export function getSectionProject() {
     method: 'get'
   })
 }
+
+// 校验当前日期是否允许新增或提交计划
+export function isCreate() {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialSectionProject/isCreate`,
+    method: 'get'
+  })
+}

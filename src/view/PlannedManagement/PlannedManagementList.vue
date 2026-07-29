@@ -113,6 +113,7 @@ import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 import { materialDemandPlanRestList, materialDemandPlanRestBatchRemove, materialDemandPlanRestSubmit } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { isCreate } from '@/api/prodmgr-inv/materialSectionProject'
 import { getUserInfo } from '@/utils/user-info'
 import {customDownload} from '@/api/prodmgr-inv/file'
 export default {
@@ -252,7 +253,10 @@ export default {
     handleWaitItemClick(item) {
       this.$router.push({ name: 'RequirementDetails', query: { id: item.id } })
     },
-    addClick(item) {
+    async addClick(item) {
+      if (!item && !(await this.checkPlanSubmitDate())) {
+        return
+      }
       this.$store.dispatch('public/setMateriaList', [])
       this.$store.dispatch('public/setInterfaceMateriaList', [])
       this.$store.dispatch('public/setDemandPlanningInfo', {})
@@ -271,7 +275,10 @@ export default {
       this.$router.push({ name: 'LogisticsView', query: { id: item.id } })
     },
     //去审核点击
-    handleExamineClick(item) {
+    async handleExamineClick(item) {
+      if (!(await this.checkPlanSubmitDate())) {
+        return
+      }
       this.$dialog.confirm({
         message: '确认要提交审核吗？',
         confirmButtonText: '确认',
@@ -279,6 +286,21 @@ export default {
       }).then(() => {
         this.$refs.activitiAssignee.init(this.businessCode[item.planType], item)
       })
+    },
+    // 校验当前日期是否允许新增或提交计划
+    async checkPlanSubmitDate() {
+      try {
+        const { data } = await isCreate()
+        if (data) {
+          return true
+        }
+        await this.$dialog.alert({
+          message: '当前日期不在指挥部允许的提交计划范围内，紧急提交计划请联系指挥部'
+        })
+      } catch (error) {
+        return false
+      }
+      return false
     },
     //选择审核人回调
     optionsSuccess(assignee, { id, planType }) {

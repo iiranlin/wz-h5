@@ -146,6 +146,7 @@ import { wfHistoryList } from '@/api/myToDoList'
 import FileDownloadView from "@/components/FileDownloadView.vue"
 import { getUserInfo } from '@/utils/user-info'
 import { mergeByActId, findByBusinessType } from '@/utils/index.js'
+import { isCreate } from '@/api/prodmgr-inv/materialSectionProject'
 export default {
   name: 'RequirementDetails',
   components: { MaterialDetails, LogRecording, activitiAssignee, BackToTop, FileDownloadView },
@@ -253,8 +254,26 @@ export default {
       }
     },
     //去审核点击
-    handleExamineClick(item) {
+    async handleExamineClick(item) {
+      if (!(await this.checkPlanSubmitDate())) {
+        return
+      }
       this.$refs.activitiAssignee.init(this.businessCode[item.planType], item)
+    },
+    // 校验当前日期是否允许提交计划
+    async checkPlanSubmitDate() {
+      try {
+        const { data } = await isCreate()
+        if (data) {
+          return true
+        }
+        await this.$dialog.alert({
+          message: '当前日期不在指挥部允许的提交计划范围内，紧急提交计划请联系指挥部'
+        })
+      } catch (error) {
+        return false
+      }
+      return false
     },
     //选择审核人回调
     optionsSuccess(assignee, { id, planType }) {
