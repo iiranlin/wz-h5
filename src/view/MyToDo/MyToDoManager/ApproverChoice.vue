@@ -4,6 +4,11 @@
       <div class="detail-title-info">
         <span class="info-title">请选择审批人</span>
       </div>
+      <van-search
+        v-model="keyword"
+        placeholder="请输入审批人姓名"
+        clearable
+      />
       <van-list
         v-model="loading"
         offset="30"
@@ -11,7 +16,7 @@
         finished-text="没有更多了..."
       >
         <div
-          v-for="(item, index) in assigneeList"
+          v-for="(item, index) in filteredAssigneeList"
           :key="index"
           class="item-container"
           :class="{ active: isSelected(item.id) }"
@@ -66,7 +71,8 @@ export default {
       loading: false,
       finished: true,
       assigneeList: [],
-      selectedValues: [] // ✅ 存储多选的id
+      selectedValues: [], // ✅ 存储多选的id
+      keyword: ''
     }
   },
   computed: {
@@ -76,6 +82,18 @@ export default {
     },
     selectd(){
       return  JSON.parse(this.$route.params.selectd || '[]')
+    },
+    filteredAssigneeList() {
+      const keyword = this.keyword.trim().toLowerCase()
+      if (!keyword) return this.assigneeList
+
+      return this.assigneeList.filter(item => {
+        const searchableText = [item.nickName, item.userName, item.username, item.employeeNo]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+        return searchableText.includes(keyword)
+      })
     }
   },
   created() {
