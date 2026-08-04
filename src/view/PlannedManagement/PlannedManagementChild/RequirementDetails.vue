@@ -268,7 +268,7 @@ export default {
           return true
         }
         await this.$dialog.alert({
-          message: '当前日期不在指挥部允许的提交计划范围内，紧急提交计划请联系指挥部'
+          message: '当前日期不在指挥部允许的提交计划范围内，紧急提交计划请联系指挥部！'
         })
       } catch (error) {
         return false
