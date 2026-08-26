@@ -12,7 +12,7 @@
             @load="getList"> -->
           <div class="process-content-list" v-for="(item,index) in dataList" :key="index">
               <div class="list-left">
-                <p>{{item.actName}}</p>
+                <p>{{item.orgName}}</p>
                 <span>{{item.endTime}}</span>    
               </div>
               <div class="list-middle">
