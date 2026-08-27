@@ -176,7 +176,7 @@
                                         <span>{{ item.addr }}</span>
                                     </li>
                                     <li>
-                                        <span>供应时间:</span>
+                                        <span>计划使用时间:</span>
                                         <span v-if="item.supplyDate">{{ formattedCreateDate(item.supplyDate) }}</span>
                                     </li>
                                     <li>

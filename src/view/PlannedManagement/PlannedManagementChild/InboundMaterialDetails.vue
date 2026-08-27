@@ -85,7 +85,7 @@
       </div>
       <ul class="detail-ul detail-ul-border">
         <li>
-          <span>供应时间：</span>
+          <span>计划使用时间：</span>
           <span>{{ sectionInfo.supplyDate  && parseTime(sectionInfo.supplyDate, '{y}-{m}-{d}') }}</span>
         </li>
         <li>

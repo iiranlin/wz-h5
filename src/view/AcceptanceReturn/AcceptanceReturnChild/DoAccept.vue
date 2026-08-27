@@ -217,7 +217,7 @@
                       <span>{{ item.field2 }}</span>
                     </li>
                     <li >
-                      <span>供应时间：</span>
+                      <span>计划使用时间：</span>
                       <span>{{ item.supplyDate |formatToDate}}</span>
                     </li>
                     <li class="li-item-overlength" >

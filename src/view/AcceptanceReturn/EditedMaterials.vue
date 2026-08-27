@@ -130,7 +130,7 @@
 
         <ul class="detail-info-ul">
           <li>
-            <span>供应时间：</span>
+            <span>计划使用时间：</span>
             <span>{{ sectionInfo.supplyDate | formatToDate }}</span>
           </li>
           <li>

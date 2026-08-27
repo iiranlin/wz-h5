@@ -144,7 +144,7 @@
                             <span>{{item.planAmount}}</span>
                         </li>
                         <li>
-                            <span>供应时间：</span>
+                            <span>计划使用时间：</span>
                             <span>{{parseTime(item.supplyDate,'{y}-{m}-{d}')}}</span>
                         </li>
                         <li>

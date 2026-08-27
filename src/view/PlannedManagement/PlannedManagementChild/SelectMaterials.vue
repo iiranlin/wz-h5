@@ -83,7 +83,7 @@
                 <span class="li-span-click">{{ item.cumulativeAmount }}</span>
               </li>
               <!-- <li v-if="item.deliveryDate">
-                <span>供应时间：</span>
+                <span>计划使用时间：</span>
                 <span>{{ item.deliveryDate }}</span>
               </li>
               <li>

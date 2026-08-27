@@ -15,7 +15,7 @@
           <span>{{ sectionInfo.packagingFm }}</span>
         </li>
         <li>
-          <span>供应时间：</span>
+          <span>计划使用时间：</span>
           <span v-if="sectionInfo.supplyDate">{{ sectionInfo.supplyDate | formatDate }}</span>
         </li>
         <li>

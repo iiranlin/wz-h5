@@ -54,7 +54,7 @@
               <van-field v-model="goodsData[index].field2" label="收货地址" required placeholder="收货地址"
                 input-align="right" />
               <van-field readonly clickable v-model="goodsData[index].supplyDate" name="datetimePicker" required
-                :value="goodsData[index].supplyDate" label="供应时间" placeholder="点击选择时间"
+                :value="goodsData[index].supplyDate" label="计划使用时间" placeholder="点击选择时间"
                 @click="showCalendars(item, index, 'gong')" input-align="right" />
               <van-field v-model="goodsData[index].receiver" name="收货人" required label="收货人和电话" placeholder="收货人"
                 input-align="right" />
@@ -387,7 +387,7 @@ export default {
           errors[`goodsData[${index}].field2`] = "请填写收货地址";
         }
         if (!item.supplyDate) {
-          errors[`goodsData[${index}].supplyDate`] = "请选择供应时间";
+          errors[`goodsData[${index}].supplyDate`] = "请选择计划使用时间";
         }
         if (!item.receiver) {
           errors[`goodsData[${index}].receiver`] = "请填写收货人";

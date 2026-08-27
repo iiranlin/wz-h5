@@ -84,7 +84,7 @@
             <span v-else class="li-span-grey">填写</span>
           </li>
           <li>
-            <span>供应时间：</span>
+            <span>计划使用时间：</span>
             <span v-if="item.supplyDate">{{ item.supplyDate }}</span>
             <span v-else class="li-span-grey">填写</span>
           </li>
@@ -200,7 +200,7 @@ export default {
           { required: true, message: '请输入本次计划数量' },
         ],
         supplyDate: [
-          { required: true, message: '请选择供应时间' },
+          { required: true, message: '请选择计划使用时间' },
         ],
         addr: [
           { required: true, message: '请输入使用地点' },
@@ -403,7 +403,7 @@ export default {
         }
 
         if (!row.supplyDate) {
-          errors.push(`第${rowNum}个，供应时间未填写 `)
+          errors.push(`第${rowNum}个，计划使用时间未填写 `)
         }
 
         if (!row.addr || row.addr.trim() === '') {

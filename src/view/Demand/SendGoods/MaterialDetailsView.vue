@@ -32,7 +32,7 @@
               <span class="li-span-click">{{ detailInfo.planAmount }} {{ detailInfo.unit }}</span>
             </li>
             <li>
-              <span>供应时间:</span>
+              <span>计划使用时间:</span>
               <span>{{ detailInfo.supplyDate }}</span>
             </li>
                 <li>
@@ -80,7 +80,7 @@
           <span class="li-span-click">{{ detailInfo.cumulativeAmount }}</span>
         </li>
         <li v-if="detailInfo.deliveryDate">
-          <span>供应时间：</span>
+          <span>计划使用时间：</span>
           <span>{{ detailInfo.deliveryDate }}</span>
         </li>
         <li>
@@ -116,7 +116,7 @@
           <span>{{ detailInfo.receiver }}</span>
         </li>
         <li>
-          <span>供应时间：</span>
+          <span>计划使用时间：</span>
           <span>{{ detailInfo.deliveryDate }}</span>
         </li>
         <li>

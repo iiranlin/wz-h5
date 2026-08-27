@@ -27,7 +27,7 @@
           <span>{{ sectionInfo.receiver }}</span>
         </li>
         <li>
-          <span>供应时间：</span>
+          <span>计划使用时间：</span>
           <span>{{ sectionInfo.supplyDate | formatDate }}</span>
         </li>
         <li>

@@ -132,7 +132,7 @@
                                 <span class="text">收货地址收货地址收货地址收货地址</span>
                             </li>
                             <li>
-                                <span style="width: 210px;">供应时间:</span>
+                                <span style="width: 210px;">计划使用时间:</span>
                                 <span>2025年06月01日</span>
                             </li>
                             <li>

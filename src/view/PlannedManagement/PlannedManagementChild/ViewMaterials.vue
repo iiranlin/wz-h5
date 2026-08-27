@@ -58,7 +58,7 @@
     <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
         <img src="@/assets/img/Icon-time.png" />
-        <span>供应时间</span>
+        <span>计划使用时间</span>
       </div>
       <ul class="detail-ul detail-ul-border">
         <li>

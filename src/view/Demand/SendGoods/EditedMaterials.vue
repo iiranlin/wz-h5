@@ -140,7 +140,7 @@
     <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
         <img src="@/assets/img/Icon-time.png" />
-        <span>供应时间</span>
+        <span>计划使用时间</span>
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
@@ -351,7 +351,7 @@ export default {
         if (!this.sectionInfo.supplyDate) {
           this.$notify({
             type: 'warning',
-            message: '请选择供应时间!',
+            message: '请选择计划使用时间!',
           });
           return
         }
