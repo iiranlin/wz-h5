@@ -10,6 +10,15 @@ export function materialDemandPlanRestList(params) {
   })
 }
 
+// 需求计划各状态数量
+export function materialDemandPlanRestStatusCount(params) {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/statusCount`,
+    method: 'get',
+    params
+  })
+}
+
 //需求计划详情
 export function materialDemandPlanRestDetail(id,params={}) {
   return request({

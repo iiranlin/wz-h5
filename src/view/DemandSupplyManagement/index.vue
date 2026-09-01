@@ -15,7 +15,8 @@
         </div>
         <van-tabs v-model="statusValue" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
           title-inactive-color="#2e2e2e" @change="statusChange">
-          <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value">
+          <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value"
+            :badge="getStatusCount(item.value)">
           </van-tab>
         </van-tabs>
       </van-sticky>
@@ -90,7 +91,7 @@
 <script>
 import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
-import { materialDemandPlanRestList, recall } from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { materialDemandPlanRestList, materialDemandPlanRestStatusCount, recall } from '@/api/prodmgr-inv/materialDemandPlanRest'
 import { customDownload } from '@/api/prodmgr-inv/file'
 export default {
   name: 'DemandSupplyManagement',
@@ -111,6 +112,7 @@ export default {
       finished: false,
       error: false,
       total: 0,
+      statusCount: {},
       statusValue: '',
       statusArr: [
         { text: '全部', value: '', color: '' },
@@ -180,6 +182,7 @@ export default {
         message: "正在加载...",
         forbidClick: true
       });
+      this.getStatusCountData(params)
       materialDemandPlanRestList(params).then(({ data }) => {
         const rows = data.list || []
         this.total = data.total || 0
@@ -200,6 +203,18 @@ export default {
         toast.clear()
         this.scrollPositionInit(this.className, this.finished)
       })
+    },
+    getStatusCountData(params) {
+      materialDemandPlanRestStatusCount(params).then(({ data }) => {
+        this.statusCount = data || {}
+      }).catch(() => {
+        this.statusCount = {}
+      })
+    },
+    getStatusCount(status) {
+      const key = status === '' ? 'all' : status
+      const count = this.statusCount[key]
+      return Number(count) > 0 ? count : ''
     },
     //列表刷新
     onRefresh() {
