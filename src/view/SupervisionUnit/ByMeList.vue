@@ -29,7 +29,7 @@
                             <span class="font-weight" style="color:#134daa;">{{item.businessCode}}</span>
                             <div class="li-title-status">
                                 <img :src="checkAuditStatus(item.auditStatus)"/>
-                                <span>{{item.auditStatus | orderTypeFilter(dict.flowTaskStatus)}}</span>
+                                <span>{{ auditStatusMap[item.auditStatus] || '--' }}</span>
                             </div>
                         </div>
                         <ul class="list-ul">
@@ -110,6 +110,11 @@ export default {
     data() {
         return {
             className: '.default-container',
+            auditStatusMap: {
+                1: '审核中',
+                2: '通过',
+                3: '驳回'
+            },
             formData: {
                 keywords: '',
             },
