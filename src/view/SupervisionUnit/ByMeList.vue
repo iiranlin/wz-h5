@@ -183,7 +183,9 @@ export default {
         },
          //已审核状态图标判断
         checkAuditStatus(auditStatus){
-            if(auditStatus == '2'){
+            if(auditStatus == '1'){
+                return '/static/newIcon_Pending.png'
+            }else if(auditStatus == '2'){
                 return '/static/icon-success.png'
             }else if(auditStatus == '3'){
                 return '/static/icon-reject.png'
