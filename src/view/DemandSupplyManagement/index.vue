@@ -347,6 +347,12 @@ export default {
     background: #f8f8f8;
   }
 
+  ::v-deep .van-tabs .van-info {
+    top: -3px;
+    background-color: #84a7c9;
+    border-color: #84a7c9;
+  }
+
   ::v-deep .van-dropdown-menu__bar {
     border-radius: 50px;
     width: 90px;
