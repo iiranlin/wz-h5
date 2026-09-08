@@ -113,7 +113,8 @@ export default {
             auditStatusMap: {
                 1: '审核中',
                 2: '通过',
-                3: '驳回'
+                3: '驳回',
+                6: '已撤回',
             },
             formData: {
                 keywords: '',
@@ -189,6 +190,8 @@ export default {
                 return '/static/icon-success.png'
             }else if(auditStatus == '3'){
                 return '/static/icon-reject.png'
+            }else if(auditStatus == '6'){
+                return '/static/newIcon_Withdrawn.png'
             }
             return '/static/icon-success.png'
         },
