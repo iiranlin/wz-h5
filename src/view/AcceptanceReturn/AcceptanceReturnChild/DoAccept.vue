@@ -41,6 +41,13 @@
       </div>
       <file-download-view :fileList="filterList(dataList.fileByList, 'zczp') || []" />
     </div>
+    <div class="detail-base-info detail-base-info-edited" v-if="filterList(dataList.fileByList, 'zlzmwj')?.length > 0">
+      <div class="detail-title-content">
+        <img src="/static/icon-file.png" />
+        <span>质量证明文件</span>
+      </div>
+      <file-download-view :fileList="filterList(dataList.fileByList, 'zlzmwj') || []" />
+    </div>
 
         <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
       <div class="detail-title-content">

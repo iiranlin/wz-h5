@@ -62,6 +62,14 @@
               <file-download-view class="outbound-field-uploader" style="width: 100%;"
                                   :fileList="filterList(params.fileByList, 'zczp') || []"/>
             </div>
+            <div class="box-container" v-if="filterList(params.fileByList, 'zlzmwj')?.length > 0">
+              <div class="detail-title-contentA">
+                <img src="/static/icon-file.png">
+                <span>质量证明文件</span>
+              </div>
+              <file-download-view class="outbound-field-uploader" style="width: 100%;"
+                                  :fileList="filterList(params.fileByList, 'zlzmwj') || []"/>
+            </div>
             <div class="box-container">
               <!--              <div class="detail-content">-->
               <!--          -->
