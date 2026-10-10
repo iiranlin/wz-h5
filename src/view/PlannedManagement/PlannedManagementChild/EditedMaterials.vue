@@ -143,6 +143,7 @@
   </div>
 </template>
 <script>
+import Decimal from 'decimal.js'
 import keepPages from '@/view/mixins/keepPages'
 import { parseTime } from '@/utils/index'
 export default {
@@ -186,7 +187,12 @@ export default {
       console.log(this.sectionInfo, "sectionInfo")
     },
     cumulativeAmount(item) {
-      return this.queryType == 'update' && !item.uniqueNumber ? +item.cumulativeAmount - +item.backPlanAmount + +(item.planAmount || 0) : +(item.cumulativeAmount || 0) + +(item.planAmount || 0)
+      const cumulativeAmount = new Decimal(item.cumulativeAmount || 0)
+      const planAmount = new Decimal(item.planAmount || 0)
+
+      return this.queryType == 'update' && !item.uniqueNumber
+        ? cumulativeAmount.minus(item.backPlanAmount || 0).plus(planAmount).toString()
+        : cumulativeAmount.plus(planAmount).toString()
     },
     dateClick(item) {
       this.sectionInfo = Object.assign({}, item, { showDatePicker: true })

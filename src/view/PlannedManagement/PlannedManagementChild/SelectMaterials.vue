@@ -291,7 +291,11 @@ export default {
           let Obj = item
           interfaceMateriaList.map((val) => {
             if ((item.uniqueNumber || item.allocationUniqueNumber) == val.allocationUniqueNumber) {
-              Obj = Object.assign({}, item, { cumulativeAmount: Number(item.cumulativeAmount) - Number(val.planAmount) || 0 })
+              Obj = Object.assign({}, item, {
+                cumulativeAmount: new Decimal(item.cumulativeAmount || 0)
+                  .minus(val.planAmount || 0)
+                  .toNumber()
+              })
             }
           })
           return Obj

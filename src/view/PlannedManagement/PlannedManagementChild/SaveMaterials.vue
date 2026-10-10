@@ -322,7 +322,12 @@ export default {
       })
     },
     cumulativeAmount(item) {
-      return this.queryType == 'update' && !item.uniqueNumber ?  +item.cumulativeAmount - +item.backPlanAmount + +(item.planAmount || 0) : +item.cumulativeAmount + +(item.planAmount || 0)
+      const cumulativeAmount = new Decimal(item.cumulativeAmount || 0)
+      const planAmount = new Decimal(item.planAmount || 0)
+
+      return this.queryType == 'update' && !item.uniqueNumber
+        ? cumulativeAmount.minus(item.backPlanAmount || 0).plus(planAmount).toString()
+        : cumulativeAmount.plus(planAmount).toString()
     },
     dateClick(item, index) {
       this.$set(this.materiaList, index, Object.assign({}, item, { showDatePicker: true }))
@@ -419,15 +424,15 @@ export default {
           errors.push(`第${rowNum}个，投资比例未填写 `)
         }
 
-        const plan = Number(row.planAmount || 0)
-        const cumulative = row.cumulativeAmount - (row.backPlanAmount || 0)
-        const contract = Number(row.amount || 0)
+        const plan = new Decimal(row.planAmount || 0)
+        const cumulative = new Decimal(row.cumulativeAmount || 0).minus(row.backPlanAmount || 0)
+        const contract = new Decimal(row.amount || 0)
 
-        if (plan <= 0) {
+        if (plan.lte(0)) {
           errors.push(`第${rowNum}个，本次计划数量必须大于0 `)
         }
 
-        if (plan + cumulative > contract) {
+        if (plan.plus(cumulative).gt(contract)) {
           errors.push(`第${rowNum}个，本次计划数量超出合同数量 `)
         }
       });
@@ -661,6 +666,9 @@ export default {
 
     .default-button-container-button{
       display: flex;
+      align-items: center;
+      height: 100%;
+
       .button-info{
         margin-left: 10px;
       }
@@ -672,6 +680,9 @@ export default {
     }
 
     ::v-deep .file-add{
+      display: flex;
+      align-items: center;
+      height: 100%;
       margin: 0;
       padding: 0;
     }
