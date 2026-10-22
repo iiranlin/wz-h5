@@ -375,7 +375,12 @@ export default {
         id,
         contractId: this.contractId,
         fileList: [{ fileList: this.normalizePlanFiles() }],
-        detailsModifyParams: this.materiaList.map(item => ({ ...item, id: null, allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber }))
+        detailsModifyParams: this.materiaList.map(item => ({
+          ...item,
+          field1: `${String(item.field1).replace(/%/g, '').trim()}%`,
+          id: null,
+          allocationUniqueNumber: item.uniqueNumber || item.allocationUniqueNumber
+        }))
       }
       materialDemandPlanRestSaveModify(data, type).then(({ data, message }) => {
         id = data || id
@@ -420,8 +425,11 @@ export default {
         if (!row.field0 || row.field0.trim() === '') {
           errors.push(`第${rowNum}个，投资方未填写 `)
         }
-        if (!row.field1 || row.field1.trim() === '') {
+        const investmentRatio = String(row.field1 == null ? '' : row.field1).replace(/%/g, '').trim()
+        if (investmentRatio === '') {
           errors.push(`第${rowNum}个，投资比例未填写 `)
+        } else if (!/^\d+(\.\d{1,2})?$/.test(investmentRatio) || Number(investmentRatio) > 100) {
+          errors.push(`第${rowNum}个，投资比例须为0至100之间的数字，最多保留两位小数 `)
         }
 
         const plan = new Decimal(row.planAmount || 0)

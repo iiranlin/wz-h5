@@ -117,7 +117,9 @@
         </li>
         <li class="detail-list-li-input">
           <van-field required v-model="sectionInfo.field1" label="投资比例" placeholder="请输入投资比例" input-align="right"
-            @blur="saveInvestmentCache" />
+            type="number" :formatter="formatInvestmentRatio" @blur="saveInvestmentCache">
+            <template #button>%</template>
+          </van-field>
         </li>
       </ul>
       <div class="detail-base-info-edited-all">
@@ -168,12 +170,25 @@ export default {
     }
     this.init()
     this.sectionInfo = Object.assign({}, this.sectionInfo, historyData)
+    this.normalizeInvestmentRatio()
     this.$store.dispatch('public/setHistoryData', {})
   },
   mounted() {
     this.init()
   },
   methods: {
+    normalizeInvestmentRatio() {
+      this.$set(this.sectionInfo, 'field1', String(this.sectionInfo.field1 == null ? '' : this.sectionInfo.field1).replace(/%/g, '').trim())
+    },
+    formatInvestmentRatio(value) {
+      const cleaned = String(value).replace(/[^\d.]/g, '')
+      const [integer, ...decimals] = cleaned.split('.')
+      const normalizedInteger = integer.replace(/^0+(?=\d)/, '')
+      const formatted = decimals.length
+        ? `${normalizedInteger || '0'}.${decimals.join('').slice(0, 2)}`
+        : normalizedInteger
+      return Number(formatted) > 100 ? '100' : formatted
+    },
     init() {
       const { type = '', contractId = '', id = '' } = this.$route.query
       this.contractId = contractId
@@ -183,6 +198,7 @@ export default {
 
       // 从本地缓存加载投资信息
       this.loadInvestmentCache()
+      this.normalizeInvestmentRatio()
 
       console.log(this.sectionInfo, "sectionInfo")
     },
@@ -241,17 +257,24 @@ export default {
           });
           return
         }
-        if (!this.sectionInfo.field1) {
+        if (this.sectionInfo.field1 == null || this.sectionInfo.field1 === '') {
           this.$notify({
             type: 'warning',
             message: '请输入投资比例!',
           });
           return
         }
+        if (!/^\d+(\.\d{1,2})?$/.test(String(this.sectionInfo.field1)) || Number(this.sectionInfo.field1) > 100) {
+          this.$notify({
+            type: 'warning',
+            message: '投资比例请输入0至100之间的数字，最多保留两位小数!',
+          });
+          return
+        }
         const data = this.$store.state.public.materiaList || []
         data.forEach((item, index) => {
           if (item.id == this.sectionInfo.id) {
-            this.$set(data, index, this.sectionInfo)
+            this.$set(data, index, { ...this.sectionInfo, field1: `${this.sectionInfo.field1}%` })
           }
         })
         this.$store.dispatch('public/setMateriaList', data)
@@ -273,7 +296,9 @@ export default {
         data.forEach((item) => {
           for (const key in obj) {
             if (Object.hasOwnProperty.call(obj, key)) {
-              item[key] = this.sectionInfo[key]
+              item[key] = key === 'field1' && this.sectionInfo[key] !== '' && this.sectionInfo[key] != null
+                ? `${this.sectionInfo[key]}%`
+                : this.sectionInfo[key]
               console.log(item.key, "111")
             }
           }
