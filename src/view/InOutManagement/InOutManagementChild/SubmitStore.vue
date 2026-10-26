@@ -62,6 +62,8 @@
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="formData.rkd || []" businessType="01" />
     </div>
 
+    <ShippingAttachments :model="formData" quality-only :readonly="!(queryType === 'submit' || (queryType === 'view' && from === 'list'))" />
+
     <!-- 审核页面预览 -->
     <div class="detail-base-info detail-base-info-edited" v-if="queryType != 'submit' && formData.rkd?.length && from !== 'list'">
       <div class="detail-title-content">
@@ -164,6 +166,8 @@
   </div>
 </template>
 <script>
+import ShippingAttachments from "@/components/ShippingAttachments.vue";
+import { shippingFields, readShippingFiles } from "@/utils/shippingAttachments";
 import {parseTime} from '@/utils'
 import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
@@ -181,7 +185,7 @@ import BackToTop from '@/components/BackToTop'
 export default {
   name: 'SubmitStore',
   mixins: [indexMixin, keepPages],
-  components: { FilePreview, activitiAssignee, FileUploadView, FileDownloadView, BackToTop },
+  components: { ShippingAttachments, FilePreview, activitiAssignee, FileUploadView, FileDownloadView, BackToTop },
   filters: {
     formatDate(value) {
       if (value) {
@@ -232,7 +236,7 @@ export default {
     return {
       queryType: '',
       storeStatus: '',
-      formData: {},
+      formData: readShippingFiles(null),
       tableData: [],
       rules: {
         storeTotal: [
@@ -352,10 +356,11 @@ export default {
         const InboundInformation = this.$store.state.public.InboundInformation || {};
 
         if (Object.keys(InboundInformation)?.length > 0) {
-                  this.formData = Object.assign({}, this.formData, InboundInformation);
+                  this.formData = Object.assign({}, this.formData, readShippingFiles(InboundInformation.fileByList), InboundInformation);
         } else {
                   this.formData = {
           ...data,
+          ...readShippingFiles(data.fileByList),
           fileList01: data.fileByList ? JSON.parse(data.fileByList).jcbg || [] : [], //检测报告
           fileList02: data.fileByList ? JSON.parse(data.fileByList).zlzm || [] : [], //证明文件
           fileList03: data.fileByList ? JSON.parse(data.fileByList).byjg || [] : [], //报验结果
@@ -460,7 +465,13 @@ export default {
       }
       return true;
     },
+    validateQualityFiles() {
+      const missing = shippingFields.find(field => !field.optional && !field.key.startsWith('zczp') && !this.formData[field.key]?.length);
+      if (missing) { this.$toast('请上传' + missing.label); return false; }
+      return true;
+    },
     onSubmit() {
+      if (!this.validateQualityFiles()) return;
       const isValid = this.onCheck(this.tableData);
       if (!isValid) {
         return;
@@ -487,10 +498,9 @@ export default {
         });
         return
       }
-      //质量证明文件
-      if (this.formData.fileList02.length > 0) {
-        this.$set(fileByList, "zlzm", this.formData.fileList02);
-      }
+      shippingFields.filter(field => !field.key.startsWith('zczp')).forEach(({ key }) => {
+        fileByList[key === 'zlzmwj' ? 'zlzm' : key] = this.formData[key] || [];
+      });
       //报验结果
       if (this.formData.fileList03.length > 0) {
         this.$set(fileByList, "byjg", this.formData.fileList03);
@@ -510,6 +520,7 @@ export default {
       })
     },
     async onSave(){
+      if (!this.validateQualityFiles()) return;
       //组装附件
       let fileByList = this.formData.fileByList ? JSON.parse(this.formData.fileByList) : {};
       //检测报告
@@ -522,10 +533,9 @@ export default {
         });
         return
       }
-      //质量证明文件
-      if (this.formData.fileList02.length > 0) {
-        this.$set(fileByList, "zlzm", this.formData.fileList02);
-      }
+      shippingFields.filter(field => !field.key.startsWith('zczp')).forEach(({ key }) => {
+        fileByList[key === 'zlzmwj' ? 'zlzm' : key] = this.formData[key] || [];
+      });
       //报验结果
       if (this.formData.fileList03.length > 0) {
         this.$set(fileByList, "byjg", this.formData.fileList03);

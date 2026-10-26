@@ -54,22 +54,7 @@
               <file-download-view class="outbound-field-uploader" style="width: 100%;"
                                   :fileList="filterList(params.fileByList, 'fhd') || []"/>
             </div>
-            <div class="box-container" v-if="filterList(params.fileByList, 'zczp')?.length > 0">
-              <div class="detail-title-contentA">
-                <img src="/static/icon-file.png">
-                <span>装车照片</span>
-              </div>
-              <file-download-view class="outbound-field-uploader" style="width: 100%;"
-                                  :fileList="filterList(params.fileByList, 'zczp') || []"/>
-            </div>
-            <div class="box-container" v-if="filterList(params.fileByList, 'zlzmwj')?.length > 0">
-              <div class="detail-title-contentA">
-                <img src="/static/icon-file.png">
-                <span>质量证明文件</span>
-              </div>
-              <file-download-view class="outbound-field-uploader" style="width: 100%;"
-                                  :fileList="filterList(params.fileByList, 'zlzmwj') || []"/>
-            </div>
+            <ShippingAttachments :value="params.fileByList" readonly />
             <div class="box-container">
               <!--              <div class="detail-content">-->
               <!--          -->
@@ -229,6 +214,7 @@
   </div>
 </template>
 <script>
+import ShippingAttachments from "@/components/ShippingAttachments.vue";
 import keepPages from '@/view/mixins/keepPages'
 import BackToTop from '@/components/BackToTop'
 import {addList, detailBySend, snedGoodsSure} from '@/api/demand/sendGoods'
@@ -247,7 +233,7 @@ Vue.use(Toast);
 export default {
   name: 'cargoDetails',
   mixins: [keepPages, indexMixin],
-  components: {FilePreview, FileDownloadView, BackToTop,MaterialDetails},
+  components: { ShippingAttachments,FilePreview, FileDownloadView, BackToTop,MaterialDetails},
     filters: {
     formatDate(value) {
       if(value){

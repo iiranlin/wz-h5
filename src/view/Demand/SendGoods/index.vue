@@ -136,27 +136,7 @@
         class="outbound-field-uploader" />
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
-      <div class="detail-title-content">
-        <img src="/static/icon-file.png">
-        <span>装车照片</span>
-      </div>
-      <p class="box-container-p" v-if="!zczp.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg格式</p>
-      <file-upload-view-type :required="true" class="outbound-field-uploader" :fileList="zczp || []" businessType="01"
-        accept=".jpg,.png,.jpeg,.pdf" :maxCount="100" />
-    </div>
-
-    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
-      <div class="detail-title-content">
-        <img src="/static/icon-file.png">
-        <span>质量证明文件</span>
-      </div>
-      <p class="box-container-p" v-if="!zlzmwj.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="zlzmwj || []" businessType="01"
-        class="outbound-field-uploader" />
-    </div>
+    <ShippingAttachments :model="$data" />
 
     <div class="detail-floor-content" v-if="status !== '2'">
       <div>
@@ -382,6 +362,8 @@
   </div>
 </template>
 <script>
+import ShippingAttachments from "@/components/ShippingAttachments.vue";
+import { readOriginalFiles, shippingMixin } from "@/utils/shippingAttachments";
 import Vue from "vue";
 import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
@@ -411,8 +393,8 @@ Vue.use(Field);
 
 export default {
   name: "SendGoods",
-  mixins: [keepPages],
-  components: { FileUploadView, historyList, FileUploadViewType, Calendar },
+  mixins: [keepPages, shippingMixin],
+  components: { ShippingAttachments, FileUploadView, historyList, FileUploadViewType, Calendar },
   data() {
     return {
       btnClickIndex: '0',
@@ -438,7 +420,7 @@ export default {
       fileList: [],
       // 装车照片
       zczp: [],
-      // 质量证明文件
+      // 其他质量文件
       zlzmwj: [],
       // 传过来的标识，用来判断是新增还是编辑
       text: "",
@@ -463,7 +445,7 @@ export default {
         }
       })
 
-      return this.fileList?.length > 0 && this.zczp?.length > 0 && this.zlzmwj?.length > 0 && carNumber && receiver && arrivalDate && flag;
+      return this.fileList?.length > 0 && this.shippingFields.every(field => field.optional || this[field.key]?.length > 0) && carNumber && receiver && arrivalDate && flag;
     }
   },
   activated() {
@@ -516,11 +498,12 @@ export default {
 
       if (Object.keys(shipmentsInfo).length > 0) {
         this.params = Object.assign({}, this.params, shipmentsInfo);
+        this.restoreShippingFiles(this.params.fileByList, shipmentsInfo);
       } else {
         this.params = {};
         this.fileList = [];
         this.zczp = [];
-        this.zlzmwj = [];
+        this.restoreShippingFiles(null);
       }
 
       this.getSendGoods();
@@ -626,12 +609,13 @@ export default {
                   this.params = Object.assign({}, this.params, shipmentsInfo, historyData);
             } else {
               this.params = Object.assign({}, this.params, shipmentsInfo);
+        this.restoreShippingFiles(this.params.fileByList, shipmentsInfo);
             }
           } else {
             this.params = res.data;
             this.fileList = [];
             this.zczp = [];
-            this.zlzmwj = [];
+            this.restoreShippingFiles(null);
           }
 
           const data = this.$store.state.public.selectGoodDataEdit?.length > 0 ? this.$store.state.public.selectGoodDataEdit : res.data?.materialCirculationDetailsTableDTOS;  
@@ -680,17 +664,7 @@ export default {
           this.params.arrivalDate = this.formattedCreateDate(
             res.data.arrivalDate
           );
-          // 装车照片
-          if (!this.params?.zczp?.length) {
-              this.zczp = file.zczp || []
-           } else {
-            this.zczp = this.params.zczp;
-           }
-          if (!this.params?.zlzmwj?.length) {
-            this.zlzmwj = file.zlzmwj || [];
-          } else {
-            this.zlzmwj = this.params.zlzmwj;
-          }
+          this.restoreShippingFiles(file, this.params);
           
         }
       });
@@ -784,14 +758,7 @@ export default {
             Toast.fail("请上传的附件");
             return;
           }
-          if (!this.zczp?.length) {
-            Toast.fail("请上传装车照片");
-            return;
-          }
-          if (!this.zlzmwj?.length) {
-            Toast.fail("请上传质量证明文件");
-            return;
-          }
+          if (!this.validateShippingFiles()) return;
           let obj = {
             shippingAddress: [this.params.shippingAddress],
             carNumber: [this.params.carNumber],
@@ -800,9 +767,7 @@ export default {
           };
           this.$store.dispatch('public/setHistoryList', obj)
           //装车照片
-          let zczp = this.zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
-          let zlzmwj = this.zlzmwj.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
-          let fileByList = JSON.stringify({ fhd, zczp, zlzmwj });
+          let fileByList = JSON.stringify({ ...readOriginalFiles(this.params.fileByList), fhd, ...this.shippingFiles() });
           let params = {
             ...this.params,
             fileList: fileList,
@@ -844,17 +809,8 @@ export default {
             Toast.fail("请上传的附件");
             return;
           }
-          if (!this.zczp?.length) {
-            Toast.fail("请上传装车照片");
-            return;
-          }
-          if (!this.zlzmwj?.length) {
-            Toast.fail("请上传质量证明文件");
-            return;
-          }
-          let zczp = this.zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
-          let zlzmwj = this.zlzmwj.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
-          let fileByList = JSON.stringify({ fhd, zczp, zlzmwj });
+          if (!this.validateShippingFiles()) return;
+          let fileByList = JSON.stringify({ ...readOriginalFiles(this.params.fileByList), fhd, ...this.shippingFiles() });
 
           let params = {
             arrivalDate: this.params.arrivalDate,
@@ -899,6 +855,7 @@ export default {
       return /[\u4e00-\u9fa5]/.test(str);
     },
     onSubmit() {
+      if (!this.validateShippingFiles()) return;
      
       // console.log(this.$store.state.public.sendGoods, "this.$store.state.public.sendGoods")
       // console.log(this.params, this.fileList, this.materiaList, this.goodsMsg.sectionName, this.goodsMsg.planName, this.goodsMsg.id, "发货传参")
@@ -940,7 +897,7 @@ export default {
         }
       });
 
-      let fileByList = JSON.stringify({ fhd: this.fileList, zczp: this.zczp, zlzmwj: this.zlzmwj });
+      let fileByList = JSON.stringify({ ...readOriginalFiles(this.params.fileByList), fhd: this.fileList, ...this.shippingFiles() });
 
       let params = {
         ...this.params,
@@ -988,7 +945,7 @@ export default {
 
       this.$store.dispatch('public/setMateriaData', { ...item, phone: '', receiver: item.receiver })
 
-      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp, zlzmwj: this.zlzmwj })
+      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, ...this.shippingFiles() })
       // const query = this.text == 'edit' ? { contractId: this.contractId, type: this.text, id: this.queryId } : { contractId: this.contractId }
       const query = { type: this.text, id: this.goodsId, planId: this.planId }
       this.$router.push({ name: 'EditedMaterialGoods', query })
@@ -1008,7 +965,7 @@ export default {
     returnClick() {
       this.$store.dispatch('public/setHistoryData', {})
       // const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId, materialUsedRatio: this.materialUsedRatio } : { contractId: this.contractId, materialUsedRatio: this.materialUsedRatio }
-      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp, zlzmwj: this.zlzmwj })
+      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, ...this.shippingFiles() })
       const query = { planId: this.planId, text: this.text, id: this.goodsId };
 
 
@@ -1017,7 +974,7 @@ export default {
     receiptClick() {
       this.$store.dispatch('public/setHistoryData', {})
 
-      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp, zlzmwj: this.zlzmwj })
+      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, ...this.shippingFiles() })
 
       const {id, text, planId} = this.$route.query;
       this.$router.push({ name: 'ReceiptLists', query: { planId, type: text, id } })
@@ -1025,7 +982,7 @@ export default {
     createClick() {
       this.$store.dispatch('public/setHistoryData', {})
 
-      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, zczp: this.zczp, zlzmwj: this.zlzmwj })
+      this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, ...this.shippingFiles() })
 
       this.$router.push({ name: 'ReceiptOperates', query: { type: 'create' } })
     },

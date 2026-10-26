@@ -34,20 +34,7 @@
       </div>
       <file-download-view :fileList="filterList(dataList.fileByList, 'fhd') || []" />
     </div>
-    <div class="detail-base-info detail-base-info-edited" v-if="filterList(dataList.fileByList, 'zczp')?.length > 0">
-      <div class="detail-title-content">
-        <img src="/static/icon-file.png" />
-        <span>装车照片</span>
-      </div>
-      <file-download-view :fileList="filterList(dataList.fileByList, 'zczp') || []" />
-    </div>
-    <div class="detail-base-info detail-base-info-edited" v-if="filterList(dataList.fileByList, 'zlzmwj')?.length > 0">
-      <div class="detail-title-content">
-        <img src="/static/icon-file.png" />
-        <span>质量证明文件</span>
-      </div>
-      <file-download-view :fileList="filterList(dataList.fileByList, 'zlzmwj') || []" />
-    </div>
+    <ShippingAttachments :value="dataList.fileByList" readonly />
 
         <div class="detail-base-info detail-base-info-edited" v-if="dataPc.length">
       <div class="detail-title-content">
@@ -313,6 +300,7 @@
   </div>
 </template>
 <script>
+import ShippingAttachments from "@/components/ShippingAttachments.vue";
 import {parseTime} from '@/utils'
 import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
@@ -333,7 +321,7 @@ import eventBus from '@/utils/eventBus.js'
 export default {
   name: 'DoAccept',
   mixins: [indexMixin,keepPages],
-  components: { FilePreview,FileUploadView ,FileDownloadView,BackToTop, activitiAssignee, Calendar},
+  components: { ShippingAttachments, FilePreview,FileUploadView ,FileDownloadView,BackToTop, activitiAssignee, Calendar},
   props: {
     isView: {
       type: Boolean,

@@ -116,9 +116,7 @@
                             <div style="padding: 0 20px;">
                                  <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" style="padding-right: 0.5rem;margin-left: 0px;"  title="发货单附件" :fileList="fileList" businessType="01"/>
                             </div>
-                            <div style="padding: 0 20px;">
-                                 <file-upload-view  style="padding-right: 0.5rem;margin-left: 0px;"  title="装车照片" :fileList="zczp" businessType="01" :required="false" accept=".jpg,.png,.jpeg,.pdf" :maxCount="100"  />
-                            </div>
+                            <ShippingAttachments :model="$data" />
                         </div>
                     </van-list>
                 </van-tab>
@@ -231,6 +229,8 @@
     </div>
 </template>
 <script>
+import ShippingAttachments from "@/components/ShippingAttachments.vue";
+import { shippingMixin, readOriginalFiles } from "@/utils/shippingAttachments";
 import BackToTop from '@/components/BackToTop'
 import { detailBySend } from '@/api/demand/sendGoods'
 import { minioUpload } from '@/api/blcd-base/minio'
@@ -245,8 +245,8 @@ import { Toast } from 'vant';
 Vue.use(Uploader,Toast);
 export default {
     name: 'MyToDoList',
-    mixins: [indexMixin],
-    components: { FilePreview,FileUploadView,FileDownloadView,BackToTop },
+    mixins: [indexMixin, shippingMixin],
+    components: { ShippingAttachments, FilePreview,FileUploadView,FileDownloadView,BackToTop },
     data() {
         return {
             menuActiveIndex: 0,
@@ -294,12 +294,12 @@ export default {
             detailBySend(this.id).then((res) => {
                 if (res.code == 0) {
                     this.params = res.data
-                    this.params.fileByList = JSON.parse(res.data.fileByList)
+                    this.params.fileByList = readOriginalFiles(res.data.fileByList)
                     this.params.arrivalDate = this.formattedCreateDate(res.data.arrivalDate)
                     // this.params.createDate = this.formattedCreateDate(res.data.createDate)
                     this.params.shippingDate = this.formattedCreateDate(res.data.shippingDate)
                     this.params.createDate = this.formatTimestamp(res.data.createDate)
-                    //  let file = JSON.parse(res.data.fileByList)
+                    //  let file = readOriginalFiles(res.data.fileByList)
                     this.fileList.push({fileName:res.data.fileByList.fhd[0].fileName,filePath:res.data.fileByList.fhd[0].filePath})
                     this.materialCirculationDetailsTableDTOS = res.data.materialCirculationDetailsTableDTOS.map((item) => {
                         let fileByListObj = {}
@@ -316,8 +316,7 @@ export default {
                         }
                     })
                     // 装车照片
-                    let { zczp } = res.data.fileByList || {}
-                    this.zczp = zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
+                    this.restoreShippingFiles(res.data.fileByList)
                 }
             })
         },
@@ -378,6 +377,7 @@ export default {
             })
         },
           chooseGoods(id, text) {
+            if (!this.validateShippingFiles()) return;
             if(this.fileList.length == 0){
                 this.$notify({
                     type: 'warning',
@@ -411,7 +411,7 @@ export default {
 
                     //装车照片
                     let zczp = this.zczp.map(item => ({ fileName: item.fileName, filePath: item.filePath }))
-                    let fileByList = JSON.stringify({ fhd, zczp });
+                    let fileByList = JSON.stringify({ ...readOriginalFiles(this.params.fileByList), fhd, ...this.shippingFiles() });
 
                     let params = {
                         // ...this.params,
