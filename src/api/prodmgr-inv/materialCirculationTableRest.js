@@ -1,6 +1,33 @@
 import request from '@/utils/request'
 const VUE_APP_PRODMGR_INV = process.env.VUE_APP_PRODMGR_INV
 
+// 收货各状态数量
+export const getTakeStatusCount = (params) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/takeStatusCount`,
+    method: 'get',
+    params
+  })
+}
+
+// 质检各状态数量
+export const getStoreStatusCount = (params) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/storeStatusCount`,
+    method: 'get',
+    params
+  })
+}
+
+// 需求库存各状态数量
+export const getStockStatusCount = (params) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/stockStatusCount`,
+    method: 'get',
+    params
+  })
+}
+
 // 获取供应商发货批次
 export const listPc = (id) => {
   return request({

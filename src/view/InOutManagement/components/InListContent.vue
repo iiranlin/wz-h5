@@ -14,7 +14,8 @@
       </div>
       <van-tabs sticky v-model="formData.storeStatus" color="#0571ff" background="#ffffff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" @change="tabsChange">
-        <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value">
+        <van-tab v-for="item in statusArr" :title="item.text" :name="item.value" :key="item.value"
+          :badge="['1', '0'].includes(item.value) && statusCount[item.value] > 0 ? statusCount[item.value] : ''">
         </van-tab>
       </van-tabs>
     </van-sticky>
@@ -106,7 +107,7 @@
 </template>
 <script>
 import indexMixin from '@/view/mixins'
-import { listStore } from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { listStore, getStoreStatusCount } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { recall } from '@/api/prodmgr-inv/audit'
 import { downloadStorageList } from '@/api/prodmgr-inv/file'
 import {customDownload} from '@/api/prodmgr-inv/file'
@@ -121,6 +122,7 @@ export default {
   data() {
     return {
       className: '.in-out-management',
+      statusCount: {},
       formData: {
         queryField: '',
         storeStatus: ''
@@ -153,6 +155,14 @@ export default {
   activated() {
   },
   methods: {
+    async getStatusCount() {
+      try {
+        const { data } = await getStoreStatusCount({ queryField: this.formData.queryField });
+        this.statusCount = data || {};
+      } catch (error) {
+        console.error('获取质检状态数量失败', error);
+      }
+    },
     checkStatusText(status) {
       let name = ''
       this.statusArr.forEach(item => {
@@ -186,6 +196,7 @@ export default {
       this.finished = false
       this.listQuery.pageNum = 1
       this.listStore()
+      this.getStatusCount()
     },
     onLoad() {
       this.listStore()

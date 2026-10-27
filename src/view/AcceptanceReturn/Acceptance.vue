@@ -10,7 +10,8 @@
       </div>
       <van-tabs sticky v-model="menuActiveIndex" color="#0571ff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" @change="tabsChange">
-        <van-tab v-for="item in tabList" :title="item.title" :name="item.status" :key="item.status">
+        <van-tab v-for="item in tabList" :title="item.title" :name="item.status" :key="item.status"
+          :badge="['1', '0'].includes(item.status) && statusCount[item.status] > 0 ? statusCount[item.status] : ''">
         </van-tab>
       </van-tabs>
     </van-sticky>
@@ -119,7 +120,7 @@ import indexMixin from '@/view/mixins'
 import BackToTop from '@/components/BackToTop'
 import activitiAssignee from '@/components/activitiAssignee'
 import {listTake} from '@/api/prodmgr-inv/AcceptanceReturn'
-import { materialCirculationTableRestSubmit } from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { materialCirculationTableRestSubmit, getTakeStatusCount } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { recall } from '@/api/prodmgr-inv/audit'
 import { downloadHandoverAcceptanceForm } from '@/api/prodmgr-inv/file'
 import {customDownload} from '@/api/prodmgr-inv/file'
@@ -133,6 +134,7 @@ export default {
       className: '.in-out-management',
 
       menuActiveIndex: '',
+      statusCount: {},
 
       formData: {
         keywords: ''
@@ -220,6 +222,14 @@ export default {
     this.$store.commit('removeThisPage', 'MyToDoDetail')
   },
   methods: {
+    async getStatusCount() {
+      try {
+        const { data } = await getTakeStatusCount({ queryField: this.formData.keywords });
+        this.statusCount = data || {};
+      } catch (error) {
+        console.error('获取收货状态数量失败', error);
+      }
+    },
     //查看流程点击
     handleProcessClick(item) {
       this.$router.push({ 
@@ -268,6 +278,7 @@ export default {
       this.allRefreshLoading = true
       this.allFinished = true
       this.getList()
+      this.getStatusCount()
     },
     //获取全部订单
     loadList() {
@@ -311,13 +322,13 @@ export default {
 
     //搜索点击
     handeSearchClick() {
-      this.allListQuery.pageNum = 1
-      this.getList()
+      this.allRefresh()
     },
     //全部列表刷新
     allRefresh() {
       this.allListQuery.pageNum = 1
       this.getList()
+      this.getStatusCount()
     },
     onLoad() {
       this.allListQuery.pageNum ++
@@ -370,6 +381,7 @@ export default {
       }).then(() => {
         this.$toast("撤回成功")
         this.getList()
+        this.getStatusCount()
       })
     },
     // 下载验收单

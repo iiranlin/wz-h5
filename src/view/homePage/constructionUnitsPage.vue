@@ -22,6 +22,7 @@
           <div class="twoLines" @click="handleRouter('/Acceptance')">
             <img :src="Receiving">
             收货管理
+            <van-badge v-if="takeStoreCount.unTakeCount > 0" class="managementBadge" :content="takeStoreCount.unTakeCount" />
           </div>
           <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/Return')">
             <img :src="returns">
@@ -35,6 +36,7 @@
           <div class="twoLines" @click="handleRouter('/InListContent')">
             <img :src="warehousing">
             质检管理
+            <van-badge v-if="takeStoreCount.unStoreCount > 0" class="managementBadge" :content="takeStoreCount.unStoreCount" />
           </div>
           <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/RefundListContent')">
             <img :src="CreditOrder">
@@ -48,6 +50,7 @@
           <div class="twoLines"  @click="handleRouter('/InventoryListContent')">
             <img :src="DemandInventory">
             出库管理
+            <van-badge v-if="takeStoreCount.stockCount > 0" class="managementBadge" :content="takeStoreCount.stockCount" />
           </div>
           <div class="twoLines" style="margin-left: 10px;" @click="handleRouter('/OutListContent')">
             <img :src="StockOut">
@@ -101,6 +104,7 @@ const BuyerPact = require('@/assets/img/BuyerPact.png');
 
 import VideoArea from './components/VideoArea.vue';
 import CheckModule from './components/checkModule.vue';
+import { getTakeStoreCount } from './api/homePage';
 export default {
   name: 'constructionUnitsPage',
   // mixins: [keepPages],
@@ -113,6 +117,11 @@ export default {
   data() {
     return {
       refreshLoading: false,
+      takeStoreCount: {
+        unTakeCount: 0,
+        unStoreCount: 0,
+        stockCount: 0
+      },
       Receiving,
       returns,
       warehousing,
@@ -132,10 +141,22 @@ export default {
   // },
 
   mounted() {
-
+    this.handlerTakeStoreCount();
   },
 
   methods: {
+    async handlerTakeStoreCount() {
+      try {
+        const { data } = await getTakeStoreCount();
+        this.takeStoreCount = {
+          unTakeCount: data?.unTakeCount || 0,
+          unStoreCount: data?.unStoreCount || 0,
+          stockCount: data?.stockCount || 0
+        };
+      } catch (error) {
+        console.error('获取收货、质检、出库数量失败', error);
+      }
+    },
     addClick() {
       this.$store.dispatch('public/setMateriaList', [])
       this.$store.dispatch('public/setInterfaceMateriaList', [])
@@ -155,6 +176,7 @@ export default {
     refreshCheck() {
       this.refreshLoading = true
       this.$refs.checkModule?.handlerTodoCount()
+      this.handlerTakeStoreCount()
     },
   },
 };
@@ -253,6 +275,7 @@ export default {
 }
 
 .twoLines {
+  position: relative;
   width: 50%;
   height: 70px;
   margin: 0 auto;
@@ -267,6 +290,13 @@ export default {
     height: 40px;
     vertical-align: middle;
   }
+}
+
+.managementBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  pointer-events: none;
 }
 
 .statisticsEntry {

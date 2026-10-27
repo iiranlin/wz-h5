@@ -10,7 +10,8 @@
       </div>
       <van-tabs sticky v-model="formData.planCompleteStatus" color="#0571ff" title-active-color="#0571ff"
         title-inactive-color="#2e2e2e" @change="tabsChange">
-        <van-tab v-for="item in option2" :title="item.text" :name="item.value" :key="item.value">
+        <van-tab v-for="item in option2" :title="item.text" :name="item.value" :key="item.value"
+          :badge="item.value === '2' && stockCount > 0 ? stockCount : ''">
         </van-tab>
       </van-tabs>
     </van-sticky>
@@ -81,6 +82,7 @@
 </template>
 <script>
 import {materialDemandPlanRestListStock} from '@/api/prodmgr-inv/materialDemandPlanRest'
+import { getStockStatusCount } from '@/api/prodmgr-inv/materialCirculationTableRest'
 
 export default {
   name: 'InventoryListContent',
@@ -92,6 +94,7 @@ export default {
         planCompleteStatus: '',
       },
       dataList:[],
+      stockCount: 0,
       value1: 0,
       option1: [
         { text: '全部', value: '', color: '' },
@@ -128,6 +131,14 @@ export default {
   activated() {
   },
   methods: {
+    async getStatusCount() {
+      try {
+        const { data } = await getStockStatusCount({ queryField: this.formData.queryField });
+        this.stockCount = data?.stockCount || 0;
+      } catch (error) {
+        console.error('获取库存状态数量失败', error);
+      }
+    },
     //全部列表刷新
     allRefresh() {
       this.allRefreshLoading = true
@@ -135,6 +146,7 @@ export default {
       this.allFinished = false
       this.allListQuery.pageNum = 1;
       this.getAllList()
+      this.getStatusCount()
     },
     getAllList() {
       let toast = this.$toast.loading({
