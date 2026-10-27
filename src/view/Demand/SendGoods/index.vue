@@ -136,7 +136,7 @@
         class="outbound-field-uploader" />
     </div>
 
-    <ShippingAttachments :model="$data" />
+    <ShippingAttachments :model="$data" show-loading-photo-hint />
 
     <div class="detail-floor-content" v-if="status !== '2'">
       <div>

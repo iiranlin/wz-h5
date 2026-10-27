@@ -33,7 +33,7 @@
           </li>
           <li>
             <span>累计发货数量(不含本次)：</span>
-            <span class="li-span-click">{{ item.shippedTotal }} {{ item.unit }}</span>
+            <span class="li-span-click">{{ item.shippedTotal || 0 }} {{ item.unit }}</span>
           </li>
           <li>
             <span>本次发货数量：</span>
