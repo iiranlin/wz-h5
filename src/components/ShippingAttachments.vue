@@ -2,7 +2,7 @@
   <div>
     <div v-for="field in fields" :key="field.key" class="shipping-attachment">
       <div class="shipping-title"><span v-if="!readonly && !field.optional" class="required">*</span>{{ field.label }}</div>
-      <p v-if="showLoadingPhotoHint && !readonly && field.key.startsWith('zczp')" class="shipping-hint">必填项，如无可上传说明材料</p>
+      <p v-if="showLoadingPhotoHint && !readonly && field.key.startsWith('zczp')" class="shipping-hint"><span class="li-span-red">*</span>必填项，如无可上传说明材料</p>
       <file-download-view v-if="readonly" :fileList="files[field.key] || []" />
       <component v-else :is="field.key.startsWith('zczp') ? 'FileUploadViewType' : 'FileUploadView'"
         :class="{ 'loading-photo-uploader': field.key.startsWith('zczp') }"
@@ -28,7 +28,8 @@ export default {
 <style scoped>
 .shipping-attachment { background: #fff; border-radius: 7px; margin: 8px 6px; padding: 10px; min-width: 0; box-sizing: border-box; }
 .shipping-title { font-size: 13px; margin-bottom: 10px; color: #151b3e; }
-.shipping-hint { margin: 0 0 10px; max-width: 100%; font-size: 12px; line-height: 18px; color: #ee0a24; white-space: normal; overflow-wrap: break-word; }
+.shipping-hint { margin: 22px 0 13px; max-width: 100%; font-size: 11px; line-height: 18px; color: #4a4a4a; text-align: center; white-space: normal; overflow-wrap: break-word; }
+.shipping-hint span { vertical-align: middle; }
 .loading-photo-uploader ::v-deep .file-info { width: auto !important; min-width: 0; }
 .loading-photo-uploader ::v-deep .file-info > span { min-width: 0; overflow-wrap: anywhere; }
 .loading-photo-uploader ::v-deep .file-info > img { flex-shrink: 0; }
