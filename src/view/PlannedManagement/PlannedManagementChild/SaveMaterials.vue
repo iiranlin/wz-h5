@@ -387,6 +387,11 @@ export default {
         this.$toast(message)
         sessionStorage.removeItem('xqObj')
         this.$router.push({ name: 'PlannedManagementList' })
+      }).catch(error => {
+        if (error && error.isInitialAcceptanceBlocked) {
+          return
+        }
+        throw error
       })
     },
     returnClick() {

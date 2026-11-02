@@ -1,4 +1,5 @@
 import request,{ download } from '@/utils/request'
+import { Dialog } from 'vant'
 const VUE_APP_PRODMGR_INV = process.env.VUE_APP_PRODMGR_INV
 
 //需求计划列表
@@ -37,7 +38,24 @@ export const materialDemandPlanRestSaveModify = (data, type) => {
   return request({
     url: `${VUE_APP_PRODMGR_INV}/materialDemandPlanRest/${type}`,
     method: 'post',
-    data
+    data,
+    passThroughCodes: type === 'save' ? [99] : []
+  }).then(res => {
+    if (type === 'save' && Number(res.code) === 99) {
+      const message = '您所在标段存在较多未完成初验收货的物资，请先处理完成后再提交新的计划！'
+      Dialog.alert({
+        title: '提示',
+        message,
+        theme: 'round-button',
+        confirmButtonText: '关闭',
+        showCancelButton: false,
+        closeOnClickOverlay: false
+      }).catch(() => {})
+      const error = new Error(message)
+      error.isInitialAcceptanceBlocked = true
+      return Promise.reject(error)
+    }
+    return res
   })
 }
 

@@ -161,6 +161,8 @@ service.interceptors.response.use(
         }
       });
       return Promise.reject(res.message);
+    } else if ((response.config.passThroughCodes || []).some(code => Number(code) === Number(res.code))) {
+      return res;
     } else if (res.code !== 0) {
       Dialog.alert({
         title: "提示",
