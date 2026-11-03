@@ -225,6 +225,17 @@
         <!-- <div class="default-button-container" v-if="listObj.nameType == 'handle'">
           <van-button class="button-info button-info-container" round type="info" @click.stop="handleClick(listObj)">处理</van-button>
         </div> -->
+        <van-popup v-model="urgentPopupShow" round class="urgent-popup" :close-on-click-overlay="false">
+            <div class="urgent-popup-title">提示</div>
+            <div class="urgent-popup-message">
+                物资计划使用时间距当前较近，请确定是否审核通过。如需修改，请点击“修改后同意”，经办人可进行修改后重新提交。
+            </div>
+            <div class="urgent-popup-actions">
+                <van-button plain type="info" round @click="confirmUrgent('editAdopt')">修改后同意</van-button>
+                <van-button type="info" round @click="confirmUrgent('adopt')">审核通过</van-button>
+            </div>
+            <van-button class="urgent-popup-back" block round @click="urgentPopupShow = false">返回</van-button>
+        </van-popup>
         <!--选择审批人弹框-->
         <van-popup v-model="assigneePopupShow" round :close-on-click-overlay="false">
             <div class="assignee-popup">
@@ -269,6 +280,7 @@ export default {
             detailList:[],
             //是否显示选择审批人弹框
             assigneePopupShow:false,
+            urgentPopupShow: false,
             //审批人数据
             assigneeList:[],
             //审核参数
@@ -395,6 +407,21 @@ export default {
         },
         //同意
         handleAdopt(){
+            if (String(this.listObj.urgentFlag) === '1') {
+                this.urgentPopupShow = true;
+                return;
+            }
+            this.openAdopt();
+        },
+        confirmUrgent(type){
+            this.urgentPopupShow = false;
+            if (type === 'editAdopt') {
+                this.handleEditAdopt();
+            } else {
+                this.openAdopt();
+            }
+        },
+        openAdopt(){
             this.$router.push({
                 name: "ExamineOpinionEdit",
                 params: {
@@ -582,6 +609,49 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.urgent-popup {
+    width: 320px;
+    max-width: calc(100vw - 40px);
+    box-sizing: border-box;
+    padding: 20px;
+    background: #ffffff;
+
+    .urgent-popup-title {
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        color: #1c1c1c;
+    }
+
+    .urgent-popup-message {
+        margin: 16px 0 20px;
+        font-size: 14px;
+        line-height: 1.7;
+        color: #73768b;
+    }
+
+    .urgent-popup-actions {
+        display: flex;
+
+        .van-button {
+            flex: 1;
+            min-width: 0;
+            height: 40px;
+            padding: 0 8px;
+            font-size: 14px;
+
+            & + .van-button {
+                margin-left: 12px;
+            }
+        }
+    }
+
+    .urgent-popup-back {
+        height: 40px;
+        margin-top: 12px;
+        font-size: 14px;
+    }
+}
 .box-container {
     padding: 0px;
 }
