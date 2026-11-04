@@ -63,6 +63,7 @@
                             </li>
                         </ul>
                         <div class="list-ul-button">
+                            <workflow-rollback :task="item" @success="onRefresh" />
                             <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
                             <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">审核</van-button>
                         </div>
@@ -80,6 +81,7 @@
     </div>  
 </template>
 <script>
+import WorkflowRollback from '@/components/WorkflowRollback.vue'
 import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfTodoList } from '@/api/myToDoList'
@@ -89,7 +91,7 @@ import { FLOW_ROUTE } from '@/utils/constant'
 export default {
     name:'WaitExamineList',
     mixins: [keepPages,indexMixin],
-    components: {BackToTop},
+    components: { WorkflowRollback,BackToTop},
     dicts: ['flowBusinessType'],
     beforeRouteLeave (to, from, next) {
       this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})

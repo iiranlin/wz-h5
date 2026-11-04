@@ -29,7 +29,7 @@
                             <span class="font-weight" style="color:#134daa;">{{item.businessCode}}</span>
                             <div class="li-title-status">
                                 <img :src="checkAuditStatus(item.auditStatus)"/>
-                                <span>{{ auditStatusMap[item.auditStatus] || '--' }}</span>
+                                <span>{{ isRollbackStatus(item.auditStatus) ? '退回上一步' : (auditStatusMap[item.auditStatus] || '--') }}</span>
                             </div>
                         </div>
                         <ul class="list-ul">
@@ -83,6 +83,7 @@
     </div>  
 </template>
 <script>
+import { isRollbackStatus } from '@/utils/workflow'
 import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfTodoList } from '@/api/myToDoList'
@@ -143,6 +144,7 @@ export default {
       this.scrollPositionInit(this.className, this.finished)
     },
     methods: {
+        isRollbackStatus,
         //查看流程点击
         handleProcessClick({ businessId, businessType, takeStatus }) {
             this.$router.push({ 
@@ -184,6 +186,7 @@ export default {
         },
          //已审核状态图标判断
         checkAuditStatus(auditStatus){
+            if (isRollbackStatus(auditStatus)) return '/static/newIcon_Returned.png'
             if(auditStatus == '1'){
                 return '/static/newIcon_Pending.png'
             }else if(auditStatus == '2'){

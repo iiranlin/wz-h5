@@ -257,8 +257,9 @@
         </p>
       </div>
     </div>
-    <div class="default-button-container default-button-container-box" v-if="from === 'WaitExamineList'">
+    <div class="default-button-container default-button-container-box" v-if="(from === 'WaitExamineList') && listObj.taskId">
         <div class="default-button-container-div">
+          <workflow-rollback action :task="listObj" @success="handleRollbackSuccess" />
           <p @click="handleReject()"><img src="@/assets/img/Icon-detailInfo.png" alt=""><span>驳回</span></p>
         </div>
         <van-button class="button-info button-info-container" block type="info" round @click="handleAdopt()">通过</van-button>
@@ -300,6 +301,7 @@
   </div>
 </template>
 <script>
+import WorkflowRollback from '@/components/WorkflowRollback.vue'
 import ShippingAttachments from "@/components/ShippingAttachments.vue";
 import {parseTime} from '@/utils'
 import editedStatus from '@/assets/img/editedStatus.png'
@@ -321,7 +323,7 @@ import eventBus from '@/utils/eventBus.js'
 export default {
   name: 'DoAccept',
   mixins: [indexMixin,keepPages],
-  components: { ShippingAttachments, FilePreview,FileUploadView ,FileDownloadView,BackToTop, activitiAssignee, Calendar},
+  components: { WorkflowRollback, ShippingAttachments, FilePreview,FileUploadView ,FileDownloadView,BackToTop, activitiAssignee, Calendar},
   props: {
     isView: {
       type: Boolean,
@@ -432,6 +434,12 @@ export default {
     }
   },
   methods: {
+    handleRollbackSuccess() {
+      this.listObj.taskId = ''
+      this.$store.commit('removeThisPage', this.$options.name)
+      this.$store.commit('removeThisPage', this.$route.name)
+      this.$router.back()
+    },
     handlerShowCalendar(elementName) {
       this.$refs[elementName]?.handleCalendarShow(1);
     },
@@ -1254,7 +1262,11 @@ export default {
   justify-content: space-between;
   .default-button-container-div{
     display: flex;
+    flex: 1;
+    min-width: 0;
     p{
+      flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1270,7 +1282,9 @@ export default {
     }
   }
   .button-info-container{
-    width: 169px !important;
+    width: 30% !important;
+    min-width: 80px !important;
+    flex-shrink: 0;
     margin-right: 12px;
   }
 }

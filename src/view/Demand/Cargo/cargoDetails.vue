@@ -189,8 +189,9 @@
                   @click="handleDoAccept(params)">收货
       </van-button>
     </div>
-  <div class="default-button-container default-button-container-box" v-if="from === 'WaitExamineList' && params.status == 8">
+  <div class="default-button-container default-button-container-box" v-if="(from === 'WaitExamineList' && params.status == 8) && listObj.taskId">
         <div class="default-button-container-div">
+          <workflow-rollback action :task="listObj" @success="handleRollbackSuccess" />
           <p @click="handleReject()"><img src="@/assets/img/Icon-detailInfo.png" alt=""><span>驳回</span></p>
         </div>
         <van-button class="button-info button-info-container" block type="info" round @click="handleAdopt()">通过</van-button>
@@ -214,6 +215,7 @@
   </div>
 </template>
 <script>
+import WorkflowRollback from '@/components/WorkflowRollback.vue'
 import ShippingAttachments from "@/components/ShippingAttachments.vue";
 import keepPages from '@/view/mixins/keepPages'
 import BackToTop from '@/components/BackToTop'
@@ -233,7 +235,7 @@ Vue.use(Toast);
 export default {
   name: 'cargoDetails',
   mixins: [keepPages, indexMixin],
-  components: { ShippingAttachments,FilePreview, FileDownloadView, BackToTop,MaterialDetails},
+  components: { WorkflowRollback, ShippingAttachments,FilePreview, FileDownloadView, BackToTop,MaterialDetails},
     filters: {
     formatDate(value) {
       if(value){
@@ -371,6 +373,12 @@ export default {
     this.cargoDetails();
   },
   methods: {
+    handleRollbackSuccess() {
+      this.listObj.taskId = ''
+      this.$store.commit('removeThisPage', this.$options.name)
+      this.$store.commit('removeThisPage', this.$route.name)
+      this.$router.back()
+    },
     openInfo(){
       this.$router.push({ path: '/cargoInfo', query: { id:this.params.shipmentBatchNumber } })
 
@@ -922,7 +930,11 @@ export default {
   justify-content: space-between;
   .default-button-container-div{
     display: flex;
+    flex: 1;
+    min-width: 0;
     p{
+      flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -938,7 +950,9 @@ export default {
     }
   }
   .button-info-container{
-    width: 169px !important;
+    width: 30% !important;
+    min-width: 80px !important;
+    flex-shrink: 0;
     margin-right: 12px;
   }
 }

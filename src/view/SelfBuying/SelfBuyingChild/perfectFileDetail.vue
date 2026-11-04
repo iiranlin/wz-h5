@@ -110,19 +110,24 @@
             <img v-if="historyData.status == '2' || historyData.actId == 'root'" src="@/assets/img/Icon-state-yes.png"
               alt="">
             <img v-if="historyData.status == '3'" src="@/assets/img/Icon-state-no.png" alt="">
-            <img v-if="historyData.status == '6'" src="@/assets/img/Icon-state-goback.png" alt="">
+            <img v-if="historyData.status == '6' || isRollbackStatus(historyData.status)" src="@/assets/img/Icon-state-goback.png" alt="">
             <img v-if="historyData.status == '' && historyData.actId != 'root'"
               src="@/assets/img/Icon-state-waiting.png" alt="">
             <span>{{ historyData.assigneeName }}</span>
             <span v-if="historyData.status == '2'" style="color:rgba(19, 77, 170, 1);font-weight: 600">通过</span>
             <span v-if="historyData.status == '3'" style="color:rgba(244, 160, 47, 1);font-weight: 600">驳回</span>
             <span v-if="historyData.status == '6'" style="color:rgba(19, 77, 170, 1);font-weight: 600">撤销审核</span>
+            <span v-if="isRollbackStatus(historyData.status)" style="color:rgba(244, 160, 47, 1);font-weight: 600">退回上一步</span>
             <span v-if="historyData.status == '' && historyData.actId == 'root'"
               style="color:rgba(19, 77, 170, 1);font-weight: 600">发起</span>
             <span v-if="historyData.status == '' && historyData.actId != 'root'"
               style="color:rgba(21, 27, 62, 0.5);font-weight: 400">未审批</span>
           </p>
           <span>{{ historyData.endTime ? historyData.endTime.substr(0, 10) : "" }}</span>
+        </li>
+        <li v-if="isRollbackStatus(historyData.status) && historyData.message">
+          <span>退回原因：</span>
+          <span>{{ formatWorkflowMessage(historyData) }}</span>
         </li>
       </ul>
     </div>
@@ -151,8 +156,9 @@
     </div>
 
     <div class="default-button-container default-button-container-box"
-      v-if="from === 'WaitExamineList' && formData.status == 2">
+      v-if="(from === 'WaitExamineList' && formData.status == 2) && listObj.taskId">
       <div class="default-button-container-div">
+        <workflow-rollback action :task="listObj" @success="handleRollbackSuccess" />
         <p @click="handleReject()"><img src="@/assets/img/Icon-detailInfo.png" alt=""><span>驳回</span></p>
       </div>
       <van-button class="button-info button-info-container" block type="info" round
@@ -174,6 +180,8 @@
 </template>
 
 <script>
+import { isRollbackStatus, formatWorkflowMessage } from '@/utils/workflow'
+import WorkflowRollback from '@/components/WorkflowRollback.vue'
 import keepPages from '@/view/mixins/keepPages'
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import { mergeByActId } from '@/utils/index.js'
@@ -192,6 +200,7 @@ export default {
   mixins: [indexMixin, keepPages],
 
   components: {
+    WorkflowRollback,
     FileDownloadView
   },
 
@@ -282,6 +291,14 @@ export default {
   },
 
   methods: {
+    isRollbackStatus,
+    formatWorkflowMessage,
+    handleRollbackSuccess() {
+      this.listObj.taskId = ''
+      this.$store.commit('removeThisPage', this.$options.name)
+      this.$store.commit('removeThisPage', this.$route.name)
+      this.$router.back()
+    },
     // 获取详情
     handleDetail() {
       materialPurchaseFiledetail(this.rQueryId).then(({ data }) => {
@@ -843,8 +860,12 @@ export default {
 
   .default-button-container-div {
     display: flex;
+    flex: 1;
+    min-width: 0;
 
     p {
+      flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -863,7 +884,9 @@ export default {
   }
 
   .button-info-container {
-    width: 169px !important;
+    width: 30% !important;
+    min-width: 80px !important;
+    flex-shrink: 0;
     margin-right: 12px;
   }
 }

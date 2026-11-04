@@ -28,6 +28,7 @@ import Vue from 'vue';
 Vue.use(Toast);
 
 import { getTodoCount } from '../api/homePage.js'
+import eventBus from '@/utils/eventBus'
 export default {
   name: 'CheckModule',
 
@@ -39,6 +40,10 @@ export default {
 
   mounted() {
     this.handlerTodoCount();
+    eventBus.$on('workflowRollbackSuccess', this.handlerTodoCount);
+  },
+  beforeDestroy() {
+    eventBus.$off('workflowRollbackSuccess', this.handlerTodoCount);
   },
 
   methods: {
@@ -60,6 +65,7 @@ export default {
 
           this.checkInfo = data;
         }
+      }).catch(() => {
       }).finally(() => {
         Toast.clear();
       });

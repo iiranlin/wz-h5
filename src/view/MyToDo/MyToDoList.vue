@@ -71,6 +71,7 @@
                                     </li>
                                 </ul>
                                 <div class="list-ul-button">
+                                    <workflow-rollback :task="item" @success="waitRefresh" />
                                     <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
                                     <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">审核</van-button>
                                 </div>
@@ -165,7 +166,8 @@
                                     <span class="font-weight" style="color:#134daa;">{{item.businessCode}}</span>
                                     <div class="li-title-status">
                                         <img :src="checkAuditStatus(item.auditStatus)"/>
-                                        <span>{{item.auditStatus | orderTypeFilter(dict.flowTaskStatus)}}</span>
+                                        <span v-if="isRollbackStatus(item.auditStatus)">退回上一步</span>
+                                        <span v-else>{{item.auditStatus | orderTypeFilter(dict.flowTaskStatus)}}</span>
                                     </div>
                                 </div>
                                 <ul class="list-ul">
@@ -231,6 +233,8 @@
     </div>  
 </template>
 <script>
+import { isRollbackStatus } from '@/utils/workflow'
+import WorkflowRollback from '@/components/WorkflowRollback.vue'
 import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfTodoList,wfHandleList } from '@/api/myToDoList'
@@ -239,7 +243,7 @@ import indexMixin from '@/view/mixins'
 export default {
     name:'MyToDoList',
     mixins: [keepPages, indexMixin],
-    components: {BackToTop},
+    components: { WorkflowRollback,BackToTop},
     dicts: ['flowBusinessType','flowTaskStatus'],
     beforeRouteLeave (to, from, next) {
         from.meta.myToDoNavIndex = this.menuActiveIndex;
@@ -327,6 +331,7 @@ export default {
       }
     },
     methods: {
+        isRollbackStatus,
         changeTab(index) {
             this.menuActiveIndex = index;
             if(index == '0'){
@@ -453,6 +458,7 @@ export default {
         },
         //已审核状态图标判断
         checkAuditStatus(auditStatus){
+            if (isRollbackStatus(auditStatus)) return '/static/newIcon_Returned.png'
             if(auditStatus == '2'){
                 return '/static/icon-success.png'
             }else if(auditStatus == '3'){

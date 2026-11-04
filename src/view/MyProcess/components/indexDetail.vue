@@ -18,8 +18,8 @@
               <div class="list-middle">
                 <p v-if="item.status == '2' || item.actId=='root'"><img src="@/assets/img/Icon-state-yes.png" alt=""></p>
                 <p v-if="item.status == '3'"><img src="@/assets/img/Icon-state-no.png" alt=""></p>
-                <p v-if="item.status == '6'"><img src="@/assets/img/Icon-state-goback.png" alt=""></p>
-                <p v-if="item.status == '' && item.actId!='root'"><img src="@/assets/img/Icon-state-waiting.png" alt=""></p></p>
+                <p v-if="item.status == '6' || isRollbackStatus(item.status)"><img src="@/assets/img/Icon-state-goback.png" alt=""></p>
+                <p v-if="item.status == '' && item.actId!='root'"><img src="@/assets/img/Icon-state-waiting.png" alt=""></p>
                 <div class="middle-border"></div>
               </div>
               <div class="list-right">
@@ -28,11 +28,12 @@
                   <span v-if="item.status == '2'" style="color:rgba(19, 77, 170, 1);font-weight: 600">通过</span>
                   <span v-if="item.status == '3'"  style="color:rgba(244, 160, 47, 1);font-weight: 600">驳回</span>
                   <span v-if="item.status == '6'" style="color:rgba(19, 77, 170, 1);font-weight: 600">撤销审核</span>
+                  <span v-if="isRollbackStatus(item.status)" style="color:rgba(244, 160, 47, 1);font-weight: 600">退回上一步</span>
                   <span v-if="item.status == '' && item.actId=='root'"  style="color:rgba(19, 77, 170, 1);font-weight: 600">发起</span>
                   <span v-if="item.status == '' && item.actId!='root'"  style="color:rgba(21, 27, 62, 0.5);font-weight: 400">未审批</span>
                 </div>
                 <p>单位：{{item.orgName}}</p>
-                <p class="right-message" v-if="item.message">意见：{{item.message}}</p>
+                <p class="right-message" v-if="item.message">{{ isRollbackStatus(item.status) ? '退回原因' : '意见' }}：{{ formatWorkflowMessage(item) }}</p>
               </div>
           </div>
         <!-- </van-list> -->
@@ -40,6 +41,7 @@
     </div>
 </template>
 <script>
+import { isRollbackStatus, formatWorkflowMessage } from '@/utils/workflow'
 import { wfHistoryList } from '@/api/myToDoList'
 import { mergeByActId } from '@/utils/index.js'
 
@@ -60,6 +62,8 @@ export default {
         this.getList();
     },
     methods: {
+        isRollbackStatus,
+        formatWorkflowMessage,
         //获取列表数据
         getList(){
             let toast = this.$toast.loading({

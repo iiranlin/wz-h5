@@ -88,7 +88,7 @@
             <img class="detail-ul-bottom-text-Arrow" src="/static/icon-reject.png" v-else /> -->
             <img v-if="historyData.status == '2' || historyData.actId=='root'" src="@/assets/img/Icon-state-yes.png" alt="">
             <img v-if="historyData.status == '3'" src="@/assets/img/Icon-state-no.png" alt="">
-            <img v-if="historyData.status == '6'" src="@/assets/img/Icon-state-goback.png" alt="">
+            <img v-if="historyData.status == '6' || isRollbackStatus(historyData.status)" src="@/assets/img/Icon-state-goback.png" alt="">
             <img v-if="historyData.status == '' && historyData.actId!='root'" src="@/assets/img/Icon-state-waiting.png" alt="">
             <span>{{ historyData.assigneeName }}</span>
             <!-- <span :class="historyData.status == '2' ? 'li-span-click' : 'li-span-orange'">{{ historyData.status ==
@@ -96,10 +96,15 @@
             <span v-if="historyData.status == '2'" style="color:rgba(19, 77, 170, 1);font-weight: 600">通过</span>
             <span v-if="historyData.status == '3'"  style="color:rgba(244, 160, 47, 1);font-weight: 600">驳回</span>
             <span v-if="historyData.status == '6'" style="color:rgba(19, 77, 170, 1);font-weight: 600">撤销审核</span>
+            <span v-if="isRollbackStatus(historyData.status)" style="color:rgba(244, 160, 47, 1);font-weight: 600">退回上一步</span>
             <span v-if="historyData.status == '' && historyData.actId=='root'"  style="color:rgba(19, 77, 170, 1);font-weight: 600">发起</span>
             <span v-if="historyData.status == '' && historyData.actId!='root'"  style="color:rgba(21, 27, 62, 0.5);font-weight: 400">未审批</span>
           </p>
           <span>{{ historyData.endTime?historyData.endTime.substr(0, 10):'' }}</span>
+        </li>
+        <li v-if="isRollbackStatus(historyData.status) && historyData.message">
+          <span>退回原因：</span>
+          <span>{{ formatWorkflowMessage(historyData) }}</span>
         </li>
       </ul>
     </div>
@@ -136,6 +141,7 @@
   </div>
 </template>
 <script>
+import { isRollbackStatus, formatWorkflowMessage } from '@/utils/workflow'
 import BackToTop from '@/components/BackToTop'
 import MaterialDetails from './components/MaterialDetails'
 import LogRecording from './components/LogRecording'
@@ -219,6 +225,8 @@ export default {
     }
   },
   methods: {
+    isRollbackStatus,
+    formatWorkflowMessage,
     async getBatch(id) {
       const res = await listPc(id)
       this.dataPc = res.data
