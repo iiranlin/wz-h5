@@ -1,5 +1,5 @@
 <template>
-  <div class="workflow-rollback" :class="{ 'workflow-rollback-action': action }" @click.stop>
+  <div v-if="!action || canShowRollback" class="workflow-rollback" :class="{ 'workflow-rollback-action': action }" @click.stop>
     <button v-if="action" class="rollback-trigger" type="button" :disabled="!task.taskId || submitting || completed" @click="open">
       <van-icon name="revoke" size="24" />
       <span>退回上一步</span>
@@ -40,6 +40,7 @@ export default {
   },
   data() {
     return {
+      canShowRollback: false,
       visible: false,
       submitting: false,
       reason: '',
@@ -52,10 +53,20 @@ export default {
       return this.completedTaskId === this.task.taskId
     }
   },
+  watch: {
+    'task.taskId': { immediate: true, handler: 'readRollbackFlag' }
+  },
+  activated() {
+    this.readRollbackFlag()
+  },
   deactivated() {
     this.visible = false
   },
   methods: {
+    readRollbackFlag() {
+      const { taskId } = this.task
+      this.canShowRollback = this.action && !!taskId && sessionStorage.getItem(`prevIsStartNodeFlag_${taskId}`) === '0'
+    },
     open() {
       if (this.submitting || this.completed || !this.task.taskId) return
       this.currentTask = { ...this.task }

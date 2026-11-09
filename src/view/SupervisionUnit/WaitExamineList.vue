@@ -63,7 +63,6 @@
                             </li>
                         </ul>
                         <div class="list-ul-button">
-                            <workflow-rollback :task="item" @success="onRefresh" />
                             <van-button class="button-info" plain round type="info"  @click.stop="handleProcessClick(item)">查看流程</van-button>
                             <van-button class="button-info" round type="info" @click.stop="handleExamineClick(item)">审核</van-button>
                         </div>
@@ -81,7 +80,6 @@
     </div>  
 </template>
 <script>
-import WorkflowRollback from '@/components/WorkflowRollback.vue'
 import BackToTop from '@/components/BackToTop'
 import keepPages from '@/view/mixins/keepPages'
 import { wfTodoList } from '@/api/myToDoList'
@@ -91,7 +89,7 @@ import { FLOW_ROUTE } from '@/utils/constant'
 export default {
     name:'WaitExamineList',
     mixins: [keepPages,indexMixin],
-    components: { WorkflowRollback,BackToTop},
+    components: { BackToTop },
     dicts: ['flowBusinessType'],
     beforeRouteLeave (to, from, next) {
       this.$store.dispatch('public/setScrollPosition', {[from.name]: document.querySelector(this.className).scrollTop})
@@ -171,8 +169,10 @@ export default {
         },
         //列表条目点击
         handleItemClick(item){
-            const { businessType, businessId, businessCode, taskId, procInstId } = item
+            const { prevIsStartNodeFlag, ...task } = item
+            const { businessType, businessId, businessCode, taskId, procInstId } = task
             const auditObj = { businessType, businessId, businessCode, taskId, procInstId }
+            if (taskId) sessionStorage.setItem(`prevIsStartNodeFlag_${taskId}`, prevIsStartNodeFlag ?? 1)
 
             this.$store.dispatch('public/setGoodsReceiptInfo', {});
           
@@ -192,7 +192,7 @@ export default {
                 this.$router.push({
                     name: "DemandPlanningExamine",
                     params: { 
-                        obj: JSON.stringify(item),
+                        obj: JSON.stringify(task),
                         type: '0',
                     },
                 });

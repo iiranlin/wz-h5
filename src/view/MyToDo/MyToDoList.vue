@@ -467,10 +467,12 @@ export default {
         },
         //待审核列表条目点击
         handleWaitItemClick(item){
+            const { prevIsStartNodeFlag, ...task } = item
+            if (task.taskId) sessionStorage.setItem(`prevIsStartNodeFlag_${task.taskId}`, prevIsStartNodeFlag ?? 1)
             this.$router.push({
                 name: "DemandPlanningExamine",
                 params: { 
-                    obj: JSON.stringify(item),
+                    obj: JSON.stringify(task),
                     type: '0',
                 },
             });
@@ -478,13 +480,7 @@ export default {
         //待处理列表条目点击
         handleWaitHandleItemClick(item){
             if (item.businessType == 'YLXQ' || item.businessType == 'FBYLXQ') {
-                this.$router.push({
-                    name: "DemandPlanningExamine",
-                    params: { 
-                        obj: JSON.stringify(item),
-                        type: '0',
-                    },
-                });
+                this.handleWaitItemClick(item)
             } else if (item.businessType == 'SHLC') {
                 this.$store.dispatch('public/setGoodsReceiptInfo', {});
       
@@ -525,13 +521,7 @@ export default {
         },
         //去审核点击
         handleExamineClick(item){
-            this.$router.push({
-                name: "DemandPlanningExamine",
-                params: { 
-                    obj: JSON.stringify(item),
-                    type: '0',
-                },
-            });
+            this.handleWaitItemClick(item)
         },
         //搜索点击
         handeSearch(){
