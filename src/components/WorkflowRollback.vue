@@ -11,13 +11,17 @@
       <div class="rollback-tip">退回后，单据仍处于审核中，由上一步审批人或审批环节重新审核。</div>
       <van-field
         v-model="reason"
-        label="退回原因"
+        class="rollback-reason"
+        label="退回原因："
+        aria-label="退回原因"
+        aria-required="true"
         type="textarea"
         placeholder="请输入退回原因"
         maxlength="200"
         rows="3"
         required
         show-word-limit
+        :border="false"
         :disabled="submitting"
       />
       <div class="rollback-buttons">
@@ -156,6 +160,30 @@ export default {
 .rollback-tip {
   margin-bottom: 12px;
   color: #73768b;
+}
+.rollback-reason {
+  display: block;
+  padding: 0;
+  &::before {
+    left: 0;
+  }
+  ::v-deep .van-field__label {
+    width: auto;
+    margin: 0 0 6px;
+    padding-left: 12px;
+    color: #151b3e;
+  }
+  ::v-deep .van-field__value {
+    padding: 8px 12px;
+    border: 1px solid #8a95a6;
+    border-radius: 8px;
+    &:focus-within {
+      border-color: #1989fa;
+    }
+  }
+  ::v-deep .van-field__control::placeholder {
+    color: #73768b;
+  }
 }
 .rollback-buttons {
   display: flex;
