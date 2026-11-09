@@ -28,8 +28,8 @@
                             <span>业务编码：</span>
                             <span class="font-weight" style="color:#134daa;">{{item.businessCode}}</span>
                             <div class="li-title-status">
-                                <img :src="checkAuditStatus(item.auditStatus)"/>
-                                <span v-if="isRollbackStatus(item.auditStatus)">退回上一步</span>
+                                <img :src="checkAuditStatus(item)"/>
+                                <span v-if="isRollbackAudit(item)">退回上一步</span>
                                 <span v-else>{{item.auditStatus | orderTypeFilter(dict.flowTaskStatus)}}</span>
                             </div>
                         </div>
@@ -139,7 +139,10 @@ export default {
       this.scrollPositionInit(this.className, this.finished)
     },
     methods: {
-        isRollbackStatus,
+        isRollbackAudit({ auditStatus, message }) {
+            return isRollbackStatus(auditStatus) ||
+                (typeof message === 'string' && /^退回上一步\s*[:：]/.test(message.trim()))
+        },
         //查看流程点击
         handleProcessClick({ businessId, businessType, takeStatus }) {
             this.$router.push({ 
@@ -182,8 +185,9 @@ export default {
             });
         },
          //已审核状态图标判断
-        checkAuditStatus(auditStatus){
-            if (isRollbackStatus(auditStatus)) return '/static/newIcon_Returned.png'
+        checkAuditStatus(item){
+            if (this.isRollbackAudit(item)) return '/static/newIcon_Returned.png'
+            const { auditStatus } = item
             if(auditStatus == '2'){
                 return '/static/icon-success.png'
             }else if(auditStatus == '3'){
