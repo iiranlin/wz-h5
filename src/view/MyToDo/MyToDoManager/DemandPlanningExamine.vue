@@ -429,8 +429,10 @@ export default {
             }
             this.openAdopt();
         },
-        confirmUrgent(type){
+        async confirmUrgent(type){
             this.urgentPopupShow = false;
+            // 先把关闭状态传给弹窗，避免缓存页面返回时恢复提醒。
+            await this.$nextTick();
             if (type === 'editAdopt') {
                 this.handleEditAdopt();
             } else {
