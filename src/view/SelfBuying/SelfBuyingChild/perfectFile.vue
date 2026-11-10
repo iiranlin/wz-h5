@@ -83,7 +83,9 @@
       </div>
       <div class="detail-title-content-field">
         <van-field v-model="sectionInfo.remak" class="detail-base-info-edited-textarea" rows="3" autosize
-          type="textarea" placeholder="请备注物资相关信息" />
+          type="textarea" placeholder="请备注物资相关信息"
+          :maxlength="remarkInputMaxLength" :show-word-limit="remarkLength <= remarkMaxLength"
+          :error-message="remarkLength > remarkMaxLength ? `备注不能超过 ${remarkMaxLength} 字（当前 ${remarkLength} 字）` : ''" />
       </div>
     </div>
 
@@ -178,6 +180,7 @@ export default {
   data() {
     return {
       detailInfo: {},
+      remarkMaxLength: 500,
       sectionInfo: {
         sectionId: '',
         registration: [],
@@ -220,6 +223,13 @@ export default {
     };
   },
   computed: {
+    remarkLength() {
+      return (this.sectionInfo.remak || '').length;
+    },
+    remarkInputMaxLength() {
+      // Vant 会截断超过 maxlength 的回填值，保留历史备注供用户手动删减。
+      return Math.max(this.remarkMaxLength, this.remarkLength);
+    },
     unitColumns() {
       if (this.dict && this.dict.MeasureUnit) {
         return this.dict.MeasureUnit.map(item => item.label);
@@ -490,6 +500,13 @@ export default {
           this.$notify({
             type: 'warning',
             message: '请备注物资相关信息!',
+          });
+          return
+        }
+        if (this.remarkLength > this.remarkMaxLength) {
+          this.$notify({
+            type: 'warning',
+            message: `备注不能超过 ${this.remarkMaxLength} 字`,
           });
           return
         }
