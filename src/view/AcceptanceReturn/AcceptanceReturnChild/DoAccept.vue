@@ -133,9 +133,9 @@
 
     <div v-if="!isView" class="detail-floor-content">
       <div>
-        <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '0' }"
+        <van-button type="default" :class="{ 'van-button-selected': showAllMaterials }"
           @click="btnClick('0')">全部物资</van-button>
-        <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '1' }"
+        <van-button v-if="!isReceiptEntryPage" type="default" :class="{ 'van-button-selected': btnClickIndex == '1' }"
           @click="btnClick('1')">未完善物资</van-button>
       </div>
     </div>
@@ -149,7 +149,7 @@
     </div>
 
     <div style="margin-bottom: 30px;">
-      <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList"
+      <div class="box-container" v-for="(item, index) in showAllMaterials ? materiaList : editMateriaList"
       :key="item.id"
       :class="boolExceptZero(item.putTotal) && boolExceptZero(item.refundTotal) ? '' : 'box-container-unedited'">
       <div class="div-child">
@@ -250,7 +250,8 @@
         </span>
       </div>
       <div class="default-button-container-button" v-if="!isView">
-
+        <van-button class="draft-button" round plain type="info"
+          :disabled="!draftReady" :loading="draftSaving" @click="saveDraft">暂存</van-button>
         <van-button v-if="isFlag" class="button-info" round type="info" @click="addClick">提交收货审核</van-button>
 
         <p style="font-size: 12px;" v-else><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资收货信息</span>
@@ -304,6 +305,7 @@
 import WorkflowRollback from '@/components/WorkflowRollback.vue'
 import ShippingAttachments from "@/components/ShippingAttachments.vue";
 import {parseTime} from '@/utils'
+import dayjs from 'dayjs'
 import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
 import BackToTop from '@/components/BackToTop'
@@ -316,7 +318,8 @@ import FileUploadView from "@/components/FileUploadView.vue";
 import FileDownloadView from "@/components/FileDownloadView.vue";
 import Calendar from "@/layout/components/calendar.vue";
 import activitiAssignee from '@/components/activitiAssignee'
-import { submitTodo } from "@/api/prodmgr-inv/receive"
+import { modifyTake, submitTodo } from "@/api/prodmgr-inv/receive"
+import { readOriginalFiles } from '@/utils/shippingAttachments'
 import { materialDemandPlanRestDetail,auditReject,wfNextAssigneeMore,auditApprove,wfHistoryList } from '@/api/myToDoList'
 import eventBus from '@/utils/eventBus.js'
 
@@ -340,6 +343,12 @@ export default {
 
   },
   computed: {
+    isReceiptEntryPage() {
+      return this.$route.name === 'DoAccept';
+    },
+    showAllMaterials() {
+      return this.isReceiptEntryPage || this.btnClickIndex === '0';
+    },
     isFlag() {
       const { takeDate } = this.dataList;
 
@@ -357,6 +366,9 @@ export default {
     },
     takeStatus(){
       return this.$route.query?.takeStatus ;
+    },
+    usesReceiptAuditRecord() {
+      return this.takeStatus == 5 || this.takeStatus == null || this.takeStatus == 0;
     },
   },
   data() {
@@ -391,6 +403,8 @@ export default {
       editStatus,
       backupParams: {},
       from: "",
+      draftReady: false,
+      draftSaving: false,
 
       //是否显示选择审批人弹框
       assigneePopupShow:false,
@@ -595,7 +609,9 @@ export default {
       
       const fileByList = this.dataList.fileByList ? JSON.parse(this.dataList.fileByList) : {};
 
-      this.$store.dispatch('public/setGoodsReceiptInfo', { ...this.dataList, fileByList: JSON.stringify({ ...fileByList, zjd: this.fileZjdList, qtzl: this.fileQtzlList, jhd: this.fileJhdList }) })
+      const receiptInfo = { ...this.dataList, fileByList: JSON.stringify({ ...fileByList, zjd: this.fileZjdList, qtzl: this.fileQtzlList, jhd: this.fileJhdList }) };
+      if (!this.isView && receiptInfo.takeDate) receiptInfo.takeDate = this.currentTime.toISOString();
+      this.$store.dispatch('public/setGoodsReceiptInfo', receiptInfo)
 
       this.$router.push({ name: 'EditedMaterialDoAccept', query: {from: this.from, id: this.id, tabs: this.tabs, isLable: this.isLable, isView: this.isView, takeStatus: this.takeStatus}  })
     },
@@ -618,18 +634,20 @@ export default {
       return finallyData
     },
     getDetailList(){
+      this.draftReady = false;
       let toast = this.$toast.loading({
         duration: 0,
         message: "正在加载...",
         forbidClick: true
       });
       console.log(this.takeStatus,'this.takeStatus');
-      const getDetailApi = this.takeStatus == 5 || this.takeStatus == void 0 || this.takeStatus == 0 ? detailTakeBack : getDismissedDetails;
+      const getDetailApi = this.usesReceiptAuditRecord ? detailTakeBack : getDismissedDetails;
        getDetailApi(this.id).then((res)=>{
           if(res.success){
             const GoodsReceiptInfo = this.$store.state.public.GoodsReceiptInfo || {};
 
-            if (Object.keys(GoodsReceiptInfo).length > 0) {
+            const hasCachedReceipt = Object.keys(GoodsReceiptInfo).length > 0;
+            if (hasCachedReceipt) {
               this.dataList = Object.assign({}, this.dataList, GoodsReceiptInfo);
             } else {
               this.dataList = res.data
@@ -641,25 +659,33 @@ export default {
             this.fileZjdList = this.filterList(this.dataList.fileByList, 'zjd') || []
             this.fileQtzlList = this.filterList(this.dataList.fileByList, 'qtzl') || []
             this.fileJhdList = this.filterList(this.dataList.fileByList, 'jhd') || []
+            const hasSavedReceipt = !hasCachedReceipt &&
+              (res.data.takeDate || Object.prototype.hasOwnProperty.call(readOriginalFiles(res.data.fileByList), 'zjd'));
             if (!this.isView) {
-              this.dataList.takeDate = parseTime(this.currentTime, '{y}-{m}-{d}')
+              const savedDate = dayjs(this.dataList.takeDate);
+              const hasDate = Boolean(this.dataList.takeDate) && savedDate.isValid();
+              this.currentTime = hasDate ? savedDate.toDate() : new Date();
+              this.dataList.takeDate = hasDate || (!hasSavedReceipt && !hasCachedReceipt)
+                ? parseTime(this.currentTime, '{y}-{m}-{d}')
+                : '';
             } else {
               this.dataList.takeDate = this.dataList.takeDate ? parseTime(this.dataList.takeDate, '{y}-{m}-{d}') : ""
             }
 
             if(this.isView==false){
               data.forEach(el => {
-                if (this.$store.state.public.selectGoodData?.length == 0) {
+                if (this.$store.state.public.selectGoodData?.length == 0 && !hasSavedReceipt) {
                   el.putTotal = res.data.takeStatus == 0 ? el.putTotal : el.sendTotal
                 }
-                  el.values = el.values?.length > 0 ? el.values : []
-                  this.fileTHList.push({id:el.id,value:[]})
+                el.values = el.values ?? this.filterList(el.fileByList, 'thfj_sh') ?? [];
+                this.fileTHList.push({id:el.id,value:[]})
               })
             }
 
             this.$store.dispatch('public/setSelectGoodData', data);
 
             this.materiaList = this.historyCaches();
+            this.draftReady = String(this.dataList.id) === String(this.id) && data.length > 0;
           }
        }).finally(() => {
           toast.clear();
@@ -690,6 +716,43 @@ export default {
       this.dataList.takeDate = parseTime(val, '{y}-{m}-{d}')
       this.$forceUpdate();
       // this.showDatePicker = false
+    },
+    async saveDraft() {
+      if (this.isView || !this.draftReady || this.draftSaving) return;
+
+      this.draftSaving = true;
+      try {
+        const receipt = this.dataList;
+        const rows = receipt.materialCirculationDetailsTableDTOS;
+        const fileByList = JSON.stringify({
+          ...readOriginalFiles(receipt.fileByList),
+          zjd: this.fileZjdList,
+          qtzl: this.fileQtzlList,
+          jhd: this.fileJhdList,
+        });
+        const materialCirculationDetailsTableParamList = rows.map(row => ({
+          ...row,
+          putTotal: row.putTotal ?? null,
+          refundTotal: row.refundTotal ?? null,
+          fileByList: JSON.stringify({ ...readOriginalFiles(row.fileByList), thfj_sh: row.values || [] }),
+        }));
+        await modifyTake({
+          id: this.id,
+          planType: 'SH',
+          takeDate: receipt.takeDate ? this.currentTime.toISOString() : null,
+          fileByList,
+          materialCirculationDetailsTableParamList,
+        });
+        this.$set(receipt, 'fileByList', fileByList);
+        rows.forEach((row, index) => {
+          this.$set(row, 'fileByList', materialCirculationDetailsTableParamList[index].fileByList);
+        });
+        this.$toast('暂存成功，下次可继续编辑');
+      } catch {
+        // 请求失败由公共请求层提示。
+      } finally {
+        this.draftSaving = false;
+      }
     },
     addClick() {
       this.dataList.materialCirculationDetailsTableDTOS.forEach(item=>{
@@ -1202,8 +1265,14 @@ export default {
 
     .default-button-container-button{
       display: flex;
+      align-items: center;
       .button-info{
         margin-left: 10px;
+      }
+      .draft-button {
+        flex-shrink: 0;
+        height: 34px;
+        margin-left: 8px;
       }
     }
 

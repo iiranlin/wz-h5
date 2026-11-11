@@ -143,7 +143,8 @@
         </span>
       </div>
       <div class="default-button-container-button" v-if="queryType === 'submit'">
-
+        <van-button v-if="canSaveDraft" class="draft-button" round plain type="info"
+          :disabled="!draftReady" :loading="draftSaving" @click="saveDraft">暂存</van-button>
         <van-button v-if="isFlag" class="button-info" round type="info" @click="onSubmit">提交报检审核</van-button>
 
         <p style="font-size: 12px;" v-else><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资入库信息</span>
@@ -167,13 +168,13 @@
 </template>
 <script>
 import ShippingAttachments from "@/components/ShippingAttachments.vue";
-import { shippingFields, readShippingFiles } from "@/utils/shippingAttachments";
+import { shippingFields, readShippingFiles, readOriginalFiles } from "@/utils/shippingAttachments";
 import {parseTime} from '@/utils'
 import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
 import keepPages from "@/view/mixins/keepPages";
 import indexMixin from '@/view/mixins'
-import { detailByStore ,updateFileList} from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { detailByStore, modifyStore, updateFileList } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
 import { getDismissedDetails } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { materialStoreTableRestSubmit } from '@/api/prodmgr-inv/materialStoreTableRest'
@@ -230,12 +231,17 @@ export default {
     },
     from(){
       return this.$route.query.from || '';
-    }
+    },
+    canSaveDraft() {
+      return this.queryType === 'submit' && this.from === 'qualityList';
+    },
   },
   data() {
     return {
       queryType: '',
       storeStatus: '',
+      draftReady: false,
+      draftSaving: false,
       formData: readShippingFiles(null),
       tableData: [],
       rules: {
@@ -294,7 +300,7 @@ export default {
 
       this.$store.dispatch('public/setInboundInformation', this.formData)
 
-      this.$router.push({ name: 'EditedMaterialSubmitStore', query: {queryType: this.queryType, id: this.id, supplyId: this.supplyId,storeStatus: this.storeStatus} })
+      this.$router.push({ name: 'EditedMaterialSubmitStore', query: {queryType: this.queryType, id: this.id, supplyId: this.supplyId,storeStatus: this.storeStatus, from: this.canSaveDraft ? this.from : undefined} })
     },
     checkStatusText(status) {
       let name = ''
@@ -335,6 +341,7 @@ export default {
       return finallyData
     },
     detailByStore(id, storeStatus) {
+      this.draftReady = false;
       console.log(storeStatus,'storeStatusstoreStatusstoreStatus');
       const url = storeStatus == '0' ? getDismissedDetails : storeStatus == "5" || storeStatus == "6"  ? detailStoreBack : detailByStore
       let toast = this.$toast.loading({
@@ -344,6 +351,8 @@ export default {
       });
       url(id).then(({ data }) => {
         data.materialCirculationDetailsTableDTOS.forEach(item => {
+          // 已暂存的明细保留通过和退货数量，首次办理沿用默认值。
+          if (this.canSaveDraft && (Number(item.storeTotal) > 0 || Number(item.refundZjTotal) > 0)) return;
           item.storeTotal = data.storeStatus === '0' ? item.storeTotal:  this.queryType == "submit" ? item.putTotal : item.storeTotal; //新增默认入库数量=收货数量
           item.refundZjTotal = data.storeStatus === '0' ? item.refundZjTotal:  this.queryType == "submit" ? 0 : item.refundZjTotal; 
           // item.defaultRadio = '1';
@@ -356,16 +365,20 @@ export default {
         const InboundInformation = this.$store.state.public.InboundInformation || {};
 
         if (Object.keys(InboundInformation)?.length > 0) {
-                  this.formData = Object.assign({}, this.formData, readShippingFiles(InboundInformation.fileByList), InboundInformation);
+          this.formData = Object.assign({}, this.formData, readShippingFiles(InboundInformation.fileByList), InboundInformation);
         } else {
-                  this.formData = {
-          ...data,
-          ...readShippingFiles(data.fileByList),
-          fileList01: data.fileByList ? JSON.parse(data.fileByList).jcbg || [] : [], //检测报告
-          fileList02: data.fileByList ? JSON.parse(data.fileByList).zlzm || [] : [], //证明文件
-          fileList03: data.fileByList ? JSON.parse(data.fileByList).byjg || [] : [], //报验结果
-          rkd: data.fileByList ? JSON.parse(data.fileByList).rkd || [] : [], //入库单附件
-        }
+          this.formData = {
+            ...data,
+            ...readShippingFiles(data.fileByList),
+            fileList01: data.fileByList ? JSON.parse(data.fileByList).jcbg || [] : [], //检测报告
+            fileList02: data.fileByList ? JSON.parse(data.fileByList).zlzm || [] : [], //证明文件
+            fileList03: data.fileByList ? JSON.parse(data.fileByList).byjg || [] : [], //报验结果
+            rkd: data.fileByList ? JSON.parse(data.fileByList).rkd || [] : [], //入库单附件
+          }
+          if (this.canSaveDraft) {
+            const files = readOriginalFiles(data.fileByList);
+            this.formData.zlzmwj = files.zlzm ?? this.formData.zlzmwj;
+          }
         }
 
         if(selectStoreData?.length > 0) {
@@ -387,6 +400,7 @@ export default {
         this.$store.dispatch('public/setSelectStoreData', this.tableData);
 
         this.materiaList = this.historyCaches();
+        this.draftReady = String(this.formData.id) === String(id) && this.tableData.length > 0;
       }).finally((err) => {
         toast.clear()
       })
@@ -469,6 +483,45 @@ export default {
       const missing = shippingFields.find(field => !field.optional && !field.key.startsWith('zczp') && !this.formData[field.key]?.length);
       if (missing) { this.$toast('请上传' + missing.label); return false; }
       return true;
+    },
+    async saveDraft() {
+      if (!this.canSaveDraft || !this.draftReady || this.draftSaving) return;
+
+      this.draftSaving = true;
+      try {
+        const form = this.formData;
+        const rows = this.tableData;
+        const files = {
+          ...readOriginalFiles(form.fileByList),
+          jcbg: form.fileList01,
+          byjg: form.fileList03,
+          rkd: form.rkd,
+        };
+        shippingFields.filter(field => !field.key.startsWith('zczp')).forEach(({ key }) => {
+          files[key === 'zlzmwj' ? 'zlzm' : key] = form[key] || [];
+        });
+        const fileByList = JSON.stringify(files);
+        const materialCirculationDetailsTableParamList = rows.map(row => ({
+          ...row,
+          fileByList: JSON.stringify({ ...readOriginalFiles(row.fileByList), thfj_im: row.fileList03 || [] }),
+        }));
+        await modifyStore({
+          id: this.id,
+          supplyId: this.supplyId,
+          planType: 'RK',
+          fileByList,
+          materialCirculationDetailsTableParamList,
+        });
+        this.$set(form, 'fileByList', fileByList);
+        rows.forEach((row, index) => {
+          this.$set(row, 'fileByList', materialCirculationDetailsTableParamList[index].fileByList);
+        });
+        this.$toast('暂存成功，下次可继续编辑');
+      } catch {
+        // 请求失败由公共请求层提示。
+      } finally {
+        this.draftSaving = false;
+      }
     },
     onSubmit() {
       if (!this.validateQualityFiles()) return;
@@ -911,8 +964,14 @@ export default {
 
     .default-button-container-button{
       display: flex;
+      align-items: center;
       .button-info{
         margin-left: 10px;
+      }
+      .draft-button {
+        flex-shrink: 0;
+        height: 34px;
+        margin-left: 8px;
       }
     }
 

@@ -8,7 +8,7 @@
     <van-popup v-model="visible" class="rollback-popup" round get-container="body" close-on-popstate :close-on-click-overlay="false">
       <div class="rollback-title">退回上一步</div>
       <div v-if="currentTask.businessCode" class="rollback-code">单据编号：{{ currentTask.businessCode }}</div>
-      <div class="rollback-tip">退回后，单据仍处于审核中，由上一步审批人或审批环节重新审核。</div>
+      <div class="rollback-tip">退回后，单据仍处于审核中，由上一审批节点重新审核。</div>
       <van-field
         v-model="reason"
         class="rollback-reason"

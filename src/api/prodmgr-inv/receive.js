@@ -42,6 +42,16 @@ export const save = (data) => {
         data
     })
 }
+
+// 收货暂存
+export const modifyTake = (data) => {
+    return request({
+        url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/modifyTake`,
+        method: 'post',
+        loading: true,
+        data
+    })
+}
 /**
  * 收货退货列表
  * @param {*} params 

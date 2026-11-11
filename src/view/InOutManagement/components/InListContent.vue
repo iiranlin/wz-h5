@@ -237,7 +237,7 @@ export default {
       this.$store.dispatch('public/setInboundInformation', {});
       this.$store.dispatch('public/setSelectStoreData', []);
 
-      this.$router.push({ name: 'SubmitStore', query: { type: 'submit', id: item.id, supplyId: item.planId, storeStatus: item.storeStatus } })
+      this.$router.push({ name: 'SubmitStore', query: { type: 'submit', id: item.id, supplyId: item.planId, storeStatus: item.storeStatus, from: 'qualityList' } })
     },
     // 下载入库单
     async handleDonwload({id}) {
