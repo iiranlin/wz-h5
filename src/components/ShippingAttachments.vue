@@ -1,14 +1,18 @@
 <template>
   <div>
-    <div v-for="field in fields" :key="field.key" class="shipping-attachment">
-      <div class="shipping-title"><span v-if="!readonly && !field.optional" class="required">*</span>{{ field.label }}</div>
-      <p v-if="showLoadingPhotoHint && !readonly && field.key.startsWith('zczp')" class="shipping-hint"><span class="li-span-red">*</span>必填项，如无可上传说明材料</p>
-      <file-download-view v-if="readonly" :fileList="files[field.key] || []" />
-      <component v-else :is="field.key.startsWith('zczp') ? 'FileUploadViewType' : 'FileUploadView'"
-        :class="{ 'loading-photo-uploader': field.key.startsWith('zczp') }"
-        :fileList="files[field.key]" :required="!field.optional" :maxCount="100"
-        accept=".jpg,.png,.jpeg,.pdf" businessType="01" />
-    </div>
+    <slot name="before-fields" />
+    <template v-for="field in fields">
+      <slot v-if="field.key === 'zlzmwj'" name="before-other-quality-files" />
+      <div :key="field.key" class="shipping-attachment">
+        <div class="shipping-title"><span v-if="!readonly && !field.optional" class="required">*</span>{{ field.label }}</div>
+        <p v-if="showLoadingPhotoHint && !readonly && field.key.startsWith('zczp')" class="shipping-hint"><span class="li-span-red">*</span>必填项，如无可上传说明材料</p>
+        <file-download-view v-if="readonly" :fileList="files[field.key] || []" />
+        <component v-else :is="field.key.startsWith('zczp') ? 'FileUploadViewType' : 'FileUploadView'"
+          :class="{ 'loading-photo-uploader': field.key.startsWith('zczp') }"
+          :fileList="files[field.key]" :required="!field.optional" :maxCount="100"
+          accept=".jpg,.png,.jpeg,.pdf" businessType="01" />
+      </div>
+    </template>
   </div>
 </template>
 <script>

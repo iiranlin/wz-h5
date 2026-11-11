@@ -53,16 +53,18 @@
       <file-download-view :fileList="formData.fileList01 || []" />
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" v-if="queryType === 'submit'|| queryType === 'view' && from === 'list' " >
-      <div class="detail-title-content">
-        <img src="/static/icon-file.png" />
-        <span>入库单附件</span>
-      </div>
-      <p class="box-container-p" v-if="!formData.rkd?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="formData.rkd || []" businessType="01" />
-    </div>
-
-    <ShippingAttachments :model="formData" quality-only :readonly="!(queryType === 'submit' || (queryType === 'view' && from === 'list'))" />
+    <ShippingAttachments :model="formData" quality-only :readonly="!canEditAttachments">
+      <template v-slot:[inboundAttachmentSlot]>
+        <div v-if="canEditAttachments" class="detail-base-info detail-base-info-edited">
+          <div class="detail-title-content">
+            <img src="/static/icon-file.png" />
+            <span>入库单附件</span>
+          </div>
+          <p class="box-container-p" v-if="!formData.rkd?.length">请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+          <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="formData.rkd || []" businessType="01" />
+        </div>
+      </template>
+    </ShippingAttachments>
 
     <!-- 审核页面预览 -->
     <div class="detail-base-info detail-base-info-edited" v-if="queryType != 'submit' && formData.rkd?.length && from !== 'list'">
@@ -215,6 +217,12 @@ export default {
     }
   },
   computed: {
+    canEditAttachments() {
+      return this.queryType === 'submit' || (this.queryType === 'view' && this.from === 'list');
+    },
+    inboundAttachmentSlot() {
+      return this.queryType === 'submit' ? 'before-other-quality-files' : 'before-fields';
+    },
     isFlag() {
 
       let flag = false;
