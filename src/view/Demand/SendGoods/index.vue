@@ -106,21 +106,17 @@
             input-align="right"
             :rules="[{ required: true, message: '请填写发货地址' }]"
           /> -->
-          <van-field readonly clickable name="calendar" :disabled="fileDisabled" required v-model="params.shippingDate"
+          <van-field readonly clickable name="calendar" :disabled="fileDisabled" v-model="params.shippingDate"
             label="发货日期" input-align="right" :value="params.shippingDate" placeholder="点击选择日期"
-            @click="handlerShowCalendar('calendar')" :rules="[{ required: true, message: '请填写发货日期' }]" />
+            @click="handlerShowCalendar('calendar')" />
           <!-- <van-calendar v-model="showCalendar" @confirm="onConfirm" /> -->
           <Calendar ref="calendar" @onConfirm="onConfirm" :unlimited="true" />
-          <van-field readonly clickable name="calendar" :disabled="fileDisabled" required :value="params.arrivalDate"
-            label="预计送到时间" input-align="right" placeholder="点击选择日期" @click="handlerShowCalendar('calendar2')"
-            :rules="[{ required: true, message: '请填写预计送达时间' }]" />
+          <van-field readonly clickable name="calendar" :disabled="fileDisabled" :value="params.arrivalDate"
+            label="预计送到时间" input-align="right" placeholder="点击选择日期" @click="handlerShowCalendar('calendar2')" />
           <!-- <van-calendar v-model="sendStop" @confirm="onStopConfirm" /> -->
           <Calendar ref="calendar2" @onConfirm="onStopConfirm" :unlimited="true" />
           <van-field v-model="params.carNumber" label="车牌号" @click.stop="fieldClick($event, 'carNumber')"
-            :disabled="fileDisabled" type="text" placeholder="如无可备注" input-align="right"
-            required
-            :rules="[{ required: true, message: '如无可备注' }]"
-            />
+            :disabled="fileDisabled" type="text" placeholder="如无可备注" input-align="right" />
         </div>
       </template>
     </div>
@@ -130,13 +126,12 @@
         <img src="/static/icon-file.png">
         <span>发货单附件</span>
       </div>
-      <p class="box-container-p" v-if="!fileList.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+      <p class="box-container-p" v-if="!fileList.length">支持上传jpg、png、jpeg、pdf格式文件</p>
       <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01"
         class="outbound-field-uploader" />
     </div>
 
-    <ShippingAttachments :model="$data" show-loading-photo-hint />
+    <ShippingAttachments :model="$data" show-loading-photo-hint optional />
 
     <div class="detail-floor-content" v-if="status !== '2'">
       <div>
@@ -227,10 +222,9 @@
         </span>
       </div>
       <div class="default-button-container-button">
-        <van-button :class="{'van-button--disabled': !isFlag}" class="button-info" round type="info"
+        <van-button class="button-info" round type="info"
           @click="onSubmit">保存发货单</van-button>
 
-        <!-- <p style="font-size: 12px;" v-if="!isFlag"><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资发货信息</span></p> -->
       </div>
     </div>
 
@@ -431,23 +425,6 @@ export default {
       status:'',
     };
   },
-  computed: {
-    isFlag() {
-      const { receiver, arrivalDate,carNumber='' } = this.params;
-
-      let flag = false;
-
-      this.materiaList.forEach(item => {
-        if (item.manufactureDate && item.packagingFm && item.fileList01?.length > 0 ) {
-          flag = true;
-        } else {
-          flag = false;
-        }
-      })
-
-      return this.fileList?.length > 0 && this.shippingFields.every(field => field.optional || this[field.key]?.length > 0) && carNumber && receiver && arrivalDate && flag;
-    }
-  },
   activated() {
     // this.text = this.$route.query.text;
     // this.goodsId = this.$route.query.id;
@@ -645,16 +622,13 @@ export default {
 
           this.materiaList = this.historyCaches('selectGoodDataEdit');
 
-          let file = JSON.parse(res.data.fileByList);
+          let file = readOriginalFiles(res.data.fileByList);
 
-           if (!this.params?.fileList?.length) {
-            this.fileList.push({
-              fileName: file.fhd[0].fileName,
-              filePath: file.fhd[0].filePath,
-            });
-           } else {
+          if (!this.params?.fileList?.length) {
+            this.fileList = file.fhd || [];
+          } else {
             this.fileList = this.params.fileList;
-           }
+          }
 
 
           // this.fileByList = file.fhd[0].fileName;
@@ -709,6 +683,7 @@ export default {
       return `${year}-${month}-${date}`;
     },
     formattedCreateDate(timestamp) {
+      if (!timestamp) return '';
       const date = new Date(timestamp);
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 月份加0
@@ -855,21 +830,12 @@ export default {
       return /[\u4e00-\u9fa5]/.test(str);
     },
     onSubmit() {
-      if (!this.validateShippingFiles()) return;
-     
       // console.log(this.$store.state.public.sendGoods, "this.$store.state.public.sendGoods")
       // console.log(this.params, this.fileList, this.materiaList, this.goodsMsg.sectionName, this.goodsMsg.planName, this.goodsMsg.id, "发货传参")
       if (this.containsChinese(this.params.oddNumbers)) {
         this.$notify({
           type: 'warning',
           message: '[物流单号]不可输入中文字符!',
-        });
-        return
-      }
-      if(!this.isFlag){
-        this.$notify({
-          type: 'warning',
-          message: '请完善发货信息',
         });
         return
       }
@@ -883,10 +849,10 @@ export default {
       this.materiaList.forEach((item) => {
         let fileByList = {};
         //报验结果
-        if (item.fileList01.length > 0) {
+        if (item.fileList01?.length > 0) {
           this.$set(fileByList, "hgz", item.fileList01);
         }
-        if (item.fileList02.length > 0) {
+        if (item.fileList02?.length > 0) {
           this.$set(fileByList, "cjbg", item.fileList02);
         }
         item.fileByList = JSON.stringify(fileByList);

@@ -29,7 +29,7 @@
       </ul>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field label="发货数量" placeholder="请输入发货数量" required clearable input-align="right">
+          <van-field label="发货数量" placeholder="请输入发货数量" clearable input-align="right">
             <template #input>
               <van-stepper v-model="sectionInfo.sendTotal" :min="0" :max="sectionInfo.ssendTotal" />
             </template>
@@ -44,11 +44,11 @@
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field required v-model="sectionInfo.packagingFm" label="包装形式" placeholder="请输入包装形式"
+          <van-field v-model="sectionInfo.packagingFm" label="包装形式" placeholder="请输入包装形式"
             input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field readonly clickable v-model="sectionInfo.manufactureDate" required name="datetimePicker"
+          <van-field readonly clickable v-model="sectionInfo.manufactureDate" name="datetimePicker"
             :value="sectionInfo.manufactureDate" label="生产日期" placeholder="点击选择日期" @click="showCalendars('show')"
             input-align="right" />
         </li>
@@ -80,7 +80,7 @@
         </div>
         <ul class="detail-list-ul-edited">
           <li class="detail-list-li-input">
-            <van-field required v-model="sectionInfo.receiver" label="收货人及联系方式" placeholder="请输入收货人及联系方式"
+            <van-field v-model="sectionInfo.receiver" label="收货人及联系方式" placeholder="请输入收货人及联系方式"
               input-align="right" />
           </li>
           <!-- <li class="detail-list-li-input">
@@ -88,7 +88,7 @@
             input-align="right" />
         </li> -->
           <li class="detail-list-li-input">
-            <van-field required v-model="sectionInfo.field2" label="收货地址" placeholder="请输入收货地址" input-align="right" />
+            <van-field v-model="sectionInfo.field2" label="收货地址" placeholder="请输入收货地址" input-align="right" />
           </li>
         </ul>
         <div class="detail-base-info-edited-all" style="padding-top: 0; margin: 5px 0;">
@@ -144,7 +144,7 @@
       </div>
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
-          <van-field required readonly is-link v-model="sectionInfo.supplyDate" label="选择时间" placeholder="请选择时间"
+          <van-field readonly is-link v-model="sectionInfo.supplyDate" label="选择时间" placeholder="请选择时间"
             @click="dateClick(sectionInfo)" input-align="right" />
           <van-popup v-model="sectionInfo.showDatePicker" position="bottom" round>
             <van-datetime-picker type="date" v-model="sectionInfo.minDate" @confirm="onDateConfirm(sectionInfo)"
@@ -161,8 +161,7 @@
         <img src="/static/icon-file.png">
         <span>合格证附件</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.fileList01?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+      <p class="box-container-p" v-if="!sectionInfo?.fileList01?.length">支持上传jpg、png、jpeg、pdf格式文件</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="9999" :fileList="sectionInfo.fileList01 || []" businessType="01"
         class="outbound-field-uploader" />
     </div>
@@ -171,8 +170,7 @@
         <img src="/static/icon-file.png">
         <span>厂检报告附件</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.fileList02?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+      <p class="box-container-p" v-if="!sectionInfo?.fileList02?.length">支持上传jpg、png、jpeg、pdf格式文件</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="9999" :fileList="sectionInfo.fileList02 || []"
         businessType="01" class="outbound-field-uploader" />
     </div>
@@ -313,27 +311,6 @@ export default {
     },
     sureClick(isData) {
       if (isData) {
-        if (!this.sectionInfo.sendTotal) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入发货数量!',
-          });
-          return
-        }
-        if (!this.sectionInfo.packagingFm) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入包装形式!',
-          });
-          return
-        }
-        if (!this.sectionInfo.manufactureDate) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择生产日期!',
-          });
-          return
-        }
         // if(!this.pattern.test(this.sectionInfo.phone)){
         //   this.$notify({
         //     type: 'warning',
@@ -341,34 +318,6 @@ export default {
         //   });
         //   return
         // }
-        if (!(this.sectionInfo.receiver && this.sectionInfo.field2)) {
-          this.$notify({
-            type: 'warning',
-            message: '请完善收货信息!',
-          });
-          return
-        }
-        if (!this.sectionInfo.supplyDate) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择计划使用时间!',
-          });
-          return
-        }
-        if (!this.sectionInfo.fileList01?.length > 0) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择合格证附件!',
-          });
-          return
-        }
-        if (!this.sectionInfo.fileList02?.length > 0) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择厂检报告附件!',
-          });
-          return
-        }
         const pathName = this.queryType == 'add' ? 'selectGoodData' : 'selectGoodDataEdit';
 
         const data = this.$store.state.public[pathName] || []
