@@ -391,7 +391,7 @@ export default {
       history.back()
     },
     editBack(text,id){
-      this.$router.push({path:'/sendGoods',query:{title:text,id:id,planId:this.planId}})
+      this.$router.push({path:'/sendGoods',query:{title:text,id:id,planId:this.planId,source:this.$route.query.source}})
     },
     selectClick () {
       this.$router.push({ name: 'SelectContract' })
@@ -401,7 +401,7 @@ export default {
       if(this.selectArrayData.length>0){
         this.$store.dispatch('public/setSelectGoodData', this.selectArrayData);
 
-        this.$router.push({ path: '/sendGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:this.goodsId,text:text} })
+        this.$router.push({ path: '/sendGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:this.goodsId,text:text,source:this.$route.query.source} })
       }else{
         Toast.fail('请选择至少一项');
       }
@@ -410,7 +410,7 @@ export default {
        if(this.selectArrayData.length>0){
         this.$store.dispatch('public/setSelectGoodDataEdit', this.selectArrayData);
 
-        this.$router.push({ path: '/sendGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:id,text:text,planId:this.planId} })
+        this.$router.push({ path: '/sendGoods',query:{goodData:JSON.stringify(this.selectArrayData),id:id,text:text,planId:this.planId,source:this.$route.query.source} })
       }else{
         Toast.fail('请选择至少一项');
       }

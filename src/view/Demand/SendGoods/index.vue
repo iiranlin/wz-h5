@@ -106,17 +106,19 @@
             input-align="right"
             :rules="[{ required: true, message: '请填写发货地址' }]"
           /> -->
-          <van-field readonly clickable name="calendar" :disabled="fileDisabled" v-model="params.shippingDate"
+          <van-field readonly clickable name="calendar" :disabled="fileDisabled" required v-model="params.shippingDate"
             label="发货日期" input-align="right" :value="params.shippingDate" placeholder="点击选择日期"
-            @click="handlerShowCalendar('calendar')" />
+            @click="handlerShowCalendar('calendar')" :rules="[{ required: true, message: '请填写发货日期' }]" />
           <!-- <van-calendar v-model="showCalendar" @confirm="onConfirm" /> -->
           <Calendar ref="calendar" @onConfirm="onConfirm" :unlimited="true" />
-          <van-field readonly clickable name="calendar" :disabled="fileDisabled" :value="params.arrivalDate"
-            label="预计送到时间" input-align="right" placeholder="点击选择日期" @click="handlerShowCalendar('calendar2')" />
+          <van-field readonly clickable name="calendar" :disabled="fileDisabled" required :value="params.arrivalDate"
+            label="预计送到时间" input-align="right" placeholder="点击选择日期" @click="handlerShowCalendar('calendar2')"
+            :rules="[{ required: true, message: '请填写预计送达时间' }]" />
           <!-- <van-calendar v-model="sendStop" @confirm="onStopConfirm" /> -->
           <Calendar ref="calendar2" @onConfirm="onStopConfirm" :unlimited="true" />
           <van-field v-model="params.carNumber" label="车牌号" @click.stop="fieldClick($event, 'carNumber')"
-            :disabled="fileDisabled" type="text" placeholder="如无可备注" input-align="right" />
+            :disabled="fileDisabled" type="text" placeholder="如无可备注" input-align="right" required
+            :rules="[{ required: true, message: '如无可备注' }]" />
         </div>
       </template>
     </div>
@@ -126,12 +128,13 @@
         <img src="/static/icon-file.png">
         <span>发货单附件</span>
       </div>
-      <p class="box-container-p" v-if="!fileList.length">支持上传jpg、png、jpeg、pdf格式文件</p>
+      <p class="box-container-p" v-if="!fileList.length"><span
+          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
       <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01"
         class="outbound-field-uploader" />
     </div>
 
-    <ShippingAttachments :model="$data" show-loading-photo-hint optional />
+    <ShippingAttachments :model="$data" show-loading-photo-hint />
 
     <div class="detail-floor-content" v-if="status !== '2'">
       <div>
@@ -222,8 +225,9 @@
         </span>
       </div>
       <div class="default-button-container-button">
-        <van-button class="button-info" round type="info"
-          @click="onSubmit">保存发货单</van-button>
+        <van-button v-if="showDraft" class="button-info" round @click="onSubmit(false)">暂存</van-button>
+        <van-button :class="{'van-button--disabled': !isFlag}" class="button-info" round type="info"
+          @click="onSubmit(true)">保存发货单</van-button>
 
       </div>
     </div>
@@ -424,6 +428,21 @@ export default {
       // 1未发货 2货运中 3已完成 供应中的物资仅允许修改附件信息
       status:'',
     };
+  },
+  computed: {
+    showDraft() {
+      return this.$route.query.source === 'Information';
+    },
+    isFlag() {
+      const { receiver, shippingDate, arrivalDate, carNumber } = this.params;
+      return this.fileList?.length > 0 &&
+        this.shippingFields.every(field => field.optional || this[field.key]?.length > 0) &&
+        carNumber && receiver && shippingDate && arrivalDate &&
+        this.materiaList.length > 0 &&
+        this.materiaList.every(item => Number(item.sendTotal) > 0 && item.packagingFm &&
+          item.manufactureDate && item.field2 && item.supplyDate && item.receiver &&
+          item.fileList01?.length > 0 && item.fileList02?.length > 0);
+    }
   },
   activated() {
     // this.text = this.$route.query.text;
@@ -758,7 +777,7 @@ export default {
           // 携带参数跳转到选择商品页
           this.$router.push({
             path: "/selectGoods",
-            query: { id: id, text: text },
+            query: { id: id, text: text, source: this.$route.query.source },
           });
         })
         .catch(() => {
@@ -820,7 +839,7 @@ export default {
           // 编辑时如果到了这页面就把数据存到缓存里
           this.$store.dispatch("public/setEditSendGoods", params);
           //判断有没有可供选择的物资
-          this.$router.push({ path: "/selectGoods", query: { text: text,planId:this.planId } });
+          this.$router.push({ path: "/selectGoods", query: { text: text,planId:this.planId, source: this.$route.query.source } });
         })
         .catch(() => {
           //验证失败
@@ -829,7 +848,7 @@ export default {
     containsChinese(str) {
       return /[\u4e00-\u9fa5]/.test(str);
     },
-    onSubmit() {
+    onSubmit(validateRequired = true) {
       // console.log(this.$store.state.public.sendGoods, "this.$store.state.public.sendGoods")
       // console.log(this.params, this.fileList, this.materiaList, this.goodsMsg.sectionName, this.goodsMsg.planName, this.goodsMsg.id, "发货传参")
       if (this.containsChinese(this.params.oddNumbers)) {
@@ -838,6 +857,14 @@ export default {
           message: '[物流单号]不可输入中文字符!',
         });
         return
+      }
+      if (validateRequired && !this.validateShippingFiles()) return;
+      if (validateRequired && !this.isFlag) {
+        this.$notify({
+          type: 'warning',
+          message: '请完善发货信息',
+        });
+        return;
       }
 
       Toast.loading({
@@ -880,28 +907,21 @@ export default {
       const { addr, receiveraddress, phone, receiver, ...rest } = params;
 
 
-      if (this.text == 'add') {
-        demandSaveSendGoods(rest).then((res) => {
-          if (res.code == 0) {
+      const saveRequest = this.text == 'add' ? demandSaveSendGoods(rest) : modifySendGoods(rest);
+      saveRequest.then((res) => {
+        Toast.clear();
+        if (res.code == 0) {
+          if (!validateRequired) {
+            Toast.success('暂存成功，下次可继续编辑');
+          } else {
             Toast.success(res.data);
-            sessionStorage.removeItem('gysObj')
-            this.$router.push({ path: "/Information" })
+            sessionStorage.removeItem('gysObj');
+            this.$router.push({ path: "/Information" });
           }
-        }).finally(() => {
-                Toast.clear()
-            })
-      } else {
-        modifySendGoods(rest).then((res) => {
-          if (res.code == 0) {
-            Toast.success(res.data);
-            sessionStorage.removeItem('gysObj')
-
-            this.$router.push({ path: "/Information" })
-          }
-        }).finally(() => {
-                Toast.clear()
-              })
-      }
+        }
+      }).catch(() => {
+        Toast.clear();
+      });
     },
     btnClick(code) {
       this.btnClickIndex = code
@@ -932,7 +952,7 @@ export default {
       this.$store.dispatch('public/setHistoryData', {})
       // const query = this.queryType == 'update' ? { contractId: this.contractId, type: this.queryType, id: this.queryId, materialUsedRatio: this.materialUsedRatio } : { contractId: this.contractId, materialUsedRatio: this.materialUsedRatio }
       this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, ...this.shippingFiles() })
-      const query = { planId: this.planId, text: this.text, id: this.goodsId };
+      const query = { planId: this.planId, text: this.text, id: this.goodsId, source: this.$route.query.source };
 
 
       this.$router.push({ name: 'selectGoods', query })
@@ -954,7 +974,7 @@ export default {
     },
     lookGoods(id) {
       this.formKey++;
-      this.$router.push({ path: "/selectGoods", query: { id: id } });
+      this.$router.push({ path: "/selectGoods", query: { id: id, source: this.$route.query.source } });
     },
     uploadGoosSend() {
       this.formKey++;
@@ -1410,9 +1430,9 @@ li :nth-child(2) {
 
     .default-button-container-button{
       display: flex;
-      flex-direction: column;
+      gap: 8px;
       .button-info{
-        margin-left: 10px;
+        width: 100px;
       }
     }
 
