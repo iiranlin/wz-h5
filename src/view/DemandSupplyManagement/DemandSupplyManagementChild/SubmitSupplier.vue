@@ -22,6 +22,20 @@
       <p class="box-container-p" v-if="!fileList.length"><span class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
       <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="51" />
     </div>
+    <div class="remark-section">
+      <label class="remark-title" for="supplier-remark">物代备注</label>
+      <van-field
+        id="supplier-remark"
+        v-model="detail.remark"
+        class="remark-field"
+        type="textarea"
+        rows="3"
+        placeholder="请输入物代备注（选填）"
+        maxlength="500"
+        show-word-limit
+        autosize
+      />
+    </div>
     <div class="default-button-container">
       <van-button class="button-info" round @click="cancelClick">取消</van-button>
       <van-button class="button-info" round type="info" @click="submitSeller">提交</van-button>
@@ -36,7 +50,7 @@ export default {
   components: { FileUploadView },
   data() {
     return {
-      detail: {},
+      detail: { remark: '' },
       fileList: []
     }
   },
@@ -59,7 +73,10 @@ export default {
         forbidClick: true
       });
       materialDemandPlanRestDetail(id).then(({ data }) => {
-        this.detail = data
+        this.detail = { ...data, remark: data.remark || '' }
+        this.fileList = (data.fileList || []).flatMap(group =>
+          (group.fileList || []).filter(file => file.businessType === '51')
+        )
       }).finally((err) => {
         toast.clear()
       })
@@ -72,9 +89,12 @@ export default {
         });
         return
       }
-      const otherFileList = (this.detail.fileList || []).filter(item =>
-        !item.fileList?.some(file => file.businessType === '51')
-      )
+      const otherFileList = (this.detail.fileList || []).flatMap(group => {
+        const files = group.fileList || []
+        const remainingFiles = files.filter(file => file.businessType !== '51')
+        if (remainingFiles.length === files.length) return [group]
+        return remainingFiles.length ? [{ ...group, fileList: remainingFiles }] : []
+      })
       const params = {
         ...this.detail,
         fileList: [...otherFileList, { fileList: this.normalizeSupplyFiles() }]
@@ -139,6 +159,25 @@ export default {
 
     .detail-ul {
       padding: 10px 12px;
+    }
+  }
+
+  .remark-section {
+    margin: 8px 10px 0;
+
+    .remark-title {
+      display: block;
+      margin-bottom: 8px;
+      color: #151b3e;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .remark-field {
+      background: #fff;
+      border-radius: 10px;
+      padding-left: 13px;
+      padding-right: 13px;
     }
   }
 

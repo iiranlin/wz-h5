@@ -33,6 +33,10 @@
             <span>提报人：</span>
             <span>{{ result.createUserName }}</span>
           </li>
+          <li v-if="result.remark && result.remark.trim()">
+            <span>备注：</span>
+            <span class="agency-remark">{{ result.remark }}</span>
+          </li>
         </ul>
       </div>
       <div class="detail-ul-bottom-text">
@@ -284,6 +288,12 @@ findByBusinessType,
 
     .detail-ul {
       padding: 10px 8px;
+
+      .agency-remark {
+        min-width: 0;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
     }
   }
 
