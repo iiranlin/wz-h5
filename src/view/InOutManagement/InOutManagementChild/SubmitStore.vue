@@ -62,8 +62,6 @@
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="99" :fileList="formData.rkd || []" businessType="01" />
     </div>
 
-    <ShippingAttachments :model="formData" quality-only :readonly="!(queryType === 'submit' || (queryType === 'view' && from === 'list'))" />
-
     <!-- 审核页面预览 -->
     <div class="detail-base-info detail-base-info-edited" v-if="queryType != 'submit' && formData.rkd?.length && from !== 'list'">
       <div class="detail-title-content">
@@ -74,12 +72,7 @@
     </div>
 
     <div v-if="queryType === 'submit'" class="detail-floor-content">
-      <div>
-        <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '0' }"
-          @click="btnClick('0')">全部物资</van-button>
-        <van-button type="default" :class="{ 'van-button-selected': btnClickIndex == '1' }"
-          @click="btnClick('1')">未完善物资</van-button>
-      </div>
+      <h2>全部物资</h2>
     </div>
 
     <div class="detail-base-info detail-base-info-edited" v-else style="margin-bottom: 8px; background-color: #F2F4F8;">
@@ -91,7 +84,7 @@
     </div>
 
     <div style="padding-bottom: 50px;">
-      <div class="box-container" v-for="(item, index) in btnClickIndex == '0' ? materiaList : editMateriaList"
+      <div class="box-container" v-for="(item, index) in materiaList"
       :key="item.id"
       :class="boolExceptZero(item.putTotal) && boolExceptZero(item.refundTotal) ? '' : 'box-container-unedited'">
       <div class="div-child">
@@ -143,8 +136,9 @@
         </span>
       </div>
       <div class="default-button-container-button" v-if="queryType === 'submit'">
-
-        <van-button v-if="isFlag" class="button-info" round type="info" @click="onSubmit">提交报检审核</van-button>
+        <van-button v-if="canSaveDraft" class="draft-button" round plain type="info"
+          :disabled="!draftReady" :loading="draftSaving" @click="saveDraft">暂存</van-button>
+        <van-button v-if="isFlag" class="button-info" round type="info" :disabled="draftSaving" @click="onSubmit">提交报检审核</van-button>
 
         <p style="font-size: 12px;" v-else><van-icon name="warning-o" color="#1989fa" /> 提示： <span>请完善所有物资入库信息</span>
         </p>
@@ -166,14 +160,13 @@
   </div>
 </template>
 <script>
-import ShippingAttachments from "@/components/ShippingAttachments.vue";
-import { shippingFields, readShippingFiles } from "@/utils/shippingAttachments";
 import {parseTime} from '@/utils'
 import editedStatus from '@/assets/img/editedStatus.png'
 import editStatus from '@/assets/img/editStatus.png'
 import keepPages from "@/view/mixins/keepPages";
 import indexMixin from '@/view/mixins'
-import { detailByStore ,updateFileList} from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { detailByStore, modifyStore, updateFileList } from '@/api/prodmgr-inv/materialCirculationTableRest'
+import { readOriginalFiles } from '@/utils/shippingAttachments'
 import {detailStoreBack} from '@/api/prodmgr-inv/materialStoreTableRest'
 import { getDismissedDetails } from '@/api/prodmgr-inv/materialCirculationTableRest'
 import { materialStoreTableRestSubmit } from '@/api/prodmgr-inv/materialStoreTableRest'
@@ -185,7 +178,7 @@ import BackToTop from '@/components/BackToTop'
 export default {
   name: 'SubmitStore',
   mixins: [indexMixin, keepPages],
-  components: { ShippingAttachments, FilePreview, activitiAssignee, FileUploadView, FileDownloadView, BackToTop },
+  components: { FilePreview, activitiAssignee, FileUploadView, FileDownloadView, BackToTop },
   filters: {
     formatDate(value) {
       if (value) {
@@ -230,13 +223,18 @@ export default {
     },
     from(){
       return this.$route.query.from || '';
-    }
+    },
+    canSaveDraft() {
+      return this.queryType === 'submit' && this.from === 'qualityList';
+    },
   },
   data() {
     return {
       queryType: '',
       storeStatus: '',
-      formData: readShippingFiles(null),
+      draftReady: false,
+      draftSaving: false,
+      formData: {},
       tableData: [],
       rules: {
         storeTotal: [
@@ -258,9 +256,7 @@ export default {
         { value: "6", text: "已驳回" },
       ],
       menuActiveIndex: '0',
-      btnClickIndex: '0',
       materiaList: [],
-      editMateriaList: [],
       editedMateriaList: [],
       editedStatus,
       editStatus,
@@ -283,9 +279,6 @@ export default {
     this.detailByStore(id, storeStatus)
   },
   methods: {
-    btnClick(code) {
-      this.btnClickIndex = code
-    },
     boolExceptZero(val) {
       return val === 0 || Boolean(val);
     },
@@ -294,7 +287,7 @@ export default {
 
       this.$store.dispatch('public/setInboundInformation', this.formData)
 
-      this.$router.push({ name: 'EditedMaterialSubmitStore', query: {queryType: this.queryType, id: this.id, supplyId: this.supplyId,storeStatus: this.storeStatus} })
+      this.$router.push({ name: 'EditedMaterialSubmitStore', query: {queryType: this.queryType, id: this.id, supplyId: this.supplyId,storeStatus: this.storeStatus, from: this.canSaveDraft ? this.from : undefined} })
     },
     checkStatusText(status) {
       let name = ''
@@ -330,11 +323,11 @@ export default {
 
 
       this.editedMateriaList = finallyData.filter(item => this.boolExceptZero(item.putTotal) && this.boolExceptZero(item.refundTotal))
-      this.editMateriaList = finallyData.filter(item => !(this.boolExceptZero(item.putTotal) && this.boolExceptZero(item.refundTotal)))
 
       return finallyData
     },
     detailByStore(id, storeStatus) {
+      this.draftReady = false;
       console.log(storeStatus,'storeStatusstoreStatusstoreStatus');
       const url = storeStatus == '0' ? getDismissedDetails : storeStatus == "5" || storeStatus == "6"  ? detailStoreBack : detailByStore
       let toast = this.$toast.loading({
@@ -344,6 +337,7 @@ export default {
       });
       url(id).then(({ data }) => {
         data.materialCirculationDetailsTableDTOS.forEach(item => {
+          if (this.canSaveDraft && (Number(item.storeTotal) > 0 || Number(item.refundZjTotal) > 0)) return;
           item.storeTotal = data.storeStatus === '0' ? item.storeTotal:  this.queryType == "submit" ? item.putTotal : item.storeTotal; //新增默认入库数量=收货数量
           item.refundZjTotal = data.storeStatus === '0' ? item.refundZjTotal:  this.queryType == "submit" ? 0 : item.refundZjTotal; 
           // item.defaultRadio = '1';
@@ -356,11 +350,10 @@ export default {
         const InboundInformation = this.$store.state.public.InboundInformation || {};
 
         if (Object.keys(InboundInformation)?.length > 0) {
-                  this.formData = Object.assign({}, this.formData, readShippingFiles(InboundInformation.fileByList), InboundInformation);
+                  this.formData = Object.assign({}, this.formData, InboundInformation);
         } else {
                   this.formData = {
           ...data,
-          ...readShippingFiles(data.fileByList),
           fileList01: data.fileByList ? JSON.parse(data.fileByList).jcbg || [] : [], //检测报告
           fileList02: data.fileByList ? JSON.parse(data.fileByList).zlzm || [] : [], //证明文件
           fileList03: data.fileByList ? JSON.parse(data.fileByList).byjg || [] : [], //报验结果
@@ -387,6 +380,7 @@ export default {
         this.$store.dispatch('public/setSelectStoreData', this.tableData);
 
         this.materiaList = this.historyCaches();
+        this.draftReady = String(this.formData.id) === String(id) && this.tableData.length > 0;
       }).finally((err) => {
         toast.clear()
       })
@@ -465,13 +459,40 @@ export default {
       }
       return true;
     },
-    validateQualityFiles() {
-      const missing = shippingFields.find(field => !field.optional && !field.key.startsWith('zczp') && !this.formData[field.key]?.length);
-      if (missing) { this.$toast('请上传' + missing.label); return false; }
-      return true;
+    async saveDraft() {
+      if (!this.canSaveDraft || !this.draftReady || this.draftSaving) return;
+
+      this.draftSaving = true;
+      const form = this.formData;
+      const rows = this.tableData;
+      try {
+        const fileByList = this.serializeInspectionFiles(form);
+        const materialCirculationDetailsTableParamList = rows.map(row => ({
+          ...row,
+          fileByList: JSON.stringify({
+            ...readOriginalFiles(row.fileByList),
+            thfj_im: row.fileList03 || [],
+          }),
+        }));
+        await modifyStore({
+          id: this.id,
+          supplyId: this.supplyId,
+          planType: 'RK',
+          fileByList,
+          materialCirculationDetailsTableParamList,
+        });
+        this.$set(form, 'fileByList', fileByList);
+        rows.forEach((row, index) => {
+          this.$set(row, 'fileByList', materialCirculationDetailsTableParamList[index].fileByList);
+        });
+        this.$toast('暂存成功，下次可继续编辑');
+      } catch {
+        // 请求失败由公共请求层提示。
+      } finally {
+        this.draftSaving = false;
+      }
     },
     onSubmit() {
-      if (!this.validateQualityFiles()) return;
       const isValid = this.onCheck(this.tableData);
       if (!isValid) {
         return;
@@ -486,30 +507,7 @@ export default {
         }
         this.tableData[i].fileByList = JSON.stringify(fileByList);
       }
-      //组装附件
-      let fileByList = this.formData.fileByList ? JSON.parse(this.formData.fileByList) : {};
-      //检测报告
-      if (this.formData.fileList01.length > 0) {
-        this.$set(fileByList, "jcbg", this.formData.fileList01);
-      } else {
-        this.$notify({
-          type: 'warning',
-          message: "请上传报检结果附件"
-        });
-        return
-      }
-      shippingFields.filter(field => !field.key.startsWith('zczp')).forEach(({ key }) => {
-        fileByList[key === 'zlzmwj' ? 'zlzm' : key] = this.formData[key] || [];
-      });
-      //报验结果
-      if (this.formData.fileList03.length > 0) {
-        this.$set(fileByList, "byjg", this.formData.fileList03);
-      }
-      // 入库单
-   
-        this.$set(fileByList, "rkd", this.formData.rkd);
-      
-      this.formData.fileByList = JSON.stringify(fileByList);
+      if (!this.prepareInspectionFiles()) return;
 
       this.$dialog.confirm({
         message: '提交报检结果审核?',
@@ -519,32 +517,27 @@ export default {
         this.$refs.activitiAssignee.init('RKLC', this.formData)
       })
     },
-    async onSave(){
-      if (!this.validateQualityFiles()) return;
-      //组装附件
-      let fileByList = this.formData.fileByList ? JSON.parse(this.formData.fileByList) : {};
-      //检测报告
-      if (this.formData.fileList01.length > 0) {
-        this.$set(fileByList, "jcbg", this.formData.fileList01);
-      } else {
+    prepareInspectionFiles() {
+      if (!this.formData.fileList01?.length) {
         this.$notify({
           type: 'warning',
           message: "请上传报检结果附件"
         });
-        return
+        return false;
       }
-      shippingFields.filter(field => !field.key.startsWith('zczp')).forEach(({ key }) => {
-        fileByList[key === 'zlzmwj' ? 'zlzm' : key] = this.formData[key] || [];
+
+      this.formData.fileByList = this.serializeInspectionFiles(this.formData);
+      return true;
+    },
+    serializeInspectionFiles(form) {
+      return JSON.stringify({
+        ...readOriginalFiles(form.fileByList),
+        jcbg: form.fileList01 || [],
+        rkd: form.rkd || [],
       });
-      //报验结果
-      if (this.formData.fileList03.length > 0) {
-        this.$set(fileByList, "byjg", this.formData.fileList03);
-      }
-      // 入库单
-      
-        this.$set(fileByList, "rkd", this.formData.rkd);
-      
-      this.formData.fileByList = JSON.stringify(fileByList);
+    },
+    async onSave(){
+      if (!this.prepareInspectionFiles()) return;
       const res = await updateFileList({...this.formData,id:this.id})
       if(res.code == 0){
         this.$toast('保存成功')
@@ -671,32 +664,14 @@ export default {
     }
   }
 
-      .detail-floor-content {
-    justify-content: space-between;
+  .detail-floor-content {
     padding: 5px 12px;
 
-    span {
+    h2 {
+      margin: 0;
       color: #151b3e;
-      font-weight: 400;
-    }
-
-    .van-button {
-      border-radius: 5px;
-      margin-right: 8px;
-      height: 30px;
-    }
-
-    .van-button-selected {
-      span {
-        color: #0861db;
-      }
-    }
-
-    .detail-floor-content-add {
-      color: #1189f6;
-      padding-right: 2px;
-      font-size: 16px;
-      vertical-align: middle;
+      font-size: 14px;
+      line-height: 30px;
     }
   }
 
@@ -911,8 +886,14 @@ export default {
 
     .default-button-container-button{
       display: flex;
+      align-items: center;
       .button-info{
         margin-left: 10px;
+      }
+      .draft-button {
+        flex-shrink: 0;
+        height: 34px;
+        margin-left: 8px;
       }
     }
 

@@ -49,6 +49,16 @@ export const updateFileList = (data) => {
   })
 }
 
+// 质检暂存
+export const modifyStore = (data) => {
+  return request({
+    url: `${VUE_APP_PRODMGR_INV}/materialCirculationTableRest/modifyStore`,
+    method: 'post',
+    loading: true,
+    data
+  })
+}
+
 // 物流跟踪明细查询
 export const detailWlgz = (id) => {
   return request({

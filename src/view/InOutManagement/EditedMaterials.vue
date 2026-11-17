@@ -339,7 +339,8 @@ export default {
         });
         this.$store.dispatch('public/setSelectStoreData', data)
       }
-      this.$router.push({ name: 'SubmitStore', query: { id: this.id, type: this.queryType, supplyId: this.supplyId, storeStatus: this.storeStatus } })
+      const from = this.$route.query.from === 'qualityList' ? 'qualityList' : undefined;
+      this.$router.push({ name: 'SubmitStore', query: { id: this.id, type: this.queryType, supplyId: this.supplyId, storeStatus: this.storeStatus, from } })
     },
   }
 }
