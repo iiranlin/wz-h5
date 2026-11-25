@@ -31,6 +31,10 @@
             <span>提报时间：</span>
             <span>{{ detail.createDate && parseTime(detail.createDate, '{y}-{m}-{d} {h}:{i}') }}</span>
           </li>
+          <li>
+            <span>物代备注：</span>
+            <span>{{ detail.remark }}</span>
+          </li>
         </ul>
       </div>
       <div class="detail-ul-bottom-text">

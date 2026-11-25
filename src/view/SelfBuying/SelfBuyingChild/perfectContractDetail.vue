@@ -39,6 +39,14 @@
           <span class="li-span-click" @click="handlePurchaseFileDetail(formData)">{{ formData.purchaseFileNumber || '--' }}</span>
         </li>
         <li>
+          <span>物资名称：</span>
+          <span>{{ formData.purchaseFileName || '--' }}</span>
+        </li>
+        <li>
+          <span>采购方式：</span>
+          <span>{{ formData.purchaseMethod || '--' }}</span>
+        </li>
+        <li>
           <span>买方单位：</span>
           <span>{{ formData.unitName }}</span>
         </li>
@@ -192,29 +200,14 @@
       </ul>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited">
+    <div v-for="(attachment, index) in attachmentSections" :key="attachment.key"
+      class="detail-base-info detail-base-info-edited"
+      :style="index === attachmentSections.length - 1 ? { marginBottom: '65px' } : {}">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
-        <span>合同副本扫描件</span>
+        <span>{{ attachment.label }}</span>
       </div>
-      <file-download-view :fileList="filterList(formData.files, 'htfbsmj') || []" />
-    </div>
-
-    <div class="detail-base-info detail-base-info-edited">
-      <div class="detail-title-content">
-        <img src="@/assets/img/icon-picking-list.png">
-        <span>供应商质量终身承诺书</span>
-      </div>
-      <file-download-view :fileList="filterList(formData.files, 'gyszlzscns') || []" />
-    </div>
-
-    <div class="detail-base-info detail-base-info-edited"
-      :style="{ marginBottom: formData.railwaySpecial == '0' ? '65px' : '0' }">
-      <div class="detail-title-content">
-        <img src="@/assets/img/icon-picking-list.png">
-        <span>合同核备附件</span>
-      </div>
-      <file-download-view :fileList="filterList(formData.files, 'hthbfj') || []" />
+      <file-download-view :fileList="attachment.files" />
     </div>
 
     <div class="default-button-container default-button-container-box"
@@ -253,7 +246,8 @@ import indexMixin from '@/view/mixins'
 import { auditReject, wfNextAssigneeMore, auditApprove } from '@/api/myToDoList'
 import eventBus from '@/utils/eventBus.js'
 
-import { materialPurchaseContractdetail } from '@/api/prodmgr-inv/SelfBuying'
+import { materialPurchaseContractdetail, materialPurchaseFiledetail } from '@/api/prodmgr-inv/SelfBuying'
+import { getContractAttachmentSections } from '@/utils/selfBuyingAttachments'
 
 export default {
   name: 'perfectContractDetail',
@@ -263,6 +257,12 @@ export default {
   components: {
     WorkflowRollback,
     FileDownloadView
+  },
+
+  computed: {
+    attachmentSections() {
+      return getContractAttachmentSections(this.formData);
+    },
   },
 
   filters: {
@@ -362,12 +362,23 @@ export default {
     },
     // 获取详情
     handleDetail() {
-      materialPurchaseContractdetail(this.rQueryId).then(({ data }) => {
+      materialPurchaseContractdetail(this.rQueryId).then(async ({ data }) => {
         data.contractDetailsList.forEach((el, index) => {
           this.activeNames.push(index);
         })
 
         this.formData = data
+        if (data.purchaseFileId && (!data.purchaseFileName || !data.purchaseMethod)) {
+          try {
+            const res = await materialPurchaseFiledetail(data.purchaseFileId);
+            if (res.code == 0 && res.data && this.formData === data) {
+              this.$set(data, 'purchaseFileName', data.purchaseFileName || res.data.purchaseFileName || '');
+              this.$set(data, 'purchaseMethod', data.purchaseMethod || res.data.purchaseMethod || '');
+            }
+          } catch (error) {
+            this.$notify({ type: 'warning', message: '关联采购文件信息加载失败' });
+          }
+        }
       })
     },
     // 流程信息

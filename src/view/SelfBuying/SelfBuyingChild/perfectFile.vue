@@ -66,8 +66,8 @@
             @click="handlerShowCalendar('calendar')" input-align="right" />
         </li>
         <li class="detail-list-li-input">
-          <van-field v-model="sectionInfo.purchaseMethod" required name="purchaseMethod" label="采购方式"
-            placeholder="请输入或选择采购方式" right-icon="arrow" @click-right-icon="showprocurementPicker = true"
+          <van-field v-model="sectionInfo.purchaseMethod" readonly clickable required name="purchaseMethod" label="采购方式"
+            placeholder="请选择采购方式" right-icon="arrow" @click="showprocurementPicker = true"
             input-align="right" />
         </li>
       </ul>
@@ -75,7 +75,6 @@
 
     <div class="detail-base-info detail-base-info-edited">
       <div class="detail-title-content">
-        <span class="li-span-red">*</span>
         <img src="@/assets/img/Icon-notes.png" />
         <span>
           备注
@@ -103,35 +102,28 @@
     <div class="detail-base-info detail-base-info-edited" style="margin-bottom: 8px;background-color: #F2F4F8;">
       <div class="detail-title-content">
         <span style="font-size: 16px;">核备文件</span><span
-          style="font-size: 12px; color: #898C9F; font-weight: 300;">(必传项)</span>
+          style="font-size: 12px; color: #898C9F; font-weight: 300;">（按采购方式确定必传项）</span>
       </div>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
+    <div v-for="(attachment, index) in attachmentSections" :key="attachment.key"
+      class="detail-base-info detail-base-info-edited"
+      :style="{ marginTop: 0, marginBottom: index === attachmentSections.length - 1 ? '65px' : '5px' }">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
-        <span>采购方案或招标计划</span>
+        <span v-if="attachment.required" class="attachment-required-mark">*</span>
+        <span>{{ attachment.label }}</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.registration?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.registration
-        || []" businessType="01" class="outbound-field-uploader" />
-    </div>
-
-    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 65px;">
-      <div class="detail-title-content">
-        <img src="/static/icon-file.png">
-        <span>采购文件（含技术规格书）</span>
-      </div>
-      <p class="box-container-p" v-if="!sectionInfo?.bidDocument?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.bidDocument
-        || []" businessType="01" class="outbound-field-uploader" />
+      <p class="box-container-p" v-if="!attachment.files.length">
+        {{ attachment.required ? '必填项，' : '非必填项，' }}请选择文件上传，支持jpg、png、jpeg、pdf、doc、docx格式，可上传多个
+      </p>
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="attachment.files"
+        businessType="01" class="outbound-field-uploader" />
     </div>
 
     <div class="default-button-container">
-      <van-button class="button-info" round @click="sureClick(false)">返回</van-button>
-      <van-button class="button-info" round type="info" @click="sureClick(true)">确定</van-button>
+      <van-button class="button-info" round @click="saveDraft" :disabled="saving">暂存</van-button>
+      <van-button class="button-info" round type="info" @click="sureClick" :disabled="saving">确定</van-button>
     </div>
 
     <!-- 物资大类 -->
@@ -170,6 +162,7 @@
 import FileUploadView from "@/components/FileUploadView.vue";
 import Calendar from "@/layout/components/calendar.vue";
 import { parseTime } from '@/utils/index'
+import { clearDraftEmptyPlaceholders, PURCHASE_METHODS, PURCHASE_FILE_ATTACHMENTS, isAttachmentRequired, parseAttachmentList } from '@/utils/selfBuyingAttachments'
 import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseFilecreate, materialPurchaseFilemodify, materialPurchaseFiledetail } from "@/api/prodmgr-inv/SelfBuying"
 
 export default {
@@ -180,11 +173,14 @@ export default {
   data() {
     return {
       detailInfo: {},
+      saving: false,
+      draftCreatedWithoutId: false,
       remarkMaxLength: 500,
       sectionInfo: {
         sectionId: '',
         registration: [],
         bidDocument: [],
+        registrationAttach: [],
         name: '',
         code: '',
         purchaseName: '',
@@ -219,10 +215,17 @@ export default {
       // unitColumns: ['个', '件', '台', '套', '米', '吨', '千克', '平方米', '立方米'],
       // 采购方式
       showprocurementPicker: false,
-      procurementColumns: ['公开招标', '邀请招标', '竞争性谈判', '单一来源采购', '询价采购', '协议招标'],
+      procurementColumns: PURCHASE_METHODS,
     };
   },
   computed: {
+    attachmentSections() {
+      return PURCHASE_FILE_ATTACHMENTS.map(item => ({
+        ...item,
+        required: isAttachmentRequired(item, this.sectionInfo.purchaseMethod),
+        files: this.sectionInfo[item.key],
+      }));
+    },
     remarkLength() {
       return (this.sectionInfo.remak || '').length;
     },
@@ -249,9 +252,14 @@ export default {
     } else {
       const data = await this.getGeneraDetail();
 
-      data.registration = JSON.parse(data.registration);
-      data.bidDocument = JSON.parse(data.bidDocument);
-      data.registrationDate = parseTime(data.registrationDate, '{y}-{m}-{d}');
+      PURCHASE_FILE_ATTACHMENTS.forEach(item => {
+        data[item.key] = parseAttachmentList(data[item.key]);
+      });
+      const { registrationDate } = data;
+      const formattedDate = typeof registrationDate === 'string' || typeof registrationDate === 'number'
+        ? parseTime(registrationDate, '{y}-{m}-{d}')
+        : '';
+      data.registrationDate = formattedDate === 'NaN-NaN-NaN' ? '' : formattedDate;
 
       this.sectionInfo = data;
 
@@ -431,154 +439,154 @@ export default {
       this.sectionInfo.purchaseMethod = value;
       this.showprocurementPicker = false;
     },
-    sureClick(isData) {
-      if (isData) {
-        if (!this.sectionInfo.name) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择物资大类!',
-          });
-          return
-        }
-        if (!this.sectionInfo.purchaseName) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择类别!',
-          });
-          return
-        }
-        // if (!this.sectionInfo.purchaseDetailName) {
-        //   this.$notify({
-        //     type: 'warning',
-        //     message: '请选择物资细目!',
-        //   });
-        //   return
-        // }
-        // if (!this.sectionInfo.quantity) {
-        //   this.$notify({
-        //     type: 'warning',
-        //     message: '请输入数量!',
-        //   });
-        //   return
-        // }
-        if (!this.sectionInfo.purchaseTypeName) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择物资种类!',
-          });
-          return
-        }
-        if (!this.sectionInfo.amount) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入预估采购金额!',
-          });
-          return
-        }
-        if (!this.sectionInfo.purchaseFileName) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入物资名称!',
-          });
-          return
-        }
-        if (!this.sectionInfo.registrationDate) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择预计采购完成日期!',
-          });
-          return
-        }
-        if (!this.sectionInfo.purchaseMethod) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择采购方式!',
-          });
-          return
-        }
-        if (!this.sectionInfo.remak) {
-          this.$notify({
-            type: 'warning',
-            message: '请备注物资相关信息!',
-          });
-          return
-        }
-        if (this.remarkLength > this.remarkMaxLength) {
-          this.$notify({
-            type: 'warning',
-            message: `备注不能超过 ${this.remarkMaxLength} 字`,
-          });
-          return
-        }
-        if (!this.sectionInfo.registration?.length > 0) {
-          this.$notify({
-            type: 'warning',
-            message: '请上传采购方案或招标计划!',
-          });
-          return
-        }
-        if (!this.sectionInfo.bidDocument?.length > 0) {
-          this.$notify({
-            type: 'warning',
-            message: '请上传采购文件（含技术规格书）!',
-          });
-          return
-        }
-
-        if (this.$route.query.type == 'create') {
-          const registrationDate = new Date(this.sectionInfo.registrationDate).toISOString();
-
-          const params = {
-            ...this.sectionInfo,
-            id: "",
-            registration: JSON.stringify(this.sectionInfo.registration),
-            bidDocument: JSON.stringify(this.sectionInfo.bidDocument),
-            registrationDate,
-            schemeApproval: "\"\"",
-            tenderAnnouncement: "\"\"",
-            bidEvaluationReport: "\"\"",
-            acceptance: "\"\"",
-            contractCopy: "\"\"",
-            other: "\"\"",
-            scheme: "\"\"",
-            bidAddendum: "\"\"",
-            bidCandidateWeb: "\"\"",
-            bidCopy: "\"\"",
-            commitment: "\"\"",
-            sectionShortName: this.detailInfo.projectShortName
-          }
-
-          materialPurchaseFilecreate(params).then(res => {
-            if (res.code == 0) {
-              this.$toast('新增成功')
-              this.$router.push({ name: 'purchaseFile' })
-            }
-          })
-        } else {
-          const params = {
-            ...this.sectionInfo,
-            registration: JSON.stringify(this.sectionInfo.registration),
-            bidDocument: JSON.stringify(this.sectionInfo.bidDocument),
-          }
-
-          materialPurchaseFilemodify(params).then(res => {
-            if (res.code == 0) {
-              this.$toast('修改成功')
-              this.$router.push({ name: 'purchaseFile' })
-            }
-          })
-        }
-
-
-      } else {
-        this.$router.push({ name: 'purchaseFile' })
+    saveDraft() {
+      if (!this.validateBasicInfo()) return;
+      return this.savePurchaseFile(true);
+    },
+    async savePurchaseFile(isDraft = false) {
+      if (this.saving) return;
+      if (this.draftCreatedWithoutId) {
+        this.$toast('请从采购文件列表打开已暂存的记录后继续保存');
+        return;
       }
+
+      const isCreate = this.$route.query.type === 'create' && !this.sectionInfo.id;
+      const params = { ...this.sectionInfo };
+      PURCHASE_FILE_ATTACHMENTS.forEach(({ key }) => {
+        params[key] = JSON.stringify(this.sectionInfo[key]);
+      });
+      if (isCreate) {
+        const date = params.registrationDate ? new Date(params.registrationDate) : null;
+        Object.assign(params, {
+          id: '',
+          registrationDate: date && !Number.isNaN(date.getTime()) ? date.toISOString() : null,
+          schemeApproval: '',
+          tenderAnnouncement: '',
+          bidEvaluationReport: '',
+          acceptance: '',
+          contractCopy: '',
+          other: '',
+          scheme: '',
+          bidAddendum: '',
+          bidCandidateWeb: '',
+          bidCopy: '',
+          commitment: '',
+          sectionShortName: this.detailInfo.projectShortName
+        });
+      }
+
+      if (isDraft) {
+        clearDraftEmptyPlaceholders(params);
+      }
+
+      this.saving = true;
+      try {
+        const save = isCreate ? materialPurchaseFilecreate : materialPurchaseFilemodify;
+        const res = await save(params);
+        if (res.code != 0) return;
+
+        if (isDraft) {
+          if (isCreate) {
+            const data = res.data;
+            const id = data && typeof data === 'object' ? data.id : data;
+            if ((typeof id === 'string' && id.trim()) || (typeof id === 'number' && id > 0)) {
+              this.$set(this.sectionInfo, 'id', id);
+            } else {
+              this.draftCreatedWithoutId = true;
+            }
+          }
+          this.$toast('暂存成功，下次可继续编辑');
+          return;
+        }
+
+        this.$toast(isCreate ? '新增成功' : '修改成功');
+        this.$router.push({ name: 'purchaseFile' });
+      } catch {
+        // 接口错误由公共请求层提示。
+      } finally {
+        this.saving = false;
+      }
+    },
+    validateBasicInfo() {
+      if (!this.sectionInfo.name) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择物资大类!',
+        });
+        return false;
+      }
+      if (!this.sectionInfo.purchaseName) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择类别!',
+        });
+        return false;
+      }
+      if (!this.sectionInfo.purchaseTypeName) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择物资种类!',
+        });
+        return false;
+      }
+      if (!this.sectionInfo.amount) {
+        this.$notify({
+          type: 'warning',
+          message: '请输入预估采购金额!',
+        });
+        return false;
+      }
+      if (!String(this.sectionInfo.purchaseFileName ?? '').trim()) {
+        this.$notify({
+          type: 'warning',
+          message: '请输入物资名称!',
+        });
+        return false;
+      }
+      if (!this.sectionInfo.registrationDate) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择预计采购完成日期!',
+        });
+        return false;
+      }
+      if (!PURCHASE_METHODS.includes(this.sectionInfo.purchaseMethod)) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择采购方式!',
+        });
+        return false;
+      }
+      return true;
+    },
+    sureClick() {
+      if (!this.validateBasicInfo()) return;
+      if (this.remarkLength > this.remarkMaxLength) {
+        this.$notify({
+          type: 'warning',
+          message: `备注不能超过 ${this.remarkMaxLength} 字`,
+        });
+        return
+      }
+      const missingAttachment = this.attachmentSections.find(item => item.required && !item.files.length);
+      if (missingAttachment) {
+        this.$notify({
+          type: 'warning',
+          message: `请上传${missingAttachment.label}!`,
+        });
+        return
+      }
+      return this.savePurchaseFile();
     },
   },
 };
 </script>
 
 <style lang="less" scoped>
+.detail-base-info .detail-title-content > .attachment-required-mark {
+  color: #1989fa;
+}
+
 /deep/.van-calendar__popup.van-popup--bottom,
 .van-calendar__popup.van-popup--top {
   height: 94% !important;

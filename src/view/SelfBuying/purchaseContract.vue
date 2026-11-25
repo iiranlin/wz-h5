@@ -93,7 +93,7 @@
             <div class="list-ul-button">
               <!-- 未提交、已驳回可修改 -->
               <van-button class="button-info" plain round type="info" v-if="[1, 0].includes(item.status)"
-                @click.stop="handleSelfBuying(item)">修改</van-button>
+                @click.stop="handleSelfBuying(item)">编辑</van-button>
 
               <!-- 未提交、已驳回可提交审核 -->
               <van-button class="button-info" round type="info" v-if="[1, 0].includes(item.status)"

@@ -171,6 +171,7 @@
 </template>
 
 <script>
+import { parseAttachmentList } from '@/utils/selfBuyingAttachments'
 import FileUploadView from "@/components/FileUploadView.vue";
 import { materialPurchaseFiledetail, materialPurchaseFilemodify } from '@/api/prodmgr-inv/SelfBuying'
 
@@ -236,15 +237,15 @@ export default {
     handleDetail() {
       materialPurchaseFiledetail(this.$route.query.id).then(({ data }) => {
         this.formData = data
-        this.formData.tenderAnnouncement = JSON.parse(data.tenderAnnouncement) || []
-        this.formData.bidAddendum = JSON.parse(data.bidAddendum) || []
-        this.formData.bidEvaluationReport = JSON.parse(data.bidEvaluationReport) || []
-        this.formData.bidCandidateWeb = JSON.parse(data.bidCandidateWeb) || []
-        this.formData.acceptance = JSON.parse(data.acceptance) || []
-        this.formData.bidCopy = JSON.parse(data.bidCopy) || []
-        this.formData.contractCopy = JSON.parse(data.contractCopy) || []
-        this.formData.commitment = JSON.parse(data.commitment) || []
-        this.formData.other = JSON.parse(data.other) || []
+        this.formData.tenderAnnouncement = parseAttachmentList(data.tenderAnnouncement)
+        this.formData.bidAddendum = parseAttachmentList(data.bidAddendum)
+        this.formData.bidEvaluationReport = parseAttachmentList(data.bidEvaluationReport)
+        this.formData.bidCandidateWeb = parseAttachmentList(data.bidCandidateWeb)
+        this.formData.acceptance = parseAttachmentList(data.acceptance)
+        this.formData.bidCopy = parseAttachmentList(data.bidCopy)
+        this.formData.contractCopy = parseAttachmentList(data.contractCopy)
+        this.formData.commitment = parseAttachmentList(data.commitment)
+        this.formData.other = parseAttachmentList(data.other)
       })
     },
     sureClick(isData) {

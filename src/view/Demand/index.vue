@@ -160,11 +160,11 @@ export default {
           status: '5',
           title: '已完成',
         },
-        {
-          id: 7,
-          status: '7',
-          title: '已撤回',
-        }
+        // {
+        //   id: 7,
+        //   status: '7',
+        //   title: '已撤回',
+        // }
       ],
       listGhsData: [],
       filePath: "",
@@ -252,7 +252,7 @@ export default {
 
       this.$store.dispatch('public/setSelectGoodData', []);
       sessionStorage.setItem('gysObj',JSON.stringify({ id: id, text: title }))
-      this.$router.push({ path: '/selectGoods', query: { id: id, text: title } })
+      this.$router.push({ path: '/selectGoods', query: { id: id, text: title, source: 'dashboard' } })
     },
     //查看物流
     handleLookClick(id, number, logisticsNumber) {

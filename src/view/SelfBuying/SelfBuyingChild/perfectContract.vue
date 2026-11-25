@@ -28,6 +28,17 @@
             input-align="right" @click="openPurchaseFilePopup" />
         </li>
         <li class="detail-list-li-input">
+          <van-field v-model="sectionInfo.purchaseFileName" :readonly="arePurchaseFieldsLocked" required
+            name="purchaseFileName" label="物资名称"
+            :placeholder="arePurchaseFieldsLocked ? '请关联采购文件带出物资名称' : '请输入物资名称'" input-align="right" />
+        </li>
+        <li class="detail-list-li-input">
+          <van-field v-model="sectionInfo.purchaseMethod" readonly :clickable="!arePurchaseFieldsLocked" required
+            name="purchaseMethod" label="采购方式" :right-icon="arePurchaseFieldsLocked ? '' : 'arrow'"
+            :placeholder="arePurchaseFieldsLocked ? '请关联采购文件带出采购方式' : '请选择采购方式'"
+            input-align="right" @click="openProcurementPicker" />
+        </li>
+        <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.contractName" required name="contractName" label="合同名称" placeholder="请输入合同名称"
             input-align="right" />
         </li>
@@ -80,7 +91,7 @@
       </ul>
     </div>
 
-    <van-collapse v-model="activeNames">
+    <van-collapse v-model="activeNames" class="contract-material-details">
       <van-collapse-item class="detail-base-info detail-base-info-edited"
         :style="index + 1 == sectionInfo.contractDetailsList.length ? { boxShadow: '0 -2px 5px rgba(32,30,74,.1)' } : ''"
         v-for="(item, index) in sectionInfo.contractDetailsList" :key="index" :name="index">
@@ -197,40 +208,24 @@
           style="color: #1989FA;">+添加物资明细</span></van-button>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited">
+    <div v-for="(attachment, index) in attachmentSections" :key="attachment.key"
+      class="detail-base-info detail-base-info-edited"
+      :style="index === attachmentSections.length - 1 ? { marginBottom: '65px' } : {}">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
-        <span>合同副本扫描件</span>
+        <span v-if="attachment.required" class="attachment-required-mark">*</span>
+        <span>{{ attachment.label }}</span>
       </div>
-      <p class="box-container-p" v-if="!sectionInfo?.htfbsmj?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.htfbsmj
-        || []" businessType="01" class="outbound-field-uploader" />
-    </div>
-
-    <div class="detail-base-info detail-base-info-edited">
-      <div class="detail-title-content">
-        <img src="/static/icon-file.png">
-        <span>供应商质量终身承诺书</span>
-      </div>
-      <p class="box-container-p" v-if="!sectionInfo?.gyszlzscns?.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf、doc格式</p>
-      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.gyszlzscns
-        || []" businessType="02" class="outbound-field-uploader" />
-    </div>
-    <div class="detail-base-info detail-base-info-edited" style="margin-bottom: 65px;">
-      <div class="detail-title-content">
-        <img src="/static/icon-file.png">
-        <span>合同核备附件</span>
-      </div>
-      <p class="box-container-p" v-if="!sectionInfo?.hthbfj?.length">请选择文件上传，支持jpg、png、jpeg、pdf、doc格式，可上传多个</p>
-      <file-upload-view accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="sectionInfo.hthbfj
-        || []" :maxCount="99" businessType="03" class="outbound-field-uploader" />
+      <p class="box-container-p" v-if="!attachment.files.length">
+        {{ attachment.required ? '必填项，' : '非必填项，' }}请选择文件上传，支持jpg、png、jpeg、pdf、doc、docx格式，可上传多个
+      </p>
+      <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf,.doc,.docx" :fileList="attachment.files"
+        :businessType="attachment.businessType || '01'" class="outbound-field-uploader" />
     </div>
 
     <div class="default-button-container">
-      <van-button class="button-info" round @click="sureClick(false)">返回</van-button>
-      <van-button class="button-info" round type="info" @click="sureClick(true)">确定</van-button>
+      <van-button class="button-info" round @click="saveDraft" :disabled="saving">暂存</van-button>
+      <van-button class="button-info" round type="info" @click="sureClick" :disabled="saving">确定</van-button>
     </div>
 
     <!-- 物资大类 -->
@@ -255,6 +250,11 @@
     <van-popup v-model="showUnitPicker" round position="bottom">
       <van-picker show-toolbar :columns="unitColumns" @cancel="showUnitPicker = false" @confirm="onUnitConfirm" />
     </van-popup>
+    <!-- 非 A 类物资采购方式 -->
+    <van-popup v-model="showprocurementPicker" round position="bottom">
+      <van-picker show-toolbar :columns="procurementColumns" @cancel="showprocurementPicker = false"
+        @confirm="procurementConfirm" />
+    </van-popup>
     <!-- 关联采购文件核备 -->
     <van-popup v-model="showPurchaseFilePopup" round position="bottom" @close="handlePurchaseFilePopupClose">
       <div class="purchase-file-popup detail-base-info detail-base-info-edited">
@@ -264,12 +264,12 @@
         </div>
         <van-list v-model="purchaseFileLoading" :finished="purchaseFileFinished" finished-text="没有更多了..."
           :immediate-check="false" @load="loadMorePurchaseFiles">
-          <van-radio-group v-model="selectedPurchaseFileId">
+          <van-radio-group :value="selectedPurchaseFileId">
             <div v-for="item in purchaseFileList" :key="item.id" class="purchase-file-item"
               @click="handlePurchaseFileRowClick(item)">
               <div class="purchase-file-item-title">
                 <span>单据ID：{{ item.purchaseNumber }}</span>
-                <van-radio :name="String(item.id)" @click.native.stop="handlePurchaseFileRadioClick(item)" />
+                <van-radio :name="String(item.id)" @click.native.stop="handlePurchaseFileRowClick(item)" />
               </div>
               <ul class="detail-ul">
                 <li>
@@ -308,7 +308,8 @@
 import FileUploadView from "@/components/FileUploadView.vue";
 import Calendar from "@/layout/components/calendar.vue";
 import rangeCalendar from "./components/calendar.vue";
-import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseFileList, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify, countByContractNumber } from "@/api/prodmgr-inv/SelfBuying"
+import { materialCategoryList, purchasefindAllList, purchasefindAllListType, purchasefindAllListDetail, materialSectionProject, materialPurchaseFileList, materialPurchaseFiledetail, materialPurchaseContractcreate, materialPurchaseContractdetail, materialPurchaseContractmodify, countByContractNumber } from "@/api/prodmgr-inv/SelfBuying"
+import { clearDraftEmptyPlaceholders, PURCHASE_METHODS, createContractAttachmentFiles, getContractAttachmentSections, parseAttachmentList, parseAttachmentObject } from '@/utils/selfBuyingAttachments'
 import keepPages from '@/view/mixins/keepPages'
 import dayjs from "dayjs";
 import Decimal from 'decimal.js'
@@ -319,6 +320,9 @@ export default {
   components: { FileUploadView, Calendar, rangeCalendar },
 
   computed: {
+    attachmentSections() {
+      return getContractAttachmentSections(this.sectionInfo);
+    },
     unitColumns() {
       if (this.dict && this.dict.MeasureUnit) {
         return this.dict.MeasureUnit.map(item => item.label);
@@ -336,6 +340,9 @@ export default {
     isPurchaseFileRequired() {
       return this.sectionInfo.name === 'A类';
     },
+    arePurchaseFieldsLocked() {
+      return this.$route.query.type === 'create' ? Boolean(this.sectionInfo.purchaseFileId) : this.isPurchaseFileRequired;
+    },
   },
 
   watch: {
@@ -351,12 +358,17 @@ export default {
 
   data() {
     return {
+      saving: false,
+      draftCreatedWithoutId: false,
       contractDetailsIndex: 0,
       activeNames: [0],
       detailInfo: {},
       sectionInfo: {
         purchaseFileId: '',
         purchaseFileNumber: '',
+        purchaseFileName: '',
+        purchaseMethod: '',
+        attachFiles: createContractAttachmentFiles(),
         name: '',
         code: '',
         purchaseName: '',
@@ -406,6 +418,9 @@ export default {
       varietyColumns: [],
       // 计量单位
       showUnitPicker: false,
+      showprocurementPicker: false,
+      procurementColumns: PURCHASE_METHODS,
+      linkedPurchaseFile: null,
       // 关联采购文件核备
       showPurchaseFilePopup: false,
       purchaseFileList: [],
@@ -462,6 +477,9 @@ export default {
           this.sectionInfo = {
             purchaseFileId: '',
             purchaseFileNumber: '',
+            purchaseFileName: '',
+            purchaseMethod: '',
+            attachFiles: createContractAttachmentFiles(),
             name: '',
             code: '',
             purchaseName: '',
@@ -495,6 +513,8 @@ export default {
             ],
           }
           sessionStorage.removeItem('zghtCreate')
+          this.linkedPurchaseFile = null;
+          this.draftCreatedWithoutId = false;
           // 重置合同编号重复标记
           this.contractNumberDuplicate = false;
         }
@@ -512,10 +532,15 @@ export default {
 
             const data = await this.getGeneraDetail();
 
-            data.htfbsmj = JSON.parse(data.files)?.htfbsmj || [];
-            data.gyszlzscns = JSON.parse(data.files)?.gyszlzscns || [];
-            data.hthbfj = JSON.parse(data.files)?.hthbfj || [];
-            data.startTime = dayjs(data.startTime).format("YYYY-MM-DD");
+            const files = parseAttachmentObject(data.files);
+            data.htfbsmj = parseAttachmentList(files.htfbsmj);
+            data.gyszlzscns = parseAttachmentList(files.gyszlzscns);
+            data.hthbfj = parseAttachmentList(files.hthbfj);
+            data.attachFiles = createContractAttachmentFiles(data.attachFiles ?? data.fileList);
+            delete data.fileList;
+            data.purchaseFileName = data.purchaseFileName || '';
+            data.purchaseMethod = data.purchaseMethod || '';
+            data.startTime = data.startTime ? dayjs(data.startTime).format("YYYY-MM-DD") : '';
 
             data.contractDetailsList.forEach((el, index) => {
               if (el.railwaySpecial == '1') {
@@ -532,6 +557,7 @@ export default {
             await this.onGeneraConfirm({ text: data.name, code: data.code }, false);
             await this.oncategoryConfirm({ text: data.purchaseName, code: data.purchaseCode }, false);
             await this.onvarietyConfirm({ text: data.purchaseTypeName, code: data.purchaseTypeCode }, false);
+            await this.loadLinkedPurchaseFile();
 
             sessionStorage.removeItem('zghtCreate')
 
@@ -636,23 +662,59 @@ export default {
       this.selectedPurchaseFileId = rowId;
       this.selectedPurchaseFile = row;
     },
-    handlePurchaseFileRadioClick(row) {
-      this.$nextTick(() => {
-        this.handlePurchaseFileRowClick(row);
-      });
-    },
     handlePurchaseFilePopupClose() {
       this.selectedPurchaseFile = null;
     },
-    confirmPurchaseFile() {
-      const row = this.purchaseFileList.find(
+    openProcurementPicker() {
+      if (!this.arePurchaseFieldsLocked) {
+        this.showprocurementPicker = true;
+      }
+    },
+    procurementConfirm(value) {
+      if (!this.arePurchaseFieldsLocked && PURCHASE_METHODS.includes(value)) {
+        this.sectionInfo.purchaseMethod = value;
+      }
+      this.showprocurementPicker = false;
+    },
+    applyLinkedPurchaseFile(row, overwrite = true) {
+      if (overwrite || !this.sectionInfo.purchaseFileName) {
+        this.$set(this.sectionInfo, 'purchaseFileName', row.purchaseFileName || '');
+      }
+      if (overwrite || !this.sectionInfo.purchaseMethod) {
+        this.$set(this.sectionInfo, 'purchaseMethod', row.purchaseMethod || '');
+      }
+    },
+    async loadLinkedPurchaseFile() {
+      this.linkedPurchaseFile = null;
+      const id = this.sectionInfo.purchaseFileId;
+      if (!id) return;
+
+      try {
+        const res = await materialPurchaseFiledetail(id);
+        if (String(this.sectionInfo.purchaseFileId) !== String(id)) return;
+        if (res.code != 0 || !res.data) throw new Error('未获取到关联采购文件');
+        this.linkedPurchaseFile = res.data;
+        // A 类以关联采购文件为准；非 A 类保留已保存的手填值，只补充空值。
+        this.applyLinkedPurchaseFile(res.data, this.isPurchaseFileRequired);
+      } catch (error) {
+        this.$notify({ type: 'warning', message: '关联采购文件信息加载失败，请重新选择关联采购文件' });
+      }
+    },
+    async confirmPurchaseFile() {
+      if (this.purchaseFileLoading) return;
+      let row = this.purchaseFileList.find(
         item => String(item.id) === this.selectedPurchaseFileId
       ) || this.selectedPurchaseFile;
 
-      if (!row) {
+      if (!this.selectedPurchaseFileId) {
         if (!this.isPurchaseFileRequired) {
+          if (this.sectionInfo.purchaseFileId) {
+            this.sectionInfo.purchaseFileName = '';
+            this.sectionInfo.purchaseMethod = '';
+          }
           this.sectionInfo.purchaseFileId = '';
           this.sectionInfo.purchaseFileNumber = '';
+          this.linkedPurchaseFile = null;
           this.showPurchaseFilePopup = false;
           return;
         }
@@ -664,8 +726,25 @@ export default {
         return;
       }
 
+      // 列表没有带出完整信息时，复用现有采购文件详情接口补齐。
+      if (!row || !row.purchaseFileName || !row.purchaseMethod) {
+        const toast = this.$toast.loading({ duration: 0, forbidClick: true, message: '正在读取采购文件...' });
+        try {
+          const res = await materialPurchaseFiledetail(this.selectedPurchaseFileId);
+          if (res.code != 0 || !res.data) throw new Error('未获取到关联采购文件');
+          row = res.data;
+        } catch (error) {
+          this.$notify({ type: 'warning', message: '关联采购文件信息加载失败，请重新选择' });
+          return;
+        } finally {
+          toast.clear();
+        }
+      }
+
       this.sectionInfo.purchaseFileId = row.id;
       this.sectionInfo.purchaseFileNumber = row.purchaseNumber;
+      this.linkedPurchaseFile = row;
+      this.applyLinkedPurchaseFile(row);
       this.showPurchaseFilePopup = false;
     },
     formatTimestamp(timestamp) {
@@ -763,6 +842,10 @@ export default {
       this.showGeneraPicker = false;
 
       if (flag) {
+        if (this.isPurchaseFileRequired && this.arePurchaseFieldsLocked) {
+          this.showprocurementPicker = false;
+          this.applyLinkedPurchaseFile(this.linkedPurchaseFile || {});
+        }
         this.$set(this.sectionInfo, 'purchaseName', '');
         this.$set(this.sectionInfo, 'purchaseDetailName', '');
         this.$set(this.sectionInfo, 'purchaseTypeName', '');
@@ -974,175 +1057,181 @@ export default {
 
       this.sectionInfo.amount = this.handlerfix(value) ? `${i}.${d.slice(0, 6)}` : value;
     },
-    sureClick(isData) {
-      if (isData) {
-        if (!this.sectionInfo.contractName) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入合同名称!',
-          });
-          return
-        }
-        if (this.isPurchaseFileRequired && !this.sectionInfo.purchaseFileNumber) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择关联采购文件!',
-          });
-          return
-        }
-        // if (!this.sectionInfo.amount) {
-        //   this.$notify({
-        //     type: 'warning',
-        //     message: '请输入合同金额!',
-        //   });
-        //   return
-        // }
-        if (!this.sectionInfo.contractNumber) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入合同编号!',
-          });
-          return
-        }
-        if (!this.sectionInfo.purchaseNo) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入采购编号!',
-          });
-          return
-        }
-        if (!this.sectionInfo.name) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择物资大类!',
-          });
-          return
-        }
-        if (!this.sectionInfo.packageNumber) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入包件号!',
-          });
-          return
-        }
-        if (!this.sectionInfo.purchaseName) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择类别!',
-          });
-          return
-        }
-        // if (!this.sectionInfo.purchaseDetailName) {
-        //   this.$notify({
-        //     type: 'warning',
-        //     message: '请选择物资细目!',
-        //   });
-        //   return
-        // }
-        if (!this.sectionInfo.supplierName) {
-          this.$notify({
-            type: 'warning',
-            message: '请输入供应商!',
-          });
-          return
-        }
-        if (!this.sectionInfo.purchaseTypeName) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择物资种类!',
-          });
-          return
-        }
-        if (!this.sectionInfo.startTime) {
-          this.$notify({
-            type: 'warning',
-            message: '请选择合同签订日期!',
-          });
-          return
-        }
-        // if (!this.sectionInfo.railwaySpecial) {
-        //   this.$notify({
-        //     type: 'warning',
-        //     message: '请选择是否为铁路产品!',
-        //   });
-        //   return
-        // }
-
-        if (!this.validateContractDetails(this.sectionInfo.contractDetailsList).isValid) {
-          this.$notify({
-            type: 'warning',
-            message: '请完善物资明细信息!',
-          });
-          return
-        }
-
-        if (!this.sectionInfo.htfbsmj?.length > 0) {
-          this.$notify({
-            type: 'warning',
-            message: '请上传合同副本扫描件!',
-          });
-          return
-        }
-        if (!this.sectionInfo.gyszlzscns?.length > 0) {
-          this.$notify({
-            type: 'warning',
-            message: '请上传供应商质量终身承诺书!',
-          });
-          return
-        }
-
-
-        // 判断新增或编辑调用不同接口，成功后跳转回列表页面
-        const time = new Date(this.sectionInfo.startTime);
-
-        if (this.$route.query.type == 'create') {
-
-          const params = {
-            ...this.sectionInfo,
-            id: null,
-            files: JSON.stringify({ htfbsmj: this.sectionInfo.htfbsmj, gyszlzscns: this.sectionInfo.gyszlzscns, hthbfj: this.sectionInfo.hthbfj }),
-            startTime: time.getTime(),
-            contractDetailsList: this.sectionInfo.contractDetailsList,
-            sectionShortName: this.detailInfo.projectShortName,
-            projectName: this.detailInfo.projectName,
-
-          }
-
-          materialPurchaseContractcreate(params).then(res => {
-            if (res.code == 0) {
-              sessionStorage.removeItem('perfectContract_imported_details')
-              this.$toast('新增成功')
-              this.$router.push({ name: 'purchaseContract' })
-            }
-          })
-        } else {
-          const params = {
-            ...this.sectionInfo,
-            files: JSON.stringify({ htfbsmj: this.sectionInfo.htfbsmj, gyszlzscns: this.sectionInfo.gyszlzscns, hthbfj: this.sectionInfo.hthbfj }),
-            startTime: time.getTime(),
-            contractDetailsList: this.sectionInfo.contractDetailsList,
-          }
-
-          materialPurchaseContractmodify(params).then(res => {
-            if (res.code == 0) {
-              sessionStorage.removeItem('perfectContract_imported_details')
-
-              this.$toast('修改成功')
-              this.$router.push({ name: 'purchaseContract' })
-
-            }
-          })
-        }
-
-      } else {
-        this.$router.push({ name: 'purchaseContract' })
+    saveDraft() {
+      if (!this.validateBasicInfo()) return;
+      return this.saveContract(true);
+    },
+    async saveContract(isDraft = false) {
+      if (this.saving) return;
+      if (this.draftCreatedWithoutId) {
+        this.$toast('请从合同列表打开已暂存的记录后继续保存');
+        return;
       }
+
+      const { startTime, htfbsmj, gyszlzscns, hthbfj, attachFiles } = this.sectionInfo;
+      const isCreate = this.$route.query.type === 'create' && !this.sectionInfo.id;
+      const params = {
+        ...this.sectionInfo,
+        files: JSON.stringify({ htfbsmj, gyszlzscns, hthbfj }),
+        attachFiles: JSON.stringify(attachFiles),
+        startTime: startTime ? new Date(startTime).getTime() : null,
+      };
+      if (isCreate) {
+        params.id = null;
+        params.sectionShortName = this.detailInfo.projectShortName;
+        params.projectName = this.detailInfo.projectName;
+      }
+
+      if (isDraft) {
+        clearDraftEmptyPlaceholders(params);
+      }
+
+      this.saving = true;
+      try {
+        const save = isCreate ? materialPurchaseContractcreate : materialPurchaseContractmodify;
+        const res = await save(params);
+        if (res.code != 0) return;
+        sessionStorage.removeItem('perfectContract_imported_details');
+
+        if (isDraft) {
+          if (isCreate) {
+            const data = res.data;
+            const id = data && typeof data === 'object' ? data.id : data;
+            if ((typeof id === 'string' && id.trim()) || (typeof id === 'number' && id > 0)) {
+              this.$set(this.sectionInfo, 'id', id);
+            } else {
+              this.draftCreatedWithoutId = true;
+            }
+          }
+          this.$toast('暂存成功，下次可继续编辑');
+          return;
+        }
+
+        this.$toast(isCreate ? '新增成功' : '修改成功');
+        this.$router.push({ name: 'purchaseContract' });
+      } catch {
+        // 接口错误由公共请求层提示。
+      } finally {
+        this.saving = false;
+      }
+    },
+    validateBasicInfo() {
+      if (!String(this.sectionInfo.contractName ?? '').trim()) {
+        this.$notify({
+          type: 'warning',
+          message: '请输入合同名称!',
+        });
+        return false;
+      }
+      if (this.isPurchaseFileRequired && !this.sectionInfo.purchaseFileNumber) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择关联采购文件!',
+        });
+        return false;
+      }
+      if (!String(this.sectionInfo.purchaseFileName ?? '').trim()) {
+        this.$notify({
+          type: 'warning',
+          message: this.arePurchaseFieldsLocked ? '请关联包含物资名称的采购文件!' : '请输入物资名称!',
+        });
+        return false;
+      }
+      if (!PURCHASE_METHODS.includes(this.sectionInfo.purchaseMethod)) {
+        this.$notify({
+          type: 'warning',
+          message: this.arePurchaseFieldsLocked ? '关联采购文件的采购方式无效，请先完善采购文件!' : '请选择采购方式!',
+        });
+        return false;
+      }
+      if (!String(this.sectionInfo.contractNumber ?? '').trim()) {
+        this.$notify({
+          type: 'warning',
+          message: '请输入合同编号!',
+        });
+        return false;
+      }
+      if (!String(this.sectionInfo.purchaseNo ?? '').trim()) {
+        this.$notify({
+          type: 'warning',
+          message: '请输入采购编号!',
+        });
+        return false;
+      }
+      if (!this.sectionInfo.name) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择物资大类!',
+        });
+        return false;
+      }
+      if (!String(this.sectionInfo.packageNumber ?? '').trim()) {
+        this.$notify({
+          type: 'warning',
+          message: '请输入包件号!',
+        });
+        return false;
+      }
+      if (!this.sectionInfo.purchaseName) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择类别!',
+        });
+        return false;
+      }
+      if (!String(this.sectionInfo.supplierName ?? '').trim()) {
+        this.$notify({
+          type: 'warning',
+          message: '请输入供应商!',
+        });
+        return false;
+      }
+      if (!this.sectionInfo.purchaseTypeName) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择物资种类!',
+        });
+        return false;
+      }
+      if (!this.sectionInfo.startTime) {
+        this.$notify({
+          type: 'warning',
+          message: '请选择合同签订日期!',
+        });
+        return false;
+      }
+      return true;
+    },
+    sureClick() {
+      if (!this.validateBasicInfo()) return;
+      if (!this.validateContractDetails(this.sectionInfo.contractDetailsList).isValid) {
+        this.$notify({
+          type: 'warning',
+          message: '请完善物资明细信息!',
+        });
+        return
+      }
+
+      const missingAttachment = this.attachmentSections.find(item => item.required && !item.files.length);
+      if (missingAttachment) {
+        this.$notify({
+          type: 'warning',
+          message: `请上传${missingAttachment.label}!`,
+        });
+        return
+      }
+      return this.saveContract();
     },
   },
 };
 </script>
 
 <style lang="less" scoped>
+.detail-base-info .detail-title-content > .attachment-required-mark,
+.contract-material-details ::v-deep .van-cell--required::before {
+  color: #1989fa;
+}
+
 /deep/.van-calendar__popup.van-popup--bottom,
 .van-calendar__popup.van-popup--top {
   height: 94% !important;

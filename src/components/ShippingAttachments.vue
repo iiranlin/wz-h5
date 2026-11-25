@@ -4,7 +4,9 @@
     <template v-for="field in fields">
       <slot v-if="field.key === 'zlzmwj'" name="before-other-quality-files" />
       <div :key="field.key" class="shipping-attachment">
-        <div class="shipping-title"><span v-if="!readonly && !optional && !field.optional" class="required">*</span>{{ field.label }}</div>
+        <div class="shipping-title">
+          <span v-if="!readonly && !field.optional" class="required" :class="{ 'suggested-mark': optional }" aria-hidden="true">*</span>{{ field.label }}
+        </div>
         <p v-if="showLoadingPhotoHint && !readonly && field.key.startsWith('zczp')" class="shipping-hint">
           <template v-if="!optional"><span class="li-span-red">*</span>必填项，</template>如无可上传说明材料
         </p>
@@ -40,4 +42,5 @@ export default {
 .loading-photo-uploader ::v-deep .file-info > span { min-width: 0; overflow-wrap: anywhere; }
 .loading-photo-uploader ::v-deep .file-info > img { flex-shrink: 0; }
 .required { color: #ee0a24; margin-right: 4px; }
+.suggested-mark { color: #1989fa; }
 </style>

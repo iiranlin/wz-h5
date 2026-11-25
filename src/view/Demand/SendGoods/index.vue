@@ -28,7 +28,7 @@
         <div class="detail-title-content detail-title-edited-p">
           <p>
             <img src="@/assets/img/Icon-address.png" />
-            <span>发货信息</span>
+            <span><span v-if="showDraft" class="li-span-red" aria-hidden="true">*</span>发货信息</span>
           </p>
           <p v-show="status !== '2'" @click="receiptClick">
             <img src="@/assets/img/Icon-edit.png" />
@@ -54,7 +54,7 @@
       <template v-else>
         <div class="detail-title-content">
           <img src="@/assets/img/Icon-address.png" />
-          <span>发货信息</span>
+          <span><span v-if="showDraft" class="li-span-red" aria-hidden="true">*</span>发货信息</span>
         </div>
         <div class="detail-title-content-edited">
           <span>还未完善发货信息，请点击下方按钮</span>
@@ -126,15 +126,17 @@
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
-        <span>发货单附件</span>
+        <span><span v-if="showDraft" class="completion-mark" aria-hidden="true">*</span>发货单附件</span>
       </div>
-      <p class="box-container-p" v-if="!fileList.length"><span
-          class="li-span-red">*</span>必填项，请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
+      <p class="box-container-p" v-if="!fileList.length"><template v-if="!showDraft"><span
+          class="li-span-red">*</span>必填项，</template>请选择文件上传，支持jpg、png、jpeg、pdf格式</p>
       <file-upload-view :maxCount="99" accept=".jpg,.png,.jpeg,.pdf" :fileList="fileList || []" businessType="01"
         class="outbound-field-uploader" />
     </div>
 
-    <ShippingAttachments :model="$data" show-loading-photo-hint />
+    <!-- <p v-if="isDemandShipment" class="suggested-fields-hint"><span>*</span> 蓝色星号为建议填写项，留空也可暂存</p> -->
+    <p v-if="showDraft" class="suggested-fields-hint"><span>*</span> 蓝色星号为完成发货单时的必填项，暂存时可留空</p>
+    <ShippingAttachments :model="$data" show-loading-photo-hint :optional="isDemandShipment || showDraft" />
 
     <div class="detail-floor-content" v-if="status !== '2'">
       <div>
@@ -226,8 +228,8 @@
       </div>
       <div class="default-button-container-button">
         <van-button v-if="showDraft" class="button-info" round @click="onSubmit(false)">暂存</van-button>
-        <van-button :class="{'van-button--disabled': !isFlag}" class="button-info" round type="info"
-          @click="onSubmit(true)">保存发货单</van-button>
+        <van-button :class="{'van-button--disabled': !isDemandShipment && !isFlag}" class="button-info" round type="info"
+          @click="onSubmit(true)">{{ isDemandShipment ? '暂存发货单' : '完成发货单' }}</van-button>
 
       </div>
     </div>
@@ -430,6 +432,9 @@ export default {
     };
   },
   computed: {
+    isDemandShipment() {
+      return this.$route.query.source === 'dashboard';
+    },
     showDraft() {
       return this.$route.query.source === 'Information';
     },
@@ -858,13 +863,13 @@ export default {
         });
         return
       }
-      if (validateRequired && !this.validateShippingFiles()) return;
-      if (validateRequired && !this.isFlag) {
-        this.$notify({
-          type: 'warning',
-          message: '请完善发货信息',
-        });
-        return;
+      if ((this.isDemandShipment || this.showDraft) && !this.validateDraftRequirements()) return;
+      if (!this.isDemandShipment && validateRequired) {
+        if (!this.validateShippingFiles()) return;
+        if (!this.isFlag) {
+          this.$notify({ type: 'warning', message: '请完善发货信息' });
+          return;
+        }
       }
 
       Toast.loading({
@@ -923,6 +928,20 @@ export default {
         Toast.clear();
       });
     },
+    validateDraftRequirements() {
+      const { receiver, phone, shippingAddress, shippingDate, arrivalDate, carNumber } = this.params;
+      let message = '';
+      if (!receiver?.trim() || !String(phone ?? '').trim() || !shippingAddress?.trim()) {
+        message = '请完善发货信息';
+      } else if (!shippingDate || !arrivalDate || !carNumber?.trim()) {
+        message = '请完善物流信息';
+      } else if (this.isDemandShipment && !this.fileList?.length) {
+        message = '请上传发货单附件';
+      }
+      if (!message) return true;
+      this.$notify({ type: 'warning', message });
+      return false;
+    },
     btnClick(code) {
       this.btnClickIndex = code
     },
@@ -933,7 +952,7 @@ export default {
 
       this.$store.dispatch('public/setShipmentsInfo', { ...this.params, fileList: this.fileList, ...this.shippingFiles() })
       // const query = this.text == 'edit' ? { contractId: this.contractId, type: this.text, id: this.queryId } : { contractId: this.contractId }
-      const query = { type: this.text, id: this.goodsId, planId: this.planId }
+      const query = { type: this.text, id: this.goodsId, planId: this.planId, source: this.$route.query.source }
       this.$router.push({ name: 'EditedMaterialGoods', query })
     },
     deleteClick(index) {
@@ -1067,6 +1086,15 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.completion-mark { color: #1989fa; }
+
+.suggested-fields-hint {
+  margin: 10px;
+  font-size: 12px;
+  color: #4a4a4a;
+
+  span { color: #1989fa; }
+}
 /deep/.van-calendar__popup.van-popup--bottom, .van-calendar__popup.van-popup--top{
     height: 94% !important;
 }

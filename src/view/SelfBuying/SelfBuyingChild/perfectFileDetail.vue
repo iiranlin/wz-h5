@@ -134,25 +134,18 @@
 
     <div class="detail-base-info detail-base-info-edited" style="margin-bottom: 8px;background-color: #F2F4F8;">
       <div class="detail-title-content">
-        <span style="font-size: 16px;">核备文件</span><span
-          style="font-size: 12px; color: #898C9F; font-weight: 300;">(必传项)</span>
+        <span style="font-size: 16px;">核备文件</span>
       </div>
     </div>
 
-    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
+    <div v-for="(attachment, index) in attachmentSections" :key="attachment.key"
+      class="detail-base-info detail-base-info-edited"
+      :style="{ marginTop: 0, marginBottom: index === attachmentSections.length - 1 ? '65px' : '5px' }">
       <div class="detail-title-content">
         <img src="@/assets/img/icon-picking-list.png">
-        <span>采购方案或采购计划</span>
+        <span>{{ attachment.label }}</span>
       </div>
-      <file-download-view :fileList="formData.fileList01 || []" />
-    </div>
-
-    <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 65px;">
-      <div class="detail-title-content">
-        <img src="@/assets/img/icon-picking-list.png">
-        <span>采购文件（含技术规格书）</span>
-      </div>
-      <file-download-view :fileList="formData.fileList02 || []" />
+      <file-download-view :fileList="attachment.files" />
     </div>
 
     <div class="default-button-container default-button-container-box"
@@ -192,6 +185,7 @@ import { auditReject, wfNextAssigneeMore, auditApprove } from '@/api/myToDoList'
 import eventBus from '@/utils/eventBus.js'
 
 import { materialPurchaseFiledetail } from '@/api/prodmgr-inv/SelfBuying'
+import { PURCHASE_FILE_ATTACHMENTS, parseAttachmentList } from '@/utils/selfBuyingAttachments'
 
 
 export default {
@@ -202,6 +196,15 @@ export default {
   components: {
     WorkflowRollback,
     FileDownloadView
+  },
+
+  computed: {
+    attachmentSections() {
+      return PURCHASE_FILE_ATTACHMENTS.map(item => ({
+        ...item,
+        files: parseAttachmentList(this.formData[item.key]),
+      }));
+    },
   },
 
   filters: {
@@ -250,10 +253,7 @@ export default {
       opinion: '',
       // 待审核带过来的审核参数对象定义
       listObj: {},
-      formData: {
-        fileList01: [],
-        fileList02: [],
-      },
+      formData: {},
       recordList: [],
       historyData: {},
     };
@@ -303,8 +303,6 @@ export default {
     handleDetail() {
       materialPurchaseFiledetail(this.rQueryId).then(({ data }) => {
         this.formData = data
-        this.formData.fileList01 = JSON.parse(data.registration) || []
-        this.formData.fileList02 = JSON.parse(data.bidDocument) || []
       })
     },
     // 流程信息

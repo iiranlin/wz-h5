@@ -1,5 +1,7 @@
 <template>
   <div class="edited-materials">
+    <!-- <p v-if="showSuggestedMarks" class="suggested-fields-hint"><span class="suggested-mark">*</span> 蓝色星号为建议填写项，留空也可暂存</p> -->
+    <p v-if="$route.query.source === 'Information'" class="suggested-fields-hint"><span class="suggested-mark">*</span> 蓝色星号为完成发货单时的必填项，暂存时可留空</p>
     <div class="detail-base-info">
       <div class="detail-title-content">
         <img src="/static/icon-xqjh.png">
@@ -30,6 +32,7 @@
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
           <van-field label="发货数量" placeholder="请输入发货数量" clearable input-align="right">
+            <template #label><span v-if="showSuggestedMarks" class="suggested-mark" aria-hidden="true">*</span>发货数量</template>
             <template #input>
               <van-stepper v-model="sectionInfo.sendTotal" :min="0" :max="sectionInfo.ssendTotal" />
             </template>
@@ -45,12 +48,16 @@
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
           <van-field v-model="sectionInfo.packagingFm" label="包装形式" placeholder="请输入包装形式"
-            input-align="right" />
+            input-align="right">
+            <template #label><span v-if="showSuggestedMarks" class="suggested-mark" aria-hidden="true">*</span>包装形式</template>
+          </van-field>
         </li>
         <li class="detail-list-li-input">
           <van-field readonly clickable v-model="sectionInfo.manufactureDate" name="datetimePicker"
             :value="sectionInfo.manufactureDate" label="生产日期" placeholder="点击选择日期" @click="showCalendars('show')"
-            input-align="right" />
+            input-align="right">
+            <template #label><span v-if="showSuggestedMarks" class="suggested-mark" aria-hidden="true">*</span>生产日期</template>
+          </van-field>
         </li>
         <li class="detail-list-li-input">
           <van-field readonly clickable v-model="sectionInfo.expirationDate" name="datetimePicker"
@@ -81,14 +88,18 @@
         <ul class="detail-list-ul-edited">
           <li class="detail-list-li-input">
             <van-field v-model="sectionInfo.receiver" label="收货人及联系方式" placeholder="请输入收货人及联系方式"
-              input-align="right" />
+              input-align="right">
+              <template #label><span v-if="showSuggestedMarks" class="suggested-mark" aria-hidden="true">*</span>收货人及联系方式</template>
+            </van-field>
           </li>
           <!-- <li class="detail-list-li-input">
           <van-field required v-model="sectionInfo.phone" label="联系方式" placeholder="请输入联系方式"
             input-align="right" />
         </li> -->
           <li class="detail-list-li-input">
-            <van-field v-model="sectionInfo.field2" label="收货地址" placeholder="请输入收货地址" input-align="right" />
+            <van-field v-model="sectionInfo.field2" label="收货地址" placeholder="请输入收货地址" input-align="right">
+              <template #label><span v-if="showSuggestedMarks" class="suggested-mark" aria-hidden="true">*</span>收货地址</template>
+            </van-field>
           </li>
         </ul>
         <div class="detail-base-info-edited-all" style="padding-top: 0; margin: 5px 0;">
@@ -145,7 +156,9 @@
       <ul class="detail-list-ul-edited">
         <li class="detail-list-li-input">
           <van-field readonly is-link v-model="sectionInfo.supplyDate" label="选择时间" placeholder="请选择时间"
-            @click="dateClick(sectionInfo)" input-align="right" />
+            @click="dateClick(sectionInfo)" input-align="right">
+            <template #label><span v-if="showSuggestedMarks" class="suggested-mark" aria-hidden="true">*</span>选择时间</template>
+          </van-field>
           <van-popup v-model="sectionInfo.showDatePicker" position="bottom" round>
             <van-datetime-picker type="date" v-model="sectionInfo.minDate" @confirm="onDateConfirm(sectionInfo)"
               @cancel="hideDatePicker(sectionInfo)" />
@@ -159,7 +172,7 @@
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
-        <span>合格证附件</span>
+        <span><span v-if="showSuggestedMarks" class="suggested-mark" aria-hidden="true">*</span>合格证附件</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.fileList01?.length">支持上传jpg、png、jpeg、pdf格式文件</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="9999" :fileList="sectionInfo.fileList01 || []" businessType="01"
@@ -168,7 +181,7 @@
     <div class="detail-base-info detail-base-info-edited" style="margin-top: 0; margin-bottom: 5px;">
       <div class="detail-title-content">
         <img src="/static/icon-file.png">
-        <span>厂检报告附件</span>
+        <span><span v-if="showSuggestedMarks" class="suggested-mark" aria-hidden="true">*</span>厂检报告附件</span>
       </div>
       <p class="box-container-p" v-if="!sectionInfo?.fileList02?.length">支持上传jpg、png、jpeg、pdf格式文件</p>
       <file-upload-view accept=".jpg,.png,.jpeg,.pdf" :maxCount="9999" :fileList="sectionInfo.fileList02 || []"
@@ -219,6 +232,12 @@ export default {
       showCalendar: false,
       minDate: new Date(2010, 0, 1),
       maxDate: today,
+    }
+  },
+  computed: {
+    showSuggestedMarks() {
+      const { source } = this.$route.query;
+      return source === 'dashboard' || source === 'Information';
     }
   },
   activated() {
@@ -359,6 +378,17 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.suggested-mark {
+  color: #1989fa;
+  padding-right: 4px;
+}
+
+.suggested-fields-hint {
+  margin: 10px;
+  font-size: 12px;
+  color: #4a4a4a;
+}
+
 ::v-deep .van-field__label {
   width: 120px !important;
 }
